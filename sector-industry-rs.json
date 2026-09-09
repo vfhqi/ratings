@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-07",
+ "current_week": "2026-09-08",
  "prior_week": "2026-07-10",
  "industry": {
   "A. Consumer staples": {
@@ -12,7 +12,7 @@
    "prior": "D"
   },
   "C. Telecoms": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "D. Infrastructure": {
@@ -24,7 +24,7 @@
    "prior": "B"
   },
   "F. Defence": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "G. Financials": {
@@ -86,7 +86,7 @@
    "prior": "D"
   },
   "A.5. Food retail": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -278,7 +278,7 @@
    "prior": "B"
   },
   "J.1. IT services - consulting": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "J.2. IT services - reselling": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "M.2. Chemicals - Distributors": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "M.3. Chemicals - Specialty": {
@@ -354,7 +354,7 @@
    "prior": "D"
   },
   "M.4. Chemicals - Base": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "M.6. Basic materials and construction": {
@@ -386,7 +386,7 @@
    "prior": "A"
   },
   "O.15. Distributors": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "O.2. Products - various [SPLIT]": {
