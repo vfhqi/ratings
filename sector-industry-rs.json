@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-08",
+ "current_week": "2026-09-09",
  "prior_week": "2026-07-10",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "C"
   },
   "D. Infrastructure": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "E. Utilities": {
@@ -44,7 +44,7 @@
    "prior": "F"
   },
   "K. Professional, business and consumer services": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "L. Media": {
@@ -74,7 +74,7 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "A.3. Automotive repair": {
@@ -86,7 +86,7 @@
    "prior": "D"
   },
   "A.5. Food retail": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -138,7 +138,7 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "C.2. Telecoms - towers": {
@@ -154,7 +154,7 @@
    "prior": "A"
   },
   "E.1. Utilities - Integrated power": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
@@ -206,7 +206,7 @@
    "prior": "B"
   },
   "G.6. Asset management software (B2B)": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "G.8. Retail trading platforms (D2C)": {
@@ -250,7 +250,7 @@
    "prior": "C"
   },
   "H.2. Retail - apparel": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "H.3. Retail - general/physical": {
@@ -258,7 +258,7 @@
    "prior": "C"
   },
   "H.4. Retail - online": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "H.6. Gambling - B2C OSB, Casino-led": {
@@ -330,7 +330,7 @@
    "prior": "F"
   },
   "K.8. Outsourcing, admin and other services": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "K.9. Recruitment services": {
@@ -366,7 +366,7 @@
    "prior": "F"
   },
   "M.8. Chemicals - Gases": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -410,7 +410,7 @@
    "prior": "B"
   },
   "O.9. Capital goods - HVAC": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "P.1. Energy - downstream distribution": {
@@ -418,7 +418,7 @@
    "prior": "A"
   },
   "P.2. Energy - upstream E&P": {
-   "current": "B",
+   "current": "A",
    "prior": "B"
   },
   "P.3. Energy - upstream support services": {
