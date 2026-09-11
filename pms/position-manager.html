@@ -541,7 +541,7 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
       <button class="btn pf-overlay-btn active" data-overlay="risk">Risk zones</button>
       <button class="btn pf-overlay-btn active" data-overlay="promo">Promotions</button>
       <button class="btn pf-overlay-btn" data-overlay="breach" title="Tier 2: red gradient on recent bars when stop breached">Breach</button>
-      <button class="btn pf-overlay-btn" data-overlay="grace" title="Tier 2: grace clock badge (e.g. Grace 2/3)">Grace</button>
+      <button class="btn pf-overlay-btn" data-overlay="grace" title="Tier 2: count of slices with a confirmed exit">Stop state</button>
       <button class="btn pf-overlay-btn" data-overlay="stopMaBold" title="Tier 2: bold the MA(s) used as active tranche stops">Stop MA bold</button>
       <button class="btn pf-overlay-btn" data-overlay="filterBadges" title="Tier 3: PB / MM99 / UTR badges in top-left">MD filters</button>
       <button class="btn pf-overlay-btn" data-overlay="thematic" title="Tier 3: composite thematic score badge top-right">Thematic</button>
@@ -566,7 +566,7 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
     <div class="help-banner">
       <b>How to use:</b> 20 investment slots × 6 tranche rows (PB1, PB2, Core MM 1–4). Type <b>%AUM</b> as <kbd>3</kbd> for 3%. Pick a date + stop MA. <b>MA→stop buffer</b> defaults to 2% (= stop is MA × 0.98) and is editable per tranche. Derived columns auto-fill. <b>Drag</b> the ⋮⋮ handle to move tranches between slots — drop a PB onto an MM to promote. Cross-investment drag blocked.
       <br><b>Slot caps:</b> PB1/2 = 2.5%, MM1 = 4%, MM2 = 3%, MM3 = 2%, MM4 = 1%. <b>PB stops</b>: 5D/10D/20D/50D. <b>MM stops</b>: any of 5 MAs.
-      <b>Hybrid grace clock:</b> 150D/200D = immediate; 20D/50D/100D = 3 daily closes OR 1 weekly close.
+      <b>One stop rule (11-Sep-2026):</b> a stop is <b>hit</b> on the first close at or below it and stays <b>triggered</b> while the price keeps closing there; the <b>exit is confirmed</b> on the third consecutive close at or below (sell the next trading day). A close back above on day 1 or 2 resets the count. No weekly close. Once a slice has closed 20% up, its entry price is a floor and the higher level binds.
       <br><b>Row colours by MA for stop-loss:</b> orange=20D, blue=50D, teal=100D, magenta=150D, slate=200D. Breach states override.
       <b>Empty slots</b> can have a ticker typed in. <b>New MM tranches</b> warn if no PB exists for that investment (override permitted for backfill). <b>Connect to disk</b> for auto-save (auto-reconnects on reload).
     </div>
@@ -646,9 +646,10 @@ var MM_TYPES = {'MM1': true, 'MM2': true, 'MM3': true, 'MM4': true};
 var TRADE_LABELS = {PB1:'PB/SB 1', PB2:'PB/SB 2', MM1:'Core MM 1', MM2:'Core MM 2', MM3:'Core MM 3', MM4:'Core MM 4'};
 var SLOT_CAP_DECIMAL = {PB1:0.025, PB2:0.025, MM1:0.04, MM2:0.03, MM3:0.02, MM4:0.01};
 var DEFAULT_STOP_MA = {PB1:'50D', PB2:'50D', MM1:'100D', MM2:'100D', MM3:'100D', MM4:'100D'};
-var GRACE_IMMEDIATE = {'150D':true, '200D':true};
-var GRACE_TACTICAL = {'20D':true, '50D':true, '100D':true};
-var GRACE_DAILY_THRESHOLD = 3;
+// The one stop rule (11-Sep-2026) replaced the grace clock constants: three consecutive closes at or
+// below the stop confirm the exit; the floor at entry arms once a slice has closed 20% up.
+var STOP_CONFIRM_CLOSES = 3;
+var STOP_FLOOR_TRIGGER = 0.20;
 var BACKUP_RETENTION_DAYS = 30;
 
 // Column widths (must match between sticky header and main table for alignment)
@@ -662,13 +663,15 @@ var BACKUP_RETENTION_DAYS = 30;
 // clipped by `overflow:hidden`. A first attempt at 68px was still short — the width was
 // GUESSED. Measured instead: input 55 + suffix 6.6 + flex gap 2 + cell padding 16 = 82px.
 // Guessing a width twice is how a "fix" ships still broken; measure the box.
+// 11-Sep-2026 (one stop rule): the column is now "Stop state" and 158 -> 204px, because its widest badge is
+// now "TRIGGERED 2/3 (09-Sep-26)" or "EXIT CONFIRMED 28-Aug-26" (measured in the render check, not guessed).
 // D-PMS-210: Historical breach 140 -> 158. The widest badge ("IMMEDIATE 29-Jul-26") measures
 // 132px and the 140px cell leaves only 123px inside its 8px padding, so it was clipped by
 // ~9px on 2 of 120 cells. Shrinking the badge font was the alternative and was rejected:
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['180px', '34px', '140px', '74px', '140px', '82px', '70px', '70px', '70px', '80px', '70px', '95px', '70px', '70px', '70px', '80px', '80px', '90px', '80px', '85px', '158px', '34px'];  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
+var COL_WIDTHS = ['180px', '34px', '140px', '74px', '140px', '82px', '70px', '70px', '70px', '80px', '70px', '95px', '70px', '70px', '70px', '80px', '80px', '90px', '80px', '85px', '204px', '34px'];  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
 var CONFIG = null;
@@ -1886,34 +1889,54 @@ function getMaOnDate(ticker, dateStr, maName) {
 }
 function calcStop(ma, buf) { var b = (buf == null) ? BUFFER : buf; return (ma == null) ? null : +(ma * (1 - b)).toFixed(4); }
 
+// ONE-STOP-RULE-2026-09-11-MARKER. THE ONE STOP RULE (Richard, 11-Sep-2026), JavaScript twin of
+// scripts/stop_rule.py; both are tested against scripts/stop_rule_cases.json. Change one, change both.
+// HIT = first CLOSE at or below the stop (day 1); TRIGGERED while it keeps closing there;
+// EXIT CONFIRMED on the third consecutive close at or below. A close back above on day 1 or 2 ends the
+// trigger. A confirmed exit stays confirmed until the slice is sold. Each day against its own level.
+// Once a slice has closed 20% or more above its entry close, the entry close is a floor and the binding
+// level is the higher of the two. The two-speed grace clock and the weekly close (D-PMS-5) are retired.
+// Not yet in the page: Richard's "keep" overrides (pms-data/stop-overrides.json); the evening engine
+// applies them, so a kept slice can still read EXIT CONFIRMED here until this reads that file.
+function stopRuleWalk(series, startIdx, maKey, bufVal) {
+  var entryClose = series[startIdx] ? series[startIdx].c : null;
+  var floorOn = false, run = 0, runStart = -1, confirmed = null, firstHit = null;
+  var lastBinding = null, lastSrc = null;
+  for (var i = startIdx; i < series.length; i++) {
+    var day = series[i]; var c = day.c; if (c == null) continue;
+    var ma = day[maKey];
+    if (!floorOn && entryClose && c >= entryClose * (1 + STOP_FLOOR_TRIGGER)) floorOn = true;
+    var level = (ma == null) ? null : ma * (1 - bufVal);
+    var binding = level, src = 'moving average';
+    if (floorOn && entryClose && (binding == null || entryClose > binding)) { binding = entryClose; src = 'floor at entry'; }
+    if (binding == null) { run = 0; runStart = -1; continue; }
+    lastBinding = binding; lastSrc = src;
+    if (c <= binding) {
+      if (run === 0) { runStart = i; if (!firstHit) firstHit = { breach_date: day.d, breach_close: c, stop_level: +binding.toFixed(4), days_held: i - startIdx }; }
+      run += 1;
+      if (!confirmed && run >= STOP_CONFIRM_CLOSES) {
+        confirmed = { trigger: 'EXIT CONFIRMED', breach_date: day.d, breach_close: c, stop_level: +binding.toFixed(4),
+                      days_held: i - startIdx, hit_date: series[runStart].d, on: src };
+      }
+    } else { run = 0; runStart = -1; }
+  }
+  var triggered = (!confirmed && run > 0) ? { trigger: 'TRIGGERED ' + run + '/' + STOP_CONFIRM_CLOSES, day: run,
+      hit_date: series[runStart].d, breach_date: series[runStart].d, stop_level: lastBinding != null ? +lastBinding.toFixed(4) : null } : null;
+  return { raw_breach: firstHit, grace_breach: confirmed, triggered: triggered,
+           back_above: !!(confirmed && run === 0), day_of_run: run,
+           tier: confirmed ? 'confirmed' : (triggered ? 'triggered' : 'clear'),
+           binding_level: lastBinding, binding_source: lastSrc, floor_active: floorOn };
+}
+
 function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return null;
   var startIdx = findIndexByDate(ticker, entryDateStr);
   if (startIdx < 0) return null;
   var maKey = 'ma' + stopMa.replace('D', '');
-  var immediate = !!GRACE_IMMEDIATE[stopMa];
   var bufVal = (bufferOverride == null) ? BUFFER : bufferOverride;
-  var rawBreach = null, graceBreach = null, streak = 0, lastIdx = -999;
-  for (var i = startIdx; i < series.length; i++) {
-    var day = series[i]; var ma = day[maKey]; if (ma == null) continue;
-    var stopLevel = ma * (1 - bufVal);
-    if (day.c < stopLevel) {
-      if (!rawBreach) rawBreach = { breach_date: day.d, breach_close: day.c, stop_level: +stopLevel.toFixed(4), days_held: i - startIdx };
-      if (i === lastIdx + 1 || lastIdx === -999) streak += 1; else streak = 1;
-      lastIdx = i;
-      var dt = new Date(day.d); var isFri = dt.getDay() === 5;
-      if (immediate) {
-        if (!graceBreach) graceBreach = { trigger:'IMMEDIATE', breach_date: day.d, breach_close: day.c, stop_level: +stopLevel.toFixed(4), days_held: i - startIdx };
-      } else {
-        if (streak >= GRACE_DAILY_THRESHOLD && !graceBreach) graceBreach = { trigger:'DAILY_3', breach_date: day.d, breach_close: day.c, stop_level: +stopLevel.toFixed(4), days_held: i - startIdx, streak };
-        if (isFri && !graceBreach) graceBreach = { trigger:'WEEKLY', breach_date: day.d, breach_close: day.c, stop_level: +stopLevel.toFixed(4), days_held: i - startIdx };
-      }
-    } else { streak = 0; }
-  }
-  return { raw_breach: rawBreach, grace_breach: graceBreach, tier: immediate ? 'immediate' : 'tactical' };
+  return stopRuleWalk(series, startIdx, maKey, bufVal);
 }
-
 function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return { error: 'No chart data for ' + ticker };
@@ -3120,7 +3143,7 @@ function buildHeaderRow() {
     + '<th class="col-group-start">Price move since entry</th>'
     + '<th>P&L AUM</th>'
     + '<th class="col-key-bold">Loss risk</th>'
-    + '<th class="col-group-start">Historical breach</th>'
+    + '<th class="col-group-start">Stop state</th>'
     + '<th></th>'
     + '</tr>';
   return '<thead>' + groupRow + colRow + '</thead>';
@@ -3361,7 +3384,8 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   if (isFirstSlot) rowCls += ' inv-separator';
   if (r && r.ok) {
     if (r.entry_warn === 'BELOW_STOP' || r.entry_warn === 'BELOW_MA_ABOVE_STOP') rowCls += ' row-warn';
-    if (r.breach && r.breach.grace_breach) rowCls += (r.breach.tier === 'immediate' ? ' row-breach-immediate' : ' row-breach-grace');
+    if (r.breach && r.breach.grace_breach) rowCls += ' row-breach-immediate';   // exit confirmed
+    else if (r.breach && r.breach.triggered) rowCls += ' row-breach-grace';     // triggered, day 1 or 2 of 3
   }
   var hasE = hasEdit(invIdx, slotType);
   var draggable = hasE && !isPlaceholder ? 'draggable="true"' : '';
@@ -3624,7 +3648,8 @@ function renderAlerts() {
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
       var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal);
       if (!r || !r.ok) return;
-      if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.grace_breach, tier: r.breach.tier });
+      if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.grace_breach, tier: 'confirmed' });
+      else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.triggered, tier: 'triggered' });
     });
   });
   var el = document.getElementById('alertBanner');
@@ -3655,13 +3680,14 @@ function renderAlerts() {
   }
 
   if (!alerts.length) { el.className = 'alert-banner'; el.innerHTML = ''; return; }
-  var html = '<h2>⚠ STOP BREACH — ' + alerts.length + ' tranche' + (alerts.length > 1 ? 's' : '') + '</h2>';
+  var _nConf = alerts.filter(function(a) { return a.tier === 'confirmed'; }).length;
+  var html = '<h2>⚠ STOPS — ' + _nConf + ' exit' + (_nConf === 1 ? '' : 's') + ' confirmed, not yet sold; ' + (alerts.length - _nConf) + ' triggered</h2>';
   alerts.forEach(function(a) {
     html += '<div class="alert-item">'
       + '<span class="alert-ticker">' + esc(a.ticker) + '</span>'
       + '<span>' + esc(TRADE_LABELS[a.slot] || a.slot) + '</span>'
       + '<span class="alert-msg">' + esc(a.breach.trigger) + ' ' + esc(fmtDate(a.breach.breach_date)) + '</span>'
-      + '<span class="alert-status b-bad">' + esc(a.breach.trigger) + '</span>'
+      + '<span class="alert-status ' + (a.tier === 'confirmed' ? 'b-bad' : 'b-warn') + '">' + esc(a.tier === 'confirmed' ? 'SELL' : 'WATCH') + '</span>'
       + '</div>';
   });
   el.innerHTML = html;
@@ -3758,8 +3784,9 @@ function pctBp(v) {
 function esc(s) { var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
 function breachBadge(r) {
   if (!r.breach) return '<span class="badge b-active">no</span>';
-  if (r.breach.grace_breach) return '<span class="badge b-bad">' + esc(r.breach.grace_breach.trigger) + ' ' + esc(fmtDate(r.breach.grace_breach.breach_date)) + '</span>';
-  if (r.breach.raw_breach) return '<span class="badge b-warn">raw ' + esc(fmtDate(r.breach.raw_breach.breach_date)) + '</span>';
+  if (r.breach.grace_breach) return '<span class="badge b-bad" title="Exit confirmed: third consecutive close at or below the stop (hit ' + esc(fmtDate(r.breach.grace_breach.hit_date)) + '), not yet sold' + (r.breach.back_above ? '; price since back above the stop' : '') + '">EXIT CONFIRMED ' + esc(fmtDate(r.breach.grace_breach.breach_date)) + '</span>';
+  if (r.breach.triggered) return '<span class="badge b-warn" title="Triggered: closed at or below the stop ' + r.breach.triggered.day + ' day(s) running; the exit confirms on the third">TRIGGERED ' + r.breach.triggered.day + '/3 (' + esc(fmtDate(r.breach.triggered.hit_date)) + ')</span>';
+  if (r.breach.raw_breach) return '<span class="badge b-active" title="Hit the stop on this date but never closed at or below it three days running">hit ' + esc(fmtDate(r.breach.raw_breach.breach_date)) + ', recovered</span>';
   return '<span class="badge b-active">no</span>';
 }
 
@@ -4224,7 +4251,7 @@ function drawChartIntoCanvas(ticker, canvas, rowMeta) {
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 9px ui-sans-serif, system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText('Grace ' + graceCount, padL + plotW - 34, priceTop + 14);
+      ctx.fillText('Exits ' + graceCount, padL + plotW - 34, priceTop + 14);
       ctx.textAlign = 'start';
     }
   }
