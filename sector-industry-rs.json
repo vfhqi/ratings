@@ -1,14 +1,14 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-09",
+ "current_week": "2026-09-10",
  "prior_week": "2026-07-10",
  "industry": {
   "A. Consumer staples": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "B. Healthcare": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "C. Telecoms": {
@@ -60,7 +60,7 @@
    "prior": "C"
   },
   "O. Industrials and capital goods": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -194,11 +194,11 @@
    "prior": "D"
   },
   "G.3. Alternative investment managers": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -218,7 +218,7 @@
    "prior": "D"
   },
   "H.10. Hotels": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "H.11. Airlines and travel": {
@@ -258,7 +258,7 @@
    "prior": "C"
   },
   "H.4. Retail - online": {
-   "current": "C",
+   "current": "F",
    "prior": "D"
   },
   "H.6. Gambling - B2C OSB, Casino-led": {
@@ -350,7 +350,7 @@
    "prior": "F"
   },
   "M.3. Chemicals - Specialty": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "M.4. Chemicals - Base": {
@@ -366,7 +366,7 @@
    "prior": "F"
   },
   "M.8. Chemicals - Gases": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -374,7 +374,7 @@
    "prior": "D"
   },
   "O.1. Industrial services": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.10. Capital goods - EV": {

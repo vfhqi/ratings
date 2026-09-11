@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-10",
+ "generated": "2026-09-11",
  "count": 289,
  "stocks": {
   "1U1-DE": {
@@ -1030,7 +1030,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -1524,7 +1524,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -6500,7 +6500,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -8725,7 +8725,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -11049,7 +11049,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -12067,7 +12067,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -13679,7 +13679,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -14638,7 +14638,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -15901,7 +15901,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -17357,7 +17357,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": null,
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -17760,7 +17760,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": null,
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -23910,7 +23910,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -25118,7 +25118,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -28183,7 +28183,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -30442,7 +30442,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -32831,7 +32831,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -38094,7 +38094,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -39087,7 +39087,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -44247,7 +44247,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -46946,7 +46946,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "F",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -50892,7 +50892,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -52452,7 +52452,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -54919,7 +54919,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -55528,7 +55528,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -58973,7 +58973,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -61128,7 +61128,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -62308,7 +62308,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -64186,7 +64186,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -66121,7 +66121,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -72184,7 +72184,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -73188,7 +73188,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -75276,7 +75276,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -75871,7 +75871,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -81322,7 +81322,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -83614,7 +83614,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -85941,7 +85941,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -86337,7 +86337,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -87482,7 +87482,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -88315,7 +88315,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -90394,7 +90394,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -94328,7 +94328,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -95978,7 +95978,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -96647,7 +96647,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -103929,7 +103929,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
