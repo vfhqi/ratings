@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-11",
+ "generated": "2026-09-12",
  "count": 289,
  "stocks": {
   "1U1-DE": {
@@ -64502,7 +64502,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-nr"
     },
     {

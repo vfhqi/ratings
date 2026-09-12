@@ -1,10 +1,10 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-10",
+ "current_week": "2026-09-11",
  "prior_week": "2026-07-10",
  "industry": {
   "A. Consumer staples": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "B. Healthcare": {
@@ -20,11 +20,11 @@
    "prior": "C"
   },
   "E. Utilities": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "F. Defence": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "G. Financials": {
@@ -154,7 +154,7 @@
    "prior": "A"
   },
   "E.1. Utilities - Integrated power": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
@@ -162,7 +162,7 @@
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "F.1. Defence - Primes": {
@@ -198,7 +198,7 @@
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -310,7 +310,7 @@
    "prior": "A"
   },
   "K.1. Security and facilities services": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "K.10. Waste management services": {
@@ -342,7 +342,7 @@
    "prior": "F"
   },
   "M.1. Chemicals - Fragrances/ingredients": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "M.2. Chemicals - Distributors": {
@@ -366,7 +366,7 @@
    "prior": "F"
   },
   "M.8. Chemicals - Gases": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -410,7 +410,7 @@
    "prior": "B"
   },
   "O.9. Capital goods - HVAC": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "P.1. Energy - downstream distribution": {
@@ -418,7 +418,7 @@
    "prior": "A"
   },
   "P.2. Energy - upstream E&P": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "P.3. Energy - upstream support services": {
