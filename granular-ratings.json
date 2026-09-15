@@ -1,6 +1,6 @@
 {
- "generated": "2026-09-14",
- "count": 285,
+ "generated": "2026-09-15",
+ "count": 289,
  "stocks": {
   "1U1-DE": {
    "stage": "Triaging",
@@ -814,7 +814,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -1253,7 +1253,7 @@
     {
      "code": "MR1",
      "label": "Change thesis",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-change-thesis-b"
     },
     {
@@ -2171,7 +2171,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -3645,7 +3645,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -9142,7 +9142,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -10067,6 +10067,50 @@
      "anchor": "section-d-pillar-iii-investment-case-components"
     }
    ]
+  },
+  "ART-ES": {
+   "stage": "Triaging",
+   "date": "2026-09-14",
+   "source_memo": "memo.md",
+   "master": [
+    {
+     "code": "MR1",
+     "label": "Technical momentum",
+     "grade": "C",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    },
+    {
+     "code": "MR2",
+     "label": "Earnings momentum",
+     "grade": "B",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    },
+    {
+     "code": "MR3",
+     "label": "Thematic fit -- not rated on this memo's framework; see Headline Rating 3, Thematic momentum",
+     "grade": "NR",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    },
+    {
+     "code": "MR4",
+     "label": "Case change elements -- not rated on this memo's framework; see Headline Rating 4, Thesis and fit",
+     "grade": "NR",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    },
+    {
+     "code": "MR5",
+     "label": "Case building blocks -- not rated on this memo's framework; see Headline Rating 5, Foundations",
+     "grade": "NR",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    },
+    {
+     "code": "MR6",
+     "label": "Investment case components -- not rated on this memo's framework; see Headline Rating 6, Valuation",
+     "grade": "NR",
+     "anchor": "section-b-pillar-i-case-change-elements-e1-e5-e7-e8"
+    }
+   ],
+   "pillars": []
   },
   "ASML-NL": {
    "stage": "Triaging",
@@ -11977,7 +12021,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -12567,7 +12611,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -15109,7 +15153,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -15811,7 +15855,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -16228,7 +16272,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -17267,7 +17311,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": null,
+     "grade": "C",
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -18802,7 +18846,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -27071,7 +27115,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -28085,6 +28129,50 @@
     }
    ]
   },
+  "CVSG-GB": {
+   "stage": "Triaging",
+   "date": "2026-09-14",
+   "source_memo": "memo.md",
+   "master": [
+    {
+     "code": "MR1",
+     "label": "Technical momentum",
+     "grade": "B",
+     "anchor": "mr1-technical-momentum-c"
+    },
+    {
+     "code": "MR2",
+     "label": "Earnings momentum",
+     "grade": "D",
+     "anchor": "mr2-sell-side-earnings-momentum-d"
+    },
+    {
+     "code": "MR3",
+     "label": "Thematic fit -- not rated on this memo's framework; see Headline Rating 3, Thematic momentum",
+     "grade": "NR",
+     "anchor": "mr3-thematic-fit-c"
+    },
+    {
+     "code": "MR4",
+     "label": "Case change elements -- not rated on this memo's framework; see Headline Rating 4, Thesis and fit",
+     "grade": "NR",
+     "anchor": "mr4-pillar-i-case-change-elements-b"
+    },
+    {
+     "code": "MR5",
+     "label": "Case building blocks -- not rated on this memo's framework; see Headline Rating 5, Foundations",
+     "grade": "NR",
+     "anchor": "mr5-pillar-ii-case-building-blocks-c"
+    },
+    {
+     "code": "MR6",
+     "label": "Investment case components -- not rated on this memo's framework; see Headline Rating 6, Valuation",
+     "grade": "NR",
+     "anchor": "mr6-pillar-iii-investment-case-components-nr"
+    }
+   ],
+   "pillars": []
+  },
   "CWK-GB": {
    "stage": "Triaging",
    "date": "2026-08-07",
@@ -28510,7 +28598,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -29367,7 +29455,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -29935,7 +30023,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -30352,7 +30440,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -30755,7 +30843,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -33441,7 +33529,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -34067,7 +34155,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -37975,7 +38063,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -38580,7 +38668,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -45454,7 +45542,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -46439,7 +46527,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "F",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -50572,7 +50660,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -52362,7 +52450,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -53182,7 +53270,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": null,
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -56034,7 +56122,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-nr"
     },
     {
@@ -57632,7 +57720,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -63260,6 +63348,50 @@
      "anchor": "section-d-pillar-iii-investment-case-components"
     }
    ]
+  },
+  "LAGR.B-SE": {
+   "stage": "Triaging",
+   "date": "2026-09-14",
+   "source_memo": "memo.md",
+   "master": [
+    {
+     "code": "MR1",
+     "label": "Technical momentum",
+     "grade": "C",
+     "anchor": "mr1-technical-momentum-c"
+    },
+    {
+     "code": "MR2",
+     "label": "Earnings momentum",
+     "grade": "A",
+     "anchor": "mr2-sell-side-earnings-momentum-a"
+    },
+    {
+     "code": "MR3",
+     "label": "Thematic fit -- not rated on this memo's framework; see Headline Rating 3, Thematic momentum",
+     "grade": "NR",
+     "anchor": "mr3-thematic-fit-c"
+    },
+    {
+     "code": "MR4",
+     "label": "Case change elements -- not rated on this memo's framework; see Headline Rating 4, Thesis and fit",
+     "grade": "NR",
+     "anchor": "mr4-pillar-i-case-change-elements-c"
+    },
+    {
+     "code": "MR5",
+     "label": "Case building blocks -- not rated on this memo's framework; see Headline Rating 5, Foundations",
+     "grade": "NR",
+     "anchor": "mr5-pillar-ii-case-building-blocks-c"
+    },
+    {
+     "code": "MR6",
+     "label": "Investment case components -- not rated on this memo's framework; see Headline Rating 6, Valuation",
+     "grade": "NR",
+     "anchor": "mr6-pillar-iii-investment-case-components-nr"
+    }
+   ],
+   "pillars": []
   },
   "LAND-CH": {
    "stage": "Triaging",
@@ -70043,7 +70175,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -70885,7 +71017,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -71267,7 +71399,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -76406,7 +76538,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -77233,7 +77365,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -78501,7 +78633,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -85802,7 +85934,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -87398,7 +87530,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -87806,6 +87938,50 @@
      "anchor": "section-d-pillar-iii-investment-case-components"
     }
    ]
+  },
+  "SMWH-GB": {
+   "stage": "Triaging",
+   "date": "2026-09-14",
+   "source_memo": "memo.md",
+   "master": [
+    {
+     "code": "MR1",
+     "label": "Technical momentum",
+     "grade": "F",
+     "anchor": "mr1-technical-momentum-d"
+    },
+    {
+     "code": "MR2",
+     "label": "Earnings momentum",
+     "grade": "F",
+     "anchor": "mr2-sell-side-earnings-momentum-f"
+    },
+    {
+     "code": "MR3",
+     "label": "Thematic fit -- not rated on this memo's framework; see Headline Rating 3, Thematic momentum",
+     "grade": "NR",
+     "anchor": "mr3-thematic-fit-c"
+    },
+    {
+     "code": "MR4",
+     "label": "Case change elements -- not rated on this memo's framework; see Headline Rating 4, Thesis and fit",
+     "grade": "NR",
+     "anchor": "mr4-pillar-i-case-change-elements-d"
+    },
+    {
+     "code": "MR5",
+     "label": "Case building blocks -- not rated on this memo's framework; see Headline Rating 5, Foundations",
+     "grade": "NR",
+     "anchor": "mr5-pillar-ii-case-building-blocks-d"
+    },
+    {
+     "code": "MR6",
+     "label": "Investment case components -- not rated on this memo's framework; see Headline Rating 6, Valuation",
+     "grade": "NR",
+     "anchor": "mr6-pillar-iii-investment-case-components-nr"
+    }
+   ],
+   "pillars": []
   },
   "SN-GB": {
    "stage": "Triaging",
@@ -92417,7 +92593,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -93029,7 +93205,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -94679,7 +94855,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -101176,7 +101352,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
