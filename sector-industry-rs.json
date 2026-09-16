@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-14",
+ "current_week": "2026-09-15",
  "prior_week": "2026-07-17",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "C"
   },
   "D. Infrastructure": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "E. Utilities": {
@@ -44,7 +44,7 @@
    "prior": "F"
   },
   "K. Professional, business and consumer services": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "L. Media": {
@@ -126,7 +126,7 @@
    "prior": "D"
   },
   "B.7. Pharma/biotech": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "B.8. Medtech - distributors / retail": {
@@ -198,7 +198,7 @@
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -254,7 +254,7 @@
    "prior": "C"
   },
   "H.3. Retail - general/physical": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "H.4. Retail - online": {
@@ -322,7 +322,7 @@
    "prior": "F"
   },
   "K.3. Testing and inspection services": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "K.5. Advertising and consulting services": {
@@ -350,7 +350,7 @@
    "prior": "F"
   },
   "M.3. Chemicals - Specialty": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "M.4. Chemicals - Base": {
@@ -386,7 +386,7 @@
    "prior": "A"
   },
   "O.15. Distributors": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "O.2. Products - various [SPLIT]": {
