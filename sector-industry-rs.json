@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-15",
+ "current_week": "2026-09-16",
  "prior_week": "2026-07-17",
  "industry": {
   "A. Consumer staples": {
@@ -24,7 +24,7 @@
    "prior": "B"
   },
   "F. Defence": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "G. Financials": {
@@ -56,7 +56,7 @@
    "prior": "D"
   },
   "N. Real assets": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "O. Industrials and capital goods": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "D.1. Infrastructure - airports/trains": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "D.2. Infrastructure - ports": {
@@ -154,7 +154,7 @@
    "prior": "A"
   },
   "E.1. Utilities - Integrated power": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
@@ -162,7 +162,7 @@
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "F.1. Defence - Primes": {
@@ -202,7 +202,7 @@
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.6. Asset management software (B2B)": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "H.2. Retail - apparel": {
@@ -270,7 +270,7 @@
    "prior": "D"
   },
   "H.9. Leisure": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "I.1. Logistics": {
@@ -374,11 +374,11 @@
    "prior": "D"
   },
   "O.1. Industrial services": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.10. Capital goods - EV": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.13. Renewables": {
