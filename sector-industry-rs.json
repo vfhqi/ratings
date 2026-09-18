@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-16",
+ "current_week": "2026-09-17",
  "prior_week": "2026-07-17",
  "industry": {
   "A. Consumer staples": {
@@ -118,7 +118,7 @@
    "prior": "D"
   },
   "B.5. Medtech - consumables - mature": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "D.1. Infrastructure - airports/trains": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "D.2. Infrastructure - ports": {
@@ -158,7 +158,7 @@
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
@@ -198,7 +198,7 @@
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -230,7 +230,7 @@
    "prior": "F"
   },
   "H.13. Food delivery": {
-   "current": "D",
+   "current": "F",
    "prior": "B"
   },
   "H.14. Automotive - sales/rentals": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "H.2. Retail - apparel": {
@@ -282,7 +282,7 @@
    "prior": "D"
   },
   "J.2. IT services - reselling": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "J.3. Fintech/payment processing": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "M.2. Chemicals - Distributors": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "M.3. Chemicals - Specialty": {
@@ -354,7 +354,7 @@
    "prior": "D"
   },
   "M.4. Chemicals - Base": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "M.6. Basic materials and construction": {
@@ -398,7 +398,7 @@
    "prior": "A"
   },
   "O.6. Capital goods - measurement": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.7. Capital goods - factory equipment": {
