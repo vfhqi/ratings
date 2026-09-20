@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-18",
+ "generated": "2026-09-20",
  "count": 289,
  "stocks": {
   "1U1-DE": {
@@ -4479,7 +4479,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -72770,7 +72770,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -80282,7 +80282,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-d"
     },
     {

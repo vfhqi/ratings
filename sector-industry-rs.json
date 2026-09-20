@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-17",
+ "current_week": "2026-09-18",
  "prior_week": "2026-07-17",
  "industry": {
   "A. Consumer staples": {
@@ -12,7 +12,7 @@
    "prior": "D"
   },
   "C. Telecoms": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "D. Infrastructure": {
@@ -44,7 +44,7 @@
    "prior": "F"
   },
   "K. Professional, business and consumer services": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "L. Media": {
@@ -74,7 +74,7 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "A.3. Automotive repair": {
@@ -118,7 +118,7 @@
    "prior": "D"
   },
   "B.5. Medtech - consumables - mature": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "D.1. Infrastructure - airports/trains": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "D.2. Infrastructure - ports": {
@@ -198,7 +198,7 @@
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -230,11 +230,11 @@
    "prior": "F"
   },
   "H.13. Food delivery": {
-   "current": "F",
+   "current": "D",
    "prior": "B"
   },
   "H.14. Automotive - sales/rentals": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "H.15. Automotive - OEM or supplier": {
@@ -366,7 +366,7 @@
    "prior": "F"
   },
   "M.8. Chemicals - Gases": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -378,7 +378,7 @@
    "prior": "C"
   },
   "O.10. Capital goods - EV": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "O.13. Renewables": {
@@ -390,7 +390,7 @@
    "prior": "C"
   },
   "O.2. Products - various [SPLIT]": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "O.4. Capital goods - grid": {
@@ -426,7 +426,7 @@
    "prior": "A"
   },
   "P.4. Agriculture": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "P.5. Precious metals mining": {
