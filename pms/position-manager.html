@@ -1463,7 +1463,9 @@ function ensureTrancheId(t, invIdx, slotType) {
   if (t.tranche_id) return t.tranche_id;
   var inv = (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.investments) ? CONFIG.investments[invIdx] : null;
   var ticker = (typeof effectiveTicker === 'function') ? (effectiveTicker(inv, invIdx) || '') : '';
-  t.tranche_id = 't-' + trancheIdSeed([ticker, slotType, t.entry_date || '', t.target_size_pct == null ? '' : String(t.target_size_pct), t.promoted_at || ''].join('|'))
+  // the slot index is part of the seed (21-Sep-2026 re-check) so two slots holding the same ticker with a tranche of the
+  // same type, entry date and size cannot share an id; the id still travels with the tranche once assigned
+  t.tranche_id = 't-' + trancheIdSeed([String(invIdx), ticker, slotType, t.entry_date || '', t.target_size_pct == null ? '' : String(t.target_size_pct), t.promoted_at || ''].join('|'))
                  + '-' + (t.entry_date || 'nodate');
   return t.tranche_id;
 }
@@ -2286,7 +2288,7 @@ function performMove(invIdx, fromSlot, toSlot, newStopMa) {
   if (newStopMa) {
     // Promotion: PB → MM
     movingEdit.promoted_from = fromSlot;
-    movingEdit.promoted_at = new Date().toISOString().slice(0, 10);
+    movingEdit.promoted_at = todayISO();   // the LOCAL date, the same clock the recorder stamps with (21-Sep-2026 re-check: the UTC date differed from it between midnight and 01:00 UK in summer, mislabelling a promotion as an edit)
     movingEdit.stop_ma = newStopMa;
   } else {
     // D-PMS-67: non-promotion move (reorder/swap). Strip stale promotion metadata if the destination
