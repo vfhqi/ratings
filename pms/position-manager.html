@@ -1101,13 +1101,15 @@ async function mergeDiskStateIntoMemory() {
         if (isTranche) resurrected.push('slot ' + (parseInt(invIdx, 10) + 1) + ' ' + slotType);
         merged[invIdx][slotType] = memEdit;
       } else {
-        // Compare timestamps if both have them
-        var memTs = memEdit._added_at || memEdit.promoted_at || '';
-        var diskTs = diskEdit._added_at || diskEdit.promoted_at || '';
-        if (memTs > diskTs) merged[invIdx][slotType] = memEdit;
+        // Both present: the copy edited more recently wins (MERGE-RECENCY-2026-09-21: the exact edit instant, else the
+        // edit day, else the creation or promotion stamp; before this only the creation/promotion stamps were compared,
+        // so a stop change made in this browser lost to an older disk copy of the same tranche). A tie keeps the disk copy.
+        if (editRecency(memEdit) > editRecency(diskEdit)) merged[invIdx][slotType] = memEdit;
       }
     });
   });
+  var duplicates = dedupeTrancheIds(merged);   // one tranche in two slots after the merge is the same capital twice
+  if (duplicates.length) flashError('Merge dropped ' + duplicates.length + ' duplicate copy(ies) of a tranche held in two slots. Check the console.');
   EDITS = merged;
   lastSavedAt = (diskMeta && diskMeta.saved_at) || lastSavedAt;  // D-PMS-193
   lastAutoBackupDate = diskMeta && diskMeta.last_auto_backup_date;
@@ -1491,7 +1493,9 @@ function applyStopHistoryBackfill() {
       var t = EDITS[slot][tt];
       if (!t || (Array.isArray(t.stop_history) && t.stop_history.length)) return;
       var fp = (MIGRATION_STOP_HISTORY_ENTRY_DATES[slot] || {})[tt];
-      if (fp && t.entry_date && fp !== t.entry_date) { refused.push('slot ' + slot + ' ' + tt + ' (entry ' + t.entry_date + ', history was for ' + fp + ')'); return; }
+      // both entry dates must be present AND equal (21-Sep-2026 re-check: a tranche with no entry date, or a history with
+      // no recorded entry date, used to slip through the guard and inherit another tranche's past)
+      if (!fp || !t.entry_date || fp !== t.entry_date) { refused.push('slot ' + slot + ' ' + tt + ' (entry ' + (t.entry_date || 'unknown') + ', history was for ' + (fp || 'unknown') + ')'); return; }
       t.stop_history = JSON.parse(JSON.stringify(MIGRATION_STOP_HISTORY[slot][tt]));
       filled++;
     });
@@ -1515,13 +1519,85 @@ function recordStopChange(t, slotType, today, prevEdited) {
   var id = t.tranche_id; if (!id) return false;
   var before = (id in EDIT_STOP) ? EDIT_STOP[id] : undefined;
   var now = resolvedStopMa(t, slotType);
-  if (before === undefined || before === now) return false;   // no baseline, or the stop IN FORCE did not change
-  if (!Array.isArray(t.stop_history) || !t.stop_history.length) {
+  if (before === undefined) return false;   // no baseline: nothing can be said about a change
+  var last = (Array.isArray(t.stop_history) && t.stop_history.length) ? t.stop_history[t.stop_history.length - 1] : null;
+  // today's promotion is recorded ONCE as 'promotion'; a later edit the same day is an 'edit' (21-Sep-2026 re-check)
+  var promotedNow = (t.promoted_at === today) && !(last && last.via === 'promotion' && last.set_on === today);
+  if (before === now && !promotedNow) return false;   // the stop IN FORCE did not change
+  if (!last) {
     t.stop_history = [{ stop_ma: before, set_on: null, exact: false, via: 'inherited', explicit: false,
       note: 'in force before this history began; set on or before ' + (prevEdited || 'an unknown date') }];
   }
-  t.stop_history.push({ stop_ma: now, set_on: today, exact: true, explicit: !!t.stop_ma,
-    via: (t.promoted_at === today ? 'promotion' : 'edit'), previous: before });
+  var entry = { stop_ma: now, set_on: today, exact: true, explicit: !!t.stop_ma, via: (promotedNow ? 'promotion' : 'edit'), previous: before };
+  // a promotion is a reset of the stop count in its own right (D-PMS-V2-8), so it is recorded even when the stop in
+  // force is unchanged (21-Sep-2026 re-check: before, such a promotion left no entry and the engine never saw the reset)
+  if (promotedNow && before === now) entry.note = 'promoted; the stop in force did not change';
+  t.stop_history.push(entry);
+  return true;
+}
+// RECONCILE-2026-09-21: a history whose last entry is not the stop in force means a change went unrecorded (a page older
+// than the recorder, a hand edit of the state file, or the 18-to-20-Sep recorder defects). At load the gap is closed
+// with a 'reconciled' entry dated to the last edit stamp as an upper bound, never silently and never by rewriting
+// what was recorded. The engine and the twin treat it as a dated stop change (a reset), so the note can say so.
+function reconcileStopHistories() {
+  var fixed = [];
+  forEachTranche(function(t, slot, tt) {
+    if (!Array.isArray(t.stop_history) || !t.stop_history.length) return;
+    var last = t.stop_history[t.stop_history.length - 1];
+    var now = resolvedStopMa(t, tt);
+    if (!last || !now || last.stop_ma === now) return;
+    var when = t.last_edited ? String(t.last_edited).slice(0, 10) : todayISO();
+    if (last.set_on && when < last.set_on) when = last.set_on;   // never dated before the entry it follows
+    t.stop_history.push({ stop_ma: now, set_on: when, exact: false, via: 'reconciled', previous: last.stop_ma, explicit: !!t.stop_ma,
+      note: 'the stop in force (' + now + ') did not match the last recorded entry (' + last.stop_ma + ') when the page loaded on '
+            + todayISO() + '; dated to the last edit stamp as an upper bound' });
+    fixed.push('slot ' + slot + ' ' + tt + ' (' + last.stop_ma + ' recorded, ' + now + ' in force, dated ' + when + ')');
+  });
+  if (fixed.length) console.warn('[pms] stop history RECONCILED on ' + fixed.length + ' tranche(s): ' + fixed.join('; ') + '. Persists on the next save.');
+  return fixed.length;
+}
+// MERGE-RECENCY-2026-09-21: the newest instant known for a copy of a tranche: the exact edit instant, else the edit day,
+// else its creation or promotion stamp. A day-only stamp sorts before an exact instant on the same day, so the copy that
+// knows when it was edited wins a same-day tie; different days compare as days.
+function editRecency(e) {
+  if (!e || typeof e !== 'object') return '';
+  return String(e.last_edited_at || e.last_edited || e._added_at || e.promoted_at || '');
+}
+// TRANCHE-DEDUPE-2026-09-21: after a merge one tranche can sit in two slots (promoted in this browser while the disk
+// file still held it in the old slot, or the reverse). The same identity twice is the same capital counted twice.
+// Two copies are the same tranche only when they share the identity AND the entry date AND the size; the newer copy
+// (editRecency; on a tie the promoted one) is kept, the other dropped, and each drop is reported.
+function dedupeTrancheIds(edits) {
+  var seen = {}, dropped = [];
+  Object.keys(edits || {}).forEach(function(slot) {
+    var se = edits[slot]; if (!se || typeof se !== 'object') return;
+    TRADE_TYPES.forEach(function(tt) {
+      var t = se[tt]; if (!t || typeof t !== 'object' || !t.tranche_id) return;
+      var prev = seen[t.tranche_id];
+      if (!prev) { seen[t.tranche_id] = { slot: slot, tt: tt, t: t }; return; }
+      if (prev.t.entry_date !== t.entry_date || String(prev.t.target_size_pct) !== String(t.target_size_pct)) return;   // same id, different facts: not touched
+      var a = editRecency(t), b = editRecency(prev.t);
+      var keepThis = a > b || (a === b && !!t.promoted_at && !prev.t.promoted_at);
+      if (keepThis) {
+        delete edits[prev.slot][prev.tt];
+        dropped.push('slot ' + prev.slot + ' ' + prev.tt + ' (older copy of the tranche now in ' + tt + ')');
+        seen[t.tranche_id] = { slot: slot, tt: tt, t: t };
+      } else {
+        delete se[tt];
+        dropped.push('slot ' + slot + ' ' + tt + ' (older copy of the tranche in ' + prev.tt + ')');
+      }
+    });
+    if (edits[slot] && !Object.keys(edits[slot]).length) delete edits[slot];
+  });
+  if (dropped.length) console.warn('[pms] MERGE dropped ' + dropped.length + ' duplicate copy(ies) of a tranche held in two slots: ' + dropped.join('; '));
+  return dropped;
+}
+// an existing tranche the baseline did not hold (unknown baseline) gets no invented change: an 'inherited' first entry
+// when it has no history, dated unknown, so the next real change is recorded against it
+function seedUnknownBaseline(t, slotType, prevEdited, today) {
+  if (Array.isArray(t.stop_history) && t.stop_history.length) return false;
+  t.stop_history = [{ stop_ma: resolvedStopMa(t, slotType), set_on: null, exact: false, via: 'inherited', explicit: !!t.stop_ma,
+    note: 'in force when this page first saw the tranche on ' + today + '; set on or before ' + (prevEdited || 'an unknown date') }];
   return true;
 }
 var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at'];
@@ -1538,6 +1614,7 @@ function snapshotEditFingerprints() {
 // Seed the baseline from freshly-loaded state so the first save after a page load does
 // not stamp every tranche as "edited today".
 function seedEditFingerprints() {
+  reconcileStopHistories();   // close any gap between the recorded history and the stop in force BEFORE the baseline is taken
   EDIT_FP = snapshotEditFingerprints();
   EDIT_STOP = snapshotEditStops();
   EDIT_FP_SEEDED = true;
@@ -1561,8 +1638,12 @@ function stampChangedTranches() {
     // precision claim.
     t.last_edited_at = new Date().toISOString();
     var id = ensureTrancheId(t, p[0], p[1]);
-    if (!(id in EDIT_STOP)) seedStopHistoryOnCreation(t, p[1], today);   // never seen before: born with a history
-    else recordStopChange(t, p[1], today, prevEdited);                    // a tranche this page knows, in any slot
+    if (!(id in EDIT_STOP)) {
+      // not in the baseline: NEW when it has no edit stamp and no history (born with an 'entry' entry); otherwise an
+      // existing tranche the baseline did not hold, which gets no invented change (21-Sep-2026 re-check)
+      if (!prevEdited && !(Array.isArray(t.stop_history) && t.stop_history.length)) seedStopHistoryOnCreation(t, p[1], today);
+      else seedUnknownBaseline(t, p[1], prevEdited, today);
+    } else recordStopChange(t, p[1], today, prevEdited);                  // a tranche this page knows, in any slot
   });
   EDIT_FP = now;
   EDIT_STOP = snapshotEditStops();
