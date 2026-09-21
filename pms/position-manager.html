@@ -1467,7 +1467,7 @@ function ensureTrancheId(t, invIdx, slotType) {
                  + '-' + (t.entry_date || 'nodate');
   return t.tranche_id;
 }
-function resolvedStopMa(t, slotType) { return (t && t.stop_ma) ? t.stop_ma : (DEFAULT_STOP_MA[slotType] || null); }
+function resolvedStopMa(t, slotType) { return (t && t.stop_ma) ? t.stop_ma : (DEFAULT_STOP_MA[slotType] || null); }   // values are the fixed '20D'..'200D' strings of the stop selector, so plain equality is the right comparison
 function forEachTranche(fn) {
   Object.keys(EDITS || {}).forEach(function(slot) {
     var se = EDITS[slot]; if (!se || typeof se !== 'object') return;
