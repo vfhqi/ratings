@@ -542,7 +542,7 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
       <button class="btn pf-overlay-btn active" data-overlay="risk">Risk zones</button>
       <button class="btn pf-overlay-btn active" data-overlay="promo">Promotions</button>
       <button class="btn pf-overlay-btn" data-overlay="breach" title="Tier 2: red gradient on recent bars when stop breached">Breach</button>
-      <button class="btn pf-overlay-btn" data-overlay="grace" title="Tier 2: count of slices with a confirmed exit">Stop state</button>
+      <button class="btn pf-overlay-btn" data-overlay="grace" title="Count of tranches with a confirmed exit (the stop-state overlay)">Stop state</button>
       <button class="btn pf-overlay-btn" data-overlay="stopMaBold" title="Tier 2: bold the MA(s) used as active tranche stops">Stop MA bold</button>
       <button class="btn pf-overlay-btn" data-overlay="filterBadges" title="Tier 3: PB / MM99 / UTR badges in top-left">MD filters</button>
       <button class="btn pf-overlay-btn" data-overlay="thematic" title="Tier 3: composite thematic score badge top-right">Thematic</button>
@@ -1438,7 +1438,7 @@ var EDIT_FP_SEEDED = false;
 // TRANCHE-IDENTITY-2026-09-21-MARKER. THE STOP-CHANGE RECORDER, rebuilt in the fix pass of 21-Sep-2026 after the
 // re-assessment of 20-Sep found five defects in the 18-Sep version (a promotion into an empty slot recorded nothing;
 // entering the default stop explicitly recorded a change; a swap recorded changes on both tranches; the reconstructed
-// history was keyed by slot; a new tranche was never seeded). Tested by scripts/pms_recorder_page_test.js against
+// history was indexed by slot; a new tranche was never seeded). Tested by scripts/pms_recorder_page_test.js against
 // the page's own functions. Richard, 21-Sep-2026 (D-PMS-V2-8): a stop change after a confirmed exit stays a ruling
 // that restarts the count; no reason is asked for ("no. Just execute.").
 //
@@ -2473,7 +2473,7 @@ async function runOneTimeMigration() {
       // FLTR-GB and all — and the migration can never run again to clean it.
       // So the key records how many slots it saw, and a run that saw none does not count.
       // Safe to re-run: every step is idempotent (deletions are fingerprint-guarded, the
-      // backfill only fills a missing stamp, flag removal and the re-key are no-ops second time).
+      // backfill only fills a missing stamp, flag removal and the re-pointing of the slot to FLUT-US are no-ops second time).
       if (!(applied.indexOf('slots=0') >= 0 && slotCount > 0)) return;
       console.log('[migration] previous run saw an empty book; re-running now that '
                   + slotCount + ' slot(s) are present');
@@ -2552,7 +2552,7 @@ async function runOneTimeMigration() {
   Object.keys(EDITS || {}).forEach(function(slot) {
     if (EDITS[slot] && EDITS[slot]._ticker_override === 'FLTR-GB') {
       EDITS[slot]._ticker_override = 'FLUT-US';
-      log.push('slot ' + (parseInt(slot, 10) + 1) + ': FLTR-GB re-keyed to FLUT-US (live NYSE series)');
+      log.push('slot ' + (parseInt(slot, 10) + 1) + ': FLTR-GB re-pointed to FLUT-US (live NYSE series)');
     }
   });
 
@@ -2578,7 +2578,7 @@ async function runOneTimeMigration() {
   if (diskWriteEnabled) { await writeStateToDisk(); }
   // Charts were requested at DOMContentLoaded, BEFORE this ran, so the Flutter slot asked
   // for the dead FLTR-GB series. Re-run the loader now that tickers have changed, or the
-  // re-keyed slot renders as an empty placeholder with no price, no rows and no total.
+  // re-pointed slot renders as an empty placeholder with no price, no rows and no total.
   // (Caught by QC: FLUT-US was the one holding still missing its totals row.)
   initializeChartData();
 
@@ -3476,7 +3476,7 @@ function renderStickyHeaderTable() {
 //
 // DISPLAY ONLY. This returns a render ORDER (an array of invIdx), and nothing else in the
 // file changes. That is deliberate and it is the safety property that matters: EDITS is
-// keyed by slot index, so physically reordering CONFIG.investments would silently re-point
+// indexed by slot index, so physically reordering CONFIG.investments would silently re-point
 // every tranche onto the wrong stock. Every handler (drag, promote, clear, edit) keeps
 // receiving its true invIdx, so behaviour is identical whatever the sort.
 //
@@ -3583,7 +3583,7 @@ function renderTable() {
   var tbl = document.getElementById('posTable');
   if (!CONFIG || !CONFIG.investments) { tbl.innerHTML = ''; return; }
   var html = buildColgroup() + buildHeaderRow() + '<tbody>';
-  var order = sortedInvestmentOrder();  // D-PMS-192: display-only ordering, never re-keys EDITS
+  var order = sortedInvestmentOrder();  // D-PMS-192: display-only ordering, never re-indexes EDITS
   order.forEach(function(invIdx, renderPos) {
     var inv = CONFIG.investments[invIdx];
     // D-PMS-198 (07-Aug-26): an EXPLICITLY EMPTIED slot must render as empty here too.
@@ -4092,7 +4092,7 @@ function pctBp(v) {
 function esc(s) { var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
 function breachBadge(r) {
   if (!r.breach) return '<span class="badge b-active">no</span>';
-  if (r.breach.grace_breach) return '<span class="badge b-bad" title="Exit confirmed on day ' + r.breach.grace_breach.day + ' of the five-day window (hit ' + esc(fmtDate(r.breach.grace_breach.hit_date)) + '): ' + esc(r.breach.grace_breach.reason_text || '') + '. Not yet sold' + (r.breach.back_above ? '; price since back above the stop' : '') + (r.breach.restarts && r.breach.restarts.length ? '. Walk restarted at a stop change on ' + esc(fmtDate(r.breach.restarts[r.breach.restarts.length - 1].on)) : '') + (r.breach.legacy && r.breach.legacy.state !== 'exit_confirmed' ? '. The three-close rule of 11-Sep would read: ' + r.breach.legacy.state : '') + '">EXIT CONFIRMED ' + esc(fmtDate(r.breach.grace_breach.breach_date)) + '</span>';
+  if (r.breach.grace_breach) return '<span class="badge b-bad" title="Exit confirmed on day ' + r.breach.grace_breach.day + ' of the five-day window (hit ' + esc(fmtDate(r.breach.grace_breach.hit_date)) + '): ' + esc(r.breach.grace_breach.reason_text || '') + '. Not yet sold' + (r.breach.back_above ? '; price since back above the stop' : '') + (r.breach.restarts && r.breach.restarts.length ? '. The day-by-day count restarted at a stop change or promotion on ' + esc(fmtDate(r.breach.restarts[r.breach.restarts.length - 1].on)) : '') + (r.breach.legacy && r.breach.legacy.state !== 'exit_confirmed' ? '. The three-close rule of 11-Sep would read: ' + r.breach.legacy.state : '') + '">EXIT CONFIRMED ' + esc(fmtDate(r.breach.grace_breach.breach_date)) + '</span>';
   if (r.breach.triggered) return '<span class="badge b-warn" title="Triggered: closed at or below the stop ' + r.breach.triggered.day + ' day(s) running inside the five-day window; lower closes in a row: ' + r.breach.triggered.lower_close_streak + '; weak closes in a row: ' + r.breach.triggered.weak_close_streak + (r.breach.data_gaps_in_run ? '. ' + r.breach.data_gaps_in_run + ' chart bar(s) missing in or just before the window: the evening engine fills them from the price cache, so its day count and verdict are the ones that count' : '') + (r.breach.legacy && r.breach.legacy.state === 'exit_confirmed' ? '. The three-close rule of 11-Sep would already read EXIT CONFIRMED ' + esc(fmtDate(r.breach.legacy.confirmed_date)) : '') + '">TRIGGERED ' + r.breach.triggered.day + '/' + STOP_WINDOW_DAYS + ' (' + esc(fmtDate(r.breach.triggered.hit_date)) + ')</span>';
   if (r.breach.raw_breach) return '<span class="badge b-active" title="Hit the stop on this date, recovered inside the window without any confirmation event">hit ' + esc(fmtDate(r.breach.raw_breach.breach_date)) + ', recovered</span>';
   return '<span class="badge b-active">no</span>';
