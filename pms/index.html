@@ -567,7 +567,7 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
     <div class="help-banner">
       <b>How to use:</b> 20 investment slots × 6 tranche rows (PB1, PB2, Core MM 1–4). Type <b>%AUM</b> as <kbd>3</kbd> for 3%. Pick a date + stop MA. <b>MA→stop buffer</b> defaults to 2% (= stop is MA × 0.98) and is editable per tranche. Derived columns auto-fill. <b>Drag</b> the ⋮⋮ handle to move tranches between slots — drop a PB onto an MM to promote. Cross-investment drag blocked.
       <br><b>Slot caps:</b> PB1/2 = 2.5%, MM1 = 4%, MM2 = 3%, MM3 = 2%, MM4 = 1%. <b>PB stops</b>: 5D/10D/20D/50D. <b>MM stops</b>: any of 5 MAs.
-      <b>The five-day stop rule (18-Sep-2026):</b> a stop is <b>hit</b> on the first close at or below it (day 1 of a five-day window) and stays <b>triggered</b> while the price keeps closing there. The <b>exit is confirmed</b> on the first close where any of these holds: <b>A</b> heavy selling (more than 5% below the stop, close in the bottom half of the day's range, volume above 1.25x the 50-day average); <b>B</b> three consecutive lower closes; <b>C</b> three consecutive closes in the bottom half of the range; <b>D</b> the fifth close at or below; or, from day 2, the <b>window closes</b> (a close more than 5% below the stop, or the average volume of the days after the hit at 0.80x the 50-day average or more). Sell the next trading day. A close back above resets the window. Once a slice has closed 20% up, its entry price is a floor and the higher level binds. The three-close verdict of 11-Sep is shown beside it for a fortnight as a comparison.
+      <b>The five-day stop rule (Richard, 18-Sep-2026, amended 21-Sep-2026):</b> a stop is <b>hit</b> on the first close at or below it (day 1 of a five-day window) and stays <b>triggered</b> while the price keeps closing there. The <b>exit is confirmed</b> on the first close where any of these holds: the <b>window closes</b> (a close more than 5% below the stop on any day, the hit day included; or, from day 2, the average volume of the days after the hit at 0.75x the 50-day average or more, the hit day's own volume never counted); <b>B</b> three consecutive lower closes; <b>C</b> three consecutive closes in the bottom half of the range; <b>D</b> the fifth close at or below. On a known mechanical-volume day (a quarterly expiry Friday, an index rebalance day) the volume test is not measured; every other test still runs. Sell the next trading day. A close back above resets the window. Once a tranche has closed 20% up, its entry price is a floor and the higher level binds. A dated change of a tranche's stop after a confirmation is your ruling on it: the confirmation is cleared and the count restarts on the change date. The three-close verdict of 11-Sep is shown beside it for a fortnight as a comparison.
       <br><b>Row colours by MA for stop-loss:</b> orange=20D, blue=50D, teal=100D, magenta=150D, slate=200D. Breach states override.
       <b>Empty slots</b> can have a ticker typed in. <b>New MM tranches</b> warn if no PB exists for that investment (override permitted for backfill). <b>Connect to disk</b> for auto-save (auto-reconnects on reload).
     </div>
@@ -650,16 +650,26 @@ var DEFAULT_STOP_MA = {PB1:'50D', PB2:'50D', MM1:'100D', MM2:'100D', MM3:'100D',
 // THE FIVE-DAY STOP RULE (Richard, 18-Sep-2026; version 2 of the one stop rule). The constants mirror
 // scripts/stop_rule.py exactly; change one, change both, re-run both tests (scripts/stop_rule_cases.json).
 var STOP_WINDOW_DAYS = 5;            // (D) the fifth consecutive close at or below confirms
-var STOP_BAND_PCT = 0.05;            // (i) closes must stay within 5% of the stop, judged from day 2
-var STOP_LIGHT_VOLUME_MAX = 0.80;    // (ii) "approximately 75%": average days-after volume vs the 50-day average
-var STOP_DEEP_PCT = 0.05;            // (A) more than 5% below the stop
-var STOP_HEAVY_VOLUME_MIN = 1.25;    // (A) volume above 1.25x the 50-day average
-var STOP_WEAK_CLOSE_MAX_PCT = 50;    // (A), (C) close in the bottom half of the day's range
+var STOP_BAND_PCT = 0.05;            // (i) closes must stay within 5% of the stop, from day 1 (Richard, 21-Sep-2026, Q4 = A)
+var STOP_LIGHT_VOLUME_MAX = 0.75;    // (ii) "approximately 75%", as written (Richard, 21-Sep-2026): average days-after volume vs the 50-day average
+var STOP_WEAK_CLOSE_MAX_PCT = 50;    // (C) close in the bottom half of the day's range
 var STOP_LOWER_CLOSES = 3;           // (B)
 var STOP_WEAK_CLOSES = 3;            // (C)
 var STOP_VOL_AVG_DAYS = 50;
 var STOP_LEGACY_CONFIRM_CLOSES = 3;  // version 1 (11-Sep-2026), computed beside the verdict as a comparison read only
 var STOP_FLOOR_TRIGGER = 0.20;
+// MECHANICAL-VOLUME-DAYS-BEGIN (written by scripts/pms_mechanical_volume_days.py; do not edit by hand)
+var STOP_MECHANICAL_VOLUME_DAYS = {"dates":["2025-03-21","2025-06-20","2025-09-19","2025-11-24","2025-12-19","2026-02-27","2026-03-20","2026-05-29","2026-06-19","2026-08-31","2026-09-18","2026-11-30","2026-12-18","2026-12-30","2027-03-19","2027-06-18","2027-09-17","2027-12-17"],"by_ticker":{}};
+// MECHANICAL-VOLUME-DAYS-END
+// Known mechanical-volume days (Richard, 21-Sep-2026, D-PMS-V2-5): the volume test is not measured on a quarterly expiry
+// Friday, an index rebalance day or a day of an index change on the stock; every other test still runs. The same file
+// feeds the evening engine (pms-data/mechanical-volume-days.json) so both judge the same days.
+function stopMechanicalDaysFor(ticker) {
+  var out = {}, cal = STOP_MECHANICAL_VOLUME_DAYS || {}, k;
+  (cal.dates || []).forEach(function (d) { out[d] = true; });
+  ((cal.by_ticker || {})[ticker] || []).forEach(function (d) { out[d] = true; });
+  return out;
+}
 var BACKUP_RETENTION_DAYS = 30;
 
 // Column widths (must match between sticky header and main table for alignment)
@@ -1423,65 +1433,106 @@ function todayISO() {
 // The fingerprint excludes the stamp keys themselves, so stamping cannot re-trigger.
 var EDIT_FP = {};
 var EDIT_FP_SEEDED = false;
-// STOP-HISTORY-2026-09-18: every change of a tranche's stop average is recorded in its own
-// `stop_history` list ({stop_ma, set_on, exact, via, previous}), stamped centrally here beside
-// last_edited, so no mutation path can miss it. Richard, 18-Sep-2026: the stop rule must be able to
-// judge a past day against the stop in force THAT day, not today's. A tranche edited for the first
-// time after this change gets a first entry for the stop it carried before, dated unknown (exact
-// false), so the list never pretends to know when an inherited stop was set.
-var EDIT_STOP = {};
-// The stop-change history reconstructed from 54 snapshots (08-May-26 to 16-Sep-26) by
-// scripts/pms_backfill_stop_history.py, applied ONLY to a tranche that has no stop_history of its own and
-// never overwriting a recorded entry. Dates are upper bounds (exact=false) except promotion stamps.
+// TRANCHE-IDENTITY-2026-09-21-MARKER. THE STOP-CHANGE RECORDER, rebuilt in the fix pass of 21-Sep-2026 after the
+// re-assessment of 20-Sep found five defects in the 18-Sep version (a promotion into an empty slot recorded nothing;
+// entering the default stop explicitly recorded a change; a swap recorded changes on both tranches; the reconstructed
+// history was keyed by slot; a new tranche was never seeded). Tested by scripts/pms_recorder_page_test.js against
+// the page's own functions. Richard, 21-Sep-2026 (D-PMS-V2-8): a stop change after a confirmed exit stays a ruling
+// that restarts the count; no reason is asked for ("no. Just execute.").
+//
+// IDENTITY. Every tranche carries `tranche_id`, an identity that travels with it when it moves slot (promotion,
+// swap), so the recorder compares a tranche with ITSELF, never with whatever occupied its slot before. It is assigned
+// once, deterministically, from the facts of the tranche the first time this page sees it (ticker, slot type, entry
+// date, size, promotion stamp), so the browser copy and the disk copy of the same tranche derive the same id
+// independently and the newer-wins merge never meets two ids for one tranche. Once stored, the id is the identity.
+//
+// RESOLVED VALUES. The recorder compares the stop IN FORCE (the explicit average, or the slot type's default when
+// none is set), so choosing the default explicitly is not a change, reverting to the default is recorded as the
+// default's name (never null), and a promotion is recorded as the change from the probing-bet stop in force to the
+// new main-tranche stop. Each entry: {stop_ma, set_on, exact, via: entry|edit|promotion|inherited|reconstructed,
+// previous, explicit}. A tranche created from now on is born with an 'entry' entry dated its entry date. A tranche
+// that pre-dates this code gets the reconstructed history (below) when its entry date matches, otherwise an
+// 'inherited' entry the first time its stop changes, dated unknown, never pretending to know when it was set.
+function trancheIdSeed(str) {
+  var h = 5381;
+  for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+  return ('00000000' + h.toString(16)).slice(-8);
+}
+function ensureTrancheId(t, invIdx, slotType) {
+  if (!t || typeof t !== 'object') return null;
+  if (t.tranche_id) return t.tranche_id;
+  var inv = (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.investments) ? CONFIG.investments[invIdx] : null;
+  var ticker = (typeof effectiveTicker === 'function') ? (effectiveTicker(inv, invIdx) || '') : '';
+  // the slot index is part of the seed (21-Sep-2026 re-check) so two slots holding the same ticker with a tranche of the
+  // same type, entry date and size cannot share an id; the id still travels with the tranche once assigned
+  t.tranche_id = 't-' + trancheIdSeed([String(invIdx), ticker, slotType, t.entry_date || '', t.target_size_pct == null ? '' : String(t.target_size_pct), t.promoted_at || ''].join('|'))
+                 + '-' + (t.entry_date || 'nodate');
+  return t.tranche_id;
+}
+function resolvedStopMa(t, slotType) { return (t && t.stop_ma) ? t.stop_ma : (DEFAULT_STOP_MA[slotType] || null); }   // values are the fixed '20D'..'200D' strings of the stop selector, so plain equality is the right comparison
+function forEachTranche(fn) {
+  Object.keys(EDITS || {}).forEach(function(slot) {
+    var se = EDITS[slot]; if (!se || typeof se !== 'object') return;
+    TRADE_TYPES.forEach(function(tt) { if (se[tt] && typeof se[tt] === 'object') fn(se[tt], slot, tt); });
+  });
+}
+var EDIT_STOP = {};   // tranche_id -> the RESOLVED stop average at the last baseline
 var MIGRATION_STOP_HISTORY = {"0":{"MM1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-06-30"},{"stop_ma":"150D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]},"1":{"MM1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-07-03"},{"stop_ma":"200D","set_on":"2026-09-10","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]},"2":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-19"}],"MM1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-06-30"},{"stop_ma":"150D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}],"MM2":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-07"},{"stop_ma":"50D","set_on":"2026-08-12","exact":false,"via":"reconstructed","previous":"20D","explicit":true,"note":"changed between the snapshots of 2026-08-12 and 2026-08-12"},{"stop_ma":"150D","set_on":"2026-08-14","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]},"3":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-22"}],"PB2":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}]},"5":{"PB1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-06-18"},{"stop_ma":"50D","set_on":"2026-08-04","exact":false,"via":"reconstructed","previous":"20D","explicit":true,"note":"changed between the snapshots of 2026-08-04 and 2026-08-04"}]},"6":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-19"}],"MM1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-06-30"},{"stop_ma":"200D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB2; date from the promotion stamp"},{"stop_ma":"150D","set_on":"2026-08-04","exact":false,"via":"reconstructed","previous":"200D","explicit":true,"note":"changed between the snapshots of 2026-08-04 and 2026-08-04"}],"MM2":[{"stop_ma":"200D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}]},"8":{"MM1":[{"stop_ma":"200D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}],"MM2":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-06-30"},{"stop_ma":"200D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB2; date from the promotion stamp"}]},"9":{"PB1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-05"}],"MM1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-22"},{"stop_ma":"150D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]},"10":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-14"}],"MM1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-15"},{"stop_ma":"150D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB2; date from the promotion stamp"}],"MM2":[{"stop_ma":"150D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}]},"11":{"PB1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-19"}]},"13":{"PB1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-07"},{"stop_ma":"50D","set_on":"2026-08-12","exact":false,"via":"reconstructed","previous":"20D","explicit":true,"note":"changed between the snapshots of 2026-08-12 and 2026-08-12"}],"PB2":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-12"}],"MM1":[{"stop_ma":"100D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}],"MM2":[{"stop_ma":"150D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-04"}]},"14":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-06-15"}],"MM1":[{"stop_ma":"100D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-22"}],"MM2":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-15"},{"stop_ma":"100D","set_on":"2026-07-17","exact":true,"via":"promotion","previous":"50D","explicit":true,"note":"promoted from PB2; date from the promotion stamp"}]},"15":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-11"}]},"16":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-03"}],"PB2":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-07-15"}]},"17":{"MM1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-07-03"},{"stop_ma":"100D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"},{"stop_ma":"150D","set_on":"2026-08-14","exact":false,"via":"reconstructed","previous":"100D","explicit":true,"note":"changed between the snapshots of 2026-08-12 and 2026-08-14"}],"MM2":[{"stop_ma":"100D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-07"},{"stop_ma":"150D","set_on":"2026-08-14","exact":false,"via":"reconstructed","previous":"100D","explicit":true,"note":"changed between the snapshots of 2026-08-12 and 2026-08-14"}],"MM3":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-08-07"},{"stop_ma":"150D","set_on":"2026-08-14","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]},"19":{"PB1":[{"stop_ma":"50D","set_on":null,"exact":false,"via":"inherited","explicit":false,"note":"in force since before the record began; first seen in the snapshot of 2026-08-19"}],"MM1":[{"stop_ma":"20D","set_on":null,"exact":false,"via":"inherited","explicit":true,"note":"in force since before the record began; first seen in the snapshot of 2026-07-03"},{"stop_ma":"200D","set_on":"2026-08-04","exact":true,"via":"promotion","previous":"20D","explicit":true,"note":"promoted from PB1; date from the promotion stamp"}]}};
+var MIGRATION_STOP_HISTORY_ENTRY_DATES = {"0":{"MM1":"2026-06-22"},"1":{"MM1":"2026-06-26"},"2":{"PB1":"2026-08-19","MM1":"2026-06-22","MM2":"2026-08-07"},"3":{"PB1":"2026-07-22","PB2":"2026-08-04"},"5":{"PB1":"2026-06-08"},"6":{"PB1":"2026-08-19","MM1":"2026-06-30","MM2":"2026-06-22"},"8":{"MM1":"2026-06-22","MM2":"2026-06-30"},"9":{"PB1":"2026-08-05","MM1":"2026-07-10"},"10":{"PB1":"2026-08-11","MM1":"2026-07-06","MM2":"2026-06-22"},"11":{"PB1":"2026-08-19"},"13":{"PB1":"2026-08-07","PB2":"2026-08-12","MM1":"2026-06-30","MM2":"2026-07-22"},"14":{"PB1":"2026-06-08","MM1":"2026-07-17","MM2":"2026-07-06"},"15":{"PB1":"2026-08-12"},"16":{"PB1":"2026-07-01","PB2":"2026-07-06"},"17":{"MM1":"2026-06-29","MM2":"2026-08-05","MM3":"2026-08-07"},"19":{"PB1":"2026-08-19","MM1":"2026-06-26"}};
+// The stop-change history reconstructed from 54 snapshots (08-May-26 to 16-Sep-26) by scripts/pms_backfill_stop_history.py,
+// applied ONLY to a tranche that has no stop_history of its own, ONLY when the tranche's entry date matches the one the
+// history was reconstructed for (a new occupant of a slot never inherits the previous tranche's past), and never
+// overwriting a recorded entry. Dates are upper bounds (exact=false) except promotion stamps.
 function applyStopHistoryBackfill() {
-  var filled = 0;
+  var filled = 0, refused = [];
   Object.keys(MIGRATION_STOP_HISTORY).forEach(function(slot) {
     if (!EDITS[slot]) return;
     Object.keys(MIGRATION_STOP_HISTORY[slot]).forEach(function(tt) {
       var t = EDITS[slot][tt];
-      if (!t || Array.isArray(t.stop_history)) return;
+      if (!t || (Array.isArray(t.stop_history) && t.stop_history.length)) return;
+      var fp = (MIGRATION_STOP_HISTORY_ENTRY_DATES[slot] || {})[tt];
+      if (fp && t.entry_date && fp !== t.entry_date) { refused.push('slot ' + slot + ' ' + tt + ' (entry ' + t.entry_date + ', history was for ' + fp + ')'); return; }
       t.stop_history = JSON.parse(JSON.stringify(MIGRATION_STOP_HISTORY[slot][tt]));
       filled++;
     });
   });
   if (filled) console.log('[pms] stop history backfilled on ' + filled + ' tranche(s) as upper bounds; persists on the next save');
+  if (refused.length) console.log('[pms] stop history NOT applied to ' + refused.length + ' tranche(s) whose entry date differs from the reconstruction: ' + refused.join('; '));
   return filled;
 }
 function snapshotEditStops() {
   var m = {};
-  Object.keys(EDITS || {}).forEach(function(slot) {
-    var se = EDITS[slot];
-    if (!se || typeof se !== 'object') return;
-    TRADE_TYPES.forEach(function(tt) { if (se[tt]) m[slot + '|' + tt] = se[tt].stop_ma === undefined ? null : se[tt].stop_ma; });
-  });
+  forEachTranche(function(t, slot, tt) { var id = ensureTrancheId(t, slot, tt); m[id] = resolvedStopMa(t, tt); });
   return m;
 }
-function recordStopChange(t, key, today) {
-  var before = (key in EDIT_STOP) ? EDIT_STOP[key] : undefined;
-  var now = t.stop_ma === undefined ? null : t.stop_ma;
-  if (before === undefined || before === now) return;
-  if (!Array.isArray(t.stop_history)) {
-    t.stop_history = [];
-    if (before !== null) t.stop_history.push({ stop_ma: before, set_on: null, exact: false,
-      via: 'inherited', note: 'in force before this history began; set on or before ' + (t.last_edited || 'an unknown date') });
+function seedStopHistoryOnCreation(t, slotType, today) {
+  if (Array.isArray(t.stop_history) && t.stop_history.length) return false;
+  t.stop_history = [{ stop_ma: resolvedStopMa(t, slotType), set_on: t.entry_date || today, exact: true, via: 'entry',
+                      explicit: !!t.stop_ma, note: 'the stop the tranche carried from entry; recorded when it was created on ' + today }];
+  return true;
+}
+function recordStopChange(t, slotType, today, prevEdited) {
+  var id = t.tranche_id; if (!id) return false;
+  var before = (id in EDIT_STOP) ? EDIT_STOP[id] : undefined;
+  var now = resolvedStopMa(t, slotType);
+  if (before === undefined || before === now) return false;   // no baseline, or the stop IN FORCE did not change
+  if (!Array.isArray(t.stop_history) || !t.stop_history.length) {
+    t.stop_history = [{ stop_ma: before, set_on: null, exact: false, via: 'inherited', explicit: false,
+      note: 'in force before this history began; set on or before ' + (prevEdited || 'an unknown date') }];
   }
-  t.stop_history.push({ stop_ma: now, set_on: today, exact: true,
+  t.stop_history.push({ stop_ma: now, set_on: today, exact: true, explicit: !!t.stop_ma,
     via: (t.promoted_at === today ? 'promotion' : 'edit'), previous: before });
+  return true;
 }
 var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at'];
 
 function trancheFingerprint(t) {
   if (!t || typeof t !== 'object') return null;
-  return FP_FIELDS.map(function(f) { return t[f] === undefined ? '' : String(t[f]); }).join('');
+  return FP_FIELDS.map(function(f) { return t[f] === undefined ? '' : String(t[f]); }).join('');
 }
 function snapshotEditFingerprints() {
   var m = {};
-  Object.keys(EDITS || {}).forEach(function(slot) {
-    var se = EDITS[slot];
-    if (!se || typeof se !== 'object') return;
-    TRADE_TYPES.forEach(function(tt) { if (se[tt]) m[slot + '|' + tt] = trancheFingerprint(se[tt]); });
-  });
+  forEachTranche(function(t, slot, tt) { m[slot + '|' + tt] = trancheFingerprint(t); });
   return m;
 }
 // Seed the baseline from freshly-loaded state so the first save after a page load does
@@ -1500,7 +1551,8 @@ function stampChangedTranches() {
     var p = k.split('|');
     var t = EDITS[p[0]] && EDITS[p[0]][p[1]];
     if (!t) return;
-    t.last_edited = today;              // day resolution, this is what the column shows
+    var prevEdited = t.last_edited;      // captured BEFORE the stamp below (20-Sep-2026 minor finding)
+    t.last_edited = today;               // day resolution, this is what the column shows
     t.last_edited_exact = true;
     // D-PMS-203: full timestamp too, used ONLY by the merge. Day resolution left one sharp
     // edge — an edit at 23:59 against a disk file saved at 00:01 next day compares as older
@@ -1508,7 +1560,9 @@ function stampChangedTranches() {
     // deliberately have no timestamp: they are bounds, and inventing one would be a false
     // precision claim.
     t.last_edited_at = new Date().toISOString();
-    recordStopChange(t, k, today);
+    var id = ensureTrancheId(t, p[0], p[1]);
+    if (!(id in EDIT_STOP)) seedStopHistoryOnCreation(t, p[1], today);   // never seen before: born with a history
+    else recordStopChange(t, p[1], today, prevEdited);                    // a tranche this page knows, in any slot
   });
   EDIT_FP = now;
   EDIT_STOP = snapshotEditStops();
@@ -1948,40 +2002,54 @@ function getMaOnDate(ticker, dateStr, maName) {
 }
 function calcStop(ma, buf) { var b = (buf == null) ? BUFFER : buf; return (ma == null) ? null : +(ma * (1 - b)).toFixed(4); }
 
-// STOP-RULE-V2-2026-09-18-MARKER. THE FIVE-DAY STOP RULE (Richard, 18-Sep-2026), JavaScript twin of
-// scripts/stop_rule.py; both are tested against scripts/stop_rule_cases.json (21 cases). Change one, change both.
+// STOP-RULE-V2-2026-09-18-MARKER. THE FIVE-DAY STOP RULE, VERSION 3 (Richard, 18-Sep-2026, amended 21-Sep-2026,
+// decisions D-PMS-V2-5 to V2-8), JavaScript twin of scripts/stop_rule.py; both are tested against
+// scripts/stop_rule_cases.json (36 cases; the cases with overrides are engine-only). Change one, change both.
 // HIT = first CLOSE at or below the binding level (day 1 of a five-day window). TRIGGERED while it keeps
 // closing there and nothing has confirmed. EXIT CONFIRMED on the first close where any event holds:
-//   A heavy selling: more than 5% below the stop AND close in the bottom half of the range AND volume above
-//     1.25x the 50-day average (any day, including day 1);
-//   B sellers in force: three consecutive closes each lower than the previous day's close (an equal close breaks it);
-//   C rallies sold: three consecutive closes in the bottom half of the day's range (an unmeasured day is skipped);
-//   D time: the fifth consecutive close at or below the stop;
-//   W window closed (from day 2): a close more than 5% below the stop, or the average volume of the days after
-//     the hit reaching 0.80x the 50-day average ("approximately 75%").
-// A close back above resets the window. A confirmed exit stays confirmed until the slice is sold or kept.
-// Each day against its own level; once a slice has closed 20% above its entry close the entry close is a floor
+//   W window closed: a close more than 5% below the stop on ANY day, the hit day included (exactly 5% is within);
+//     or, from day 2, the average volume of the MEASURED days after the hit reaching 0.75x the 50-day average
+//     (the hit day's own volume never counts; exactly 0.75 closes it);
+//   B sellers in force: three consecutive closes each lower than the last trading day's close (an equal close
+//     breaks it; a bar with no close is skipped, not a break);
+//   C rallies sold: three consecutive closes in the bottom half of the day's range (a day with no range is skipped);
+//   D time: the fifth consecutive close at or below the stop.
+//   (Version 2's event A, heavy selling, is dropped: with the band on day 1 it could never fire alone.)
+// A KNOWN MECHANICAL-VOLUME DAY (STOP_MECHANICAL_VOLUME_DAYS; quarterly expiry, index rebalance) is unmeasured for the
+// volume test only: its volume is left out of the days-after average; the day still counts and every other test runs.
+// A close back above resets the window. A confirmed exit stays confirmed until the tranche is sold or kept.
+// Each day against its own level; once a tranche has closed 20% above its entry close the entry close is a floor
 // and the higher level binds. Version 1 (three consecutive closes, 11-Sep-2026) is computed beside it as a
 // comparison read (`legacy`) for the fortnight after the change. Missing range or volume never confirms and
-// never rescues; such days are listed in `unmeasured`.
-// Not yet in the page: Richard's "keep" overrides (pms-data/stop-overrides.json); the evening engine
-// applies them, so a kept slice can still read EXIT CONFIRMED here until this reads that file.
-var STOP_REASON_SHORT = { A: 'heavy selling', B: 'three lower closes', C: 'three weak closes', D: 'five days below',
+// never rescues; such days are listed in `unmeasured` (for the current run only). Every comparison is made on
+// the exact value; rounding is for display (the page rounds half-up, Python half-to-even: 20-Sep-2026 finding).
+// Not in the page: Richard's "keep" overrides (pms-data/stop-overrides.json); the evening engine applies them,
+// so a kept tranche can still read EXIT CONFIRMED here until this reads that file.
+var STOP_REASON_SHORT = { B: 'three lower closes', C: 'three weak closes', D: 'five days below',
                           W_BAND: 'more than 5% below', W_VOL: 'volume not light' };
-function stopDayInfo(series, i, binding) {
-  var r = series[i]; var h = r.h, l = r.l, c = r.c, v = r.v;
+function stopNum(x) { if (x == null || x === '') return null; var v = +x; return isFinite(v) ? v : null; }
+function stopRawInfo(series, i, binding) {
+  var r = series[i]; var h = stopNum(r.h), l = stopNum(r.l), c = stopNum(r.c), v = stopNum(r.v);
   var rng = null;
-  if (h != null && l != null && c != null && h > l) rng = Math.round((c - l) / (h - l) * 100);
-  var vx = null, past = [], k;
-  for (k = Math.max(0, i - STOP_VOL_AVG_DAYS); k < i; k++) { if (series[k].v) past.push(+series[k].v); }
-  if (v && past.length >= 20) { var s = 0; for (k = 0; k < past.length; k++) s += past[k]; vx = Math.round(v / (s / past.length) * 100) / 100; }
-  var below = (binding && c != null) ? Math.round((binding - c) / binding * 10000) / 100 : null;
-  return { d: r.d, close: c, binding: binding != null ? +binding.toFixed(4) : null, close_in_range_pct: rng,
-           volume_x_50d: vx, pct_below_binding: below };
+  if (h != null && l != null && c != null && h > l) rng = (c - l) / (h - l) * 100;
+  var vx = null, past = [], k, pv;
+  for (k = Math.max(0, i - STOP_VOL_AVG_DAYS); k < i; k++) { pv = stopNum(series[k].v); if (pv) past.push(pv); }
+  if (v && past.length >= 20) { var s = 0; for (k = 0; k < past.length; k++) s += past[k]; vx = v / (s / past.length); }
+  var below = (binding && c != null) ? (binding - c) / binding * 100 : null;
+  return { rng: rng, vx: vx, below: below };
+}
+function stopDayInfo(series, i, binding, mechanical) {
+  var r = series[i]; var raw = stopRawInfo(series, i, binding);
+  var out = { d: r.d, close: stopNum(r.c), binding: binding != null ? +binding.toFixed(4) : null,
+              close_in_range_pct: raw.rng == null ? null : Math.round(raw.rng),
+              volume_x_50d: raw.vx == null ? null : Math.round(raw.vx * 100) / 100,
+              pct_below_binding: raw.below == null ? null : Math.round(raw.below * 100) / 100 };
+  if (mechanical) out.mechanical_volume_day = true;
+  return out;
 }
 // STOP-HISTORY-2026-09-18: `history` is the tranche's stop_history. The stop average in force on a day is the
 // latest entry dated on or before it (undated entries apply from the start); every dated change RESETS the
-// walk on that date (a re-key after a confirmation is Richard's own ruling on the slice), the floor keeps arming.
+// count on that date (a stop change after a confirmation is Richard's own ruling on the tranche), the floor keeps arming.
 function stopMaKeyOn(history, dayStr, defaultKey) {
   if (!history || !history.length) return defaultKey;
   var chosen = null;
@@ -1991,51 +2059,60 @@ function stopMaKeyOn(history, dayStr, defaultKey) {
   }
   return chosen ? ('ma' + String(chosen).replace('D', '')) : defaultKey;
 }
-function stopRuleWalk(series, startIdx, maKey, bufVal, history) {
-  var entryClose = series[startIdx] ? series[startIdx].c : null;
+function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryDateStr, extraResets) {
+  mechDays = mechDays || {};
+  var entryClose = series[startIdx] ? stopNum(series[startIdx].c) : null;
   var floorOn = false, run = 0, runStart = -1, confirmed = null, firstHit = null;
-  var lowerStreak = 0, weakStreak = 0, volsAfter = [], unmeasured = [], restarts = [];
+  var lowerStreak = 0, weakStreak = 0, volsAfter = [], unmeasured = [], mechInRun = [], restarts = [];
   var legacyRun = 0, legacyConfirmed = null;
   var lastBinding = null, lastSrc = null;
-  var resets = [], entryDay = series[startIdx] ? series[startIdx].d : '';
+  var resets = [], entryDay = entryDateStr || (series[startIdx] ? series[startIdx].d : '');   // the tranche's own entry date, as the engine filters (aligned 21-Sep-2026)
   (history || []).forEach(function (h) { if (h && h.set_on && h.via !== 'inherited' && h.set_on > entryDay) resets.push(h.set_on); });
+  // PROMOTION-RESET-FALLBACK-2026-09-21: a promotion is a reset (D-PMS-V2-8) even when the history has no entry for it
+  // (18 tranches promoted before the recorder existed carry promoted_at and no entry; a promotion that left the stop
+  // unchanged recorded nothing until 21-Sep-2026). The engine applies the same fallback.
+  var extra = Array.isArray(extraResets) ? extraResets : (extraResets ? [extraResets] : []);
+  extra.forEach(function (d) { if (typeof d === 'string' && d.length >= 10) { var dd = d.slice(0, 10); if (dd > entryDay && resets.indexOf(dd) < 0) resets.push(dd); } });
   resets.sort(); var rsI = 0;
+  var prevClose = null, k;
+  for (k = startIdx - 1; k >= 0; k--) { var pc = stopNum(series[k].c); if (pc != null) { prevClose = pc; break; } }
+  function clearRun() { run = 0; runStart = -1; lowerStreak = 0; weakStreak = 0; volsAfter = []; unmeasured = []; mechInRun = []; }
   for (var i = startIdx; i < series.length; i++) {
-    var day = series[i]; var c = day.c; if (c == null) continue;
+    var day = series[i]; var c = stopNum(day.c); if (c == null) continue;   // a bar with no close is skipped, not a break
+    if (!floorOn && entryClose && c >= entryClose * (1 + STOP_FLOOR_TRIGGER)) floorOn = true;
     while (rsI < resets.length && resets[rsI] <= day.d) {
       if (confirmed || run > 0 || legacyConfirmed || legacyRun > 0) restarts.push({ on: resets[rsI], cleared_confirmation: confirmed ? confirmed.breach_date : null, cleared_run_of_days: run });
-      confirmed = null; run = 0; runStart = -1; lowerStreak = 0; weakStreak = 0; volsAfter = []; legacyConfirmed = null; legacyRun = 0;
+      confirmed = null; clearRun(); legacyConfirmed = null; legacyRun = 0;
       rsI += 1;
     }
     var ma = day[history && history.length ? stopMaKeyOn(history, day.d, maKey) : maKey];
-    if (!floorOn && entryClose && c >= entryClose * (1 + STOP_FLOOR_TRIGGER)) floorOn = true;
     var level = (ma == null) ? null : ma * (1 - bufVal);
     var binding = level, src = 'moving average';
     if (floorOn && entryClose && (binding == null || entryClose > binding)) { binding = entryClose; src = 'floor at entry'; }
-    if (binding == null) { run = 0; runStart = -1; lowerStreak = 0; weakStreak = 0; volsAfter = []; legacyRun = 0; continue; }
+    // a bar with a close but no stop level is UNMEASURED: it neither counts for nor against any test and does not end a
+    // run (21-Sep-2026 hostile review; before, it cleared the run). Its close still stands as the previous close for (B).
+    if (binding == null) { if (run > 0) unmeasured.push(day.d); prevClose = c; continue; }
     lastBinding = binding; lastSrc = src;
     if (c <= binding) {
       legacyRun += 1;
       if (!legacyConfirmed && legacyRun >= STOP_LEGACY_CONFIRM_CLOSES) legacyConfirmed = { breach_date: day.d };
       if (run === 0) {
-        runStart = i; lowerStreak = 0; weakStreak = 0; volsAfter = [];
+        clearRun(); runStart = i;
         if (!firstHit) firstHit = { breach_date: day.d, breach_close: c, stop_level: +binding.toFixed(4), days_held: i - startIdx };
       }
       run += 1;
-      var info = stopDayInfo(series, i, binding);
-      var prevC = (i > 0) ? series[i - 1].c : null;
-      lowerStreak = (prevC != null && c < prevC) ? lowerStreak + 1 : 0;
-      if (info.close_in_range_pct != null) weakStreak = (info.close_in_range_pct <= STOP_WEAK_CLOSE_MAX_PCT) ? weakStreak + 1 : 0;
-      if (run >= 2) volsAfter.push(info.volume_x_50d);
-      if (info.close_in_range_pct == null || info.volume_x_50d == null) unmeasured.push(day.d);
+      var isMech = !!mechDays[day.d];
+      var raw = stopRawInfo(series, i, binding);
+      lowerStreak = (prevClose != null && c < prevClose) ? lowerStreak + 1 : 0;
+      if (raw.rng != null) weakStreak = (raw.rng <= STOP_WEAK_CLOSE_MAX_PCT) ? weakStreak + 1 : 0;
+      if (run >= 2) { volsAfter.push(isMech ? null : raw.vx); if (isMech) mechInRun.push(day.d); }
+      if (raw.rng == null || (run >= 2 && (raw.vx == null || isMech))) unmeasured.push(day.d);   // the hit day's volume never counts
       if (!confirmed) {
-        var reasons = [];
-        var below = info.pct_below_binding || 0;
-        if (below > STOP_DEEP_PCT * 100 && info.close_in_range_pct != null && info.close_in_range_pct <= STOP_WEAK_CLOSE_MAX_PCT
-            && info.volume_x_50d != null && info.volume_x_50d > STOP_HEAVY_VOLUME_MIN) reasons.push('A');
+        var reasons = [], j;
+        var below = raw.below || 0;
+        if (below > STOP_BAND_PCT * 100) reasons.push('W_BAND');
         if (run >= 2) {
-          if (below > STOP_BAND_PCT * 100) reasons.push('W_BAND');
-          var m = [], t = 0, j; for (j = 0; j < volsAfter.length; j++) if (volsAfter[j] != null) { m.push(volsAfter[j]); t += volsAfter[j]; }
+          var m = [], t = 0; for (j = 0; j < volsAfter.length; j++) if (volsAfter[j] != null) { m.push(volsAfter[j]); t += volsAfter[j]; }
           if (m.length && (t / m.length) >= STOP_LIGHT_VOLUME_MAX) reasons.push('W_VOL');
         }
         if (lowerStreak >= STOP_LOWER_CLOSES) reasons.push('B');
@@ -2045,34 +2122,49 @@ function stopRuleWalk(series, startIdx, maKey, bufVal, history) {
           var why = []; for (j = 0; j < reasons.length; j++) why.push(STOP_REASON_SHORT[reasons[j]]);
           confirmed = { trigger: 'EXIT CONFIRMED', breach_date: day.d, breach_close: c, stop_level: +binding.toFixed(4),
                         days_held: i - startIdx, hit_date: series[runStart].d, on: src, day: run,
-                        reasons: reasons, reason_text: why.join(', ') };
+                        reasons: reasons, reason_text: why.join(', '), unmeasured: unmeasured.slice(), mechanical_days: mechInRun.slice() };
         }
       }
-    } else { run = 0; runStart = -1; lowerStreak = 0; weakStreak = 0; volsAfter = []; legacyRun = 0; }
+    } else { clearRun(); legacyRun = 0; }
+    prevClose = c;
   }
   var triggered = (!confirmed && run > 0) ? { trigger: 'TRIGGERED ' + run + '/' + STOP_WINDOW_DAYS, day: run,
       hit_date: series[runStart].d, breach_date: series[runStart].d, stop_level: lastBinding != null ? +lastBinding.toFixed(4) : null,
-      lower_close_streak: lowerStreak, weak_close_streak: weakStreak } : null;
+      lower_close_streak: lowerStreak, weak_close_streak: weakStreak, mechanical_days: mechInRun.slice() } : null;
   var legacy = legacyConfirmed ? { state: 'exit_confirmed', confirmed_date: legacyConfirmed.breach_date, day_of_run: legacyRun }
              : (legacyRun > 0 ? { state: 'triggered', confirmed_date: null, day_of_run: legacyRun } : { state: 'clear', confirmed_date: null, day_of_run: 0 });
   var lastDay = series[series.length - 1] || {};
-  var touch = !!(lastBinding != null && lastDay.c != null && lastDay.l != null && lastDay.c > lastBinding && lastDay.l <= lastBinding);
-  return { raw_breach: firstHit, grace_breach: confirmed, triggered: triggered,
+  var lc = stopNum(lastDay.c), ll = stopNum(lastDay.l);
+  var touch = !!(lastBinding != null && lc != null && ll != null && lc > lastBinding && ll <= lastBinding);
+  var unmOut = (confirmed && run === 0) ? confirmed.unmeasured : unmeasured;
+  // CHART-GAP-2026-09-21: the page has no price-cache fill, so a chart bar missing inside the window can put its
+  // badge a day behind the evening engine (which fills the bar and is authoritative). Count the missing weekdays in
+  // the current run so the badge can say so instead of silently disagreeing.
+  var gaps = 0;
+  if (run > 0 && runStart >= 0) {
+    // from the bar BEFORE the hit: a session missing just before the first close below is the real day 1 on the
+    // engine's filled series (Xvivo, 17-Sep-2026), so the badge must say the window may be a day older than it shows
+    for (var g = Math.max(1, runStart); g < series.length; g++) {
+      var a = new Date(series[g - 1].d + 'T00:00:00Z'), b = new Date(series[g].d + 'T00:00:00Z');
+      for (var d = new Date(a.getTime() + 86400000); d < b; d = new Date(d.getTime() + 86400000)) { if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6) gaps++; }
+    }
+  }
+  return { raw_breach: firstHit, grace_breach: confirmed, triggered: triggered, data_gaps_in_run: gaps,
            back_above: !!(confirmed && run === 0), day_of_run: run, intraday_touch_today: touch,
            tier: confirmed ? 'confirmed' : (triggered ? 'triggered' : 'clear'),
            binding_level: lastBinding, binding_source: lastSrc, floor_active: floorOn,
-           unmeasured: unmeasured, legacy: legacy, restarts: restarts };
+           unmeasured: unmOut, legacy: legacy, restarts: restarts };
 }
-function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history) {
+function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, promotedAt) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return null;
   var startIdx = findIndexByDate(ticker, entryDateStr);
   if (startIdx < 0) return null;
   var maKey = 'ma' + stopMa.replace('D', '');
   var bufVal = (bufferOverride == null) ? BUFFER : bufferOverride;
-  return stopRuleWalk(series, startIdx, maKey, bufVal, history);
+  return stopRuleWalk(series, startIdx, maKey, bufVal, history, stopMechanicalDaysFor(ticker), entryDateStr, promotedAt);
 }
-function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history) {
+function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return { error: 'No chart data for ' + ticker };
   var idx = findIndexByDate(ticker, entryDateStr);
@@ -2107,7 +2199,7 @@ function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history
   var entryWarn = null;
   if (entry.c < entryStop) entryWarn = 'BELOW_STOP';
   else if (entryMa != null && entry.c < entryMa) entryWarn = 'BELOW_MA_ABOVE_STOP';
-  var breach = walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history);
+  var breach = walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, promotedAt);
   // D-PMS-59: Value AUM = original size × (current price / entry close) — % AUM the tranche is worth right now
   var valueAumPct = (pctAum && entry.c) ? pctAum * (latest.c / entry.c) : null;
   return { ok: true, entry_close: entry.c, entry_date_actual: entry.d, entry_ma: entryMa, entry_stop: entryStop,
@@ -2203,7 +2295,7 @@ function performMove(invIdx, fromSlot, toSlot, newStopMa) {
   if (newStopMa) {
     // Promotion: PB → MM
     movingEdit.promoted_from = fromSlot;
-    movingEdit.promoted_at = new Date().toISOString().slice(0, 10);
+    movingEdit.promoted_at = todayISO();   // the LOCAL date, the same clock the recorder stamps with (21-Sep-2026 re-check: the UTC date differed from it between midnight and 01:00 UK in summer, mislabelling a promotion as an edit)
     movingEdit.stop_ma = newStopMa;
   } else {
     // D-PMS-67: non-promotion move (reorder/swap). Strip stale promotion metadata if the destination
@@ -2594,7 +2686,7 @@ function gatherPortfolioRows() {
       // price data is present, so a momentarily-missing chart cannot drop a position from
       // the deployed total. Price-derived metrics below still require a valid runTester.
       deployed += edit.target_size_pct;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, stopMa, bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, stopMa, bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       valueAum += (r.value_aum_pct || 0);
       atRisk += (r.loss_risk_aum || 0);
@@ -3324,7 +3416,7 @@ function investmentSortMetrics(invIdx) {
     if (!edit || !edit.entry_date || edit.target_size_pct == null) return;
     deployed += edit.target_size_pct;
     var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
     if (r && r.ok) {
       m.aum += (r.value_aum_pct || 0);
       m.risk += (r.loss_risk_aum || 0);
@@ -3474,7 +3566,7 @@ function countExtraRowsForInvestment(inv, invIdx, isPlaceholder) {
     var stopMa = (edit && edit.stop_ma) || DEFAULT_STOP_MA[slotType];
     var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : 0.02;
     if (entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-      var r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit.stop_history);
+      var r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit.stop_history, edit.promoted_at);
       if (r && r.ok && (r.entry_warn === 'BELOW_STOP' || r.entry_warn === 'BELOW_MA_ABOVE_STOP')) {
         extras++;
       }
@@ -3505,7 +3597,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : 0.02;
   var r = null;
   if (!isPlaceholder && entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-    r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit && edit.stop_history);
+    r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit && edit.stop_history, edit && edit.promoted_at);
   }
   var rowKey = invIdx + ':' + slotType;
   var rowCls = 'tranche-row';
@@ -3686,7 +3778,7 @@ function renderInvTotalsRow(inv, invIdx) {
     sumDeployed += edit.target_size_pct;
     if (!ticker) return;
     var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
     if (r && r.ok) {
       sumPnl += r.paper_pnl_aum || 0;
       sumRisk += r.loss_risk_aum || 0;
@@ -3729,7 +3821,7 @@ function renderKpis() {
       deployed += edit.target_size_pct;
       activeTrades += 1; hasAny = true;
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       pnl += (r.paper_pnl_aum || 0);
       risk += (r.loss_risk_aum || 0);
@@ -3781,7 +3873,7 @@ function renderAlerts() {
       var edit = getEdit(invIdx, slotType);
       if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.grace_breach, tier: 'confirmed' });
       else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.triggered, tier: 'triggered' });
@@ -3920,7 +4012,7 @@ function esc(s) { var d = document.createElement('div'); d.textContent = String(
 function breachBadge(r) {
   if (!r.breach) return '<span class="badge b-active">no</span>';
   if (r.breach.grace_breach) return '<span class="badge b-bad" title="Exit confirmed on day ' + r.breach.grace_breach.day + ' of the five-day window (hit ' + esc(fmtDate(r.breach.grace_breach.hit_date)) + '): ' + esc(r.breach.grace_breach.reason_text || '') + '. Not yet sold' + (r.breach.back_above ? '; price since back above the stop' : '') + (r.breach.restarts && r.breach.restarts.length ? '. Walk restarted at a stop change on ' + esc(fmtDate(r.breach.restarts[r.breach.restarts.length - 1].on)) : '') + (r.breach.legacy && r.breach.legacy.state !== 'exit_confirmed' ? '. The three-close rule of 11-Sep would read: ' + r.breach.legacy.state : '') + '">EXIT CONFIRMED ' + esc(fmtDate(r.breach.grace_breach.breach_date)) + '</span>';
-  if (r.breach.triggered) return '<span class="badge b-warn" title="Triggered: closed at or below the stop ' + r.breach.triggered.day + ' day(s) running inside the five-day window; lower closes in a row: ' + r.breach.triggered.lower_close_streak + '; weak closes in a row: ' + r.breach.triggered.weak_close_streak + (r.breach.legacy && r.breach.legacy.state === 'exit_confirmed' ? '. The three-close rule of 11-Sep would already read EXIT CONFIRMED ' + esc(fmtDate(r.breach.legacy.confirmed_date)) : '') + '">TRIGGERED ' + r.breach.triggered.day + '/' + STOP_WINDOW_DAYS + ' (' + esc(fmtDate(r.breach.triggered.hit_date)) + ')</span>';
+  if (r.breach.triggered) return '<span class="badge b-warn" title="Triggered: closed at or below the stop ' + r.breach.triggered.day + ' day(s) running inside the five-day window; lower closes in a row: ' + r.breach.triggered.lower_close_streak + '; weak closes in a row: ' + r.breach.triggered.weak_close_streak + (r.breach.data_gaps_in_run ? '. ' + r.breach.data_gaps_in_run + ' chart bar(s) missing in or just before the window: the evening engine fills them from the price cache, so its day count and verdict are the ones that count' : '') + (r.breach.legacy && r.breach.legacy.state === 'exit_confirmed' ? '. The three-close rule of 11-Sep would already read EXIT CONFIRMED ' + esc(fmtDate(r.breach.legacy.confirmed_date)) : '') + '">TRIGGERED ' + r.breach.triggered.day + '/' + STOP_WINDOW_DAYS + ' (' + esc(fmtDate(r.breach.triggered.hit_date)) + ')</span>';
   if (r.breach.raw_breach) return '<span class="badge b-active" title="Hit the stop on this date, recovered inside the window without any confirmation event">hit ' + esc(fmtDate(r.breach.raw_breach.breach_date)) + ', recovered</span>';
   return '<span class="badge b-active">no</span>';
 }

@@ -2059,7 +2059,7 @@ function stopMaKeyOn(history, dayStr, defaultKey) {
   }
   return chosen ? ('ma' + String(chosen).replace('D', '')) : defaultKey;
 }
-function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryDateStr) {
+function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryDateStr, extraResets) {
   mechDays = mechDays || {};
   var entryClose = series[startIdx] ? stopNum(series[startIdx].c) : null;
   var floorOn = false, run = 0, runStart = -1, confirmed = null, firstHit = null;
@@ -2068,6 +2068,11 @@ function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryD
   var lastBinding = null, lastSrc = null;
   var resets = [], entryDay = entryDateStr || (series[startIdx] ? series[startIdx].d : '');   // the tranche's own entry date, as the engine filters (aligned 21-Sep-2026)
   (history || []).forEach(function (h) { if (h && h.set_on && h.via !== 'inherited' && h.set_on > entryDay) resets.push(h.set_on); });
+  // PROMOTION-RESET-FALLBACK-2026-09-21: a promotion is a reset (D-PMS-V2-8) even when the history has no entry for it
+  // (18 tranches promoted before the recorder existed carry promoted_at and no entry; a promotion that left the stop
+  // unchanged recorded nothing until 21-Sep-2026). The engine applies the same fallback.
+  var extra = Array.isArray(extraResets) ? extraResets : (extraResets ? [extraResets] : []);
+  extra.forEach(function (d) { if (typeof d === 'string' && d.length >= 10) { var dd = d.slice(0, 10); if (dd > entryDay && resets.indexOf(dd) < 0) resets.push(dd); } });
   resets.sort(); var rsI = 0;
   var prevClose = null, k;
   for (k = startIdx - 1; k >= 0; k--) { var pc = stopNum(series[k].c); if (pc != null) { prevClose = pc; break; } }
@@ -2084,7 +2089,9 @@ function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryD
     var level = (ma == null) ? null : ma * (1 - bufVal);
     var binding = level, src = 'moving average';
     if (floorOn && entryClose && (binding == null || entryClose > binding)) { binding = entryClose; src = 'floor at entry'; }
-    if (binding == null) { clearRun(); legacyRun = 0; prevClose = c; continue; }
+    // a bar with a close but no stop level is UNMEASURED: it neither counts for nor against any test and does not end a
+    // run (21-Sep-2026 hostile review; before, it cleared the run). Its close still stands as the previous close for (B).
+    if (binding == null) { if (run > 0) unmeasured.push(day.d); prevClose = c; continue; }
     lastBinding = binding; lastSrc = src;
     if (c <= binding) {
       legacyRun += 1;
@@ -2148,16 +2155,16 @@ function stopRuleWalk(series, startIdx, maKey, bufVal, history, mechDays, entryD
            binding_level: lastBinding, binding_source: lastSrc, floor_active: floorOn,
            unmeasured: unmOut, legacy: legacy, restarts: restarts };
 }
-function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history) {
+function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, promotedAt) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return null;
   var startIdx = findIndexByDate(ticker, entryDateStr);
   if (startIdx < 0) return null;
   var maKey = 'ma' + stopMa.replace('D', '');
   var bufVal = (bufferOverride == null) ? BUFFER : bufferOverride;
-  return stopRuleWalk(series, startIdx, maKey, bufVal, history, stopMechanicalDaysFor(ticker), entryDateStr);
+  return stopRuleWalk(series, startIdx, maKey, bufVal, history, stopMechanicalDaysFor(ticker), entryDateStr, promotedAt);
 }
-function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history) {
+function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series) return { error: 'No chart data for ' + ticker };
   var idx = findIndexByDate(ticker, entryDateStr);
@@ -2192,7 +2199,7 @@ function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history
   var entryWarn = null;
   if (entry.c < entryStop) entryWarn = 'BELOW_STOP';
   else if (entryMa != null && entry.c < entryMa) entryWarn = 'BELOW_MA_ABOVE_STOP';
-  var breach = walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history);
+  var breach = walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, promotedAt);
   // D-PMS-59: Value AUM = original size × (current price / entry close) — % AUM the tranche is worth right now
   var valueAumPct = (pctAum && entry.c) ? pctAum * (latest.c / entry.c) : null;
   return { ok: true, entry_close: entry.c, entry_date_actual: entry.d, entry_ma: entryMa, entry_stop: entryStop,
@@ -2679,7 +2686,7 @@ function gatherPortfolioRows() {
       // price data is present, so a momentarily-missing chart cannot drop a position from
       // the deployed total. Price-derived metrics below still require a valid runTester.
       deployed += edit.target_size_pct;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, stopMa, bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, stopMa, bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       valueAum += (r.value_aum_pct || 0);
       atRisk += (r.loss_risk_aum || 0);
@@ -3409,7 +3416,7 @@ function investmentSortMetrics(invIdx) {
     if (!edit || !edit.entry_date || edit.target_size_pct == null) return;
     deployed += edit.target_size_pct;
     var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
     if (r && r.ok) {
       m.aum += (r.value_aum_pct || 0);
       m.risk += (r.loss_risk_aum || 0);
@@ -3559,7 +3566,7 @@ function countExtraRowsForInvestment(inv, invIdx, isPlaceholder) {
     var stopMa = (edit && edit.stop_ma) || DEFAULT_STOP_MA[slotType];
     var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : 0.02;
     if (entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-      var r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit.stop_history);
+      var r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit.stop_history, edit.promoted_at);
       if (r && r.ok && (r.entry_warn === 'BELOW_STOP' || r.entry_warn === 'BELOW_MA_ABOVE_STOP')) {
         extras++;
       }
@@ -3590,7 +3597,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : 0.02;
   var r = null;
   if (!isPlaceholder && entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-    r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit && edit.stop_history);
+    r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit && edit.stop_history, edit && edit.promoted_at);
   }
   var rowKey = invIdx + ':' + slotType;
   var rowCls = 'tranche-row';
@@ -3771,7 +3778,7 @@ function renderInvTotalsRow(inv, invIdx) {
     sumDeployed += edit.target_size_pct;
     if (!ticker) return;
     var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
     if (r && r.ok) {
       sumPnl += r.paper_pnl_aum || 0;
       sumRisk += r.loss_risk_aum || 0;
@@ -3814,7 +3821,7 @@ function renderKpis() {
       deployed += edit.target_size_pct;
       activeTrades += 1; hasAny = true;
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       pnl += (r.paper_pnl_aum || 0);
       risk += (r.loss_risk_aum || 0);
@@ -3866,7 +3873,7 @@ function renderAlerts() {
       var edit = getEdit(invIdx, slotType);
       if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : 0.02;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history);
+      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at);
       if (!r || !r.ok) return;
       if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.grace_breach, tier: 'confirmed' });
       else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.triggered, tier: 'triggered' });
