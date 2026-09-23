@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-21",
+ "current_week": "2026-09-22",
  "prior_week": "2026-07-24",
  "industry": {
   "A. Consumer staples": {
@@ -12,19 +12,19 @@
    "prior": "D"
   },
   "C. Telecoms": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "D. Infrastructure": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "E. Utilities": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "F. Defence": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "G. Financials": {
@@ -52,11 +52,11 @@
    "prior": "F"
   },
   "M. Materials": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "N. Real assets": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "O. Industrials and capital goods": {
@@ -74,7 +74,7 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "A.3. Automotive repair": {
@@ -118,7 +118,7 @@
    "prior": "C"
   },
   "B.5. Medtech - consumables - mature": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "B.6. Medtech - capital goods": {
@@ -154,7 +154,7 @@
    "prior": "A"
   },
   "E.1. Utilities - Integrated power": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
@@ -162,7 +162,7 @@
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "F.1. Defence - Primes": {
@@ -170,7 +170,7 @@
    "prior": "C"
   },
   "F.2. Defence - Non-primes": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "G.1. Insurance": {
@@ -202,7 +202,7 @@
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.6. Asset management software (B2B)": {
@@ -234,7 +234,7 @@
    "prior": "D"
   },
   "H.14. Automotive - sales/rentals": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "H.15. Automotive - OEM or supplier": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "H.2. Retail - apparel": {
@@ -294,7 +294,7 @@
    "prior": "F"
   },
   "J.5. Software - VMS": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -330,7 +330,7 @@
    "prior": "C"
   },
   "K.8. Outsourcing, admin and other services": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "K.9. Recruitment services": {
@@ -346,11 +346,11 @@
    "prior": "D"
   },
   "M.2. Chemicals - Distributors": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "M.3. Chemicals - Specialty": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "M.4. Chemicals - Base": {
@@ -366,7 +366,7 @@
    "prior": "D"
   },
   "M.8. Chemicals - Gases": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -374,7 +374,7 @@
    "prior": "C"
   },
   "O.1. Industrial services": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.10. Capital goods - EV": {
