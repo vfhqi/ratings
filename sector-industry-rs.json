@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-22",
+ "current_week": "2026-09-23",
  "prior_week": "2026-07-24",
  "industry": {
   "A. Consumer staples": {
@@ -20,7 +20,7 @@
    "prior": "C"
   },
   "E. Utilities": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "F. Defence": {
@@ -28,7 +28,7 @@
    "prior": "C"
   },
   "G. Financials": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "H. Consumer discretionary": {
@@ -114,7 +114,7 @@
    "prior": "A"
   },
   "B.4. CDMO or CRO": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "B.5. Medtech - consumables - mature": {
@@ -138,7 +138,7 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "C.2. Telecoms - towers": {
@@ -154,11 +154,11 @@
    "prior": "A"
   },
   "E.1. Utilities - Integrated power": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "E.2. Utilities - green focused": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
@@ -198,7 +198,7 @@
    "prior": "F"
   },
   "G.4. Holding companies": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "G.5. Online savings platform (D2C)": {
@@ -206,7 +206,7 @@
    "prior": "B"
   },
   "G.6. Asset management software (B2B)": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "G.8. Retail trading platforms (D2C)": {
@@ -326,7 +326,7 @@
    "prior": "C"
   },
   "K.5. Advertising and consulting services": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "K.8. Outsourcing, admin and other services": {
@@ -358,7 +358,7 @@
    "prior": "D"
   },
   "M.6. Basic materials and construction": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "M.7. Forestry and paper products": {
@@ -366,7 +366,7 @@
    "prior": "D"
   },
   "M.8. Chemicals - Gases": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -426,7 +426,7 @@
    "prior": "A"
   },
   "P.4. Agriculture": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "P.5. Precious metals mining": {
