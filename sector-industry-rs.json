@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-23",
+ "current_week": "2026-09-24",
  "prior_week": "2026-07-24",
  "industry": {
   "A. Consumer staples": {
@@ -98,7 +98,7 @@
    "prior": "F"
   },
   "A.8. Beverages - spirits": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "B.10. Medtech - components": {
@@ -126,7 +126,7 @@
    "prior": "D"
   },
   "B.7. Pharma/biotech": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "B.8. Medtech - distributors / retail": {
@@ -138,7 +138,7 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "C.2. Telecoms - towers": {
@@ -186,7 +186,7 @@
    "prior": "F"
   },
   "G.13. Banks": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
@@ -270,7 +270,7 @@
    "prior": "D"
   },
   "H.9. Leisure": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "I.1. Logistics": {
@@ -358,7 +358,7 @@
    "prior": "D"
   },
   "M.6. Basic materials and construction": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "M.7. Forestry and paper products": {
@@ -390,7 +390,7 @@
    "prior": "C"
   },
   "O.2. Products - various [SPLIT]": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.4. Capital goods - grid": {
@@ -398,7 +398,7 @@
    "prior": "A"
   },
   "O.6. Capital goods - measurement": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "O.7. Capital goods - factory equipment": {
@@ -418,7 +418,7 @@
    "prior": "A"
   },
   "P.2. Energy - upstream E&P": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "P.3. Energy - upstream support services": {
@@ -426,7 +426,7 @@
    "prior": "A"
   },
   "P.4. Agriculture": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "P.5. Precious metals mining": {
