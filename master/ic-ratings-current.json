@@ -2492,10 +2492,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-09-25",
+      "last_updated": "2026-09-26",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "C",
+        "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "B",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
@@ -2521,7 +2521,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-09-25"
+      "_quant_refresh_at": "2026-09-26"
     },
     {
       "ticker": "OPL-PL",
