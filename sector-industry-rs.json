@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-09-24",
+ "current_week": "2026-09-25",
  "prior_week": "2026-07-24",
  "industry": {
   "A. Consumer staples": {
@@ -20,7 +20,7 @@
    "prior": "C"
   },
   "E. Utilities": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "F. Defence": {
@@ -28,7 +28,7 @@
    "prior": "C"
   },
   "G. Financials": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "H. Consumer discretionary": {
@@ -98,7 +98,7 @@
    "prior": "F"
   },
   "A.8. Beverages - spirits": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "B.10. Medtech - components": {
@@ -114,7 +114,7 @@
    "prior": "A"
   },
   "B.4. CDMO or CRO": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "B.5. Medtech - consumables - mature": {
@@ -138,7 +138,7 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "C.2. Telecoms - towers": {
@@ -186,7 +186,7 @@
    "prior": "F"
   },
   "G.13. Banks": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "H.2. Retail - apparel": {
@@ -358,7 +358,7 @@
    "prior": "D"
   },
   "M.6. Basic materials and construction": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "M.7. Forestry and paper products": {
@@ -366,7 +366,7 @@
    "prior": "D"
   },
   "M.8. Chemicals - Gases": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "N.1. TBD": {
@@ -390,7 +390,7 @@
    "prior": "C"
   },
   "O.2. Products - various [SPLIT]": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.4. Capital goods - grid": {
@@ -418,7 +418,7 @@
    "prior": "A"
   },
   "P.2. Energy - upstream E&P": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "P.3. Energy - upstream support services": {
@@ -426,7 +426,7 @@
    "prior": "A"
   },
   "P.4. Agriculture": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "P.5. Precious metals mining": {
