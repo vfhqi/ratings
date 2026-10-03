@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-01",
+ "current_week": "2026-10-02",
  "prior_week": "2026-07-31",
  "industry": {
   "A. Consumer staples": {
@@ -86,7 +86,7 @@
    "prior": "D"
   },
   "A.5. Food retail": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -126,11 +126,11 @@
    "prior": "D"
   },
   "B.7. Pharma/biotech": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "B.8. Medtech - distributors / retail": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "B.9. Medtech - consumables - growth": {
@@ -150,7 +150,7 @@
    "prior": "C"
   },
   "D.2. Infrastructure - ports": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "E.1. Utilities - Integrated power": {
@@ -162,7 +162,7 @@
    "prior": "D"
   },
   "E.3. Utilities - Water and other non-power": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "F.1. Defence - Primes": {
@@ -182,7 +182,7 @@
    "prior": "C"
   },
   "G.11. Traditional asset managers (B2C)": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.12. Specialty finance and other": {
@@ -250,7 +250,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "H.2. Retail - apparel": {
@@ -282,7 +282,7 @@
    "prior": "A"
   },
   "J.1. IT services - consulting": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "J.2. IT services - reselling": {
@@ -298,11 +298,11 @@
    "prior": "F"
   },
   "J.5. Software - VMS": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "J.7. Software - Computer games": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "J.8. Hardware": {
@@ -334,7 +334,7 @@
    "prior": "C"
   },
   "K.8. Outsourcing, admin and other services": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "K.9. Recruitment services": {
@@ -370,7 +370,7 @@
    "prior": "F"
   },
   "M.8. Chemicals - Gases": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "M.9. Steel and metals": {
@@ -398,7 +398,7 @@
    "prior": "B"
   },
   "O.15. Distributors": {
-   "current": "B",
+   "current": "A",
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
@@ -406,7 +406,7 @@
    "prior": "B"
   },
   "O.2. Products - various [SPLIT]": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "O.4. Capital goods - grid": {
