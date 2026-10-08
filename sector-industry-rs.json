@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-06",
+ "current_week": "2026-10-07",
  "prior_week": "2026-08-07",
  "industry": {
   "A. Consumer staples": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "A.2. Tobacco": {
@@ -78,11 +78,11 @@
    "prior": "F"
   },
   "A.4. Household products": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "A.5. Food retail": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -90,7 +90,7 @@
    "prior": "D"
   },
   "A.7. General retail": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "B.11. Biotech - clinical stage": {
@@ -110,11 +110,11 @@
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
-   "current": "B",
+   "current": "A",
    "prior": "D"
   },
   "B.7. Pharma/biotech": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
@@ -122,11 +122,11 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "D.3. Infrastructure - telecom towers": {
@@ -178,7 +178,7 @@
    "prior": "D"
   },
   "G.5. Digital investment and trading platforms": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "H.1. Luxury goods": {
@@ -226,8 +226,8 @@
    "prior": "F"
   },
   "H.9. Hotels, leisure and hospitality": {
-   "current": "D",
-   "prior": "D"
+   "current": "C",
+   "prior": "C"
   },
   "I.1. Logistics": {
    "current": "A",
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "J.5. Software - VMS": {
@@ -266,7 +266,7 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "K.11. Information services": {
@@ -294,7 +294,7 @@
    "prior": "C"
   },
   "M.10. Building materials - cement and aggregates": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
@@ -303,7 +303,7 @@
   },
   "M.4. Chemicals - Base": {
    "current": "C",
-   "prior": "C"
+   "prior": "D"
   },
   "M.6. Construction and infrastructure contractors": {
    "current": "D",
@@ -346,7 +346,7 @@
    "prior": "F"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
@@ -366,7 +366,7 @@
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "O.2. Building technology and products": {
@@ -382,7 +382,7 @@
    "prior": "D"
   },
   "O.8. Mining, construction and material-handling equipment": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "P.1. Energy - downstream distribution": {
