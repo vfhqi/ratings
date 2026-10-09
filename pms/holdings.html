@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PMS Per-stock Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+<style>
+.sum { display:grid; grid-template-columns:auto 1fr; gap:6px 28px; padding:12px 16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; }
+.sum .kv .v { font-size:12.5px; }
+.statepill { white-space:nowrap; }
+td .nm { color:var(--fg); font-weight:600; text-decoration:none; }
+.arrow { font-weight:700; font-size:14px; }
+</style>
+<script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
+</head><body>
+<div class="wrap">
+  <div class="topbar"><span class="brand">PMS Per-stock Dashboard</span><span class="mut" style="font-size:12px">all holdings, in risk order; each row opens its holding's page</span><span class="sp"></span><span class="asof" id="asof"></span></div>
+  <div id="err"></div>
+  <div class="sum" id="sum"></div>
+  <div class="sec">
+    <h2>The book in risk order <span class="mut">sorted: a tranche in its release window first, then the Middle Innings Core Investments by the number of Sell Criteria met, then the Early Innings Probing Bets; within each, the nearest to selling first</span></h2>
+    <div style="overflow-x:auto"><table class="book" id="tbl"></table></div>
+    <div class="key">The six boxes, left to right: Industry RS below 30; the 200-day average of relative price falling; Sector RS below 50 with Stock RS below 70; Stock RS below 50 with analysts cutting; relative price more than 25% below its 52-week high; a tranche 30% below its highest close since purchase. Red: met. Amber: one part of a two-part criterion met. Grey outline: information only (a Probing Bet, whose moving-average stop governs). Since last week: the nearest tranche's distance to its 30% level against the readings a week earlier (green up: further from selling; red down: nearer; grey: within 2 points). No profit and loss is shown on this page.</div>
+  </div>
+</div>
+<script src="dashboard.js"></script>
+<script>
+(function () {
+  'use strict';
+  var esc = DU.esc, fmtD = DU.fmtD, fmtDY = DU.fmtDY, C = DASH.C;
+  var hl = function (t) { return window.PMS_LINK_MODE === 'hash' ? 'holding.html#' + t : 'holding.html?t=' + encodeURIComponent(t); };
+  fetch('data/latest/book.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('book.json: ' + r.status); return r.json(); }).then(render).catch(function (e) {
+    document.getElementById('err').innerHTML = '<div class="err">The data for this page could not be loaded (' + esc(e.message) + ').</div>'; });
+  function render(B) {
+    document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
+    var M = B._meta, hs = B.holdings.map(function (h) { var R = h.reading; R._t = h.t; R._probing = h.probing; R._slw = h.since_last_week; R._stop = h.stop_label; return R; });
+    document.getElementById('asof').textContent = 'readings as at ' + fmtDY(M.asof) + ' (Fridays read ' + fmtD(M.last_friday) + '; month-end read ' + fmtD(M.last_month_end) + ')';
+    var near = function (R) { return R.tranches.length ? Math.min.apply(null, R.tranches.map(function (t) { return t.distance_to_level_pct; })) : 99; };
+    var rel = function (R) { return R.tranches.some(function (t) { return t.state !== 'no trigger'; }); };
+    var rank = function (R) { return (rel(R) ? 0 : 1) * 1000 + (R._probing ? 500 : 0) - R.criteria.filter(function (c) { return c.fires; }).length * 50 + near(R); };
+    hs.sort(function (a, b) { return rank(a) - rank(b); });
+    var sum = function (f) { return hs.reduce(function (a, R) { return a + (f(R) || 0); }, 0); };
+    var trn = sum(function (R) { return R.tranches.length; }), cap = sum(function (R) { return R.size_pct; }), lossN = sum(function (R) { return Math.max(0, R.est_loss_nearer_pct_of_capital || 0); }), loss30 = sum(function (R) { return Math.max(0, R.est_max_loss_pct_of_capital || 0); });
+    var nRel = hs.filter(rel).length, nAw = hs.filter(function (R) { return /^AWAITING/.test(R.order_state || ''); }).length, nNo = hs.filter(function (R) { return !R._probing && (R.order_state === 'no signal'); }).length, nPb = hs.filter(function (R) { return R._probing; }).length;
+    document.getElementById('sum').innerHTML = '<div class="kv"><span class="k">Holdings</span><span class="v"><span class="big">' + hs.length + '</span> in ' + trn + ' tranches, ' + cap.toFixed(2) + '% of capital</span></div>' +
+      '<div class="kv"><span class="k">What we could lose (% of capital)</span><span class="v"><span class="big">' + lossN.toFixed(2) + '%</span> to each tranche\'s nearer exit level; ' + loss30.toFixed(2) + '% to the 30% levels only</span></div>' +
+      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + nRel + ' holding' + (nRel === 1 ? '' : 's') + ' with a tranche in its release window &middot; ' + nAw + ' awaiting replacement &middot; ' + nNo + ' with no signal &middot; ' + nPb + ' Early Innings Probing Bets on their stops</span></div>';
+    var boxes = function (R) {
+      var c = R.criteria, info = R._probing;
+      var part3 = function (v) { return v && typeof v === 'object' && ((v.sector_rs < 50) !== (v.stock_rs < 70)); };
+      var part4 = function (v) { return v && typeof v === 'object' && v.analyst_data && ((v.stock_rs < 50) !== ((v.ss_sales_nub100 < 0) || (v.ss_pt_nub100 < 0))); };
+      var st = [c[0].fires, c[1].fires, c[2].fires, c[3].fires, c[4].fires, rel(R)], pt = [false, false, !c[2].fires && part3(c[2].value), !c[3].fires && part4(c[3].value), false, false];
+      return '<span class="boxes">' + st.map(function (s, i) { return '<b class="' + (info ? 'info' : s ? 'met' : pt[i] ? 'half' : '') + '" title="' + esc(DASH.CRIT_WORDS['C' + (i + 1)]) + (info ? ' (information only)' : s ? ': met' : pt[i] ? ': one part met' : ': clear') + '"></b>'; }).join('') + '</span>';
+    };
+    var nearestTxt = function (R) {
+      if (R._probing) return 'the moving-average stop governs' + (R._stop ? ': ' + esc(R._stop.split(' (')[0].toLowerCase().replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); })) : '');
+      var tr = R.tranches.slice().sort(function (a, b) { return a.distance_to_level_pct - b.distance_to_level_pct; })[0], fired = R.criteria.filter(function (c) { return c.fires; });
+      if (tr && tr.state !== 'no trigger') return esc(tr.state.split(' (')[0]) + ' (tranche ' + tr.tranche_number + ')';
+      if (fired.length) return fired.length + ' of 6 met' + (fired.length < 3 ? ': ' + fired.map(function (c) { return esc(DASH.CRIT_WORDS[c.id]); }).join('; ') : ' (hover the boxes)');
+      return tr ? 'nearest: tranche ' + tr.tranche_number + ' is ' + Math.round(tr.distance_to_level_pct) + '% above its 30% level' : '';
+    };
+    var arrow = function (R) { var s = R._slw || {}; if (s.nearest_now == null || s.nearest_prev == null) return '<span class="mut" title="no readings a week earlier">&ndash;</span>'; var d = s.nearest_now - s.nearest_prev, t = 'nearest tranche ' + Math.round(s.nearest_now) + '% above its 30% level, against ' + Math.round(s.nearest_prev) + '% on ' + fmtD(s.prev_asof);
+      return Math.abs(d) < 2 ? '<span class="arrow" style="color:' + C.ink3 + '" title="' + esc(t) + '">&rarr;</span>' : d > 0 ? '<span class="arrow" style="color:' + C.industry + '" title="' + esc(t) + '">&uarr;</span>' : '<span class="arrow" style="color:' + C.red + '" title="' + esc(t) + '">&darr;</span>'; };
+    var h = '<tr><th>Holding</th><th>Status</th><th>Order sheet</th><th>The six Sell Criteria</th><th>Nearest to selling, or what is met</th><th class="num">Tranches</th><th class="num">% of capital</th><th>Nearest tranche: fall to its 30% level</th><th class="num">Could lose (% of capital)</th><th>Room to add</th><th>Since last week</th></tr>';
+    hs.forEach(function (R) {
+      var tr = R.tranches.slice().sort(function (a, b) { return a.distance_to_level_pct - b.distance_to_level_pct; })[0], dist = tr ? tr.distance_to_level_pct : null;
+      var d = Math.max(0, Math.min(35, dist || 0)), col = R._probing ? C.ink3 : dist <= 0 ? C.red : dist <= 10 ? C.amber : C.ink2;
+      var state = R._probing ? '<span class="pill blue statepill">Probing Bet</span>' : /^AWAITING/.test(R.order_state || '') ? '<span class="pill red statepill">AWAITING REPLACEMENT</span>' : rel(R) ? '<span class="pill red statepill">RELEASE WINDOW</span>' : /^SELL/.test(R.order_state || '') ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : '<span class="pill grey statepill">no signal</span>';
+      var add = R.add_rule || {};
+      h += '<tr class="row" data-t="' + esc(R._t) + '"><td><a class="nm" href="' + hl(R._t) + '">' + esc(R.name) + '</a><div class="mut">' + esc(R.sector) + '</div></td><td>' + (R._probing ? 'Early Innings Probing Bet' : 'Middle Innings Core Investment' + (R.one_off_in_out_link ? ' <span class="mut">(one-off link)</span>' : '')) + '</td><td>' + state + '</td><td>' + boxes(R) + '</td><td style="max-width:300px;font-size:11.5px">' + nearestTxt(R) + '</td><td class="num">' + R.tranches.length + '</td><td class="num">' + R.size_pct.toFixed(2) + '%</td><td><div class="bar" title="' + (dist == null ? 'n/a' : dist + '%') + '"><i style="width:' + (d / 35 * 100) + '%;background:' + col + '"></i></div><div class="mut">' + (dist == null ? 'n/a' : Math.round(dist) + '%') + '</div></td><td class="num">' + Math.max(0, R.est_loss_nearer_pct_of_capital || 0).toFixed(2) + '</td><td style="font-size:11.5px">' + (add.allowed ? 'yes, ' + add.next_add_pct + '%' : 'no') + '</td><td>' + arrow(R) + '</td></tr>';
+    });
+    var tbl = document.getElementById('tbl'); tbl.innerHTML = h;
+    tbl.onclick = function (e) { if (e.target.closest('a')) return; var tr = e.target.closest('tr.row'); if (tr) location.href = hl(tr.dataset.t); };
+  }
+})();
+</script>
+</body></html>

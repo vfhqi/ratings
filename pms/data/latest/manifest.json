@@ -1,0 +1,133 @@
+{
+ "asof": "2026-10-08",
+ "files": {
+  "AZA-SE": {
+   "file": "AZA-SE.json",
+   "bytes": 268290,
+   "warnings": []
+  },
+  "BYLOT-GR": {
+   "file": "BYLOT-GR.json",
+   "bytes": 241602,
+   "warnings": [
+    "sell-side eps: not joined: no monthly value within 40 days before the first daily reading"
+   ]
+  },
+  "CARL.B-DK": {
+   "file": "CARL_B-DK.json",
+   "bytes": 254521,
+   "warnings": []
+  },
+  "CVSG-GB": {
+   "file": "CVSG-GB.json",
+   "bytes": 264537,
+   "warnings": []
+  },
+  "FEVR-GB": {
+   "file": "FEVR-GB.json",
+   "bytes": 262811,
+   "warnings": [
+    "check rs: stock_rs on 2026-09-30 drawn 50, the reader says 51; the reader's value is used"
+   ]
+  },
+  "HTWS-GB": {
+   "file": "HTWS-GB.json",
+   "bytes": 270929,
+   "warnings": [
+    "sell-side eps: not joined: the daily file's value a month earlier (0.102) differs from the 2026-08-31 month-end (0.108) by -5.6%, so the two are on different bases",
+    "Portfolio Fitness for Fighting: no tilt row for the sector D.3. Infrastructure - telecom towers"
+   ]
+  },
+  "THEON-NL": {
+   "file": "THEON-NL.json",
+   "bytes": 174447,
+   "warnings": []
+  },
+  "VLX-GB": {
+   "file": "VLX-GB.json",
+   "bytes": 259059,
+   "warnings": [
+    "sell-side eps: no daily readings",
+    "sell-side ebitda: no daily readings",
+    "sell-side sales: no daily readings",
+    "sell-side tp: no daily readings",
+    "Portfolio Fitness for Fighting: no tilt row for the sector O.17. Engineered components, polymers and electronics manufacturing"
+   ]
+  },
+  "XVIVO-SE": {
+   "file": "XVIVO-SE.json",
+   "bytes": 270039,
+   "warnings": [
+    "sell-side eps: not joined: the daily file's value a month earlier (6.1068) differs from the 2026-08-31 month-end (6.0453) by +1.0%, so the two are on different bases",
+    "sell-side sales: not joined: the daily file's value a month earlier (1256.4) differs from the 2026-08-31 month-end (1273.405) by -1.3%, so the two are on different bases"
+   ]
+  },
+  "IMCD-NL": {
+   "file": "IMCD-NL.json",
+   "bytes": 253101,
+   "warnings": []
+  },
+  "HTRO-SE": {
+   "file": "HTRO-SE.json",
+   "bytes": 267501,
+   "warnings": [
+    "sell-side eps: not joined: the daily file's value a month earlier (2.656) differs from the 2026-08-31 month-end (2.89) by -8.1%, so the two are on different bases",
+    "sell-side ebitda: not joined: the daily file's value a month earlier (1278.85) differs from the 2026-08-31 month-end (1216.64) by +5.1%, so the two are on different bases",
+    "sell-side sales: not joined: the daily file's value a month earlier (9164.4) differs from the 2026-08-31 month-end (8961.48) by +2.3%, so the two are on different bases"
+   ]
+  },
+  "SDIP.B-SE": {
+   "file": "SDIP_B-SE.json",
+   "bytes": 263259,
+   "warnings": [
+    "sell-side eps: not joined: the daily file's value a month earlier (16.498) differs from the 2026-08-31 month-end (16.7) by -1.2%, so the two are on different bases",
+    "Portfolio Fitness for Fighting: no tilt row for the sector O.19. Diversified industrial groups"
+   ]
+  },
+  "DIE-BE": {
+   "file": "DIE-BE.json",
+   "bytes": 246983,
+   "warnings": [
+    "sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
+    "sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
+   ]
+  },
+  "HFG-GB": {
+   "file": "HFG-GB.json",
+   "bytes": 263339,
+   "warnings": []
+  },
+  "ALFEN-NL": {
+   "file": "ALFEN-NL.json",
+   "bytes": 256392,
+   "warnings": []
+  },
+  "ART-ES": {
+   "file": "ART-ES.json",
+   "bytes": 239714,
+   "warnings": []
+  }
+ },
+ "failed": [],
+ "warnings": [
+  "BYLOT-GR: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
+  "FEVR-GB: check rs: stock_rs on 2026-09-30 drawn 50, the reader says 51; the reader's value is used",
+  "HTWS-GB: sell-side eps: not joined: the daily file's value a month earlier (0.102) differs from the 2026-08-31 month-end (0.108) by -5.6%, so the two are on different bases",
+  "HTWS-GB: Portfolio Fitness for Fighting: no tilt row for the sector D.3. Infrastructure - telecom towers",
+  "VLX-GB: sell-side eps: no daily readings",
+  "VLX-GB: sell-side ebitda: no daily readings",
+  "VLX-GB: sell-side sales: no daily readings",
+  "VLX-GB: sell-side tp: no daily readings",
+  "VLX-GB: Portfolio Fitness for Fighting: no tilt row for the sector O.17. Engineered components, polymers and electronics manufacturing",
+  "XVIVO-SE: sell-side eps: not joined: the daily file's value a month earlier (6.1068) differs from the 2026-08-31 month-end (6.0453) by +1.0%, so the two are on different bases",
+  "XVIVO-SE: sell-side sales: not joined: the daily file's value a month earlier (1256.4) differs from the 2026-08-31 month-end (1273.405) by -1.3%, so the two are on different bases",
+  "HTRO-SE: sell-side eps: not joined: the daily file's value a month earlier (2.656) differs from the 2026-08-31 month-end (2.89) by -8.1%, so the two are on different bases",
+  "HTRO-SE: sell-side ebitda: not joined: the daily file's value a month earlier (1278.85) differs from the 2026-08-31 month-end (1216.64) by +5.1%, so the two are on different bases",
+  "HTRO-SE: sell-side sales: not joined: the daily file's value a month earlier (9164.4) differs from the 2026-08-31 month-end (8961.48) by +2.3%, so the two are on different bases",
+  "SDIP.B-SE: sell-side eps: not joined: the daily file's value a month earlier (16.498) differs from the 2026-08-31 month-end (16.7) by -1.2%, so the two are on different bases",
+  "SDIP.B-SE: Portfolio Fitness for Fighting: no tilt row for the sector O.19. Diversified industrial groups",
+  "DIE-BE: sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
+  "DIE-BE: sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
+ ],
+ "seconds": 37.7
+}

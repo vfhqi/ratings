@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PMS Per-stock Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+<script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span class="brand">PMS Per-stock Dashboard</span>
+    <select id="picker" aria-label="Holding"></select>
+    <a class="btnlink" href="holdings.html">All holdings</a>
+    <span class="seg" id="viewseg"><button data-v="full" class="on">Full</button><button data-v="summary">Summary</button></span>
+    <span class="sp"></span>
+    <span class="asof" id="asof"></span>
+  </div>
+  <div id="err"></div>
+  <div class="head" id="head"></div>
+  <div class="fund" id="fund"></div>
+  <div class="oneline" id="oneline"></div>
+  <div class="sumhead" id="sumhead"></div>
+
+  <div id="view-full">
+    <div class="sec">
+      <h2>1. How far each Sell Criterion is from selling, and which way it has moved since you bought <span class="mut">nearest first</span></h2>
+      <div id="ladder"></div>
+      <div class="ladkey"><span><span class="dot" style="background:#fff;border:2px solid #8250df"></span> the reading when tranche 1 was bought</span><span><span class="dot" style="background:#8b949e"></span> three month-ends back, then the previous month-end</span><span><span class="dot" style="background:#1f2328"></span> the reading the rule acts on (red when met, amber when within reach)</span><span><span class="dot" style="background:#fff;border:1.5px solid #656d76"></span> today's value, information only</span><span><span style="display:inline-block;width:14px;height:6px;background:rgba(207,34,46,.35);border-radius:3px"></span> the zone that sells</span></div>
+    </div>
+
+    <div class="sec">
+      <h2>2. The share price with its moving averages and the prices at which it would be sold; volume under it on the same dates <span class="mut">the Master Dashboard's chart</span></h2>
+      <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers (click to switch on or off; the chart's own volume layers are off because volume is drawn underneath)</span></div>
+      <div class="layers" id="legend"></div>
+      <div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div>
+      <div id="vb"></div>
+      <div class="key" id="chart-key"></div>
+    </div>
+
+    <div class="sec">
+      <h2>3. Relative strength and relative price, against the lines that sell <span class="mut">hover for any day's readings</span></h2>
+      <div id="stack"></div>
+      <details><summary>Which Sell Criteria read as met at each reading</summary><div id="stack2" style="margin-top:8px"></div></details>
+    </div>
+
+    <div class="sec">
+      <h2>4. The sell-side: earnings per share, EBITDA, sales and target price, indexed to entry; and the breadth of upgrades for each</h2>
+      <div id="ss-legend"></div>
+      <div id="ss"></div>
+      <div id="ss-table" style="overflow-x:auto"></div>
+    </div>
+
+    <div class="sec">
+      <h2>5. Valuation over time: the stock's own ten-year range, with the tranches marked <span class="mut"><span class="grp" id="valwin"></span> &middot; <a id="vallink" href="#" target="_blank" rel="noopener">open the full valuation page</a></span></h2>
+      <div class="grid2"><div><b style="font-size:12.5px">P/E, 24 months forward</b><div id="val-pe"></div><div class="nowline" id="val-pe-line"></div></div><div><b style="font-size:12.5px">EV / Sales, 24 months forward</b><div id="val-evs"></div><div class="nowline" id="val-evs-line"></div></div></div>
+      <div class="key">The shaded bands are the valuation page's: the stock's own ten-year 10th, 35th, median, 75th and 90th percentiles (the dashed line is the mean). Purple: the tranches bought.</div>
+    </div>
+
+    <div class="sec">
+      <h2>6. Peers: where this holding sits in its cohort and sector <span class="mut"><span class="grp" id="peerx"></span> &middot; <span class="grp" id="peery"></span></span></h2>
+      <div class="scat"><div id="pc-plot"></div><div id="pc-tbl" style="overflow-x:auto"></div></div>
+      <div class="key">Across: the change in Stock RS (right: strengthening). Up: the analysts' revisions over 3 months (up: upgrades). Dot size: market value. Filled dots: cohort peers; hollow dots: sector peers. Purple: this holding; blue: a holding of ours; grey: not held. A reading beyond plus or minus 40 per cent is pinned at the edge with its true value. The overlay (the tab at the right edge, or the P key) lists every industry, sector, cohort and geography peer.</div>
+    </div>
+
+    <div class="twocol">
+      <div class="sec"><h2>7. The Eight Master Ratings of Capital Deployment Worthiness</h2><div id="ratings"></div></div>
+      <div class="sec"><h2>8. Context this week</h2><div id="ctx"></div></div>
+    </div>
+    <div class="sec" id="jud"></div>
+    <div class="sec"><h2>Panels to come</h2><div id="ph"></div></div>
+    <div class="sec" id="exp"></div>
+  </div>
+
+  <div id="view-summary">
+    <div class="six" id="six">
+      <div class="p"><div class="pt"><span>Share price and moving averages, with the exit levels</span></div><div class="r" id="s1r"></div><div class="pb" id="s1"><div id="chart-container-sum"><canvas id="chart-canvas-sum" style="width:100%;display:block"></canvas></div></div></div>
+      <div class="p"><div class="pt"><span>Relative strength: Stock RS, Sector RS, Industry RS</span></div><div class="r" id="s2r"></div><div class="pb" id="s2"></div></div>
+      <div class="p"><div class="pt"><span>Volume: up days green, down days red, with the 20-day and 50-day averages</span></div><div class="r" id="s3r"></div><div class="pb" id="s3"></div></div>
+      <div class="p"><div class="pt"><span>Sell-side levels, indexed to 100 at the month-end before tranche 1</span></div><div class="r" id="s4r"></div><div class="pb" id="s4"></div></div>
+      <div class="p"><div class="pt"><span>Peers: cohort (filled dots) and sector (hollow dots)</span></div><div class="r" id="s5r"></div><div class="pb" id="s5"></div></div>
+      <div class="p"><div class="pt"><span id="s6t">Valuation: P/E against its own ten years</span></div><div class="r" id="s6r"></div><div class="pb" id="s6" style="cursor:pointer" title="click for EV / Sales"></div></div>
+    </div>
+  </div>
+</div>
+
+<button class="ov-btn" id="ovbtn">Peers: industry, sector, cohort, geography &#9656;</button>
+<div class="scrim" id="scrim"></div>
+<div class="ov" id="ov">
+  <div class="ov-hd"><b>Peers of <span id="ov-name"></span></b><input id="ov-q" placeholder="Search a ticker or company name" autocomplete="off"><button id="ov-close">Close</button></div>
+  <div class="ov-cols" id="ov-cols"></div>
+  <div class="ov-foot">Click a name: a holding of ours (marked "held") opens its own page here; any other stock opens the Master Dashboard's Stock View in a new tab. The number beside each name is its Stock RS on the reading day. Escape or a click outside closes this panel.</div>
+</div>
+
+
+<script src="chart-renderer-dashboard.js"></script>
+<script src="dashboard.js"></script>
+<script>
+(function () {
+  'use strict';
+  var DATA = 'data/latest/', MASTER = window.PMS_MASTER_BASE || '../../master/', HASHMODE = window.PMS_LINK_MODE === 'hash';
+  var Q = new URLSearchParams(location.search), H0 = location.hash.slice(1), T = Q.get('t') || (H0 && H0 !== 'overlay' ? decodeURIComponent(H0) : null);
+  if (HASHMODE) window.addEventListener('hashchange', function () { location.reload(); });
+  var fileOf = function (t) { return t.replace(/[.\/]/g, '_') + '.json'; };
+  var links = { holding: function (t) { return HASHMODE ? 'holding.html#' + t : 'holding.html?t=' + encodeURIComponent(t); }, stockView: function (t) { return MASTER + '?stock=' + encodeURIComponent(t); } };
+  var esc = DU.esc, fmtD = DU.fmtD, fmtDY = DU.fmtDY;
+  var m = null, view = 'full', valWin = 5, peerAx = { x: 'm3', y: 'eps3' }, sumVal = 'pe', built = { summary: false };
+  chartVis.vol = false; chartVis.vol20 = false; chartVis.vol50 = false; chartVis.obv = false;
+  chartZoom = '12M';
+  function fail(msg) { document.getElementById('err').innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
+  function getJSON(u) { return fetch(u, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(u + ': ' + r.status); return r.json(); }); }
+  try { var sv = sessionStorage.getItem('pmsdash-view'); if (sv === 'summary') view = 'summary'; } catch (e) {}
+
+  getJSON(DATA + 'book.json').then(function (B) {
+    var hs = B.holdings;
+    document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
+    if (T && (B._meta.failed || []).indexOf(T) >= 0) { fail('No page could be built for ' + ((B._meta.failed_names || {})[T] || T) + ' in the last update (see the Daily Digest); the other holdings are in the picker.'); return; }
+    if (!T || !hs.some(function (h) { return h.t === T; })) T = hs.length ? hs[0].t : null;
+    var groups = {}; hs.forEach(function (h) { var g = h.probing ? 'Early Innings Probing Bets' : 'Middle Innings Core Investments'; (groups[g] = groups[g] || []).push(h); });
+    document.getElementById('picker').innerHTML = Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value) + (HASHMODE ? '' : location.hash); };
+    if (!T) { fail('No holdings in the data file.'); return; }
+    return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
+  }).catch(function (e) { fail('The data for this page could not be loaded (' + e.message + ').'); });
+
+  function start(Hd) {
+    m = DASH.model(Hd);
+    document.title = m.name + ': PMS Per-stock Dashboard';
+    document.getElementById('asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
+    DASH.renderHeader(document.getElementById('head'), m);
+    DASH.renderFund(document.getElementById('fund'), m);
+    document.getElementById('oneline').textContent = DASH.oneLine(m);
+    document.getElementById('sumhead').innerHTML = '<b>' + esc(m.name) + '</b> <span class="mut">' + esc(m.t) + '</span> &middot; ' + esc(m.status) + (m.oneOff ? ' &middot; one-off in/out link' : '') + ' &middot; <span class="v">' + esc(DASH.oneLine(m)) + '</span>';
+    DASH.overlay(m, links);
+    document.getElementById('vallink').href = MASTER + 'valuation.html?t=' + encodeURIComponent(m.t);
+    setView(view, true);
+    window.addEventListener('resize', debounce(function () { drawAll(); }, 200));
+  }
+  function debounce(fn, ms) { var h; return function () { clearTimeout(h); h = setTimeout(fn, ms); }; }
+  function setView(v, first) {
+    view = v; document.body.classList.toggle('summary', v === 'summary');
+    [].forEach.call(document.querySelectorAll('#viewseg button'), function (b) { b.classList.toggle('on', b.dataset.v === v); });
+    try { sessionStorage.setItem('pmsdash-view', v); } catch (e) {}
+    drawAll();
+  }
+  document.getElementById('viewseg').onclick = function (e) { var b = e.target.closest('button'); if (b) setView(b.dataset.v); };
+
+  function drawAll() { if (!m) return; if (view === 'full') drawFull(); else drawSummary(); }
+
+  /* ---------------- the full view */
+  function widthOf(id) { var e = document.getElementById(id); return Math.max(600, Math.floor(e.clientWidth || 1200)); }
+  function drawFull() {
+    var W = widthOf('ladder');
+    var lad = document.getElementById('ladder'); lad.innerHTML = '';
+    DASH.ladder(lad, m.rowsSorted, { width: W, labelWidth: Math.min(360, Math.round(W * 0.27)), rightWidth: Math.min(330, Math.round(W * 0.26)) });
+    drawChart();
+    var st = document.getElementById('stack'); st.innerHTML = '';
+    DASH.stack(st, { d0: m.d0, d1: m.d1, width: W, right: 230, markers: m.tranches.map(function (tr) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number }; }), panels: [DASH.rsPanel(m, 200), DASH.relPanel(m, 170)] });
+    var st2 = document.getElementById('stack2'); st2.innerHTML = '';
+    DASH.stack(st2, { d0: m.d0, d1: m.d1, width: W, right: 230, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.statusPanel(m)] });
+    var since = DASH.addDays(m.asof, -3 * 365 - 10);
+    var info = DASH.ssPanels(m, since, false, 210, 120);
+    document.getElementById('ss-legend').innerHTML = DASH.ssLegend(info);
+    var ss = document.getElementById('ss'); ss.innerHTML = '';
+    DASH.stack(ss, { d0: since, d1: m.d1, width: W, right: info.right.length ? 60 : 30, markers: [{ d: m.tranches[0].entry_date, label: 'tranche 1' }], panels: info.panels, tickEvery: 3 });
+    document.getElementById('ss-table').innerHTML = DASH.ssTable(m, info);
+    drawVal();
+    drawPeers();
+    DASH.renderRatings(document.getElementById('ratings'), m);
+    DASH.renderContext(document.getElementById('ctx'), m);
+    DASH.renderJudgement(document.getElementById('jud'), m);
+    DASH.renderPlaceholders(document.getElementById('ph'));
+    DASH.renderExperiment(document.getElementById('exp'), m);
+  }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 470, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
+  function drawChart() {
+    var z = document.getElementById('zooms'), s = document.getElementById('scales');
+    z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
+    s.innerHTML = ['lin', 'log'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartScaleMode ? 'active' : '') + '" data-s="' + k + '">' + k.toUpperCase() + '</button>'; }).join('');
+    z.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartZoom = b.dataset.z; drawChart(); };
+    s.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartScaleMode = b.dataset.s; drawChart(); };
+    document.getElementById('legend').innerHTML = chartLegendHTML();
+    window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; drawChart(); };
+    chartTicker = m.t;
+    loadChartData(m.t, function (rows) {
+      if (!rows) { document.getElementById('chart-container').innerHTML = '<div class="err">No chart data for ' + esc(m.t) + ' on the Master Dashboard.</div>'; return; }
+      drawMasterChart(m.t, chartOpts());
+      DASH.drawVolume(document.getElementById('vb'), m, (window.PMS_CHART_LAYOUT || {})['chart-canvas']);
+      var lastL = (m.H.daily[m.H.daily.length - 1] || {});
+      document.getElementById('chart-key').innerHTML = m.probing ? 'Red dotted: the moving-average stop each tranche follows (the average less the 2% buffer), from the alignment calculation script. Purple: the tranches bought, by date. Everything else is the Master Dashboard\'s chart.'
+        : 'Red dotted: each tranche group\'s 30% level (the Sell Criterion on a 30% fall from the highest close since purchase). Magenta dashed: the price at which the relative price would be 25% below its 52-week high. Purple: the tranches bought, by date. Everything else is the Master Dashboard\'s chart.';
+    });
+  }
+  function drawVal() {
+    var w = document.getElementById('valwin');
+    w.innerHTML = [2, 5, 10].map(function (y) { return '<button class="chart-width-btn ' + (y === valWin ? 'active' : '') + '" data-y="' + y + '">' + y + 'Y</button>'; }).join('');
+    w.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; valWin = +b.dataset.y; drawVal(); };
+    var W = Math.max(300, Math.floor(document.getElementById('val-pe').parentNode.clientWidth));
+    DASH.valChart(document.getElementById('val-pe'), m, 'pe', valWin, W, 300, false);
+    DASH.valChart(document.getElementById('val-evs'), m, 'evs', valWin, W, 300, false);
+    document.getElementById('val-pe-line').innerHTML = DASH.valLine(m, 'pe');
+    document.getElementById('val-evs-line').innerHTML = DASH.valLine(m, 'evs');
+  }
+  function drawPeers() {
+    var px = document.getElementById('peerx'), py = document.getElementById('peery');
+    px.innerHTML = '<span class="mut">across: Stock RS change over </span>' + [['m1', '1M'], ['m3', '3M'], ['m6', '6M']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.x ? 'active' : '') + '" data-x="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    py.innerHTML = '<span class="mut">up: revisions over 3M to </span>' + [['eps3', 'earnings per share'], ['sales3', 'sales']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.y ? 'active' : '') + '" data-y="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
+    py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
+    var host = document.getElementById('pc-plot'), W = Math.max(380, Math.floor(host.clientWidth));
+    DASH.peersPicture(host, m, peerAx, W, 420, false);
+    document.getElementById('pc-tbl').innerHTML = DASH.peersTable(m);
+  }
+
+  /* ---------------- the six-panel summary (one screen; twelve months for the time panels) */
+  function drawSummary() {
+    var six = document.getElementById('six'), top = six.getBoundingClientRect().top + window.scrollY;
+    var rowH = Math.max(260, Math.floor((window.innerHeight - six.getBoundingClientRect().top - 12 - 10) / 2));
+    six.style.gridAutoRows = rowH + 'px';
+    var bodyH = rowH - 16 - 34;
+    var bw = function (id) { return Math.max(260, Math.floor(document.getElementById(id).clientWidth)); };
+    var d0 = DASH.addDays(m.asof, -365);
+    // 1: the share price and its moving averages, with the exit levels (no volume)
+    chartTicker = m.t;
+    loadChartData(m.t, function (rows) {
+      if (!rows) return;
+      drawMasterChart(m.t, { canvasId: 'chart-canvas-sum', containerId: 'chart-container-sum', height: bodyH, zoom: '12M', upto: m.asof, noMaLabels: true, overlay: DASH.overlayFor(m, true), pad: { t: 10, r: 58, b: 30, l: 8 } });
+      var L = (window.PMS_CHART_LAYOUT || {})['chart-canvas-sum'];
+      // 3: volume, the same twelve months, drawn to the panel's own width
+      var w3 = bw('s3'), padv = { t: 0, l: 34, r: 34, b: 0 };
+      var dates = L ? L.dates : [];
+      var lay = { W: w3, pad: padv, dates: dates, barW: (w3 - padv.l - padv.r) / Math.max(1, dates.length) };
+      DASH.drawVolume(document.getElementById('s3'), m, lay, { compact: true, h1: Math.max(70, bodyH - 146) });
+      var lv = m.H.volume[m.H.volume.length - 1] || {};
+      document.getElementById('s3r').textContent = 'up/down ' + (lv.ud20 == null ? 'n/a' : lv.ud20.toFixed(2)) + ' · distribution days ' + lv.dist25;
+    });
+    var near = m.R.tranches.length ? Math.min.apply(null, m.R.tranches.map(function (t) { return t.distance_to_level_pct; })) : null;
+    var c5 = m.c('C5');
+    document.getElementById('s1r').textContent = m.probing ? ((m.H.stops[0] || {}).label || '').split(' (')[0] : ('nearest 30% level ' + (near == null ? 'n/a' : Math.round(near) + '% below') + ' · relative price ' + DU.pct0(c5.today) + ' vs its high');
+    // 2: relative strength
+    var s2 = document.getElementById('s2'); s2.innerHTML = '';
+    DASH.stack(s2, { d0: d0, d1: m.asof, width: bw('s2'), left: 30, right: 34, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.rsPanel(m, bodyH - 60, true)], tickEvery: 2 });
+    var c3 = m.c('C3'), c1 = m.c('C1');
+    document.getElementById('s2r').textContent = 'today: Stock ' + c3.today.stock_rs + ' · Sector ' + c3.today.sector_rs + ' · Industry ' + c1.today + '; the lines end on the rule\'s reading days';
+    // 4: the sell-side levels, indexed to entry
+    var since = DASH.addDays(m.asof, -3 * 365 - 10), info = DASH.ssPanels(m, since, true, bodyH - 60, 0);
+    var s4 = document.getElementById('s4'); s4.innerHTML = '';
+    DASH.stack(s4, { d0: since, d1: m.asof, width: bw('s4'), left: 30, right: info.right.length ? 34 : 12, markers: [{ d: m.tranches[0].entry_date }], panels: info.panels, tickEvery: 12 });
+    var lab = { eps: 'earnings per share', ebitda: 'EBITDA', sales: 'sales', tp: 'target price' };
+    document.getElementById('s4r').textContent = info.S.filter(function (s) { return !s.none && s.now && s.base; }).map(function (s) { var ch = s.now.v / s.base.v - 1; return lab[s.key] + (s.right ? ' (right axis)' : '') + ' ' + (ch > 0 ? '+' : '') + (ch * 100).toFixed(0) + '%'; }).join(' · ');
+    // 5: peers
+    var n5 = DASH.peersPicture(document.getElementById('s5'), m, { x: 'm3', y: 'eps3' }, bw('s5'), bodyH, true);
+    var sp = m.H.peers.self; document.getElementById('s5r').textContent = 'Stock RS ' + sp.rs.now + ', change 3M ' + ((sp.rs.now != null && sp.rs.m3 != null) ? ((sp.rs.now - sp.rs.m3 > 0 ? '+' : '') + (sp.rs.now - sp.rs.m3)) : 'n/a');
+    // 6: valuation (P/E; a click switches to EV / Sales)
+    var s6 = document.getElementById('s6');
+    var drawV = function () { DASH.valChart(s6, m, sumVal, 5, bw('s6'), bodyH, true); var V = m.H.valuation; document.getElementById('s6t').textContent = 'Valuation: ' + (sumVal === 'pe' ? 'P/E' : 'EV / Sales') + ' against its own ten years'; document.getElementById('s6r').textContent = V ? ((sumVal === 'pe' ? V.current.pe : V.current.evs) || 0).toFixed(sumVal === 'pe' ? 1 : 2) + 'x, the ' + DASH.ordinal(DASH.pctNow(V, sumVal)) + ' percentile' : 'no valuation file'; };
+    s6.onclick = function () { sumVal = sumVal === 'pe' ? 'evs' : 'pe'; drawV(); };
+    drawV();
+  }
+})();
+</script>
+</body></html>
