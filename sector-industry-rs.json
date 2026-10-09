@@ -1,18 +1,18 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-08",
+ "current_week": "2026-10-09",
  "prior_week": "2026-08-07",
  "industry": {
   "A. Consumer staples": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "B. Healthcare": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "C. Telecoms": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "D. Infrastructure": {
@@ -32,7 +32,7 @@
    "prior": "B"
   },
   "H. Consumer discretionary": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "I. Transportation": {
@@ -122,7 +122,7 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
@@ -158,7 +158,7 @@
    "prior": "B"
   },
   "G.10. Asset and wealth managers": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.13. Banks": {
@@ -254,7 +254,7 @@
    "prior": "C"
   },
   "J.7. Software - Computer games": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "J.8. Hardware": {
@@ -266,7 +266,7 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "K.11. Information services": {
@@ -298,7 +298,7 @@
    "prior": "D"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "M.4. Chemicals - Base": {
@@ -326,7 +326,7 @@
    "prior": "F"
   },
   "N.3. Real estate - retail property": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "N.4. Real estate - logistics and industrial": {
@@ -350,7 +350,7 @@
    "prior": "B"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "P.4. Agriculture": {
