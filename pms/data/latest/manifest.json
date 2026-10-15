@@ -3,34 +3,34 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 276115,
+   "bytes": 273305,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 248091,
+   "bytes": 247158,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 262546,
+   "bytes": 262208,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 272043,
+   "bytes": 271585,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 270570,
+   "bytes": 269665,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 279044,
+   "bytes": 276894,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (0.102) differs from the 2026-08-31 month-end (0.108) by -5.6%, so the two are on different bases",
     "Portfolio Fitness for Fighting: no tilt row for the sector D.3. Infrastructure - telecom towers"
@@ -38,12 +38,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 183613,
+   "bytes": 181918,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 265526,
+   "bytes": 264815,
    "warnings": [
     "sell-side eps: no daily readings",
     "sell-side ebitda: no daily readings",
@@ -54,7 +54,7 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 277313,
+   "bytes": 276159,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (6.1068) differs from the 2026-08-31 month-end (6.0453) by +1.0%, so the two are on different bases",
     "sell-side sales: not joined: the daily file's value a month earlier (1256.4) differs from the 2026-08-31 month-end (1273.405) by -1.3%, so the two are on different bases"
@@ -62,12 +62,12 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 259524,
+   "bytes": 259555,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 275076,
+   "bytes": 274639,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (2.656) differs from the 2026-08-31 month-end (2.89) by -8.1%, so the two are on different bases",
     "sell-side ebitda: not joined: the daily file's value a month earlier (1278.85) differs from the 2026-08-31 month-end (1216.64) by +5.1%, so the two are on different bases",
@@ -76,7 +76,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 270003,
+   "bytes": 269462,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (16.498) differs from the 2026-08-31 month-end (16.7) by -1.2%, so the two are on different bases",
     "Portfolio Fitness for Fighting: no tilt row for the sector O.19. Diversified industrial groups"
@@ -84,7 +84,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 253871,
+   "bytes": 252649,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
     "sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
@@ -92,17 +92,17 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 270098,
+   "bytes": 269265,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 264216,
+   "bytes": 263689,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 247609,
+   "bytes": 248057,
    "warnings": []
   }
  },
@@ -126,5 +126,5 @@
   "DIE-BE: sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
   "DIE-BE: sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
  ],
- "seconds": 85.2
+ "seconds": 106.1
 }
