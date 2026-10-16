@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15",
+ "generated": "2026-10-16",
  "count": 343,
  "stocks": {
   "1U1-DE": {
@@ -5351,7 +5351,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -5574,7 +5574,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -21315,7 +21315,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -23044,7 +23044,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -30274,7 +30274,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -35263,7 +35263,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -36281,7 +36281,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "D",
      "anchor": ""
     },
     {
@@ -41245,7 +41245,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -41495,7 +41495,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -43561,7 +43561,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -45377,7 +45377,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -50583,7 +50583,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -63193,7 +63193,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -71306,13 +71306,13 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -72938,7 +72938,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -107338,13 +107338,13 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr2-sell-side-earnings-momentum-f"
     },
     {
@@ -140252,7 +140252,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -140661,7 +140661,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -144960,7 +144960,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -157102,7 +157102,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -157439,7 +157439,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -160796,7 +160796,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -165701,7 +165701,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -166541,7 +166541,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr2-sell-side-earnings-momentum-a"
     },
     {
@@ -171831,7 +171831,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -179513,7 +179513,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": ""
     },
     {
@@ -189089,7 +189089,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -189339,7 +189339,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -203783,7 +203783,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-nr"
     },
     {
@@ -204410,7 +204410,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -208202,7 +208202,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": ""
     },
     {
@@ -223009,7 +223009,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -231930,7 +231930,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -238635,7 +238635,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -240543,7 +240543,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -242133,13 +242133,13 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-d"
     },
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -244027,7 +244027,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -251067,7 +251067,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -258186,7 +258186,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -271999,7 +271999,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -278094,7 +278094,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": ""
     },
     {
