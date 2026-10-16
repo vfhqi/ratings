@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-15",
+ "current_week": "2026-10-16",
  "prior_week": "2026-08-14",
  "industry": {
   "A. Consumer staples": {
@@ -8,7 +8,7 @@
    "prior": "D"
   },
   "B. Healthcare": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "C. Telecoms": {
@@ -52,7 +52,7 @@
    "prior": "F"
   },
   "M. Materials": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "N. Real assets": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "A.2. Tobacco": {
@@ -82,7 +82,7 @@
    "prior": "F"
   },
   "A.5. Food retail": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -98,7 +98,7 @@
    "prior": "C"
   },
   "B.3. Hospitals, clinics and care homes": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "F",
+   "current": "D",
    "prior": "B"
   },
   "F.2. Defence - Non-primes": {
@@ -154,7 +154,7 @@
    "prior": "B"
   },
   "G.1. Insurance": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "G.10. Asset and wealth managers": {
@@ -166,7 +166,7 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -190,7 +190,7 @@
    "prior": "D"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
@@ -206,7 +206,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "H.2. Retail - apparel": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "J.5. Software - VMS": {
@@ -254,7 +254,7 @@
    "prior": "B"
   },
   "J.7. Software - Computer games": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "J.8. Hardware": {
@@ -278,7 +278,7 @@
    "prior": "C"
   },
   "K.5. Advertising and consulting services": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "K.9. Recruitment services": {
@@ -302,11 +302,11 @@
    "prior": "C"
   },
   "M.4. Chemicals - Base": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "M.6. Construction and infrastructure contractors": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "M.7. Forestry, paper and packaging": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "F",
+   "current": "D",
    "prior": "A"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
@@ -358,7 +358,7 @@
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
@@ -366,7 +366,7 @@
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "O.2. Building technology and products": {
@@ -378,7 +378,7 @@
    "prior": "B"
   },
   "O.7. Flow control, process and production machinery": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "O.8. Mining, construction and material-handling equipment": {
@@ -402,7 +402,7 @@
    "prior": "F"
   },
   "P.5. Metals and mining": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   }
  }
