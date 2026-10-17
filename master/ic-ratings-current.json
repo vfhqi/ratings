@@ -1479,14 +1479,14 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-10-16",
+      "last_updated": "2026-10-17",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
         "p2_market_paradigm_fit": "B",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "B",
-        "p5_ss_earnings_momentum": "C",
+        "p5_ss_earnings_momentum": "B",
         "p6_valuation": "F"
       },
       "investment_case": {
@@ -1508,7 +1508,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-10-16"
+      "_quant_refresh_at": "2026-10-17"
     },
     {
       "ticker": "BYLOT-GR",
@@ -4231,14 +4231,14 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-10-08",
+      "last_updated": "2026-10-17",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
-        "p5_ss_earnings_momentum": "C",
+        "p5_ss_earnings_momentum": "B",
         "p6_valuation": "A"
       },
       "investment_case": {
@@ -4260,7 +4260,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-10-08"
+      "_quant_refresh_at": "2026-10-17"
     },
     {
       "ticker": "ACT-DE",
