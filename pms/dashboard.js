@@ -317,7 +317,7 @@
     var W = layout.W, pad = layout.pad, n = layout.dates.length, bw = layout.barW;
     var xi = function (i) { return pad.l + i * bw + bw / 2; };
     var compact = !!opts.compact, TB = compact ? 0 : 22;
-    var h1 = compact ? (opts.h1 || 120) : 100, h2 = compact ? 0 : 100, gap = 26;
+    var h1 = compact ? (opts.h1 || 120) : 90, h2 = compact ? 0 : 90, gap = 26;
     var top1 = 6 + TB, top2 = top1 + h1 + gap + TB;
     var Htot = compact ? top1 + h1 + 4 : top2 + h2 + 24;
     var svg = el('svg', { width: W, height: Htot, viewBox: '0 0 ' + W + ' ' + Htot, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, host);
@@ -491,7 +491,7 @@
       var host2 = cell(names[k] + (labs.length ? ', financial years ' + labs.join(' and ') : ''), (M[k] || {}).rev);
       if (!ser.length) { host2.innerHTML = '<div class="mut" style="padding:8px 0">No consensus for ' + (labs.join(' or ') || 'a named year') + ' is held for ' + esc(m.name) + '.</div>'; return; }
       var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.12 || Math.abs(hi) * 0.05 || 1;
-      stack(host2, { d0: d0, d1: d1, width: cw, left: 52, right: 86, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: one ? 150 : 120, series: ser, yDomain: [lo - pd, hi + pd] }] });
+      stack(host2, { d0: d0, d1: d1, width: cw, left: 52, right: 86, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: one ? 150 : 105, series: ser, yDomain: [lo - pd, hi + pd] }] });
       drawn++;
     });
     if (!only) {
@@ -501,7 +501,7 @@
       if (!tpp.length && !px.length) h3.innerHTML = '<div class="mut">No target price history is held.</div>';
       else { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1;
         var lt = tpp[tpp.length - 1], lp = px[px.length - 1];
-        stack(h3, { d0: d0, d1: d1, width: cw, left: 52, right: 86, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: 120, yDomain: [lo3 - p3, hi3 + p3], series: [{ pts: px, color: C.ink3, w: 1.2, label: 'share price', fmt: fmtN, endLabel: lp ? 'price ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }, { pts: tpp, color: C.ink, w: 2, label: 'target price (mean)', fmt: fmtN, endLabel: lt ? 'target ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }] }] }); }
+        stack(h3, { d0: d0, d1: d1, width: cw, left: 52, right: 86, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: 105, yDomain: [lo3 - p3, hi3 + p3], series: [{ pts: px, color: C.ink3, w: 1.2, label: 'share price', fmt: fmtN, endLabel: lp ? 'price ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }, { pts: tpp, color: C.ink, w: 2, label: 'target price (mean)', fmt: fmtN, endLabel: lt ? 'target ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }] }] }); }
       var bp = ssPanels(m, d0, false, 10, 110).panels[1];
       if (bp) { var bh = document.createElement('div'); bh.style.marginTop = '8px'; host.appendChild(bh); bp.title = 'Net Upgrade Breadth on the 100-day count, at month-ends (with Stock RS below 50, a reading below zero on sales estimates or target prices sells)'; stack(bh, { d0: d0, d1: d1, width: W, right: 30, markers: [], panels: [bp] }); }
     }

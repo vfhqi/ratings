@@ -170,7 +170,7 @@
     DASH.stack(cr, { d0: m.d0, d1: m.d1, width: widthOf('crit'), right: 300, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.statusPanel(m)] });
     drawChart();
     var st = document.getElementById('stack'); st.innerHTML = '';
-    DASH.stack(st, { d0: m.d0, d1: m.d1, width: widthOf('stack'), right: 150, markers: m.tranches.map(function (tr) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number }; }), panels: [DASH.rsPanel(m, 230)] });
+    DASH.stack(st, { d0: m.d0, d1: m.d1, width: widthOf('stack'), right: 150, markers: m.tranches.map(function (tr) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number }; }), panels: [DASH.rsPanel(m, 200)] });
     DASH.ssRender(document.getElementById('ss'), m, widthOf('ss'));
     drawVal();
     drawPeers();
@@ -179,7 +179,7 @@
     DASH.renderJudgement(document.getElementById('jud'), m);
     DASH.renderExperiment(document.getElementById('exp'), m);
   }
-  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 370, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 340, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
@@ -204,8 +204,8 @@
     w.innerHTML = [2, 5, 10].map(function (y) { return '<button class="chart-width-btn ' + (y === valWin ? 'active' : '') + '" data-y="' + y + '">' + y + 'Y</button>'; }).join('');
     w.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; valWin = +b.dataset.y; drawVal(); };
     var W = Math.max(300, Math.floor(document.getElementById('val-pe').parentNode.clientWidth));
-    DASH.valChart(document.getElementById('val-pe'), m, 'pe', valWin, W, 210, false);
-    DASH.valChart(document.getElementById('val-evs'), m, 'evs', valWin, W, 210, false);
+    DASH.valChart(document.getElementById('val-pe'), m, 'pe', valWin, W, 190, false);
+    DASH.valChart(document.getElementById('val-evs'), m, 'evs', valWin, W, 190, false);
     document.getElementById('val-pe-line').innerHTML = DASH.valLine(m, 'pe');
     document.getElementById('val-evs-line').innerHTML = DASH.valLine(m, 'evs');
   }
@@ -216,7 +216,7 @@
     px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
     py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
     var host = document.getElementById('pc-plot'), W = Math.max(380, Math.floor(host.clientWidth));
-    DASH.peersPicture(host, m, peerAx, W, 380, false);
+    DASH.peersPicture(host, m, peerAx, W, 340, false);
     document.getElementById('pc-tbl').innerHTML = DASH.peersTable(m);
   }
 
