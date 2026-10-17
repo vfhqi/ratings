@@ -3,7 +3,7 @@
 * { box-sizing:border-box; margin:0; padding:0; }
 html { background:var(--bg); }
 body { background:var(--bg); color:var(--fg); font-family:var(--font); font-size:13px; line-height:1.45; }
-.wrap { max-width:1480px; margin:0 auto; padding:12px 16px 40px; }
+.wrap { max-width:none; margin:0 auto; padding:12px 16px 40px; } /* round 2 (17-Oct-2026): the whole screen width (Richard, Q1 = B: 1920 x 1080 at 100%) */
 a { color:var(--blue); }
 .mut { color:var(--fg3); font-size:11px; }
 /* top bar */
@@ -136,3 +136,22 @@ table.book td.num { text-align:right; font-variant-numeric:tabular-nums; }
 .boxes b { display:inline-block; width:12px; height:12px; border-radius:2px; background:var(--bg3); }
 .boxes b.met { background:var(--red); } .boxes b.half { background:var(--amber); } .boxes b.info { background:#eef0f2; border:1px solid var(--border); }
 body.summary .wrap { padding-bottom:6px; }
+
+/* round 2 (17-Oct-2026): two columns in today's section order, about three screens per holding at 1920 x 1080 */
+.cols { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; align-items:start; }
+.cols > .sec, .cols > .col > .sec { margin-bottom:14px; }
+.col { min-width:0; }
+.say { font-size:12.5px; color:var(--fg); margin:8px 0 2px; line-height:1.5; }
+.ssgrid { display:grid; gap:10px 16px; }
+.sscell { min-width:0; }
+.sst { font-size:12px; margin-bottom:2px; display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline; }
+.rvs { font-size:11px; color:var(--fg2); }
+.rv { display:inline-block; padding:0 5px; border-radius:4px; margin-left:4px; font-weight:600; font-variant-numeric:tabular-nums; }
+.rv.pos { background:rgba(26,127,55,.12); color:var(--green); } .rv.neg { background:rgba(207,34,46,.12); color:var(--red); } .rv.zero { background:var(--bg3); color:var(--fg2); }
+table.tbl td.pos { color:var(--green); } table.tbl td.neg { color:var(--red); }
+table.tbl td.pos.lg, table.tbl td.neg.lg { font-weight:700; }
+table.tbl td.pos.lg { background:rgba(26,127,55,.08); } table.tbl td.neg.lg { background:rgba(207,34,46,.08); }
+.nohist { padding:18px 12px; border:1px dashed var(--border); border-radius:6px; color:var(--fg2); font-size:12.5px; background:var(--bg2); }
+.ctxblock + .ctxblock { margin-top:10px; }
+.ctxblock p { margin:4px 0; }
+@media (max-width:1100px) { .cols { grid-template-columns:1fr; } }

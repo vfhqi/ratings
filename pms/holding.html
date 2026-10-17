@@ -22,62 +22,76 @@
   <div class="sumhead" id="sumhead"></div>
 
   <div id="view-full">
-    <div class="sec">
-      <h2>1. How far each Sell Criterion is from selling, and which way it has moved since you bought <span class="mut">nearest first</span></h2>
-      <div id="ladder"></div>
-      <div class="ladkey"><span><span class="dot" style="background:#fff;border:2px solid #8250df"></span> the reading when tranche 1 was bought</span><span><span class="dot" style="background:#8b949e"></span> three month-ends back, then the previous month-end</span><span><span class="dot" style="background:#1f2328"></span> the reading the rule acts on (red when met, amber when within reach)</span><span><span class="dot" style="background:#fff;border:1.5px solid #656d76"></span> today's value, information only</span><span><span style="display:inline-block;width:14px;height:6px;background:rgba(207,34,46,.35);border-radius:3px"></span> the zone that sells</span></div>
+    <div class="cols">
+      <div class="col">
+        <div class="sec">
+          <h2>1. How far each Sell Criterion is from selling, and which way it has moved since you bought <span class="mut">nearest first</span></h2>
+          <div id="ladder"></div>
+          <div class="ladkey"><span><span class="dot" style="background:#fff;border:2px solid #8250df"></span> the reading when tranche 1 was bought</span><span><span class="dot" style="background:#8b949e"></span> three month-ends back, then the previous month-end</span><span><span class="dot" style="background:#1f2328"></span> the reading the rule acts on (red when met, amber when within reach)</span><span><span class="dot" style="background:#fff;border:1.5px solid #656d76"></span> today's value, for information only</span><span><span style="display:inline-block;width:14px;height:6px;background:rgba(207,34,46,.35);border-radius:3px"></span> the zone in which the rule sells</span></div>
+        </div>
+        <div class="sec">
+          <h2>2. Which Sell Criteria read as met at each reading over the last year <span class="mut">red: met; grey: not met</span></h2>
+          <div id="crit"></div>
+          <div class="key">Each dot is one reading: Fridays for the weekly rules, month-ends for the monthly rules. The dots are worked out from this page's own series, so they show the history at a glance; the order sheet acts only on the Framework 14 reader's own readings, which section 1 shows.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="sec">
+          <h2>3. The share price with its moving averages and the prices at which it would be sold; buying and selling pressure and relative price under it, on the same dates</h2>
+          <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers: click to switch one on or off</span></div>
+          <div class="layers" id="legend"></div>
+          <div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div>
+          <div class="say" id="vb-say"></div>
+          <div id="vb"></div>
+          <div class="key" id="chart-key"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="col">
+        <div class="sec">
+          <h2>4. Relative strength against the lines that sell <span class="mut">hover for any day's readings</span></h2>
+          <div id="stack"></div>
+        </div>
+        <div class="sec">
+          <h2>6. Valuation over time: the stock's own ten-year range, with the tranches marked <span class="mut"><span class="grp" id="valwin"></span> &middot; <a id="vallink" href="#" target="_blank" rel="noopener">open the full valuation page</a></span></h2>
+          <div class="grid2"><div><b style="font-size:12.5px">P/E, 24 months forward</b><div id="val-pe"></div><div class="nowline" id="val-pe-line"></div></div><div><b style="font-size:12.5px">EV / Sales, 24 months forward</b><div id="val-evs"></div><div class="nowline" id="val-evs-line"></div></div></div>
+          <div class="key">The shaded bands are the valuation page's: the stock's own ten-year 10th, 35th, median, 75th and 90th percentiles, and the dashed line is the mean. A month above the top of the scale is drawn at the edge, with a marker giving its true value. Purple: the tranches bought.</div>
+        </div>
+      </div>
+      <div class="col">
+      <div class="sec">
+        <h2>5. The sell-side: the consensus for the next two financial years, and the target price against the share price</h2>
+        <div id="ss"></div>
+        <div class="key">Each line is the analysts' mean estimate for one named financial year, at each month-end over the last two years, in the company's own reporting units. A dotted line is the daily reading since 29-Sep where it is on the same basis. Purple dashes: tranche 1 bought. Green revisions are upgrades; red revisions are cuts.</div>
+      </div>
+      </div>
     </div>
 
     <div class="sec">
-      <h2>2. The share price with its moving averages and the prices at which it would be sold; volume under it on the same dates <span class="mut">the Master Dashboard's chart</span></h2>
-      <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers (click to switch on or off; the chart's own volume layers are off because volume is drawn underneath)</span></div>
-      <div class="layers" id="legend"></div>
-      <div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div>
-      <div id="vb"></div>
-      <div class="key" id="chart-key"></div>
-    </div>
-
-    <div class="sec">
-      <h2>3. Relative strength and relative price, against the lines that sell <span class="mut">hover for any day's readings</span></h2>
-      <div id="stack"></div>
-      <details><summary>Which Sell Criteria read as met at each reading</summary><div id="stack2" style="margin-top:8px"></div></details>
-    </div>
-
-    <div class="sec">
-      <h2>4. The sell-side: earnings per share, EBITDA, sales and target price, indexed to entry; and the breadth of upgrades for each</h2>
-      <div id="ss-legend"></div>
-      <div id="ss"></div>
-      <div id="ss-table" style="overflow-x:auto"></div>
-    </div>
-
-    <div class="sec">
-      <h2>5. Valuation over time: the stock's own ten-year range, with the tranches marked <span class="mut"><span class="grp" id="valwin"></span> &middot; <a id="vallink" href="#" target="_blank" rel="noopener">open the full valuation page</a></span></h2>
-      <div class="grid2"><div><b style="font-size:12.5px">P/E, 24 months forward</b><div id="val-pe"></div><div class="nowline" id="val-pe-line"></div></div><div><b style="font-size:12.5px">EV / Sales, 24 months forward</b><div id="val-evs"></div><div class="nowline" id="val-evs-line"></div></div></div>
-      <div class="key">The shaded bands are the valuation page's: the stock's own ten-year 10th, 35th, median, 75th and 90th percentiles (the dashed line is the mean). Purple: the tranches bought.</div>
-    </div>
-
-    <div class="sec">
-      <h2>6. Peers: where this holding sits in its cohort and sector <span class="mut"><span class="grp" id="peerx"></span> &middot; <span class="grp" id="peery"></span></span></h2>
+      <h2>7. Peers: where this holding sits in its cohort and sector <span class="mut"><span class="grp" id="peerx"></span> &middot; <span class="grp" id="peery"></span></span></h2>
       <div class="scat"><div id="pc-plot"></div><div id="pc-tbl" style="overflow-x:auto"></div></div>
-      <div class="key">Across: the change in Stock RS (right: strengthening). Up: the analysts' revisions over 3 months (up: upgrades). Dot size: market value. Filled dots: cohort peers; hollow dots: sector peers. Purple: this holding; blue: a holding of ours; grey: not held. A reading beyond plus or minus 40 per cent is pinned at the edge with its true value. The overlay (the tab at the right edge, or the P key) lists every industry, sector, cohort and geography peer.</div>
+      <div class="key">Across: the change in Stock RS (right means strengthening). Up: the analysts' revisions over 3 months (up means upgrades). Green dots are strengthening with upgrades, red dots are weakening with downgrades, and amber dots are mixed. Cohort peers are the stronger dots and sector peers the paler ones; dot size is market value. A purple ring marks this holding and a blue ring marks another holding of ours. A reading beyond plus or minus 40 per cent is pinned at the edge with its true value. In the table, green numbers are positive and red numbers negative. The overlay (the tab at the right edge, or the P key) lists every industry, sector, cohort and geography peer.</div>
     </div>
 
-    <div class="twocol">
-      <div class="sec"><h2>7. The Eight Master Ratings of Capital Deployment Worthiness</h2><div id="ratings"></div></div>
-      <div class="sec"><h2>8. Context this week</h2><div id="ctx"></div></div>
+    <div class="cols">
+      <div class="col">
+        <div class="sec"><h2>8. The Eight Master Ratings of Capital Deployment Worthiness</h2><div id="ratings"></div></div>
+        <div class="sec"><h2>9. Context this week</h2><div id="ctx"></div></div>
+        <div class="sec" id="exp"></div>
+      </div>
+      <div class="col"><div class="sec" id="jud"></div></div>
     </div>
-    <div class="sec" id="jud"></div>
-    <div class="sec"><h2>Panels to come</h2><div id="ph"></div></div>
-    <div class="sec" id="exp"></div>
   </div>
 
   <div id="view-summary">
     <div class="six" id="six">
       <div class="p"><div class="pt"><span>Share price and moving averages, with the exit levels</span></div><div class="r" id="s1r"></div><div class="pb" id="s1"><div id="chart-container-sum"><canvas id="chart-canvas-sum" style="width:100%;display:block"></canvas></div></div></div>
       <div class="p"><div class="pt"><span>Relative strength: Stock RS, Sector RS, Industry RS</span></div><div class="r" id="s2r"></div><div class="pb" id="s2"></div></div>
-      <div class="p"><div class="pt"><span>Volume: up days green, down days red, with the 20-day and 50-day averages</span></div><div class="r" id="s3r"></div><div class="pb" id="s3"></div></div>
-      <div class="p"><div class="pt"><span>Sell-side levels, indexed to 100 at the month-end before tranche 1</span></div><div class="r" id="s4r"></div><div class="pb" id="s4"></div></div>
-      <div class="p"><div class="pt"><span>Peers: cohort (filled dots) and sector (hollow dots)</span></div><div class="r" id="s5r"></div><div class="pb" id="s5"></div></div>
+      <div class="p"><div class="pt"><span>Buying and selling pressure: volume, up days green, down days red, distribution days marked</span></div><div class="r" id="s3r"></div><div class="pb" id="s3"></div></div>
+      <div class="p"><div class="pt"><span>Sell-side: the earnings per share consensus for the next two financial years</span></div><div class="r" id="s4r"></div><div class="pb" id="s4"></div></div>
+      <div class="p"><div class="pt"><span>Peers: cohort (stronger dots) and sector (paler dots); green, strengthening with upgrades</span></div><div class="r" id="s5r"></div><div class="pb" id="s5"></div></div>
       <div class="p"><div class="pt"><span id="s6t">Valuation: P/E against its own ten years</span></div><div class="r" id="s6r"></div><div class="pb" id="s6" style="cursor:pointer" title="click for EV / Sales"></div></div>
     </div>
   </div>
@@ -151,27 +165,21 @@
   function drawFull() {
     var W = widthOf('ladder');
     var lad = document.getElementById('ladder'); lad.innerHTML = '';
-    DASH.ladder(lad, m.rowsSorted, { width: W, labelWidth: Math.min(360, Math.round(W * 0.27)), rightWidth: Math.min(330, Math.round(W * 0.26)) });
+    DASH.ladder(lad, m.rowsSorted, { width: W, labelWidth: Math.min(310, Math.round(W * 0.34)), rightWidth: Math.min(345, Math.round(W * 0.38)) });
+    var cr = document.getElementById('crit'); cr.innerHTML = '';
+    DASH.stack(cr, { d0: m.d0, d1: m.d1, width: widthOf('crit'), right: 300, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.statusPanel(m)] });
     drawChart();
     var st = document.getElementById('stack'); st.innerHTML = '';
-    DASH.stack(st, { d0: m.d0, d1: m.d1, width: W, right: 230, markers: m.tranches.map(function (tr) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number }; }), panels: [DASH.rsPanel(m, 200), DASH.relPanel(m, 170)] });
-    var st2 = document.getElementById('stack2'); st2.innerHTML = '';
-    DASH.stack(st2, { d0: m.d0, d1: m.d1, width: W, right: 230, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.statusPanel(m)] });
-    var since = DASH.addDays(m.asof, -3 * 365 - 10);
-    var info = DASH.ssPanels(m, since, false, 210, 120);
-    document.getElementById('ss-legend').innerHTML = DASH.ssLegend(info);
-    var ss = document.getElementById('ss'); ss.innerHTML = '';
-    DASH.stack(ss, { d0: since, d1: m.d1, width: W, right: info.right.length ? 60 : 30, markers: [{ d: m.tranches[0].entry_date, label: 'tranche 1' }], panels: info.panels, tickEvery: 3 });
-    document.getElementById('ss-table').innerHTML = DASH.ssTable(m, info);
+    DASH.stack(st, { d0: m.d0, d1: m.d1, width: widthOf('stack'), right: 150, markers: m.tranches.map(function (tr) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number }; }), panels: [DASH.rsPanel(m, 230)] });
+    DASH.ssRender(document.getElementById('ss'), m, widthOf('ss'));
     drawVal();
     drawPeers();
     DASH.renderRatings(document.getElementById('ratings'), m);
     DASH.renderContext(document.getElementById('ctx'), m);
     DASH.renderJudgement(document.getElementById('jud'), m);
-    DASH.renderPlaceholders(document.getElementById('ph'));
     DASH.renderExperiment(document.getElementById('exp'), m);
   }
-  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 470, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 370, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
@@ -185,9 +193,10 @@
       if (!rows) { document.getElementById('chart-container').innerHTML = '<div class="err">No chart data for ' + esc(m.t) + ' on the Master Dashboard.</div>'; return; }
       drawMasterChart(m.t, chartOpts());
       DASH.drawVolume(document.getElementById('vb'), m, (window.PMS_CHART_LAYOUT || {})['chart-canvas']);
+      document.getElementById('vb-say').innerHTML = DASH.pressureSentence(m);
       var lastL = (m.H.daily[m.H.daily.length - 1] || {});
       document.getElementById('chart-key').innerHTML = m.probing ? 'Red dotted: the moving-average stop each tranche follows (the average less the 2% buffer), from the alignment calculation script. Purple: the tranches bought, by date. Everything else is the Master Dashboard\'s chart.'
-        : 'Red dotted: each tranche group\'s 30% level (the Sell Criterion on a 30% fall from the highest close since purchase). Magenta dashed: the price at which the relative price would be 25% below its 52-week high. Purple: the tranches bought, by date. Everything else is the Master Dashboard\'s chart.';
+        : 'Red dotted: the 30% level of each group of tranches; a close below it, with Stock RS below 70, sells those tranches. Magenta dashed: the relative 52-week-high line, the share price below which relative price would be more than 25% under its 52-week high with the market flat; read at the month-end, it sells the whole holding. Purple: the tranches bought, by date. Everything else is the Master Dashboard\'s chart.';
     });
   }
   function drawVal() {
@@ -195,8 +204,8 @@
     w.innerHTML = [2, 5, 10].map(function (y) { return '<button class="chart-width-btn ' + (y === valWin ? 'active' : '') + '" data-y="' + y + '">' + y + 'Y</button>'; }).join('');
     w.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; valWin = +b.dataset.y; drawVal(); };
     var W = Math.max(300, Math.floor(document.getElementById('val-pe').parentNode.clientWidth));
-    DASH.valChart(document.getElementById('val-pe'), m, 'pe', valWin, W, 300, false);
-    DASH.valChart(document.getElementById('val-evs'), m, 'evs', valWin, W, 300, false);
+    DASH.valChart(document.getElementById('val-pe'), m, 'pe', valWin, W, 210, false);
+    DASH.valChart(document.getElementById('val-evs'), m, 'evs', valWin, W, 210, false);
     document.getElementById('val-pe-line').innerHTML = DASH.valLine(m, 'pe');
     document.getElementById('val-evs-line').innerHTML = DASH.valLine(m, 'evs');
   }
@@ -207,7 +216,7 @@
     px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
     py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
     var host = document.getElementById('pc-plot'), W = Math.max(380, Math.floor(host.clientWidth));
-    DASH.peersPicture(host, m, peerAx, W, 420, false);
+    DASH.peersPicture(host, m, peerAx, W, 380, false);
     document.getElementById('pc-tbl').innerHTML = DASH.peersTable(m);
   }
 
@@ -229,9 +238,9 @@
       var w3 = bw('s3'), padv = { t: 0, l: 34, r: 34, b: 0 };
       var dates = L ? L.dates : [];
       var lay = { W: w3, pad: padv, dates: dates, barW: (w3 - padv.l - padv.r) / Math.max(1, dates.length) };
-      DASH.drawVolume(document.getElementById('s3'), m, lay, { compact: true, h1: Math.max(70, bodyH - 146) });
+      DASH.drawVolume(document.getElementById('s3'), m, lay, { compact: true, h1: Math.max(70, bodyH - 20) });
       var lv = m.H.volume[m.H.volume.length - 1] || {};
-      document.getElementById('s3r').textContent = 'up/down ' + (lv.ud20 == null ? 'n/a' : lv.ud20.toFixed(2)) + ' · distribution days ' + lv.dist25;
+      document.getElementById('s3r').textContent = 'up-day against down-day volume ' + (lv.ud20 == null ? 'n/a' : lv.ud20.toFixed(2)) + ' · distribution days in 25 sessions: ' + lv.dist25;
     });
     var near = m.R.tranches.length ? Math.min.apply(null, m.R.tranches.map(function (t) { return t.distance_to_level_pct; })) : null;
     var c5 = m.c('C5');
@@ -241,12 +250,11 @@
     DASH.stack(s2, { d0: d0, d1: m.asof, width: bw('s2'), left: 30, right: 34, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.rsPanel(m, bodyH - 60, true)], tickEvery: 2 });
     var c3 = m.c('C3'), c1 = m.c('C1');
     document.getElementById('s2r').textContent = 'today: Stock ' + c3.today.stock_rs + ' · Sector ' + c3.today.sector_rs + ' · Industry ' + c1.today + '; the lines end on the rule\'s reading days';
-    // 4: the sell-side levels, indexed to entry
-    var since = DASH.addDays(m.asof, -3 * 365 - 10), info = DASH.ssPanels(m, since, true, bodyH - 60, 0);
+    // 4: the sell-side, earnings per share for the next two named financial years (round 2: the indexed chart is gone)
     var s4 = document.getElementById('s4'); s4.innerHTML = '';
-    DASH.stack(s4, { d0: since, d1: m.asof, width: bw('s4'), left: 30, right: info.right.length ? 34 : 12, markers: [{ d: m.tranches[0].entry_date }], panels: info.panels, tickEvery: 12 });
-    var lab = { eps: 'earnings per share', ebitda: 'EBITDA', sales: 'sales', tp: 'target price' };
-    document.getElementById('s4r').textContent = info.S.filter(function (s) { return !s.none && s.now && s.base; }).map(function (s) { var ch = s.now.v / s.base.v - 1; return lab[s.key] + (s.right ? ' (right axis)' : '') + ' ' + (ch > 0 ? '+' : '') + (ch * 100).toFixed(0) + '%'; }).join(' · ');
+    DASH.ssRender(s4, m, bw('s4'), 'eps');
+    var ev = (m.H.ss.metrics.eps || {}).rev || {};
+    document.getElementById('s4r').textContent = 'earnings per share revisions: 1 month ' + (ev.L1M == null ? 'n/a' : (ev.L1M > 0 ? '+' : '') + ev.L1M + '%') + ', 3 months ' + (ev.L3M == null ? 'n/a' : (ev.L3M > 0 ? '+' : '') + ev.L3M + '%');
     // 5: peers
     var n5 = DASH.peersPicture(document.getElementById('s5'), m, { x: 'm3', y: 'eps3' }, bw('s5'), bodyH, true);
     var sp = m.H.peers.self; document.getElementById('s5r').textContent = 'Stock RS ' + sp.rs.now + ', change 3M ' + ((sp.rs.now != null && sp.rs.m3 != null) ? ((sp.rs.now - sp.rs.m3 > 0 ? '+' : '') + (sp.rs.now - sp.rs.m3)) : 'n/a');
