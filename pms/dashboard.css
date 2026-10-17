@@ -146,6 +146,7 @@ body.summary .wrap { padding-bottom:6px; }
 .sscell { min-width:0; }
 .sst { font-size:12px; margin-bottom:2px; display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline; }
 .rvs { font-size:11px; color:var(--fg2); }
+.ssnow { font-size:11.5px; color:var(--fg2); margin-bottom:2px; }
 .rv { display:inline-block; padding:0 5px; border-radius:4px; margin-left:4px; font-weight:600; font-variant-numeric:tabular-nums; }
 .rv.pos { background:rgba(26,127,55,.12); color:var(--green); } .rv.neg { background:rgba(207,34,46,.12); color:var(--red); } .rv.zero { background:var(--bg3); color:var(--fg2); }
 table.tbl td.pos { color:var(--green); } table.tbl td.neg { color:var(--red); }

@@ -37,7 +37,7 @@
       </div>
       <div class="col">
         <div class="sec">
-          <h2>3. The share price with its moving averages and the prices at which it would be sold; buying and selling pressure and relative price under it, on the same dates</h2>
+          <h2>3. The share price and the prices at which it would be sold, with volume and relative price beneath it on the same dates</h2>
           <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers: click to switch one on or off</span></div>
           <div class="layers" id="legend"></div>
           <div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div>
@@ -56,7 +56,7 @@
         </div>
         <div class="sec">
           <h2>6. Valuation over time: the stock's own ten-year range, with the tranches marked <span class="mut"><span class="grp" id="valwin"></span> &middot; <a id="vallink" href="#" target="_blank" rel="noopener">open the full valuation page</a></span></h2>
-          <div class="grid2"><div><b style="font-size:12.5px">P/E, 24 months forward</b><div id="val-pe"></div><div class="nowline" id="val-pe-line"></div></div><div><b style="font-size:12.5px">EV / Sales, 24 months forward</b><div id="val-evs"></div><div class="nowline" id="val-evs-line"></div></div></div>
+          <div class="grid2"><div><b style="font-size:12.5px">Price to earnings, 24 months forward</b><div id="val-pe"></div><div class="nowline" id="val-pe-line"></div></div><div><b style="font-size:12.5px">Enterprise value to sales, 24 months forward</b><div id="val-evs"></div><div class="nowline" id="val-evs-line"></div></div></div>
           <div class="key">The shaded bands are the valuation page's: the stock's own ten-year 10th, 35th, median, 75th and 90th percentiles, and the dashed line is the mean. A month above the top of the scale is drawn at the edge, with a marker giving its true value. Purple: the tranches bought.</div>
         </div>
       </div>
@@ -64,7 +64,7 @@
       <div class="sec">
         <h2>5. The sell-side: the consensus for the next two financial years, and the target price against the share price</h2>
         <div id="ss"></div>
-        <div class="key">Each line is the analysts' mean estimate for one named financial year, at each month-end over the last two years, in the company's own reporting units. A dotted line is the daily reading since 29-Sep where it is on the same basis. Purple dashes: tranche 1 bought. Green revisions are upgrades; red revisions are cuts.</div>
+        <div class="key">Each line is the analysts' mean estimate for one named financial year, at each month-end over the last two years, in the company's own reporting units. A dotted line is the daily reading since 29-Sep, drawn only where it is on the same basis as the monthly line. Purple dashes: tranche 1 bought. Green revisions are upgrades; red revisions are cuts.</div>
       </div>
       </div>
     </div>
@@ -89,10 +89,10 @@
     <div class="six" id="six">
       <div class="p"><div class="pt"><span>Share price and moving averages, with the exit levels</span></div><div class="r" id="s1r"></div><div class="pb" id="s1"><div id="chart-container-sum"><canvas id="chart-canvas-sum" style="width:100%;display:block"></canvas></div></div></div>
       <div class="p"><div class="pt"><span>Relative strength: Stock RS, Sector RS, Industry RS</span></div><div class="r" id="s2r"></div><div class="pb" id="s2"></div></div>
-      <div class="p"><div class="pt"><span>Buying and selling pressure: volume, up days green, down days red, distribution days marked</span></div><div class="r" id="s3r"></div><div class="pb" id="s3"></div></div>
+      <div class="p"><div class="pt"><span>Volume: up days green, down days red, distribution days marked</span></div><div class="r" id="s3r"></div><div class="pb" id="s3"></div></div>
       <div class="p"><div class="pt"><span>Sell-side: the earnings per share consensus for the next two financial years</span></div><div class="r" id="s4r"></div><div class="pb" id="s4"></div></div>
       <div class="p"><div class="pt"><span>Peers: cohort (stronger dots) and sector (paler dots); green, strengthening with upgrades</span></div><div class="r" id="s5r"></div><div class="pb" id="s5"></div></div>
-      <div class="p"><div class="pt"><span id="s6t">Valuation: P/E against its own ten years</span></div><div class="r" id="s6r"></div><div class="pb" id="s6" style="cursor:pointer" title="click for EV / Sales"></div></div>
+      <div class="p"><div class="pt"><span id="s6t">Valuation: price to earnings against its own ten years</span></div><div class="r" id="s6r"></div><div class="pb" id="s6" style="cursor:pointer" title="click for enterprise value to sales"></div></div>
     </div>
   </div>
 </div>
@@ -179,7 +179,7 @@
     DASH.renderJudgement(document.getElementById('jud'), m);
     DASH.renderExperiment(document.getElementById('exp'), m);
   }
-  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 340, upto: m.asof, overlay: DASH.overlayFor(m, false) }; }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 310, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: 22, r: 68, b: 32, l: 78 } }; }
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
@@ -211,8 +211,8 @@
   }
   function drawPeers() {
     var px = document.getElementById('peerx'), py = document.getElementById('peery');
-    px.innerHTML = '<span class="mut">across: Stock RS change over </span>' + [['m1', '1M'], ['m3', '3M'], ['m6', '6M']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.x ? 'active' : '') + '" data-x="' + k[0] + '">' + k[1] + '</button>'; }).join('');
-    py.innerHTML = '<span class="mut">up: revisions over 3M to </span>' + [['eps3', 'earnings per share'], ['sales3', 'sales']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.y ? 'active' : '') + '" data-y="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    px.innerHTML = '<span class="mut">across: Stock RS change over </span>' + [['m1', '1 month'], ['m3', '3 months'], ['m6', '6 months']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.x ? 'active' : '') + '" data-x="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    py.innerHTML = '<span class="mut">up: revisions over 3 months to </span>' + [['eps3', 'earnings per share'], ['sales3', 'sales']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.y ? 'active' : '') + '" data-y="' + k[0] + '">' + k[1] + '</button>'; }).join('');
     px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
     py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
     var host = document.getElementById('pc-plot'), W = Math.max(380, Math.floor(host.clientWidth));
@@ -257,10 +257,10 @@
     document.getElementById('s4r').textContent = 'earnings per share revisions: 1 month ' + (ev.L1M == null ? 'n/a' : (ev.L1M > 0 ? '+' : '') + ev.L1M + '%') + ', 3 months ' + (ev.L3M == null ? 'n/a' : (ev.L3M > 0 ? '+' : '') + ev.L3M + '%');
     // 5: peers
     var n5 = DASH.peersPicture(document.getElementById('s5'), m, { x: 'm3', y: 'eps3' }, bw('s5'), bodyH, true);
-    var sp = m.H.peers.self; document.getElementById('s5r').textContent = 'Stock RS ' + sp.rs.now + ', change 3M ' + ((sp.rs.now != null && sp.rs.m3 != null) ? ((sp.rs.now - sp.rs.m3 > 0 ? '+' : '') + (sp.rs.now - sp.rs.m3)) : 'n/a');
+    var sp = m.H.peers.self; document.getElementById('s5r').textContent = 'Stock RS ' + sp.rs.now + ', change over 3 months ' + ((sp.rs.now != null && sp.rs.m3 != null) ? ((sp.rs.now - sp.rs.m3 > 0 ? '+' : '') + (sp.rs.now - sp.rs.m3)) : 'n/a');
     // 6: valuation (P/E; a click switches to EV / Sales)
     var s6 = document.getElementById('s6');
-    var drawV = function () { DASH.valChart(s6, m, sumVal, 5, bw('s6'), bodyH, true); var V = m.H.valuation; document.getElementById('s6t').textContent = 'Valuation: ' + (sumVal === 'pe' ? 'P/E' : 'EV / Sales') + ' against its own ten years'; document.getElementById('s6r').textContent = V ? ((sumVal === 'pe' ? V.current.pe : V.current.evs) || 0).toFixed(sumVal === 'pe' ? 1 : 2) + 'x, the ' + DASH.ordinal(DASH.pctNow(V, sumVal)) + ' percentile' : 'no valuation file'; };
+    var drawV = function () { DASH.valChart(s6, m, sumVal, 5, bw('s6'), bodyH, true); var V = m.H.valuation; document.getElementById('s6t').textContent = 'Valuation: ' + (sumVal === 'pe' ? 'price to earnings' : 'enterprise value to sales') + ' against its own ten years'; document.getElementById('s6r').textContent = V ? ((sumVal === 'pe' ? V.current.pe : V.current.evs) || 0).toFixed(sumVal === 'pe' ? 1 : 2) + 'x, the ' + DASH.ordinal(DASH.pctNow(V, sumVal)) + ' percentile' : 'no valuation file'; };
     s6.onclick = function () { sumVal = sumVal === 'pe' ? 'evs' : 'pe'; drawV(); };
     drawV();
   }
