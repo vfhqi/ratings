@@ -17,12 +17,12 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
 <script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
 </head><body>
 <div class="wrap">
-  <div class="topbar"><span class="brand">PMS Per-stock Dashboard</span><span class="mut" style="font-size:12px">all holdings, in risk order; each row opens its holding's page</span><span class="sp"></span><span class="asof" id="asof"></span></div>
+  <div class="topbar"><span class="brand">PMS Per-stock Dashboard</span><span class="mut" style="font-size:12px">all holdings, the ones needing action first; each row opens its holding's page</span><span class="sp"></span><span class="asof" id="asof"></span></div>
   <div id="err"></div>
   <div class="sum" id="sum"></div>
   <div class="sec">
-    <h2>The book in risk order <span class="mut">sorted: a tranche in its release window first, then the Middle Innings Core Investments by the number of Sell Criteria met, then the Early Innings Probing Bets; within each, the nearest to selling first</span></h2>
-    <div class="howto"><b>How to read this page:</b> each row is one holding, riskiest first. Read across a row to see its status, what the order sheet says, which of the six Sell Criteria are met, how near it is to selling, its size, what we could lose, whether the rule allows an add, and whether it has moved nearer to selling since last week. Click a row to open the holding's own page.</div>
+    <h2>The book, the holdings needing action first <span class="mut">sorted: first the holdings the rule sells at the next Tuesday session; then a tranche in its release window; then the Middle Innings Core Investments by the number of Sell Criteria met; then the rest; within each, the nearest to selling first</span></h2>
+    <div class="howto"><b>How to read this page:</b> each row is one holding, and the holdings the rule says to act on come first. Read across a row to see its status, what the order sheet says, which of the six Sell Criteria are met, how near it is to selling, its size, what we could lose, whether the rule allows an add, and whether it has moved nearer to selling since last week. Click a row to open the holding's own page.</div>
     <div style="overflow-x:auto"><table class="book" id="tbl"></table></div>
     <div class="key">The six boxes, left to right: Industry RS below 30; the 200-day average of relative price falling; Sector RS below 50 with Stock RS below 70; Stock RS below 50 with analysts cutting; relative price more than 25% below its 52-week high; a tranche 30% below its highest close since purchase. Red: met. Amber: one part of a two-part criterion met. Grey outline: information only (a Probing Bet, whose moving-average stop governs). Since last week compares the nearest tranche's distance to its 30% level with the readings a week earlier: green when it moved further from that level, red when it moved nearer, grey when it moved less than 2 points. No profit and loss is shown on this page.</div>
   </div>
@@ -42,7 +42,11 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var near = function (R) { return R.tranches.length ? Math.min.apply(null, R.tranches.map(function (t) { return t.distance_to_level_pct; })) : 99; };
     /* 18-Oct-2026 re-check: a Probing Bet's 30% levels are information only, so its tranches never count as "in the release window" */
     var rel = function (R) { return !R._probing && R.tranches.some(function (t) { return t.state !== 'no trigger'; }); };
-    var rank = function (R) { return (rel(R) ? 0 : 1) * 1000 + (R._probing ? 500 : 0) - R.criteria.filter(function (c) { return c.fires; }).length * 50 + near(R); };
+    /* 18-Oct-2026 third check: the holdings the rule sells at the next Tuesday session come first (a confirmed moving-average stop exit, a
+       sell signal not held back by the one-off in/out link, a released tranche); the round-two order had put them last (Richard's Higher
+       Intent for this page: "you leave knowing the action the rules require") */
+    var sellNow = function (R) { return (R._probing && /EXIT CONFIRMED/.test(R._stop || '')) || /^SELL/.test(R.order_state || '') || (R.tranche_sales_due && R.tranche_sales_due.length > 0); };
+    var rank = function (R) { return (sellNow(R) ? 0 : rel(R) ? 1 : !R._probing ? 2 : 3) * 1000 - (R._probing ? 0 : R.criteria.filter(function (c) { return c.fires; }).length * 50) + near(R); };
     hs.sort(function (a, b) { return rank(a) - rank(b); });
     var sum = function (f) { return hs.reduce(function (a, R) { return a + (f(R) || 0); }, 0); };
     var trn = sum(function (R) { return R.tranches.length; }), cap = sum(function (R) { return R.size_pct; }), lossN = sum(function (R) { return Math.max(0, R.est_loss_nearer_pct_of_capital || 0); }), loss30 = sum(function (R) { return Math.max(0, R.est_max_loss_pct_of_capital || 0); });
@@ -50,7 +54,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var nPbX = hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).length;
     document.getElementById('sum').innerHTML = '<div class="kv"><span class="k">Holdings</span><span class="v"><span class="big">' + hs.length + '</span> holdings in ' + trn + ' tranches, ' + cap.toFixed(2) + '% of capital at purchase sizes.</span></div>' +
       '<div class="kv"><span class="k">What we could lose (% of capital)</span><span class="v"><span class="big">' + lossN.toFixed(2) + '%</span> if every price fell to each tranche\'s nearer exit level; ' + loss30.toFixed(2) + '% if every price fell to the 30% levels only.</span></div>' +
-      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + nRel + ' holding' + (nRel === 1 ? ' has a tranche' : 's have tranches') + ' in the release window. ' + nAw + ' Middle Innings Core Investment' + (nAw === 1 ? ' is' : 's are') + ' awaiting replacement under your one-off in/out link. ' + nNo + (nNo === 1 ? ' has' : ' have') + ' no Sell Criterion met. ' + nPb + ' Early Innings Probing Bets are sold on their moving-average stops, and ' + nPbX + ' of them ' + (nPbX === 1 ? 'has a confirmed stop exit' : 'have confirmed stop exits') + ' not yet sold.</span></div>';
+      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + (nPbX ? '<b>' + nPbX + ' Early Innings Probing Bet' + (nPbX === 1 ? ' has a confirmed stop exit' : 's have confirmed stop exits') + ' not yet sold, so the rule sells ' + (nPbX === 1 ? 'it' : 'them') + ' at the next Tuesday session: ' + hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).map(function (R) { return esc(R.name); }).join(', ') + '.</b> ' : '') + nRel + ' holding' + (nRel === 1 ? ' has a tranche' : 's have tranches') + ' in the release window. ' + nAw + ' Middle Innings Core Investment' + (nAw === 1 ? ' is' : 's are') + ' awaiting replacement under your one-off in/out link. ' + nNo + (nNo === 1 ? ' has' : ' have') + ' no Sell Criterion met. ' + nPb + ' Early Innings Probing Bets are sold on their moving-average stops.</span></div>';
     var boxes = function (R) {
       var c = R.criteria, info = R._probing;
       var part3 = function (v) { return v && typeof v === 'object' && ((v.sector_rs < 50) !== (v.stock_rs < 70)); };
@@ -68,7 +72,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       if (R._probing) {
         var sd = stopDate(R);
         out.push(nm + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale and the six Sell Criteria are information only.');
-        out.push(sd ? '<b>Its stop exit was confirmed on ' + fmtD(sd) + ' and it is not yet sold.</b>' : 'Its price is above its stop.');
+        out.push(sd ? '<b>Its stop exit was confirmed on ' + fmtD(sd) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.</b>' : 'Its price is above its stop.');
         return out.join(' ');
       }
       var tr = nearT(R), fired = R.criteria.filter(function (c) { return c.fires; });
@@ -102,7 +106,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       return '<b>No:</b> it holds ' + esc(w) + '.';
     };
     var th = function (t, ex, cls) { return '<th' + (cls ? ' class="' + cls + '"' : '') + '>' + t + (ex ? '<span class="thx">' + ex + '</span>' : '') + '</th>'; };
-    var h = '<tr>' + th('Holding') + th('Status') + th('Order sheet') + th('The six Sell Criteria', 'One box per Sell Criterion; red when met.') + th('What is met, and how near it is to selling', 'Which Sell Criteria are met, and how far the price can fall before the next one is.') + th('Tranches', 'Purchases held.', 'num') + th('% of capital', 'Its size, at purchase sizes.', 'num') + th('Could lose (% of capital)', 'If the price fell to each tranche\'s nearer exit level.', 'num') + th('Room to add', 'Whether the rule allows another tranche now.') + th('Since last week', 'How the nearest tranche\'s distance to its 30% level changed in a week.') + '</tr>';
+    var h = '<tr>' + th('Holding') + th('Status') + th('Order sheet') + th('The six Sell Criteria', 'One box per Sell Criterion: red when met; amber when one part of a two-part criterion is met.') + th('What is met, and how near it is to selling', 'Which Sell Criteria are met, and how far the price can fall before the next one is.') + th('Tranches', 'Purchases held.', 'num') + th('% of capital', 'Its size, at purchase sizes.', 'num') + th('Could lose (% of capital)', 'If the price fell to each tranche\'s nearer exit level.', 'num') + th('Room to add', 'Whether the rule allows another tranche now.') + th('Since last week', 'How the nearest tranche\'s distance to its 30% level changed in a week.') + '</tr>';
     hs.forEach(function (R) {
       var sd = R._probing ? stopDate(R) : null;
       var state = R._probing ? (sd ? '<span class="pill red statepill">STOP EXIT CONFIRMED</span>' : '<span class="pill blue statepill">price above its stop</span>') : /^AWAITING/.test(R.order_state || '') ? '<span class="pill red statepill">AWAITING REPLACEMENT</span>' : rel(R) ? '<span class="pill red statepill">RELEASE WINDOW</span>' : /^SELL/.test(R.order_state || '') ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : '<span class="pill grey statepill">no signal</span>';

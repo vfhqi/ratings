@@ -249,7 +249,7 @@
 
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
-    if (m.probing) return 'Early Innings Probing Bet: its moving-average stop decides the sale, and the six Sell Criteria are shown for information.';
+    if (m.probing) { var sx0 = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return 'Early Innings Probing Bet: its moving-average stop decides the sale' + (sx0 ? '. Its stop exit was confirmed on ' + fmtD(sx0[1]) + ', so the rule sells it at the next Tuesday session.' : ', and its price is above its stop.') + ' The six Sell Criteria are shown for information.'; }
     if (/^AWAITING/.test(m.order)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.';
     if (/^SELL/.test(m.order)) return m.order;
     if (m.order === 'no signal' || !m.order) return 'No Sell Criterion is met.';
@@ -258,7 +258,7 @@
   function oneLine(m) {
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
-    if (m.probing) { var sx = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return m.name + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale. ' + (sx ? 'Its stop exit was confirmed on ' + fmtD(sx[1]) + ' and it is not yet sold.' : 'Its price is above its stop.') + lose; }
+    if (m.probing) { var sx = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return m.name + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale. ' + (sx ? 'Its stop exit was confirmed on ' + fmtD(sx[1]) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.' : 'Its price is above its stop.') + lose; }
     var nr = m.nearestRow;
     return (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
