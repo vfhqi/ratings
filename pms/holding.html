@@ -240,16 +240,17 @@
       var lay = { W: w3, pad: padv, dates: dates, barW: (w3 - padv.l - padv.r) / Math.max(1, dates.length) };
       DASH.drawVolume(document.getElementById('s3'), m, lay, { compact: true, h1: Math.max(70, bodyH - 20) });
       var lv = m.H.volume[m.H.volume.length - 1] || {};
-      document.getElementById('s3r').textContent = 'up-day against down-day volume ' + (lv.ud20 == null ? 'n/a' : lv.ud20.toFixed(2)) + ' · distribution days in 25 sessions: ' + lv.dist25;
+      document.getElementById('s3r').textContent = 'Up-day against down-day volume over 20 sessions: ' + (lv.ud20 == null ? 'n/a' : lv.ud20.toFixed(2)) + '. Distribution days in 25 sessions: ' + lv.dist25 + '.';
     });
     var near = m.R.tranches.length ? Math.min.apply(null, m.R.tranches.map(function (t) { return t.distance_to_level_pct; })) : null;
     var c5 = m.c('C5');
-    document.getElementById('s1r').textContent = m.probing ? ((m.H.stops[0] || {}).label || '').split(' (')[0] : ('nearest 30% level ' + (near == null ? 'n/a' : Math.round(near) + '% below') + ' · relative price ' + DU.pct0(c5.today) + ' vs its high');
+    var sx1 = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(((m.H.stops || [])[0] || {}).label || '');
+    document.getElementById('s1r').textContent = m.probing ? (sx1 ? 'Its stop exit was confirmed on ' + fmtD(sx1[1]) + '.' : 'Its price is above its stop.') : ('The price can fall ' + (near == null ? 'n/a' : Math.round(near) + '%') + ' to the nearest 30% level; relative price is ' + Math.round(Math.abs(c5.today || 0) * 100) + '% below its 52-week high.');
     // 2: relative strength
     var s2 = document.getElementById('s2'); s2.innerHTML = '';
     DASH.stack(s2, { d0: d0, d1: m.asof, width: bw('s2'), left: 30, right: 34, markers: m.tranches.map(function (tr) { return { d: tr.entry_date }; }), panels: [DASH.rsPanel(m, bodyH - 60, true)], tickEvery: 2 });
     var c3 = m.c('C3'), c1 = m.c('C1');
-    document.getElementById('s2r').textContent = 'today: Stock ' + c3.today.stock_rs + ' · Sector ' + c3.today.sector_rs + ' · Industry ' + c1.today + '; the lines end on the rule\'s reading days';
+    document.getElementById('s2r').textContent = 'Today: Stock RS ' + c3.today.stock_rs + ', Sector RS ' + c3.today.sector_rs + ', Industry RS ' + c1.today + '. The lines end on the rule\'s reading days.';
     // 4: the sell-side, earnings per share for the next two named financial years (round 2: the indexed chart is gone)
     var s4 = document.getElementById('s4'); s4.innerHTML = '';
     DASH.ssRender(s4, m, bw('s4'), 'eps');

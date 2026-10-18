@@ -198,7 +198,7 @@
     var sl = function (d) { var q = d ? fridayFor(d) : null; var x = q ? dailyAt(q.d) : null; return x ? x.slope : null; };
     m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return (v * 100).toFixed(0) + '%'; }, state: info ? 'info' : c2.fires ? 'fires' : near(c2.value, 0, 0.01) ? 'near' : 'clear',
       marks: [{ v: e ? e.slope : null, kind: 'entry', label: 'bought' }, { v: sl(m.me3), kind: 'm3' }, { v: sl(m.me1), kind: 'm1' }, { v: c2.value, kind: 'latest' }, { v: c2.today, kind: 'today' }],
-      text: (c2.fires ? 'Met: the average ' : 'The average ') + (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '% over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
+      text: (c2.fires ? 'Met: the average ' : 'The average ') + (Math.abs(c2.value) < 0.0005 ? 'was flat (a change of less than 0.1%)' : (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '%') + ' over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
     var v3 = c3.value, s3met = v3.sector_rs < 50, s3other = v3.stock_rs < 70;
     var r3 = function (d, k) { var q = d ? rsAt(d) : null; return q ? q[k] : null; };
     m.rows.push({ id: 'C3s', label: 'Sector RS below 50 (sells with Stock RS below 70)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 50, triggerSide: 'below', state: info ? 'info' : c3.fires ? 'fires' : (s3met || s3other || near(v3.sector_rs, 50, 10)) ? 'near' : 'clear',
@@ -210,7 +210,7 @@
     var v4 = c4.value || {}, b4 = minNub({ sales: v4.ss_sales_nub100, tp: v4.ss_pt_nub100 });
     m.rows.push({ id: 'C4b', label: 'Net Upgrade Breadth, the weaker of the two counts (sells with Stock RS below 50)', sub: 'read at the month-end on the 100-day count', lo: -1, hi: 1, trigger: 0, triggerSide: 'below', fmt: function (v) { return (v > 0 ? '+' : '') + Math.round(v * 100) + '%'; }, state: info ? 'info' : c4.fires ? 'fires' : (b4 != null && b4 <= 0.1) ? 'near' : 'clear',
       marks: [{ v: e ? minNub(nubAt(e.grid_day)) : null, kind: 'entry', label: 'bought' }, { v: m.me3 ? minNub(nubAt(m.me3)) : null, kind: 'm3' }, { v: m.me1 ? minNub(nubAt(m.me1)) : null, kind: 'm1' }, { v: b4, kind: 'latest' }],
-      text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Met: ' : '') + 'Net Upgrade Breadth was ' + pctS(v4.ss_sales_nub100) + ' on sales estimates and ' + pctS(v4.ss_pt_nub100) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
+      text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Met: ' : '') + 'Net Upgrade Breadth was ' + (v4.ss_sales_nub100 == null ? 'not available' : pctS(v4.ss_sales_nub100)) + ' on sales estimates and ' + (v4.ss_pt_nub100 == null ? 'not available' : pctS(v4.ss_pt_nub100)) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
       text2: 'Stock RS was ' + v4.stock_rs + (v4.stock_rs < 50 ? ', below 50, so this rule can sell.' : ', above 50, so this rule cannot sell yet.') });
     var dl = dailyAt(m.asof) || {}, cl = dl.c;
     var rd = function (d) { var q = d ? dailyAt(d) : null; return q ? q.rdh : null; };
@@ -224,19 +224,33 @@
       var lt = tr.distance_to_level_pct / 100;
       m.rows.push({ id: 'C6', label: 'The nearest tranche\'s distance to its 30% level', sub: 'a close below it, with Stock RS below 70, sells it', lo: -0.1, hi: 0.35, trigger: 0, triggerSide: 'below', fmt: function (v) { return Math.round(v * 100) + '%'; }, state: info ? 'info' : tr.state !== 'no trigger' ? 'fires' : lt <= 0.10 ? 'near' : 'clear',
         marks: [{ v: 0.30, kind: 'entry', label: 'bought' }, { v: fallAt(m.me3), kind: 'm3' }, { v: fallAt(m.me1), kind: 'm1' }, { v: lt, kind: 'latest' }],
-        text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; return 'Met' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
+        text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; if (info) return 'Tranche ' + tr.tranche_number + ' fell below its 30% level' + (td ? ' on ' + fmtD(td) : '') + '; for a Probing Bet this is information only.'; return 'Met' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
         text2: (tr.state !== 'no trigger' ? 'The price is ' + Math.round(tr.distance_to_level_pct) + '% above the 30% level; ' : '') + 'Stock RS today is ' + tr.stock_rs_today + '.' });
     }
     var order = { fires: 0, near: 1, clear: 2, info: 3 };
-    m.rowsSorted = m.rows.slice().sort(function (a, b) { return order[a.state] - order[b.state]; });
-    m.nearestRow = m.rows.filter(function (r) { return r.state === 'near' || r.state === 'clear'; }).sort(function (a, b) { return order[a.state] - order[b.state]; })[0] || m.rows[0];
+    /* 18-Oct-2026 re-check: "nearest first" now means nearest, measured as the distance from the reading the rule acts on to the
+       line that sells, as a share of the row's scale (before, rows of the same colour kept their build order) */
+    m.rows.forEach(function (r) { var la = r.marks.filter(function (q) { return q.kind === 'latest'; })[0]; r.dist = (la && la.v != null) ? (la.v - r.trigger) / (r.hi - r.lo) : 9; });
+    /* a two-part Sell Criterion is only as near as its further part */
+    var rsD = function (v, line) { return v == null ? 9 : (v - line) / 99; }, nubD = (b4 == null ? 9 : b4 / 2);
+    m.rows.forEach(function (r) {
+      if (r.id === 'C3s') r.dist = Math.max(rsD(v3.sector_rs, 50), rsD(v3.stock_rs, 70));
+      if (r.id === 'C4b') r.dist = Math.max(nubD, rsD(v4.stock_rs, 50));
+      if (r.id === 'C34') r.dist = Math.min(Math.max(rsD(v3.stock_rs, 70), rsD(v3.sector_rs, 50)), Math.max(rsD(v3.stock_rs, 50), nubD));
+    });
+    m.rowsSorted = m.rows.slice().sort(function (a, b) { return (order[a.state] - order[b.state]) || (a.dist - b.dist); });
+    m.nearestRow = m.rows.filter(function (r) { return r.state === 'near' || r.state === 'clear'; }).sort(function (a, b) { return a.dist - b.dist; })[0] || m.rows[0];
+    var c3t = c3.today || {}, early = [];
+    if (!c3.fires && c3t.sector_rs < 50 && c3t.stock_rs < 70) early.push('Sector RS is ' + c3t.sector_rs + ', below 50, with Stock RS ' + c3t.stock_rs + ', below 70');
+    if (!c5.fires && c5.today != null && c5.today < -0.25) early.push('relative price is ' + Math.round(-c5.today * 100) + '% below its 52-week high');
+    m.earlyText = early.length ? 'On today\'s daily readings, ' + early.join(', and ') + ', so ' + (early.length > 1 ? 'those Sell Criteria' : 'that Sell Criterion') + ' would be met if the month-end reading stays there.' : '';
     return m;
   }
 
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
     if (m.probing) return 'Early Innings Probing Bet: its moving-average stop decides the sale, and the six Sell Criteria are shown for information.';
-    if (/^AWAITING/.test(m.order)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria are met; it is sold when a replacement is bought, under your one-off in/out link.';
+    if (/^AWAITING/.test(m.order)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.';
     if (/^SELL/.test(m.order)) return m.order;
     if (m.order === 'no signal' || !m.order) return 'No Sell Criterion is met.';
     return m.order;
@@ -246,7 +260,7 @@
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
     if (m.probing) { var sx = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return m.name + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale. ' + (sx ? 'Its stop exit was confirmed on ' + fmtD(sx[1]) + ' and it is not yet sold.' : 'Its price is above its stop.') + lose; }
     var nr = m.nearestRow;
-    return (m.metCount ? m.metCount + ' of the six Sell Criteria are met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. Nearest to selling: ' + (nr ? nr.text : '')) + lose;
+    return (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
 
   function below(v) { return v == null ? 'n/a against' : Math.round(Math.abs(v) * 100) + '% ' + (v < 0 ? 'below' : 'above'); }
@@ -588,7 +602,7 @@
     if (!(V[f] || []).some(function (v) { return v != null; })) return '';
     var cur = V.current[f], pc = pctNow(V, f), ae = V.at_entry, ev = f === 'pe' ? ae.pe : ae.evs, ep = f === 'pe' ? ae.pe_pct : ae.evs_pct;
     var fx = function (v) { return v == null ? 'n/a' : (f === 'evs' || v < 10 ? v.toFixed(2) : v.toFixed(1)) + 'x'; };
-    var s = 'Today it is <b>' + fx(cur) + '</b>, in the ' + ordinal(pc) + ' percentile of its own ten years. When tranche 1 was bought (' + MON[+ae.month.slice(5, 7) - 1] + ' ' + ae.month.slice(0, 4) + ') it was <b>' + fx(ev) + '</b>, in the ' + ordinal(ep) + ' percentile.';
+    var s = 'Today it is <b>' + fx(cur) + '</b>' + (pc != null ? ', in the ' + ordinal(pc) + ' percentile of its own ten years.' : '; its percentile in its own ten years is not available.') + (ae && ae.month && ev != null ? ' When tranche 1 was bought (' + MON[+ae.month.slice(5, 7) - 1] + ' ' + ae.month.slice(0, 4) + ') it was <b>' + fx(ev) + '</b>' + (ep != null ? ', in the ' + ordinal(ep) + ' percentile.' : '.') : '');
     var g = V.grade_basis;
     if (f === 'pe' && g && g.pe != null && cur && Math.abs(g.pe - cur) / cur > 0.03) s += '<br><span class="mut">The valuation grade reads ' + fx(g.pe) + ', the ' + ordinal(g.pct) + ' percentile (today\'s price over the same earnings); this chart is FactSet\'s own month-end series, as on the valuation page.</span>';
     return s;

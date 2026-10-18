@@ -15,12 +15,12 @@
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 268459,
+   "bytes": 268460,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 278377,
+   "bytes": 278376,
    "warnings": []
   },
   "FEVR-GB": {
@@ -37,7 +37,7 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 185496,
+   "bytes": 185498,
    "warnings": []
   },
   "VLX-GB": {
@@ -95,7 +95,7 @@
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 269100,
+   "bytes": 269112,
    "warnings": []
   },
   "ART-ES": {
@@ -122,5 +122,5 @@
   "DIE-BE: sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
   "DIE-BE: sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
  ],
- "seconds": 49.8
+ "seconds": 52.0
 }

@@ -40,7 +40,8 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var M = B._meta, hs = B.holdings.map(function (h) { var R = h.reading; R._t = h.t; R._probing = h.probing; R._slw = h.since_last_week; R._stop = h.stop_label; return R; });
     document.getElementById('asof').textContent = 'readings as at ' + fmtDY(M.asof) + ' (Fridays read ' + fmtD(M.last_friday) + '; month-end read ' + fmtD(M.last_month_end) + ')';
     var near = function (R) { return R.tranches.length ? Math.min.apply(null, R.tranches.map(function (t) { return t.distance_to_level_pct; })) : 99; };
-    var rel = function (R) { return R.tranches.some(function (t) { return t.state !== 'no trigger'; }); };
+    /* 18-Oct-2026 re-check: a Probing Bet's 30% levels are information only, so its tranches never count as "in the release window" */
+    var rel = function (R) { return !R._probing && R.tranches.some(function (t) { return t.state !== 'no trigger'; }); };
     var rank = function (R) { return (rel(R) ? 0 : 1) * 1000 + (R._probing ? 500 : 0) - R.criteria.filter(function (c) { return c.fires; }).length * 50 + near(R); };
     hs.sort(function (a, b) { return rank(a) - rank(b); });
     var sum = function (f) { return hs.reduce(function (a, R) { return a + (f(R) || 0); }, 0); };
@@ -86,6 +87,8 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     };
     var arrow = function (R) {
       if (R._probing) return '<span class="mut">Not shown: a Probing Bet is sold on its moving-average stop, not on its 30% levels.</span>';
+      var rwt = R.tranches.filter(function (x) { return x.state !== 'no trigger'; });
+      if (rwt.length) { var rp = /close >= ([0-9.]+)/.exec(rwt[0].state), rpv = rp ? +rp[1] : null; return '<b>In the release window:</b> a close at or above ' + (rpv ? rpv.toFixed(2) : 'the release price') + ' releases the sale' + (R.last_close && rpv ? '; the last close was ' + (+R.last_close).toFixed(2) + ', ' + Math.abs(Math.round((R.last_close / rpv - 1) * 100)) + '% ' + (R.last_close < rpv ? 'below' : 'above') + ' it.' : '.'); }
       var s = R._slw || {}; if (s.nearest_now == null || s.nearest_prev == null) return '<span class="mut">No reading a week earlier.</span>';
       var ab = function (v) { var r = Math.round(v); return r >= 0 ? r + '% above' : -r + '% below'; };
       var d = s.nearest_now - s.nearest_prev, t = 'its nearest tranche is ' + ab(s.nearest_now) + ' its 30% level, against ' + ab(s.nearest_prev) + ' on ' + fmtD(s.prev_asof) + '.';
