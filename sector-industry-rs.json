@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-22",
+ "current_week": "2026-10-23",
  "prior_week": "2026-08-21",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "F"
   },
   "D. Infrastructure": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "E. Utilities": {
@@ -60,7 +60,7 @@
    "prior": "F"
   },
   "O. Industrials and capital goods": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -74,7 +74,7 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "A.4. Household products": {
@@ -98,7 +98,7 @@
    "prior": "C"
   },
   "B.3. Hospitals, clinics and care homes": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
@@ -114,7 +114,7 @@
    "prior": "B"
   },
   "B.7. Pharma/biotech": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "F.2. Defence - Non-primes": {
@@ -166,7 +166,7 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -174,11 +174,11 @@
    "prior": "D"
   },
   "G.4. Holding companies": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "G.5. Digital investment and trading platforms": {
-   "current": "F",
+   "current": "D",
    "prior": "B"
   },
   "H.1. Luxury goods": {
@@ -206,7 +206,7 @@
    "prior": "F"
   },
   "H.17. Consumer products": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "H.2. Retail - apparel": {
@@ -234,7 +234,7 @@
    "prior": "B"
   },
   "J.1. IT services - consulting": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "J.2. IT services - reselling": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "J.5. Software - VMS": {
@@ -262,7 +262,7 @@
    "prior": "F"
   },
   "J.9. Semiconductors": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
@@ -270,7 +270,7 @@
    "prior": "D"
   },
   "K.11. Information services": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "K.3. Testing and inspection services": {
@@ -282,7 +282,7 @@
    "prior": "B"
   },
   "K.9. Recruitment services": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "L.1. Content, TV and other media": {
@@ -298,7 +298,7 @@
    "prior": "C"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "M.4. Chemicals - Base": {
@@ -306,7 +306,7 @@
    "prior": "C"
   },
   "M.6. Construction and infrastructure contractors": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "M.7. Forestry, paper and packaging": {
@@ -314,7 +314,7 @@
    "prior": "F"
   },
   "M.9. Steel and metals": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "N.1. Real estate - residential landlords": {
@@ -342,7 +342,7 @@
    "prior": "D"
   },
   "O.1. Industrial services": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
@@ -362,11 +362,11 @@
    "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "O.19. Diversified industrial groups": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "O.2. Building technology and products": {
@@ -382,7 +382,7 @@
    "prior": "C"
   },
   "O.8. Mining, construction and material-handling equipment": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "P.1. Energy - downstream distribution": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "P.4. Agriculture": {
@@ -402,7 +402,7 @@
    "prior": "F"
   },
   "P.5. Metals and mining": {
-   "current": "D",
+   "current": "F",
    "prior": "A"
   }
  }
