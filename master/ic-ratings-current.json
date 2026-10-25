@@ -855,14 +855,14 @@
       "market_cap_eur_bn": 4.5,
       "stage": "IG",
       "status": "Active",
-      "last_updated": "2026-10-24",
+      "last_updated": "2026-10-25",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
         "p2_market_paradigm_fit": "B",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "C",
-        "p5_ss_earnings_momentum": "B",
+        "p5_ss_earnings_momentum": "C",
         "p6_valuation": "A"
       },
       "investment_case": {
@@ -885,7 +885,7 @@
         "reassessment_trigger": "2 consecutive quarters of clean results under Brulard; LEAP AI adoption >10% of customer base; M&A approach"
       },
       "interest_level": "medium",
-      "_quant_refresh_at": "2026-10-24",
+      "_quant_refresh_at": "2026-10-25",
       "_quant_source_ticker": "TEMN-CH"
     },
     {
@@ -1441,14 +1441,14 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-10-22",
+      "last_updated": "2026-10-25",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "C",
-        "p5_ss_earnings_momentum": "C",
+        "p5_ss_earnings_momentum": "D",
         "p6_valuation": "F"
       },
       "investment_case": {
@@ -1470,7 +1470,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-10-22"
+      "_quant_refresh_at": "2026-10-25"
     },
     {
       "ticker": "BGN-IT",
@@ -3699,14 +3699,14 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-10-23",
+      "last_updated": "2026-10-25",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "D",
-        "p5_ss_earnings_momentum": "D",
+        "p5_ss_earnings_momentum": "C",
         "p6_valuation": "A"
       },
       "investment_case": {
@@ -3728,7 +3728,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-10-23"
+      "_quant_refresh_at": "2026-10-25"
     },
     {
       "ticker": "BOY-GB",
@@ -6397,14 +6397,14 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-10-23",
+      "last_updated": "2026-10-25",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "B",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "D",
-        "p5_ss_earnings_momentum": "C",
+        "p5_ss_earnings_momentum": "D",
         "p6_valuation": "A"
       },
       "investment_case": {
@@ -6426,7 +6426,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-10-23"
+      "_quant_refresh_at": "2026-10-25"
     },
     {
       "ticker": "FQT-AT",
