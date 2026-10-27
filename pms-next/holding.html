@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PMS Per-stock Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="dashboard-v2.css">
+<script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
+</head>
+<body class="v2">
+<!-- version 2 (27-Oct-2026): Richard's rebuild, one column, his items only and in his order (D-PMS-V4-16, V4-33 to V4-57).
+     1 SP and MAs; 2 volume, with relative price under it; 3 consensus by named FY; 4 analyst ratings and average PT against SP;
+     5 Net Upgrade Breadth; 6 valuation, P/E; 7 valuation, EV/Sales; 8 distance from SLs; 9 peers; end notes. -->
+<div class="wrap">
+  <div class="topbar">
+    <span class="brand">PMS Per-stock Dashboard</span>
+    <select id="picker" aria-label="Holding"></select>
+    <a class="btnlink" href="holdings.html">All holdings</a>
+    <span class="sp"></span>
+    <span class="asof" id="asof"></span>
+  </div>
+  <div id="err"></div>
+  <div class="head2" id="head"></div>
+
+  <div class="sec" id="s1">
+    <h2><span>1. SP and MAs</span><span class="mut">daily; SL levels and tranches marked</span></h2>
+    <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers</span></div>
+    <div class="layers" id="legend"></div>
+    <div class="xs"><div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div></div>
+  </div>
+
+  <div class="sec" id="s2">
+    <h2><span>2. Volume, and relative price against its 52W high</span><span class="mut" id="vb-say"></span></h2>
+    <div class="xs"><div id="vb"></div></div>
+  </div>
+
+  <div class="sec" id="s3">
+    <h2><span>3. Consensus by named FY: EPS, revenue, EBITDA</span><span class="mut">monthly, last 24 months</span></h2>
+    <div class="xs"><div id="snake"></div></div>
+  </div>
+
+  <div class="sec" id="s4">
+    <h2><span>4. Analyst ratings, and average PT against SP</span><span class="mut">last 24 months</span></h2>
+    <div class="xs"><div id="ratings2"></div></div>
+  </div>
+
+  <div class="sec" id="s5">
+    <h2><span>5. Net Upgrade Breadth: EPS, revenue, EBITDA, PT, Buys</span><span class="mut">next FY, last 12 months, 100-day counts</span></h2>
+    <div class="nubkey"><span><i style="background:rgba(26,127,55,0.38)"></i>raising</span><span><i style="background:rgba(139,148,158,0.28)"></i>no change</span><span><i style="background:rgba(207,34,46,0.38)"></i>cutting</span><span><i class="ln"></i>NUB (right-hand axis)</span></div>
+    <div class="xs"><div id="nub"></div></div>
+  </div>
+
+  <div class="sec" id="s6">
+    <h2><span>6. Valuation: 24M fwd P/E, last 10 years</span><span class="mut"><a id="vallink-pe" href="#" target="_blank" rel="noopener">open on the Master Dashboard</a></span></h2>
+    <div id="val-pe"></div>
+  </div>
+
+  <div class="sec" id="s7">
+    <h2><span>7. Valuation: 24M fwd EV/Sales, last 10 years</span><span class="mut"><a id="vallink-evs" href="#" target="_blank" rel="noopener">open on the Master Dashboard</a></span></h2>
+    <div id="val-evs"></div>
+  </div>
+
+  <div class="sec" id="s8">
+    <h2><span>8. Distance from SLs</span><span class="mut">nearest first</span></h2>
+    <div class="xs"><div id="ladder"></div></div>
+    <div class="ladkey"><span><span class="dot" style="background:#fff;border:2px solid #8250df"></span> at tranche 1's purchase</span><span><span class="dot" style="background:#8b949e"></span> three month-ends back, then the previous month-end</span><span><span class="dot" style="background:#1f2328"></span> the reading the rule acts on (red when met, amber when within reach)</span><span><span class="dot" style="background:#fff;border:1.5px solid #656d76"></span> today's value</span><span><span style="display:inline-block;width:14px;height:6px;background:rgba(207,34,46,.35);border-radius:3px"></span> the selling zone</span></div>
+  </div>
+
+  <div class="sec" id="s9">
+    <h2><span>9. Peers: cohort and sector</span><span class="mut"><span class="grp" id="peerx"></span> &middot; <span class="grp" id="peery"></span></span></h2>
+    <div class="xs"><div id="pc-plot"></div></div>
+    <div class="xs" style="margin-top:10px"><div id="pc-tbl"></div></div>
+  </div>
+
+  <div class="sec endnotes" id="notes">
+    <h2><span>End notes</span></h2>
+    <ol id="endnotes"></ol>
+  </div>
+</div>
+
+<button class="ov-btn" id="ovbtn">Peers: industry, sector, cohort, geography &#9656;</button>
+<div class="scrim" id="scrim"></div>
+<div class="ov" id="ov">
+  <div class="ov-hd"><b>Peers of <span id="ov-name"></span></b><input id="ov-q" placeholder="Search a ticker or company name" autocomplete="off"><button id="ov-close">Close</button></div>
+  <div class="ov-cols" id="ov-cols"></div>
+  <div class="ov-foot">Click a name: a holding of ours (marked "held") opens its own page here; any other stock opens the Master Dashboard's Stock View in a new tab. The number beside each name is its Stock RS on the reading day. Escape or a click outside closes this panel.</div>
+</div>
+
+<script src="chart-renderer-dashboard.js"></script>
+<script src="dashboard.js"></script>
+<script>
+(function () {
+  'use strict';
+  var DATA = 'data/latest/', MASTER = window.PMS_MASTER_BASE || '../../master/', HASHMODE = window.PMS_LINK_MODE === 'hash';
+  var Q = new URLSearchParams(location.search), H0 = location.hash.slice(1), T = Q.get('t') || (H0 && H0 !== 'overlay' ? decodeURIComponent(H0) : null);
+  if (HASHMODE) window.addEventListener('hashchange', function () { location.reload(); });
+  var fileOf = function (t) { return t.replace(/[.\/]/g, '_') + '.json'; };
+  var links = { holding: function (t) { return HASHMODE ? 'holding.html#' + t : 'holding.html?t=' + encodeURIComponent(t); }, stockView: function (t) { return MASTER + '?stock=' + encodeURIComponent(t); } };
+  var esc = DU.esc, fmtD = DU.fmtD, fmtDY = DU.fmtDY;
+  var m = null, peerAx = { x: 'm3', y: 'eps3' }, lastW = 0;
+  chartVis.vol = false; chartVis.vol20 = false; chartVis.vol50 = false; chartVis.obv = false;
+  chartZoom = '12M';
+  function fail(msg) { document.getElementById('err').innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
+  function getJSON(u) { return fetch(u, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(u + ': ' + r.status); return r.json(); }); }
+
+  getJSON(DATA + 'book.json').then(function (B) {
+    var hs = B.holdings;
+    document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
+    if (T && (B._meta.failed || []).indexOf(T) >= 0) { fail('No page could be built for ' + ((B._meta.failed_names || {})[T] || T) + ' in the last update (see the Daily Digest); the other holdings are in the picker.'); return; }
+    if (!T || !hs.some(function (h) { return h.t === T; })) T = hs.length ? hs[0].t : null;
+    var groups = {}; hs.forEach(function (h) { var g = h.probing ? 'Early Innings Probing Bets' : 'Middle Innings Core Investments'; (groups[g] = groups[g] || []).push(h); });
+    document.getElementById('picker').innerHTML = Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value); };
+    if (!T) { fail('No holdings in the data file.'); return; }
+    return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
+  }).catch(function (e) { fail('The data for this page could not be loaded (' + e.message + ').'); });
+
+  function start(Hd) {
+    m = DASH.model(Hd);
+    document.title = m.name + ': PMS Per-stock Dashboard';
+    document.getElementById('asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
+    renderHead();
+    DASH.overlay(m, links);
+    valFrames();
+    endNotes();
+    drawAll();
+    lastW = window.innerWidth;
+    window.addEventListener('resize', debounce(function () { if (Math.abs(window.innerWidth - lastW) < 2) return; lastW = window.innerWidth; drawAll(); }, 200));
+  }
+  function debounce(fn, ms) { var h; return function () { clearTimeout(h); h = setTimeout(fn, ms); }; }
+  function renderHead() {
+    var R = m.R, trs = m.tranches.map(function (tr) { return 'tranche ' + tr.tranche_number + ' ' + fmtDY(tr.entry_date) + ' (' + tr.size_pct.toFixed(2) + '%)'; }).join(', ');
+    document.getElementById('head').innerHTML = '<h1>' + esc(m.name) + ' <span class="tk">' + esc(m.t) + '</span></h1>' +
+      '<div class="sub">' + esc(m.ind) + ' &middot; ' + esc(m.sec) + ' &middot; cohort: ' + esc(m.coh || 'none named') + '</div>' +
+      '<div class="sub"><span class="pill ' + (m.probing ? 'blue' : 'grey') + '">' + esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital: ' + esc(trs) + '</div>';
+  }
+  /* items 6 and 7: the Master Dashboard's valuation chart itself, embedded (Richard, 27c: "The valuation charts should be the one from the master dashboard") */
+  function valFrames() {
+    var V = m.H.valuation, has = function (f) { return !!(V && (V[f] || []).some(function (v) { return v != null; })); };
+    [['pe', 'val-pe', '24M fwd P/E'], ['evs', 'val-evs', '24M fwd EV/Sales']].forEach(function (a) {
+      var url = MASTER + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=10&field=' + a[0];
+      document.getElementById('vallink-' + a[0]).href = MASTER + 'valuation.html?t=' + encodeURIComponent(m.t) + '&win=10&field=' + a[0];
+      var host = document.getElementById(a[1]);
+      if (!has(a[0])) { var cur = V && V.current ? V.current[a[0]] : null; host.innerHTML = '<div class="nohist">No ' + a[2] + ' history is stored for ' + esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + a[2] + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
+      var f = document.createElement('iframe'); f.className = 'valframe'; f.src = url; f.title = a[2] + ', the Master Dashboard valuation chart';
+      var fit = function () { try { var d = f.contentDocument; if (d && d.documentElement) { var h = d.documentElement.scrollHeight; if (h > 200) f.style.height = h + 'px'; } } catch (e) { /* another origin: keep the fixed height */ } };
+      f.addEventListener('load', function () { fit(); [400, 1200, 2500, 5000].forEach(function (t) { setTimeout(fit, t); }); });
+      window.addEventListener('resize', debounce(fit, 300));
+      host.appendChild(f);
+    });
+  }
+  function widthOf(id) { var e = document.getElementById(id); return Math.max(620, Math.floor(e.clientWidth || 1200)); }
+  function drawAll() {
+    if (!m) return;
+    drawChart();
+    DASH.snakeRender(document.getElementById('snake'), m, widthOf('snake'));
+    DASH.ratingsRender(document.getElementById('ratings2'), m, widthOf('ratings2'));
+    DASH.nubRender(document.getElementById('nub'), m, widthOf('nub'));
+    var W = widthOf('ladder'), lad = document.getElementById('ladder'); lad.innerHTML = '';
+    DASH.ladder(lad, m.rowsSorted, { width: W, labelWidth: Math.min(310, Math.round(W * 0.30)), rightWidth: Math.min(380, Math.round(W * 0.34)) });
+    drawPeers();
+  }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 330, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: 22, r: 68, b: 32, l: 78 } }; }
+  function drawChart() {
+    var z = document.getElementById('zooms'), s = document.getElementById('scales');
+    z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
+    s.innerHTML = ['lin', 'log'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartScaleMode ? 'active' : '') + '" data-s="' + k + '">' + k.toUpperCase() + '</button>'; }).join('');
+    z.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartZoom = b.dataset.z; drawChart(); };
+    s.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartScaleMode = b.dataset.s; drawChart(); };
+    document.getElementById('legend').innerHTML = chartLegendHTML();
+    window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; drawChart(); };
+    chartTicker = m.t;
+    loadChartData(m.t, function (rows) {
+      if (!rows) { document.getElementById('chart-container').innerHTML = '<div class="err">No chart data for ' + esc(m.t) + ' on the Master Dashboard.</div>'; return; }
+      drawMasterChart(m.t, chartOpts());
+      DASH.ratingsRender(document.getElementById('ratings2'), m, widthOf('ratings2'), rows);
+      var lay = (window.PMS_CHART_LAYOUT || {})['chart-canvas'];
+      DASH.drawVolume(document.getElementById('vb'), m, lay);
+      var q = m.H.volume[m.H.volume.length - 1] || {};
+      document.getElementById('vb-say').innerHTML = 'up/down volume, 20 sessions: <b>' + (q.ud20 == null ? 'n/a' : q.ud20.toFixed(2)) + '</b> &middot; distribution days, 25 sessions: <b>' + (q.dist25 == null ? 'n/a' : q.dist25) + '</b>';
+    });
+  }
+  function drawPeers() {
+    var px = document.getElementById('peerx'), py = document.getElementById('peery'), fy = (m.H.ss2 || {}).fy ? ' FY' + m.H.ss2.fy : '';
+    px.innerHTML = 'across: Stock RS change ' + [['m1', '1M'], ['m3', '3M'], ['m6', '6M']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.x ? 'active' : '') + '" data-x="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    py.innerHTML = 'up: 3M revisions,' + fy + ' ' + [['eps3', 'EPS'], ['sales3', 'revenue']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === peerAx.y ? 'active' : '') + '" data-y="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+    px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
+    py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
+    var host = document.getElementById('pc-plot'), W = widthOf('pc-plot');
+    DASH.peersPicture(host, m, peerAx, W, 380, false);
+    document.getElementById('pc-tbl').innerHTML = DASH.peersTable(m);
+  }
+  /* Richard, 27b: "Move all low importance "boilerplate" or "explainers" to end notes (not footnotes)" */
+  function endNotes() {
+    var S2 = m.H.ss2 || {}, fy = S2.fy ? 'FY' + S2.fy : 'the next FY', mt = S2.monthly_to ? fmtDY(S2.monthly_to) : 'the last stored month-end';
+    var probing = m.probing;
+    var N = [
+      ['SP and MAs', 'The Master Dashboard\'s chart, as copied for this page: candlesticks and the 20D, 50D, 100D, 150D and 200D MAs; Layers switches each one on or off. ' + (probing ? 'Red dotted: each tranche\'s SL, its MA less the 2% buffer. ' : 'Red dotted: the 30% level of each group of tranches; a close below it, with Stock RS below 70, sells those tranches. Magenta dashed: the SP below which relative price would be more than 25% under its 52W high with the market flat; read at the month-end, it sells the whole holding. ') + 'Purple: the tranches bought, by date.'],
+      ['Volume and relative price', 'Volume bars: green an up day, red a down day; a dark red bar with &#9660; is a distribution day (a down close on volume above 1.25 times the 50D average volume). The shaded band is the last 25 sessions; 6 or more distribution days in it is the Master Dashboard\'s warning level. Up/down volume is volume on up days divided by volume on down days over 20 sessions; below 0.8 is the Master Dashboard\'s sign of selling in force. Relative price is the stock against all other European companies of EUR 500m or more.'],
+      ['Consensus by named FY', 'Each line is the mean estimate for one named FY at each month-end, in the company\'s reporting currency and units. A dotted line is the daily reading since 29-Sep-2026, drawn only where it is on the same basis as the monthly line. The monthly lines end at ' + mt + ', the last month-end in the stored FactSet files. FactSet stores the next two calendar-year-forward estimate years (here FY' + ((m.H.ss.years || {}).labels || []).join(' and FY') + '); for a December year-end that is next year and the year after. Purple dashes: tranche 1 bought.'],
+      ['Analyst ratings and PT', 'Buys = Buy + Overweight; Other = Hold; Sells = Sell + Underweight; each as a share of the analysts rating the stock at the month-end (stored to ' + mt + '). Average PT is the mean of the analysts\' target prices, monthly, then daily since 29-Sep-2026' + (S2.tp_scale === 100 ? '; FactSet gives it in pounds, so it is shown in pence to match the SP' : '') + '.'],
+      ['Net Upgrade Breadth', 'For each month-end: of the analysts with an estimate for ' + fy + ' (FactSet\'s one-year-forward estimate year, which switches each January, marked on the chart), how many raised it, cut it or left it unchanged over the last 100 days. NUB = (raising &minus; cutting) &divide; analysts. Monthly counts are stored to ' + mt + '. For revenue and PT, FactSet\'s daily 100-day counts (stored from 2-Oct-2026) add the latest reading; there is none for September. For EPS and EBITDA no daily count is stored, so September and October are blank. Buys: the number of Buys, Other and Sells at each month-end, with % Buys on the right-hand axis.'],
+      ['Valuation', 'Both charts are the Master Dashboard\'s valuation page, embedded unchanged, opened at 10 years: FactSet\'s 24-month-forward multiple at each month-end, the stock\'s own ten-year range in colour bands (10th, 35th, median, 75th and 90th percentiles; the dashed line is the mean), and the month-end SP. The page\'s own buttons work here.'],
+      ['Distance from SLs', 'One row per Sell Criterion, nearest to selling first. Each row reads the Framework 14 reader\'s own reading on the day the rule acts on it (each Friday, or the month-end); today\'s daily value is shown for information. ' + (probing ? 'For an Early Innings Probing Bet the MA SL decides the sale, so these rows are information only.' : '')],
+      ['Peers', 'Across: the change in Stock RS over the period chosen (right means strengthening). Up: the 3-month revision to ' + fy + ' consensus, EPS or revenue. Green dots strengthening with upgrades; red weakening with downgrades; amber mixed. Cohort peers are the stronger dots, sector peers the paler ones; dot size is market value. Purple ring: this holding; blue ring: another holding of ours. A reading beyond 40% either way is pinned at the edge with its true value. NUB, Sales, 100-day: the Sell Criterion\'s month-end reading. The tab at the right edge (or the P key) lists every industry, sector, cohort and geography peer.']
+    ];
+    document.getElementById('endnotes').innerHTML = N.map(function (n) { return '<li><b>' + n[0] + '.</b> ' + n[1] + '</li>'; }).join('');
+  }
+})();
+</script>
+</body></html>

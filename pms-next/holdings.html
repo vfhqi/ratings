@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PMS Per-stock Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="dashboard-v2.css">
+<style>
+.sum { display:grid; grid-template-columns:auto 1fr; gap:6px 28px; padding:12px 16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; }
+.sum .kv .v { font-size:12.5px; }
+.statepill { white-space:nowrap; }
+td .nm { color:var(--fg); font-weight:600; text-decoration:none; }
+.arrow { font-weight:700; font-size:13px; }
+td.sent { min-width:340px; max-width:460px; font-size:12px; line-height:1.4; }
+td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
+.thx { display:block; text-transform:none; letter-spacing:0; font-weight:400; color:var(--fg3); font-size:10.5px; margin-top:2px; max-width:240px; }
+.howto { font-size:12.5px; color:var(--fg); margin:0 0 8px; line-height:1.5; }
+</style>
+<script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
+</head><body class="v2">
+<div class="wrap">
+  <div class="topbar"><span class="brand">PMS Per-stock Dashboard</span><span class="mut" style="font-size:12px">all holdings, the ones needing action first; each row opens its holding's page</span><span class="sp"></span><span class="asof" id="asof"></span></div>
+  <div id="err"></div>
+  <div class="sec" id="mkt">
+    <h2><span>Market: the Stoxx Europe 600 and each industry, rebased to the index</span><span class="mut">hover for any day's levels</span></h2>
+    <div class="xs"><div id="mkt3"></div></div>
+    <div class="xs" style="margin-top:12px"><div id="mkt12"></div></div>
+    <div class="key">Each industry is the equal-weighted average of its members' daily price moves (members need a price for the whole 12 months), started at the Stoxx Europe 600's level on the first day, so a line above the index has beaten it over the period. The figure after each name is its move over the period.</div>
+  </div>
+  <div class="sum" id="sum"></div>
+  <div class="sec">
+    <h2>The book, the holdings needing action first <span class="mut">sorted: first the holdings the rule sells at the next Tuesday session; then a tranche in its release window; then the Middle Innings Core Investments by the number of Sell Criteria met; then the rest; within each, the nearest to selling first</span></h2>
+    <div class="howto"><b>How to read this page:</b> each row is one holding, and the holdings the rule says to act on come first. Read across a row to see its status, what the order sheet says, which of the six Sell Criteria are met, how near it is to selling, its size, what we could lose, whether the rule allows an add, and whether it has moved nearer to selling since last week. Click a row to open the holding's own page.</div>
+    <div style="overflow-x:auto"><table class="book" id="tbl"></table></div>
+    <div class="key">The six boxes, left to right: Industry RS below 30; the 200-day average of relative price falling; Sector RS below 50 with Stock RS below 70; Stock RS below 50 with analysts cutting; relative price more than 25% below its 52-week high; a tranche 30% below its highest close since purchase. Red: met. Amber: one part of a two-part criterion met. Grey outline: information only (a Probing Bet, whose moving-average stop governs). Since last week compares the nearest tranche's distance to its 30% level with the readings a week earlier: green when it moved further from that level, red when it moved nearer, grey when it moved less than 2 points. No profit and loss is shown on this page.</div>
+  </div>
+</div>
+<script src="dashboard.js"></script>
+<script>
+(function () {
+  'use strict';
+  var esc = DU.esc, fmtD = DU.fmtD, fmtDY = DU.fmtDY, C = DASH.C;
+  var hl = function (t) { return window.PMS_LINK_MODE === 'hash' ? 'holding.html#' + t : 'holding.html?t=' + encodeURIComponent(t); };
+  /* 27-Oct-2026 (Richard, "Q1 = Fine"): the Market chart at the top of this page, last 3 months and last 12 months */
+  var MKT = null, mw = function () { return Math.max(620, Math.floor(document.getElementById('mkt3').clientWidth || 1200)); };
+  var drawMkt = function () { if (!MKT) return; DASH.marketRender(document.getElementById('mkt3'), MKT, mw(), 63, 'Last 3 months'); DASH.marketRender(document.getElementById('mkt12'), MKT, mw(), 252, 'Last 12 months'); };
+  fetch('data/latest/market.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('market.json: ' + r.status); return r.json(); }).then(function (M) { MKT = M; drawMkt(); }).catch(function (e) {
+    document.getElementById('mkt3').innerHTML = '<div class="nohist">The market series could not be loaded (' + esc(e.message) + ').</div>'; });
+  var mLastW = window.innerWidth; window.addEventListener('resize', function () { if (Math.abs(window.innerWidth - mLastW) < 2) return; mLastW = window.innerWidth; clearTimeout(window._mkT); window._mkT = setTimeout(drawMkt, 200); });
+  fetch('data/latest/book.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('book.json: ' + r.status); return r.json(); }).then(render).catch(function (e) {
+    document.getElementById('err').innerHTML = '<div class="err">The data for this page could not be loaded (' + esc(e.message) + ').</div>'; });
+  function render(B) {
+    document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
+    var M = B._meta, hs = B.holdings.map(function (h) { var R = h.reading; R._t = h.t; R._probing = h.probing; R._slw = h.since_last_week; R._stop = h.stop_label; return R; });
+    document.getElementById('asof').textContent = 'readings as at ' + fmtDY(M.asof) + ' (Fridays read ' + fmtD(M.last_friday) + '; month-end read ' + fmtD(M.last_month_end) + ')';
+    var near = function (R) { return R.tranches.length ? Math.min.apply(null, R.tranches.map(function (t) { return t.distance_to_level_pct; })) : 99; };
+    /* 18-Oct-2026 re-check: a Probing Bet's 30% levels are information only, so its tranches never count as "in the release window" */
+    var rel = function (R) { return !R._probing && R.tranches.some(function (t) { return t.state !== 'no trigger'; }); };
+    /* 18-Oct-2026 third check: the holdings the rule sells at the next Tuesday session come first (a confirmed moving-average stop exit, a
+       sell signal not held back by the one-off in/out link, a released tranche); the round-two order had put them last (Richard's Higher
+       Intent for this page: "you leave knowing the action the rules require") */
+    var sellNow = function (R) { return (R._probing && /EXIT CONFIRMED/.test(R._stop || '')) || /^SELL/.test(R.order_state || '') || (R.tranche_sales_due && R.tranche_sales_due.length > 0); };
+    var rank = function (R) { return (sellNow(R) ? 0 : rel(R) ? 1 : !R._probing ? 2 : 3) * 1000 - (R._probing ? 0 : R.criteria.filter(function (c) { return c.fires; }).length * 50) + near(R); };
+    hs.sort(function (a, b) { return rank(a) - rank(b); });
+    var sum = function (f) { return hs.reduce(function (a, R) { return a + (f(R) || 0); }, 0); };
+    var trn = sum(function (R) { return R.tranches.length; }), cap = sum(function (R) { return R.size_pct; }), lossN = sum(function (R) { return Math.max(0, R.est_loss_nearer_pct_of_capital || 0); }), loss30 = sum(function (R) { return Math.max(0, R.est_max_loss_pct_of_capital || 0); });
+    var nRel = hs.filter(rel).length, nAw = hs.filter(function (R) { return /^AWAITING/.test(R.order_state || ''); }).length, nNo = hs.filter(function (R) { return !R._probing && (R.order_state === 'no signal'); }).length, nPb = hs.filter(function (R) { return R._probing; }).length;
+    var nPbX = hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).length;
+    document.getElementById('sum').innerHTML = '<div class="kv"><span class="k">Holdings</span><span class="v"><span class="big">' + hs.length + '</span> holdings in ' + trn + ' tranches, ' + cap.toFixed(2) + '% of capital at purchase sizes.</span></div>' +
+      '<div class="kv"><span class="k">What we could lose (% of capital)</span><span class="v"><span class="big">' + lossN.toFixed(2) + '%</span> if every price fell to each tranche\'s nearer exit level; ' + loss30.toFixed(2) + '% if every price fell to the 30% levels only.</span></div>' +
+      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + (nPbX ? '<b>' + nPbX + ' Early Innings Probing Bet' + (nPbX === 1 ? ' has a confirmed stop exit' : 's have confirmed stop exits') + ' not yet sold, so the rule sells ' + (nPbX === 1 ? 'it' : 'them') + ' at the next Tuesday session: ' + hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).map(function (R) { return esc(R.name); }).join(', ') + '.</b> ' : '') + nRel + ' holding' + (nRel === 1 ? ' has a tranche' : 's have tranches') + ' in the release window. ' + nAw + ' Middle Innings Core Investment' + (nAw === 1 ? ' is' : 's are') + ' awaiting replacement under your one-off in/out link. ' + nNo + (nNo === 1 ? ' has' : ' have') + ' no Sell Criterion met. ' + nPb + ' Early Innings Probing Bets are sold on their moving-average stops.</span></div>';
+    var boxes = function (R) {
+      var c = R.criteria, info = R._probing;
+      var part3 = function (v) { return v && typeof v === 'object' && ((v.sector_rs < 50) !== (v.stock_rs < 70)); };
+      var part4 = function (v) { return v && typeof v === 'object' && v.analyst_data && ((v.stock_rs < 50) !== ((v.ss_sales_nub100 < 0) || (v.ss_pt_nub100 < 0))); };
+      var st = [c[0].fires, c[1].fires, c[2].fires, c[3].fires, c[4].fires, rel(R)], pt = [false, false, !c[2].fires && part3(c[2].value), !c[3].fires && part4(c[3].value), false, false];
+      return '<span class="boxes">' + st.map(function (s, i) { return '<b class="' + (info ? 'info' : s ? 'met' : pt[i] ? 'half' : '') + '" title="' + esc(DASH.CRIT_WORDS['C' + (i + 1)]) + (info ? ' (information only)' : s ? ': met' : pt[i] ? ': one part met' : ': clear') + '"></b>'; }).join('') + '</span>';
+    };
+    /* round 3 (17-Oct-2026): every cell is a sentence that reads on its own; one count throughout (of the six Sell Criteria,
+       as the six boxes show); "Since last week" names what moved; the nearest-tranche bar is folded into the sentences */
+    var CW = { C1: 'Industry RS below 30', C2: 'the 200-day average of relative price falling', C3: 'Sector RS below 50 with Stock RS below 70', C4: 'Stock RS below 50 with analysts cutting', C5: 'relative price more than 25% below its 52-week high' };
+    var stopDate = function (R) { var m = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(R._stop || ''); return m ? m[1] : null; };
+    var nearT = function (R) { return R.tranches.slice().sort(function (a, b) { return a.distance_to_level_pct - b.distance_to_level_pct; })[0]; };
+    var nearestTxt = function (R) {
+      var nm = esc(R.name), out = [];
+      if (R._probing) {
+        var sd = stopDate(R);
+        out.push(nm + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale and the six Sell Criteria are information only.');
+        out.push(sd ? '<b>Its stop exit was confirmed on ' + fmtD(sd) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.</b>' : 'Its price is above its stop.');
+        return out.join(' ');
+      }
+      var tr = nearT(R), fired = R.criteria.filter(function (c) { return c.fires; });
+      var rw = R.tranches.filter(function (x) { return x.state !== 'no trigger'; }).map(function (x) { return x.tranche_number; });
+      var met = fired.map(function (c) { return CW[c.id]; }); if (rw.length) met.push('a tranche 30% below its highest close since purchase, with Stock RS below 70');
+      out.push(met.length ? '<b>' + met.length + ' of the six Sell Criteria ' + (met.length === 1 ? 'is' : 'are') + ' met:</b> ' + met.join('; ') + '.' : 'No Sell Criterion is met.');
+      if (rw.length) { var rel = /close >= ([0-9.]+)/.exec(R.tranches.filter(function (x) { return x.state !== 'no trigger'; })[0].state);
+        out.push((rw.length > 1 ? 'Tranches ' + rw.slice(0, -1).join(', ') + ' and ' + rw[rw.length - 1] + ' are' : 'Tranche ' + rw[0] + ' is') + ' in the release window' + (rel ? ' and ' + (rw.length > 1 ? 'are' : 'is') + ' sold after a close at or above ' + (+rel[1]).toFixed(2) + ', or on the 63rd trading day.' : '.')); }
+      else if (tr) out.push('The share price can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before the nearest tranche reaches its 30% level.');
+      var c3 = R.criteria.filter(function (c) { return c.id === 'C3'; })[0], c5 = R.criteria.filter(function (c) { return c.id === 'C5'; })[0], early = [];
+      if (c3 && !c3.fires && c3.today && c3.today.sector_rs < 50 && c3.today.stock_rs < 70) early.push('Sector RS ' + c3.today.sector_rs + ' is below 50 with Stock RS ' + c3.today.stock_rs + ' below 70');
+      if (c5 && !c5.fires && c5.today != null && c5.today < -0.25) early.push('relative price is ' + Math.round(-c5.today * 100) + '% below its 52-week high');
+      if (early.length) out.push('<b>On today\'s daily readings, ' + early.join(', and ') + ', so ' + (early.length > 1 ? 'those Sell Criteria' : 'that Sell Criterion') + ' would be met if the month-end reading stays there.</b>');
+      else if (tr && tr.distance_to_rel52_pct != null && !(c5 && c5.fires)) out.push('A further fall of about ' + Math.round(tr.distance_to_rel52_pct) + '%, with the market flat, would take relative price more than 25% below its 52-week high.');
+      return out.join(' ');
+    };
+    var arrow = function (R) {
+      if (R._probing) return '<span class="mut">Not shown: a Probing Bet is sold on its moving-average stop, not on its 30% levels.</span>';
+      var rwt = R.tranches.filter(function (x) { return x.state !== 'no trigger'; });
+      if (rwt.length) { var rp = /close >= ([0-9.]+)/.exec(rwt[0].state), rpv = rp ? +rp[1] : null; return '<b>In the release window:</b> a close at or above ' + (rpv ? rpv.toFixed(2) : 'the release price') + ' releases the sale' + (R.last_close && rpv ? '; the last close was ' + (+R.last_close).toFixed(2) + ', ' + Math.abs(Math.round((R.last_close / rpv - 1) * 100)) + '% ' + (R.last_close < rpv ? 'below' : 'above') + ' it.' : '.'); }
+      var s = R._slw || {}; if (s.nearest_now == null || s.nearest_prev == null) return '<span class="mut">No reading a week earlier.</span>';
+      var ab = function (v) { var r = Math.round(v); return r >= 0 ? r + '% above' : -r + '% below'; };
+      var d = s.nearest_now - s.nearest_prev, t = 'its nearest tranche is ' + ab(s.nearest_now) + ' its 30% level, against ' + ab(s.nearest_prev) + ' on ' + fmtD(s.prev_asof) + '.';
+      return Math.abs(d) < 2 ? '<span class="arrow" style="color:' + C.ink3 + '">&#9644;</span> <b>About the same:</b> ' + t : d > 0 ? '<span class="arrow" style="color:' + C.industry + '">&#9650;</span> <b style="color:' + C.industry + '">Further from its 30% level:</b> ' + t : '<span class="arrow" style="color:' + C.red + '">&#9660;</span> <b style="color:' + C.red + '">Nearer to its 30% level:</b> ' + t; };
+    var roomTxt = function (R) {
+      var add = R.add_rule || {}, sd = R._probing ? stopDate(R) : null;
+      if (sd) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sd) + ', so the rule allows no add.';
+      if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
+      if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion is met, so the rule allows no add.';
+      var w = String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '');
+      return '<b>No:</b> it holds ' + esc(w) + '.';
+    };
+    var th = function (t, ex, cls) { return '<th' + (cls ? ' class="' + cls + '"' : '') + '>' + t + (ex ? '<span class="thx">' + ex + '</span>' : '') + '</th>'; };
+    var h = '<tr>' + th('Holding') + th('Status') + th('Order sheet') + th('The six Sell Criteria', 'One box per Sell Criterion: red when met; amber when one part of a two-part criterion is met.') + th('What is met, and how near it is to selling', 'Which Sell Criteria are met, and how far the price can fall before the next one is.') + th('Tranches', 'Purchases held.', 'num') + th('% of capital', 'Its size, at purchase sizes.', 'num') + th('Could lose (% of capital)', 'If the price fell to each tranche\'s nearer exit level.', 'num') + th('Room to add', 'Whether the rule allows another tranche now.') + th('Since last week', 'How the nearest tranche\'s distance to its 30% level changed in a week.') + '</tr>';
+    hs.forEach(function (R) {
+      var sd = R._probing ? stopDate(R) : null;
+      var state = R._probing ? (sd ? '<span class="pill red statepill">STOP EXIT CONFIRMED</span>' : '<span class="pill blue statepill">price above its stop</span>') : /^AWAITING/.test(R.order_state || '') ? '<span class="pill red statepill">AWAITING REPLACEMENT</span>' : rel(R) ? '<span class="pill red statepill">RELEASE WINDOW</span>' : /^SELL/.test(R.order_state || '') ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : '<span class="pill grey statepill">no signal</span>';
+      h += '<tr class="row" data-t="' + esc(R._t) + '"><td><a class="nm" href="' + hl(R._t) + '">' + esc(R.name) + '</a><div class="mut">' + esc(R.sector) + '</div></td><td>' + (R._probing ? 'Early Innings Probing Bet' : 'Middle Innings Core Investment' + (R.one_off_in_out_link ? ' <span class="mut">(held under your one-off in/out link)</span>' : '')) + '</td><td>' + state + '</td><td>' + boxes(R) + '</td><td class="sent">' + nearestTxt(R) + '</td><td class="num">' + R.tranches.length + '</td><td class="num">' + R.size_pct.toFixed(2) + '%</td><td class="num">' + Math.max(0, R.est_loss_nearer_pct_of_capital || 0).toFixed(2) + '</td><td class="sent2">' + roomTxt(R) + '</td><td class="sent2">' + arrow(R) + '</td></tr>';
+    });
+    var tbl = document.getElementById('tbl'); tbl.innerHTML = h;
+    tbl.onclick = function (e) { if (e.target.closest('a')) return; var tr = e.target.closest('tr.row'); if (tr) location.href = hl(tr.dataset.t); };
+  }
+})();
+</script>
+</body></html>
