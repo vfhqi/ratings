@@ -1,0 +1,32 @@
+/* dashboard-v2.css: version 2 of the PMS Per-stock Dashboard (27-Oct-2026). One column; the agreed styles of dashboard.css kept. */
+body.v2 .wrap { max-width:1500px; }
+.head2 { padding:12px 16px; border:1px solid var(--border); border-radius:8px; margin-bottom:12px; }
+.head2 h1 { font-size:22px; font-weight:650; letter-spacing:-.01em; }
+.head2 h1 .tk { font-size:12px; font-weight:400; color:var(--fg3); }
+.head2 .sub { color:var(--fg2); margin-top:4px; font-size:12.5px; }
+body.v2 .sec > h2 { font-size:14px; }
+body.v2 .sec > h2 .mut { font-size:11.5px; color:var(--fg2); }
+/* sideways scrolling only on narrow screens; on a desktop the hover readings must not be clipped */
+@media (max-width:760px) { .xs { overflow-x:auto; overflow-y:hidden; } }
+.sscell { margin-bottom:14px; }
+.sscell:last-child { margin-bottom:0; }
+.sst { font-size:12.5px; font-weight:650; margin-bottom:2px; }
+.sst .mut { font-weight:400; font-size:11.5px; color:var(--fg2); }
+.nohist { color:var(--fg2); background:var(--bg2); border:1px dashed var(--border); border-radius:6px; padding:10px 12px; font-size:12.5px; }
+.nubkey { display:flex; gap:16px; flex-wrap:wrap; font-size:11px; color:var(--fg2); margin:-2px 0 8px; }
+.nubkey i { display:inline-block; width:14px; height:10px; border-radius:2px; vertical-align:middle; margin-right:4px; }
+.nubkey i.ln { height:0; border-top:2px solid var(--fg); border-radius:0; }
+iframe.valframe { width:100%; height:900px; border:0; display:block; }
+table.tbl.peers { table-layout:fixed; min-width:820px; font-size:12px; }
+table.tbl.peers th { font-size:10px; }
+table.tbl.peers td:first-child { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+table.tbl.peers .pn { font-weight:500; }
+.endnotes ol { margin:0 0 0 18px; font-size:12px; color:var(--fg2); line-height:1.5; }
+.endnotes li { margin:4px 0; }
+.endnotes li b { color:var(--fg); }
+@media (max-width:700px) { body.v2 .wrap { padding:8px 10px 30px; } .topbar .asof { font-size:11px; } .head2 h1 { font-size:19px; } }
+/* the Peers tab sits on the right edge of the window: keep the content clear of it */
+body.v2 .wrap { padding-right:48px; }
+@media (max-width:700px) { body.v2 .wrap { padding-right:40px; } }
+/* narrow screens: each chart keeps its readable width and scrolls sideways inside its own section, never the page */
+@media (max-width:760px) { .xs svg { max-width:none !important; } .xs #chart-container { min-width:620px; } }

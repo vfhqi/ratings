@@ -5,6 +5,10 @@
    charts with the colour bands; the sliding overlay; the six-panel summary view. No profit and loss anywhere (Message 88; D-BB-28).
    READ, NEVER RECOMPUTE: every criterion reading, threshold, level and loss figure comes from the data file, which takes them from the
    Framework 14 reader. The page only draws, and decides colours ("met", "within reach", "clear") from the reader's own readings. */
+/* version 2 (27-Oct-2026, Richard's rebuild, D-PMS-V4-33 to V4-57): one column, his items only, in his order; the agreed charts
+   reused unchanged except where he asked: negative numbers in brackets everywhere; quarters and years marked on the time axes;
+   the consensus charts one per measure in one column; analyst ratings above the target price chart; Net Upgrade Breadth as
+   stacked counts behind the line; the peer table edited. */
 (function () {
   'use strict';
   var C = {
@@ -23,16 +27,22 @@
   function fmtD(s) { if (!s) return 'n/a'; var d = D(s); return d.getUTCDate() + '-' + MON[d.getUTCMonth()]; }
   function fmtDY(s) { if (!s) return 'n/a'; return fmtD(s) + '-' + D(s).getUTCFullYear(); }
   function addDays(s, n) { var d = D(s); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function pct0(v) { return v == null ? 'n/a' : Math.round(v * 100) + '%'; }
-  function pctS(v) { return v == null ? 'n/a' : (v > 0 ? '+' : '') + Math.round(v * 100) + '%'; }
-  function sgn(v, dp) { return v == null ? 'n/a' : (v > 0 ? '+' : '') + v.toFixed(dp == null ? 1 : dp); }
+  /* Richard, 27-Oct-2026 (D-PMS-V4-36): "Always display negative numbers as (X) not -X" */
+  function br(sv) { sv = String(sv); return /^-/.test(sv) && !/^-0(\.0*)?%?$/.test(sv) ? '(' + sv.slice(1) + ')' : sv.replace(/^-/, ''); }
+  function sg(v, sv) { return v > 0 ? '+' + sv : br((v < 0 ? '-' : '') + sv); }
+  function pct0(v) { return v == null ? 'n/a' : br(Math.round(v * 100) + '%'); }
+  function pctS(v) { return v == null ? 'n/a' : sg(Math.round(v * 100), Math.abs(Math.round(v * 100)) + '%'); }
+  function sgn(v, dp) { return v == null ? 'n/a' : sg(+v.toFixed(dp == null ? 1 : dp), Math.abs(v).toFixed(dp == null ? 1 : dp)); }
+  function pctI(v) { return v == null ? 'n/a' : sg(v, Math.abs(v) + '%'); }
+  function intS(v) { return v == null ? 'n/a' : sg(v, String(Math.abs(v))); }
   function ratingColor(g) { return { A: '#C0DD97', B: '#EAF3DE', C: '#FAEEDA', D: '#F5C4B3', F: '#F7C1C1' }[g] || '#eaeef2'; }
   function fmtVol(v) { if (v == null) return 'n/a'; var a = Math.abs(v); return a >= 1e9 ? (v / 1e9).toFixed(1) + 'B' : a >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : a >= 1e3 ? Math.round(v / 1e3) + 'K' : String(Math.round(v)); }
   function lastOnOrBefore(arr, key, d) { var r = null; for (var i = 0; i < arr.length; i++) { if (arr[i][key] <= d) r = arr[i]; else break; } return r; }
   function monthTicks(d0, d1) { var out = [], a = D(d0), b = D(d1), y = a.getUTCFullYear(), m = a.getUTCMonth() + 1; for (;;) { if (m > 11) { m = 0; y++; } var t = new Date(Date.UTC(y, m, 1)); if (t > b) break; out.push(t.toISOString().slice(0, 10)); m++; } return out; }
   /* round 2 (17-Oct-2026): round axis numbers, so every scale reads at a glance */
   function niceTicks(lo, hi, n) { if (!(hi > lo)) return [lo]; var raw = (hi - lo) / Math.max(1, n || 4), p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p, st = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p, out = []; for (var v = Math.ceil(lo / st) * st; v <= hi + st * 1e-9; v += st) out.push(+v.toFixed(10)); return out; }
-  function fmtN(v) { if (v == null) return 'n/a'; var a = Math.abs(v); if (Math.abs(v - Math.round(v)) < 1e-9) return Math.round(v).toLocaleString('en-GB'); return a >= 1000 ? Math.round(v).toLocaleString('en-GB') : a >= 100 ? v.toFixed(0) : a >= 10 ? v.toFixed(1) : a >= 1 ? v.toFixed(2) : v.toFixed(3); }
+  function fmtN0(v) { var a = Math.abs(v); if (Math.abs(v - Math.round(v)) < 1e-9) return Math.round(v).toLocaleString('en-GB'); return a >= 1000 ? Math.round(v).toLocaleString('en-GB') : a >= 100 ? v.toFixed(0) : a >= 10 ? v.toFixed(1) : a >= 1 ? v.toFixed(2) : v.toFixed(3); }
+  function fmtN(v) { if (v == null) return 'n/a'; return br(fmtN0(v)); }
   function monthLabels(svg, pts, H, mode) {
     pts.forEach(function (o, i) { var d = D(o.d), mo = d.getUTCMonth(), q = mo % 3 === 0; if (mode === 'quarter' && !q) return;
       txt(svg, o.x, H - 18, mode === 'initial' ? MON[mo][0] : MON[mo], { 'text-anchor': 'middle', 'font-size': 10, fill: q ? C.ink2 : C.ink3, 'font-weight': q ? 600 : 400 });
@@ -49,7 +59,7 @@
     if (M && M.failed && M.failed.length) out.push('No page could be built in the last update for: ' + M.failed.map(function (x) { return esc((M.failed_names || {})[x] || x); }).join(', ') + '. ' + (M.failed.length === 1 ? 'It is' : 'They are') + ' missing from the list below, not cleared.');
     return out.length ? '<div class="err">' + out.join('<br>') + '</div>' : '';
   }
-  window.DU = { warnBanner: warnBanner, fmtD: fmtD, fmtDY: fmtDY, esc: esc, pctS: pctS, pct0: pct0, ratingColor: ratingColor, fmtVol: fmtVol };
+  window.DU = { warnBanner: warnBanner, fmtD: fmtD, fmtDY: fmtDY, esc: esc, pctS: pctS, pct0: pct0, pctI: pctI, intS: intS, br: br, sgn: sgn, ratingColor: ratingColor, fmtVol: fmtVol };
 
   /* ------------------------------------------------------------------ a stacked time chart (SVG), one level deeper on hover */
   function stack(container, opts) {
@@ -60,7 +70,8 @@
     var T = 6 + TB(opts.panels[0]);
     /* round 3 (Richard, image 7: "each month listed and quarters and years more clearly indicated"): every month is labelled,
        by its first letter where months are close together, with the year on its own row */
-    var ticks = monthTicks(d0, d1), pxm = (W - L - R) / Math.max(1, ticks.length + 0.5);
+    /* 27-Oct-2026: monthly data (month-end readings) can put each month's gridline and label on its month-end (opts.monthEnd), so a reading sits on its own month's label */
+    var ME = !!opts.monthEnd, ticks = ME ? monthTicks(d0, addDays(d1, 1)).map(function (t) { return addDays(t, -1); }).filter(function (t) { return t >= d0 && t <= d1; }) : monthTicks(d0, d1), pxm = (W - L - R) / Math.max(1, ticks.length + 0.5);
     var mode = opts.tickEvery ? 'every' : pxm >= 26 ? 'abbr' : pxm >= 8 ? 'initial' : 'quarter';
     var H = opts.panels.reduce(function (a, p, i) { return a + p.h + gap + (i ? TB(p) : 0); }, T) + 18 + (mode === 'every' ? 0 : 12);
     var svg = el('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, container);
@@ -77,7 +88,8 @@
       yt.forEach(function (v) { el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: C.grid, 'stroke-width': 1 }, g); txt(g, L - 6, Math.max(10, Math.min(p.h - 1, y(v) + 4)), (p.yFmt || fmtN)(v), { 'text-anchor': 'end', 'font-size': 10, fill: C.ink3 }); });
       if (p.yDomain2) (p.yTicks2 || niceTicks(lo2, hi2, 3)).forEach(function (v) { txt(g, W - R + 4, Math.max(10, Math.min(p.h - 1, y2(v) + 4)), (p.yFmt2 || fmtN)(v), { 'font-size': 10, fill: C.ink3 }); });
       /* round 2: thin month lines, thicker quarter-end lines (Richard, image 4) */
-      ticks.forEach(function (t) { var q = isQuarterStart(t); el('line', { x1: x(t), x2: x(t), y1: 0, y2: p.h, stroke: q ? '#afb8c1' : C.grid, 'stroke-width': q ? 1.6 : 1 }, g); });
+      /* 27-Oct-2026 (Richard: "make the quarters and years more clearly called out (subtly/elegantly)"): a month line, a firmer quarter line, a darker year line */
+      ticks.forEach(function (t) { var tb = ME ? addDays(t, 1) : t, yr = D(tb).getUTCMonth() === 0, q = isQuarterStart(tb); el('line', { x1: x(t), x2: x(t), y1: 0, y2: p.h, stroke: yr ? '#8c959f' : q ? '#c4cbd3' : C.grid, 'stroke-width': yr ? 1.3 : 1 }, g); });
       (p.thresholds || []).forEach(function (th) {
         if (th.zone === 'below') el('rect', { x: L, y: y(th.v), width: W - L - R, height: Math.max(0, p.h - y(th.v)), fill: th.fill || C.redFill }, g);
         if (th.zone === 'above') el('rect', { x: L, y: 0, width: W - L - R, height: Math.max(0, y(th.v)), fill: th.fill || C.redFill }, g);
@@ -87,17 +99,35 @@
       p.series.forEach(function (s) {
         var yy = s.axis === 'right' ? y2 : y;
         var pts = s.pts.filter(function (q) { return q.v !== null && q.v !== undefined && q.d >= d0 && q.d <= d1; });
-        if (s.kind === 'bar') { var bw = s.bw || 4; pts.forEach(function (q) { var a = yy(Math.min(q.v, s.cap || q.v)), z = yy(0); el('rect', { x: x(q.d) - bw / 2 + (s.off || 0), y: Math.min(a, z), width: bw, height: Math.abs(z - a) || 1, fill: s.color }, g); }); }
+        if (s.kind === 'stacked') {
+          /* 27-Oct-2026 (Richard, D-PMS-V4-34): counts as a coloured stacked area, the number written in each band at each reading */
+          var sp = s.pts.filter(function (q) { return q.d >= d0 && q.d <= d1; }), segs = [], cur = [];
+          sp.forEach(function (q, i) { if (i && (D(q.d) - D(sp[i - 1].d)) / 864e5 > (s.gap || 45)) { segs.push(cur); cur = []; } cur.push(q); }); if (cur.length) segs.push(cur);
+          segs.forEach(function (seg) {
+            var base = seg.map(function () { return 0; });
+            s.layers.forEach(function (Ly) {
+              var top = seg.map(function (q, i) { return base[i] + (q[Ly.k] || 0); });
+              if (seg.length === 1) { var cx0 = x(seg[0].d); el('rect', { x: cx0 - 7, y: yy(top[0]), width: 14, height: Math.max(0, yy(base[0]) - yy(top[0])), fill: Ly.color }, g); }
+              else { var dpa = ''; seg.forEach(function (q, i) { dpa += (i ? 'L' : 'M') + x(q.d).toFixed(1) + ',' + yy(top[i]).toFixed(1); }); for (var bi = seg.length - 1; bi >= 0; bi--) dpa += 'L' + x(seg[bi].d).toFixed(1) + ',' + yy(base[bi]).toFixed(1); el('path', { d: dpa + 'Z', fill: Ly.color, stroke: 'none' }, g); }
+              if (s.numbers) seg.forEach(function (q, i) { var v = q[Ly.k] || 0; if (!v) return; var ya = yy(base[i]), yb = yy(top[i]); if (ya - yb < 10) return; txt(g, Math.max(L + 5, Math.min(W - R - 5, x(q.d))), (ya + yb) / 2 + 3.5, String(v), { 'text-anchor': 'middle', 'font-size': 9.5, 'font-weight': 600, fill: Ly.ink || C.ink, halo: true }); });
+              base = top;
+            });
+          });
+          if (s.endLabels && sp.length) { var lq = sp[sp.length - 1], cb = 0; s.layers.forEach(function (Ly) { var v = lq[Ly.k] || 0; ends.push({ x: p.labelEdge ? W - R + 6 : x(lq.d) + 6, y: yy(cb + v / 2) + 4, t: Ly.label + ' ' + (s.endFmt ? s.endFmt(v) : v), c: Ly.ink || C.ink2 }); cb += v; }); }
+        }
+        else if (s.kind === 'bar') { var bw = s.bw || 4; pts.forEach(function (q) { var a = yy(Math.min(q.v, s.cap || q.v)), z = yy(0); el('rect', { x: x(q.d) - bw / 2 + (s.off || 0), y: Math.min(a, z), width: bw, height: Math.abs(z - a) || 1, fill: s.color }, g); }); }
         else if (s.kind === 'dots') { pts.forEach(function (q) { el('circle', { cx: x(q.d), cy: yy(q.v), r: s.r || 3.5, fill: s.hollow ? C.surface : s.color, stroke: s.hollow ? s.color : C.surface, 'stroke-width': 1.5 }, g); }); }
         else if (pts.length) {
-          var dp = ''; pts.forEach(function (q, i) { dp += (i ? 'L' : 'M') + x(q.d).toFixed(1) + ',' + yy(q.v).toFixed(1); });
+          var dp = ''; pts.forEach(function (q, i) { var brk = !i || (s.gap && (D(q.d) - D(pts[i - 1].d)) / 864e5 > s.gap); dp += (brk ? 'M' : 'L') + x(q.d).toFixed(1) + ',' + yy(q.v).toFixed(1); });
+          if (s.gap) pts.forEach(function (q, i) { var lone = (!i || (D(q.d) - D(pts[i - 1].d)) / 864e5 > s.gap) && (i === pts.length - 1 || (D(pts[i + 1].d) - D(q.d)) / 864e5 > s.gap); if (lone) el('circle', { cx: x(q.d), cy: yy(q.v), r: 2.6, fill: s.color }, g); });
           el('path', { d: dp, fill: 'none', stroke: s.color, 'stroke-width': s.w || 1.6, 'stroke-dasharray': s.dash || '', 'stroke-linejoin': 'round', 'stroke-linecap': 'round', opacity: s.opacity || 1 }, g);
-          if (s.endLabel) { var q = pts[pts.length - 1]; ends.push({ x: x(q.d) + 6, y: yy(q.v) + 4, t: s.endLabel, c: s.color }); }
+          if (s.endLabel) { var q = pts[pts.length - 1]; ends.push({ x: p.labelEdge ? W - R + 6 : x(q.d) + 6, y: yy(q.v) + 4, t: s.endLabel, c: s.color }); }
         }
       });
       /* round 2: end labels pushed apart so two lines ending close together never print on top of each other */
-      ends.sort(function (a, b) { return a.y - b.y; }); for (var ei = 1; ei < ends.length; ei++) if (ends[ei].y - ends[ei - 1].y < 12) ends[ei].y = ends[ei - 1].y + 12;
-      ends.forEach(function (e) { txt(g, e.x, e.y, e.t, { fill: e.c, 'font-size': 10.5, 'font-weight': 600, halo: true }); });
+      var gapE = p.labelGap || 12; ends.forEach(function (e) { e.y = Math.max(10, e.y); }); ends.sort(function (a, b) { return a.y - b.y; }); for (var ei = 1; ei < ends.length; ei++) if (ends[ei].y - ends[ei - 1].y < gapE) ends[ei].y = ends[ei - 1].y + gapE;
+      if (ends.length && ends[ends.length - 1].y > p.h + 8) { var sh = ends[ends.length - 1].y - (p.h + 8); ends.forEach(function (e) { e.y -= sh; }); for (var ej = ends.length - 2; ej >= 0; ej--) if (ends[ej + 1].y - ends[ej].y < gapE) ends[ej].y = ends[ej + 1].y - gapE; }
+      ends.forEach(function (e) { txt(g, e.x, e.y, e.t, { fill: e.c, 'font-size': p.labelSize || 10.5, 'font-weight': 600, halo: true }); });
       (p.thresholds || []).forEach(function (th) { if (th.noline) return; el('line', { x1: L, x2: W - R, y1: y(th.v), y2: y(th.v), stroke: th.color, 'stroke-width': 1.2, 'stroke-dasharray': '5 3' }, g); if (th.label) txt(g, L + 4, y(th.v) - 3, th.label, { fill: th.color, 'font-size': 10, halo: true }); });
       (p.rightLabels || []).forEach(function (rl) { txt(g, W - R + 8, Math.max(10, Math.min(p.h - 2, y(rl.v))) + 4 + (rl.dy || 0), rl.text, { fill: rl.color || C.ink2, 'font-size': 10.5, 'font-weight': 600 }); });
       if (p.title) { el('rect', { x: L, y: y0 - 20, width: W - L - R, height: 19, fill: C.bg2 }, svg); el('line', { x1: L, x2: L, y1: y0 - 20, y2: y0 - 1, stroke: C.ink3, 'stroke-width': 3 }, svg); txt(svg, L + 7, y0 - 6, p.title, { fill: C.ink, 'font-size': p.title.length > 120 ? 10.5 : 11.5, 'font-weight': 600 }); }
@@ -116,7 +146,7 @@
       var t = new Date(D(d0).getTime() + (px - L) / (W - L - R) * span).toISOString().slice(0, 10);
       cross.setAttribute('x1', px); cross.setAttribute('x2', px); cross.setAttribute('opacity', 1);
       var h = '<b>' + fmtDY(t) + '</b>';
-      opts.panels.forEach(function (p) { p.series.forEach(function (s) { if (!s.label) return; var pts = s.pts.filter(function (q) { return q.v != null && q.d <= t; }); if (!pts.length) return; var q = pts[pts.length - 1]; h += '<div><span style="color:' + s.color + '">&#9679;</span> ' + esc(s.label) + ': ' + esc((s.fmt || String)(q.v)) + (q.d !== t ? ' <span class="mut">(' + fmtD(q.d) + ')</span>' : '') + '</div>'; }); });
+      opts.panels.forEach(function (p) { p.series.forEach(function (s) { if (!s.label) return; if (s.kind === 'stacked') { var sq = s.pts.filter(function (q) { return q.d <= t; }); if (!sq.length) return; var lq = sq[sq.length - 1]; h += '<div>' + esc(s.label) + ' <span class="mut">(' + fmtD(lq.d) + ')</span>: ' + s.layers.map(function (Ly) { return '<span style="color:' + (Ly.tip || '#fff') + '">' + esc(Ly.label) + ' ' + (lq[Ly.k] || 0) + (s.unit || '') + '</span>'; }).join(', ') + '</div>'; return; } var pts = s.pts.filter(function (q) { return q.v != null && q.d <= t; }); if (!pts.length) return; var q = pts[pts.length - 1]; h += '<div><span style="color:' + s.color + '">&#9679;</span> ' + esc(s.label) + ': ' + esc((s.fmt || String)(q.v)) + (q.d !== t ? ' <span class="mut">(' + fmtD(q.d) + ')</span>' : '') + '</div>'; }); });
       tip.innerHTML = h; tip.style.display = 'block'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 290)) + 'px'; tip.style.top = (ev.clientY - r.top + 10) + 'px';
     });
     svg.addEventListener('mouseleave', function () { cross.setAttribute('opacity', 0); tip.style.display = 'none'; });
@@ -165,13 +195,58 @@
     return svg;
   }
 
+  /* ------------------------------------------------------------------ MA SLs on every tranche (Richard, 27-Oct-2026: "All tranches, all investments") */
+  var CASE_WORDS = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link' };
+  function maTranches(m) {
+    return (m.H.stops || []).map(function (s) {
+      var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0] || {};
+      var ma = tr.ma_sl || {}, dm = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(s.label || '');
+      return { s: s, n: tr.tranche_number || '?', entry: tr.entry_date || s.entry_date, state: s.state, date: ma.exit_confirmed_date || (dm ? dm[1] : null),
+        due: tr.ma_sl_session_due || null, cases: tr.ma_sl_open_cases || null, known: !!tr.ma_sl_status, pct: ma.pct_above_stop };
+    }).sort(function (a, b) { return a.n - b.n; });
+  }
+  function trList(ns) { ns = ns.map(String); return (ns.length > 1 ? 'tranches ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : 'tranche ' + ns[0]); }
+  /* the sale date(s) the rule set, grouped by date; a date already past is said as such (Alfen: 18-Aug and 1-Sep) */
+  function dueWords(xs, asof) {
+    var g = {}; xs.forEach(function (x) { (g[x.d] = g[x.d] || []).push(x.n); });
+    var ds = Object.keys(g).sort(), past = ds.every(function (d) { return d < asof; });
+    if (past) return 'The rule\'s sale fell due at the Tuesday session of ' + ds.map(function (d) { return fmtD(d) + ' (' + trList(g[d]) + ')'; }).join(' and of ') + ', and has not been made.';
+    return 'The rule sells ' + ds.map(function (d) { return trList(g[d]) + ' at the Tuesday session of ' + fmtD(d); }).join(' and ') + '.';
+  }
+  function maRowText(t, now) {
+    if (t.state === 'exit_confirmed') {
+      var w = 'Exit confirmed on ' + fmtD(t.date) + ', not yet sold';
+      if (t.due) return 'Met: ' + w + '; the rule\'s sale ' + (t.due < (window.__PMS_ASOF || '9') ? 'fell due' : 'falls due') + ' at the Tuesday session of ' + fmtD(t.due) + '.';
+      if (t.cases && t.cases.length) return w + '; the rules leave it open (' + t.cases.map(function (c) { return CASE_WORDS[c] || 'case ' + c; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.';
+      return w + '.';
+    }
+    if (t.state === 'triggered') return 'Below its stop, inside the five-day window: the five-day stop rule decides.';
+    return now == null ? 'No reading.' : 'Tranche ' + t.n + ' can fall a further ' + Math.round(now * 100) + '% before it reaches its stop.';
+  }
+  /* one or two sentences, action first: what the MA SLs say for the holding */
+  function maWords(m, bold) {
+    var T = maTranches(m), ex = T.filter(function (t) { return t.state === 'exit_confirmed'; }), hit = T.filter(function (t) { return t.state === 'triggered'; });
+    var b = function (s) { return bold ? '<b>' + s + '</b>' : s; }, out = [];
+    if (!T.length) return '';
+    if (!ex.length) { if (hit.length) return b(trList(hit.map(function (t) { return t.n; })).replace(/^t/, 'T') + (hit.length > 1 ? ' are' : ' is') + ' below ' + (hit.length > 1 ? 'their MA SLs' : 'its MA SL') + ', inside the five-day window.');
+      var nr = T.filter(function (t) { return t.pct != null; }).sort(function (a, b) { return a.pct - b.pct; })[0];
+      return 'Every tranche is above its MA SL' + (nr ? '; the nearest, tranche ' + nr.n + ', is ' + Math.round(nr.pct) + '% above it.' : '.'); }
+    out.push(trList(ex.map(function (t) { return t.n; })).replace(/^t/, 'T') + (ex.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit (' + ex.map(function (t) { return fmtD(t.date); }).join(', ') + ') and ' + (ex.length > 1 ? 'are' : 'is') + ' not yet sold.');
+    var due = ex.filter(function (t) { return t.due; }), open = ex.filter(function (t) { return t.cases && t.cases.length; });
+    if (due.length) out.push(dueWords(due.map(function (t) { return { n: t.n, d: t.due }; }), m.asof));
+    if (open.length) { var cs = {}; open.forEach(function (t) { t.cases.forEach(function (c) { cs[c] = 1; }); });
+      out.push('The rules leave ' + (open.length > 1 ? 'them' : 'it') + ' open (' + Object.keys(cs).sort().map(function (c) { return CASE_WORDS[c] || 'case ' + c; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.'); }
+    if (!ex[0].known && m.probing) out.push('The rule sells ' + (ex.length > 1 ? 'them' : 'it') + ' at the next Tuesday session.');
+    return b(out.join(' '));
+  }
+
   /* ------------------------------------------------------------------ the model: the data file turned into what the panels draw */
   var CRIT_WORDS = { C1: 'Industry RS below 30', C2: 'The 200-day average of relative price falling over the month', C3: 'Sector RS below 50 and Stock RS below 70', C4: 'Stock RS below 50 and analysts cutting', C5: 'Relative price more than 25% below its 52-week high', C6: 'A tranche 30% below its highest close since purchase, with Stock RS below 70' };
   function model(Hd) {
     var R = Hd.reading, m = { H: Hd, R: R };
     m.t = Hd.ticker; m.name = Hd.name; m.ind = Hd.industry; m.sec = Hd.sector; m.coh = Hd.cohort_name || Hd.cohort; m.probing = !!Hd.probing;
     m.status = R.holding_status === 'Core Investment' ? 'Middle Innings Core Investment' : (R.holding_status || ''); m.oneOff = !!R.one_off_in_out_link; m.order = R.order_state || '';
-    m.asof = Hd._meta.asof; m.lastFriday = Hd._meta.last_friday; m.lastME = Hd._meta.last_month_end;
+    m.asof = Hd._meta.asof; window.__PMS_ASOF = m.asof; m.lastFriday = Hd._meta.last_friday; m.lastME = Hd._meta.last_month_end;
     m.daily = Hd.daily; m.rs = Hd.rs; m.nub = Hd.nub; m.tranches = R.tranches || [];
     m.e = Hd.at_entry.length ? Hd.at_entry[0] : null;
     m.d0 = m.daily[0].d; m.d1 = m.asof;
@@ -196,7 +271,7 @@
       marks: [{ v: e ? e.ind : null, kind: 'entry', label: 'bought' }, { v: f1(m.me3, 'ind'), kind: 'm3' }, { v: f1(m.me1, 'ind'), kind: 'm1' }, { v: c1.value, kind: 'latest' }, { v: c1.today, kind: 'today' }],
       text: c1.fires ? 'Met: Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + '.' : 'Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + ', ' + (c1.value - 30) + ' points above 30.', text2: e ? 'It was ' + e.ind + ' when tranche 1 was bought.' : '' });
     var sl = function (d) { var q = d ? fridayFor(d) : null; var x = q ? dailyAt(q.d) : null; return x ? x.slope : null; };
-    m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return (v * 100).toFixed(0) + '%'; }, state: info ? 'info' : c2.fires ? 'fires' : near(c2.value, 0, 0.01) ? 'near' : 'clear',
+    m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return br((v * 100).toFixed(0) + '%'); }, state: info ? 'info' : c2.fires ? 'fires' : near(c2.value, 0, 0.01) ? 'near' : 'clear',
       marks: [{ v: e ? e.slope : null, kind: 'entry', label: 'bought' }, { v: sl(m.me3), kind: 'm3' }, { v: sl(m.me1), kind: 'm1' }, { v: c2.value, kind: 'latest' }, { v: c2.today, kind: 'today' }],
       text: (c2.fires ? 'Met: the average ' : 'The average ') + (Math.abs(c2.value) < 0.0005 ? 'was flat (a change of less than 0.1%)' : (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '%') + ' over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
     var v3 = c3.value, s3met = v3.sector_rs < 50, s3other = v3.stock_rs < 70;
@@ -208,13 +283,13 @@
       marks: [{ v: e ? e.s : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 's'), kind: 'm3' }, { v: r3(m.me1, 's'), kind: 'm1' }, { v: v3.stock_rs, kind: 'latest' }, { v: (c3.today || {}).stock_rs, kind: 'today' }],
       text: 'Stock RS was ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.stock_rs < 50 ? 'below both lines.' : v3.stock_rs < 70 ? 'below 70 but above 50.' : (v3.stock_rs - 70) + ' above 70.'), text2: e ? 'It was ' + e.s + ' when tranche 1 was bought.' : '' });
     var v4 = c4.value || {}, b4 = minNub({ sales: v4.ss_sales_nub100, tp: v4.ss_pt_nub100 });
-    m.rows.push({ id: 'C4b', label: 'Net Upgrade Breadth, the weaker of the two counts (sells with Stock RS below 50)', sub: 'read at the month-end on the 100-day count', lo: -1, hi: 1, trigger: 0, triggerSide: 'below', fmt: function (v) { return (v > 0 ? '+' : '') + Math.round(v * 100) + '%'; }, state: info ? 'info' : c4.fires ? 'fires' : (b4 != null && b4 <= 0.1) ? 'near' : 'clear',
+    m.rows.push({ id: 'C4b', label: 'Net Upgrade Breadth, the weaker of the two counts (sells with Stock RS below 50)', sub: 'read at the month-end on the 100-day count', lo: -1, hi: 1, trigger: 0, triggerSide: 'below', fmt: function (v) { return pctS(v); }, state: info ? 'info' : c4.fires ? 'fires' : (b4 != null && b4 <= 0.1) ? 'near' : 'clear',
       marks: [{ v: e ? minNub(nubAt(e.grid_day)) : null, kind: 'entry', label: 'bought' }, { v: m.me3 ? minNub(nubAt(m.me3)) : null, kind: 'm3' }, { v: m.me1 ? minNub(nubAt(m.me1)) : null, kind: 'm1' }, { v: b4, kind: 'latest' }],
       text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Met: ' : '') + 'Net Upgrade Breadth was ' + (v4.ss_sales_nub100 == null ? 'not available' : pctS(v4.ss_sales_nub100)) + ' on sales estimates and ' + (v4.ss_pt_nub100 == null ? 'not available' : pctS(v4.ss_pt_nub100)) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
       text2: 'Stock RS was ' + v4.stock_rs + (v4.stock_rs < 50 ? ', below 50, so this rule can sell.' : ', above 50, so this rule cannot sell yet.') });
     var dl = dailyAt(m.asof) || {}, cl = dl.c;
     var rd = function (d) { var q = d ? dailyAt(d) : null; return q ? q.rdh : null; };
-    m.rows.push({ id: 'C5', label: 'Relative price against its 52-week high (sells more than 25% below)', sub: 'read at the month-end; sells the whole holding', lo: -0.5, hi: 0, trigger: -0.25, triggerSide: 'below', fmt: function (v) { return Math.round(v * 100) + '%'; }, state: info ? 'info' : c5.fires ? 'fires' : near(c5.value, -0.25, 0.05) ? 'near' : 'clear',
+    m.rows.push({ id: 'C5', label: 'Relative price against its 52-week high (sells more than 25% below)', sub: 'read at the month-end; sells the whole holding', lo: -0.5, hi: 0, trigger: -0.25, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: info ? 'info' : c5.fires ? 'fires' : near(c5.value, -0.25, 0.05) ? 'near' : 'clear',
       marks: [{ v: e ? e.rdh : null, kind: 'entry', label: 'bought' }, { v: rd(m.me3), kind: 'm3' }, { v: rd(m.me1), kind: 'm1' }, { v: c5.value, kind: 'latest' }, { v: c5.today, kind: 'today' }],
       text: (c5.fires ? 'Met: relative price was ' : 'Relative price was ') + Math.round(-c5.value * 100) + '% below its 52-week high at the ' + fmtD(c5.reading_day) + ' month-end.', text2: (dl.trig && cl) ? (dl.trig <= cl ? 'Today the share price is ' + Math.round((cl - dl.trig) / cl * 100) + '% above the price at which this rule sells, about ' + Math.round(dl.trig) + '.' : 'Today the share price is ' + Math.round((dl.trig - cl) / dl.trig * 100) + '% below the price at which this rule sells, about ' + Math.round(dl.trig) + '.') : '' });
     if (m.tranches.length) {
@@ -222,11 +297,23 @@
       var lv = (Hd.levels.filter(function (x) { return x.tranche === tr.tranche_number; })[0] || { pts: [] }).pts;
       var fallAt = function (d) { if (!d) return null; var q = null; for (var i = 0; i < lv.length; i++) { if (lv[i][0] <= d) q = lv[i]; else break; } var c = dailyAt(d); return (q && c && c.c) ? (c.c - q[1]) / c.c : null; };
       var lt = tr.distance_to_level_pct / 100;
-      m.rows.push({ id: 'C6', label: 'The nearest tranche\'s distance to its 30% level', sub: 'a close below it, with Stock RS below 70, sells it', lo: -0.1, hi: 0.35, trigger: 0, triggerSide: 'below', fmt: function (v) { return Math.round(v * 100) + '%'; }, state: info ? 'info' : tr.state !== 'no trigger' ? 'fires' : lt <= 0.10 ? 'near' : 'clear',
+      m.rows.push({ id: 'C6', label: 'The nearest tranche\'s distance to its 30% level', sub: 'a close below it, with Stock RS below 70, sells it', lo: -0.1, hi: 0.35, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: info ? 'info' : tr.state !== 'no trigger' ? 'fires' : lt <= 0.10 ? 'near' : 'clear',
         marks: [{ v: 0.30, kind: 'entry', label: 'bought' }, { v: fallAt(m.me3), kind: 'm3' }, { v: fallAt(m.me1), kind: 'm1' }, { v: lt, kind: 'latest' }],
         text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; if (info) return 'Tranche ' + tr.tranche_number + ' fell below its 30% level' + (td ? ' on ' + fmtD(td) : '') + '; for a Probing Bet this is information only.'; return 'Met' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
         text2: (tr.state !== 'no trigger' ? 'The price is ' + Math.round(tr.distance_to_level_pct) + '% above the 30% level; ' : '') + 'Stock RS today is ' + tr.stock_rs_today + '.' });
     }
+    /* 27-Oct-2026 (Richard: "All tranches, all investments"): one row per tranche's MA SL, on every holding; the five-day
+       stop rule's verdict is the alignment calculation script's (H.stops), the open cases are the Framework 14 reader's */
+    maTranches(m).forEach(function (t) {
+      var s = t.s, pts = s.pts || [];
+      var stopAt = function (d) { var v = null; for (var i = 0; i < pts.length; i++) { if (pts[i][0] <= d) v = pts[i][1]; else break; } return v; };
+      var dAbove = function (d) { if (!d) return null; var st = stopAt(d), c = dailyAt(d); return (st != null && c && c.c) ? (c.c - st) / c.c : null; };
+      var now = dAbove(m.asof), ma = String(s.stop_ma || '').replace('D', '-day');
+      var st = t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (now != null && now <= 0.05)) ? 'near' : 'clear';
+      m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + '\'s MA SL, the ' + ma + ' average less 2%', sub: 'the five-day stop rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
+        marks: [{ v: dAbove(t.entry), kind: 'entry', label: 'bought' }, { v: dAbove(m.me3), kind: 'm3' }, { v: dAbove(m.me1), kind: 'm1' }, { v: now, kind: 'latest' }],
+        text: maRowText(t, now), text2: 'The stop is ' + (s.stop_level != null ? (+s.stop_level).toFixed(2) : 'n/a') + (now != null ? '; the price is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' it.' : '.') });
+    });
     var order = { fires: 0, near: 1, clear: 2, info: 3 };
     /* 18-Oct-2026 re-check: "nearest first" now means nearest, measured as the distance from the reading the rule acts on to the
        line that sells, as a share of the row's scale (before, rows of the same colour kept their build order) */
@@ -249,33 +336,38 @@
 
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
-    if (m.probing) { var sx0 = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return 'Early Innings Probing Bet: its moving-average stop decides the sale' + (sx0 ? '. Its stop exit was confirmed on ' + fmtD(sx0[1]) + ', so the rule sells it at the next Tuesday session.' : ', and its price is above its stop.') + ' The six Sell Criteria are shown for information.'; }
-    if (/^AWAITING/.test(m.order)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.';
-    if (/^SELL/.test(m.order)) return m.order;
-    if (m.order === 'no signal' || !m.order) return 'No Sell Criterion is met.';
-    return m.order;
+    if (m.probing) return 'Early Innings Probing Bet: its MA SLs decide the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
+    var ma = maTranches(m).some(function (t) { return t.state !== 'clear'; }) ? ' ' + maWords(m) : '';
+    var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order;
+    if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
+    if (/^SELL/.test(o)) return o + ma;
+    if (o === 'no signal' || !o) return (ma ? ma.slice(1) + ' ' : '') + 'No Sell Criterion is met.';
+    return o + ma;
   }
   function oneLine(m) {
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
-    if (m.probing) { var sx = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || ''); return m.name + ' is an Early Innings Probing Bet, so its moving-average stop decides the sale. ' + (sx ? 'Its stop exit was confirmed on ' + fmtD(sx[1]) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.' : 'Its price is above its stop.') + lose; }
-    var nr = m.nearestRow;
-    return (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
+    if (m.probing) return m.name + ' is an Early Innings Probing Bet, so its MA SLs decide the sale. ' + maWords(m) + lose;
+    var nr = m.nearestRow, ex = maTranches(m).some(function (t) { return t.state !== 'clear'; });
+    return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
 
   function below(v) { return v == null ? 'n/a against' : Math.round(Math.abs(v) * 100) + '% ' + (v < 0 ? 'below' : 'above'); }
   /* round 3 (17-Oct-2026): the holding page said "yes" to an add for a Probing Bet whose stop exit is confirmed (IMCD, D'Ieteren);
      the front page was fixed in round 2, this fixes the holding page. The data's add rule does not yet know about stop exits. */
   function roomWords(m, add) {
-    var sx = m.probing ? /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || '') : null;
+    var sx = m.probing && !/MA SL/.test(add.why || '') ? /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || '') : null;
     if (sx) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sx[1]) + ', so the rule allows no add.';
+    if (add.open_case === 4) { var ex4 = maTranches(m).filter(function (t) { return t.state === 'exit_confirmed'; }).map(function (t) { return t.n; });
+      return '<b>Open:</b> ' + trList(ex4) + (ex4.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit; whether a Core Investment is added to then is for your ruling at the APM PMS Q&A SOP run.'; }
+    if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
     if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
     if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion is met, so the rule allows no add.';
     return '<b>No:</b> it holds ' + esc(String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '')) + '.';
   }
   function renderHeader(el_, m) {
     var R = m.R, e = m.e, now = m.H.at_now || null;
-    var pill = m.probing ? 'blue' : /^AWAITING|^SELL/.test(m.order) || m.metCount ? 'red' : 'grey';
+    var pill = m.probing ? 'blue' : /^AWAITING|^SELL|^MA SL/.test(m.order) || m.metCount || maTranches(m).some(function (t) { return t.state === 'exit_confirmed'; }) ? 'red' : 'grey';
     var c3 = m.c('C3'), c1 = m.c('C1'), c5 = m.c('C5');
     var add = R.add_rule || {};
     el_.innerHTML =
@@ -323,12 +415,16 @@
       var bt = {}; H.daily.forEach(function (q) { if (q.trig) bt[q.d] = q.trig; });
       var lastT = H.daily[H.daily.length - 1].trig;
       lines.push({ label: short ? '52-week-high line ' + (lastT ? fp(lastT) : '') : (lastT ? fp(lastT) + ': ' : '') + 'below this price, relative price is more than 25% under its 52-week high', color: '#bf3989', dash: [6, 3], width: 1.4, byDate: bt, labelDy: -5 });
-    } else {
+    }
+    { /* 27-Oct-2026: each tranche's MA SL on every holding (Richard: "All tranches, all investments"), drawn as on a Probing Bet's chart */
       var sg = {};
       (H.stops || []).forEach(function (s) { var k = (s.stop_level || 0).toFixed(4) + s.stop_ma; (sg[k] = sg[k] || []).push(s); });
       Object.keys(sg).forEach(function (k) { var g = sg[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; });
         var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; });
-        lines.push({ label: (g[0].stop_level ? (Math.round(g[0].stop_level * 100) / 100) + ': ' : '') + 'the stop, the ' + String(g[0].stop_ma).replace('D', '-day') + ' average less 2%' + (short ? '' : ', for tranche' + (trs.length > 1 ? 's ' : ' ') + trs.join(', ')), color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: 14 }); });
+        /* 27-Oct-2026: on a Core Investment's chart the stop labels are short (up to four stops beside the 30% and 52-week lines would hide the latest prices); the end note says what a stop is */
+        var lvl = g[0].stop_level ? (Math.round(g[0].stop_level * 100) / 100) + ': ' : '';
+        lines.push({ label: m.probing ? lvl + 'the stop, the ' + String(g[0].stop_ma).replace('D', '-day') + ' average less 2%' + (short ? '' : ', for tranche' + (trs.length > 1 ? 's ' : ' ') + trs.join(', '))
+                                      : lvl + 'MA SL, tranche' + (trs.length > 1 ? 's ' : ' ') + trs.join(', '), color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
     }
     var marks = m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
     return { lines: lines, marks: marks };
@@ -366,13 +462,13 @@
     // month lines on both panes (quarter-ends thicker), month labels under the last pane
     var monthIdx = []; for (var i = 1; i < n; i++) if (layout.dates[i].slice(0, 7) !== layout.dates[i - 1].slice(0, 7)) monthIdx.push(i);
     var yBot = compact ? top1 + h1 : top2 + h2;
-    monthIdx.forEach(function (i) { var q = isQuarterStart(layout.dates[i].slice(0, 7) + '-01'), xx = pad.l + i * bw; [[top1, top1 + h1]].concat(compact ? [] : [[top2, top2 + h2]]).forEach(function (yy) { el('line', { x1: xx, x2: xx, y1: yy[0], y2: yy[1], stroke: q ? '#afb8c1' : C.grid, 'stroke-width': q ? 1.6 : 1 }, svg); }); });
+    monthIdx.forEach(function (i) { var md = layout.dates[i].slice(0, 7) + '-01', yr = D(md).getUTCMonth() === 0, q = isQuarterStart(md), xx = pad.l + i * bw; [[top1, top1 + h1]].concat(compact ? [] : [[top2, top2 + h2]]).forEach(function (yy) { el('line', { x1: xx, x2: xx, y1: yy[0], y2: yy[1], stroke: yr ? '#8c959f' : q ? '#c4cbd3' : C.grid, 'stroke-width': yr ? 1.3 : 1 }, svg); }); });
     if (!compact) { var room = (W - pad.l - pad.r) / Math.max(1, monthIdx.length + 0.5);
       monthLabels(svg, monthIdx.map(function (i) { return { x: pad.l + i * bw, d: layout.dates[i].slice(0, 7) + '-01' }; }), Htot, room >= 26 ? 'abbr' : room >= 8 ? 'initial' : 'quarter'); }
     // tranche marks
     m.tranches.forEach(function (tr) { var k = layout.dates.indexOf(tr.entry_date); if (k < 0) { for (var j = 0; j < n; j++) { if (layout.dates[j] >= tr.entry_date) { k = j; break; } } } if (k < 0 || layout.dates[0] > tr.entry_date) return; el('line', { x1: xi(k), x2: xi(k), y1: top1, y2: yBot, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1 }, svg); });
     // pane 1: buying and selling pressure
-    band(top1, compact ? '' : 'Volume (green: an up day; red: a down day; \u25BC: a distribution day; shaded: the last 25 sessions), with its 20-day (blue) and 50-day (grey) averages');
+    band(top1, compact ? '' : 'Volume, with its 20D (blue) and 50D (grey) averages; \u25BC a distribution day; shaded: the last 25 sessions');
     if (n > 25) { var sx0 = pad.l + (n - 25) * bw; el('rect', { x: sx0, y: top1, width: W - pad.r - sx0, height: h1, fill: 'rgba(31,35,40,0.06)' }, svg); }
     var y1 = function (v) { return top1 + h1 - Math.min(v, cap) / cap * h1; };
     var bwx = Math.max(1, bw * 0.78);
@@ -387,7 +483,7 @@
     // pane 2: relative price, on the same trading days
     var y2 = null, drows = layout.dates.map(function (d) { var q = DL[d]; return q ? { rel: q.rel, rma: q.rma, rhi: q.rhi, z: q.rhi != null ? q.rhi * 0.75 : null, rdh: q.rdh } : null; });
     if (!compact) {
-      band(top2, 'Relative price (blue), its 200-day average (grey, dashed), its 52-week high (grey) and 25% below that high (red, dotted)');
+      band(top2, 'Relative price (blue), its 200D MA (grey, dashed), its 52W high (grey) and 25% below the 52W high (red, dotted)');
       var rv = []; drows.forEach(function (q) { if (q) ['rel', 'rhi', 'z', 'rma'].forEach(function (k) { if (q[k] != null) rv.push(q[k]); }); });
       if (rv.length) {
         var lo = Math.min.apply(null, rv), hi = Math.max.apply(null, rv), padv = (hi - lo) * 0.08 || 1; lo -= padv; hi += padv;
@@ -395,7 +491,7 @@
         niceTicks(lo, hi, 3).forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y2(v), y2: y2(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y2(v) + 4, fmtN(v), { 'text-anchor': 'end', 'font-size': 10, fill: C.ink3 }); });
         line('z', C.red, '2 2', y2, 1, drows); line('rhi', C.ink3, '', y2, 1, drows); line('rma', C.ma, '6 3', y2, 1.4, drows); line('rel', C.rel, '', y2, 1.7, drows);
         var lastD = null; for (var k2 = drows.length - 1; k2 >= 0; k2--) if (drows[k2] && drows[k2].rel != null) { lastD = { i: k2, q: drows[k2] }; break; }
-        if (lastD) txt(svg, xi(lastD.i) - 4, y2(lastD.q.rel) + (lastD.q.rel > lastD.q.rma ? -7 : 14), 'relative price ' + pct0(lastD.q.rdh) + ' against its 52-week high', { 'text-anchor': 'end', fill: C.rel, 'font-size': 10.5, 'font-weight': 600, halo: true });
+        if (lastD) txt(svg, xi(lastD.i) - 4, y2(lastD.q.rel) + (lastD.q.rel > lastD.q.rma ? -7 : 14), 'relative price ' + pct0(lastD.q.rdh) + ' against its 52W high', { 'text-anchor': 'end', fill: C.rel, 'font-size': 10.5, 'font-weight': 600, halo: true });
       }
       el('line', { x1: pad.l, x2: W - pad.r, y1: top2 + h2, y2: top2 + h2, stroke: C.border }, svg);
     }
@@ -631,7 +727,7 @@
     el('rect', { x: x0c, y: y0c, width: W - R - x0c, height: Hh - B - y0c, fill: 'rgba(154,103,0,0.05)' }, svg);
     if (!compact) { txt(svg, W - R - 6, T + 12, 'strengthening, with upgrades', { 'text-anchor': 'end', 'font-size': 10, fill: C.industry }); txt(svg, L + 6, Hh - B - 6, 'weakening, with downgrades', { 'font-size': 10, fill: C.red }); }
     el('line', { x1: sx(0), x2: sx(0), y1: T, y2: Hh - B, stroke: C.ink3, 'stroke-dasharray': '4 3' }, svg); el('line', { x1: L, x2: W - R, y1: sy(0), y2: sy(0), stroke: C.ink3, 'stroke-dasharray': '4 3' }, svg);
-    var xl = { m1: '1 month', m3: '3 months', m6: '6 months' }[xk], yl = yk === 'eps3' ? 'earnings per share revisions over 3 months, %' : 'sales revisions over 3 months, %';
+    var xl = { m1: '1 month', m3: '3 months', m6: '6 months' }[xk], fyp = ((m.H.ss2 || {}).fy ? ', FY' + m.H.ss2.fy : ''), yl = yk === 'eps3' ? 'EPS revisions, 3M' + fyp + ', %' : 'Revenue revisions, 3M' + fyp + ', %';
     txt(svg, W - R, Hh - (compact ? 4 : 10), 'change in Stock RS over ' + xl + ' →', { 'text-anchor': 'end', 'font-size': compact ? 9.5 : 11, fill: C.ink2 });
     txt(svg, sx(0) + 6, T - (compact ? 4 : 14), '↑ ' + yl, { 'font-size': compact ? 9.5 : 11, fill: C.ink2 });
     var rr = function (p) { return Math.max(compact ? 3 : 4, Math.min(compact ? 11 : 16, Math.sqrt((p.q.r.mc || 300) / 60) * (compact ? 0.7 : 1))); };
@@ -641,31 +737,33 @@
     pts.forEach(function (p) {
       var rg_ = ring(p);
       var c = el('circle', { cx: sx(p.x), cy: sy(p.yc), r: rr(p), fill: quad(p), 'fill-opacity': p.q.g === 'self' ? 0.85 : p.q.g === 'coh' ? 0.6 : 0.3, stroke: rg_ || C.surface, 'stroke-width': rg_ ? (p.q.g === 'self' ? 3 : 2.2) : 1 }, svg);
-      var ti = el('title', {}, c); ti.textContent = p.q.r.name + ' (' + (p.q.g === 'self' ? 'this holding' : p.q.g === 'coh' ? 'cohort peer' : 'sector peer') + '): Stock RS ' + p.q.r.rs.now + ', change over ' + xl + ' ' + (p.x > 0 ? '+' : '') + p.x + '; ' + yl.replace(', %', '') + ' ' + (p.y > 0 ? '+' : '') + p.y + '%';
-      if (p.off) txt(svg, sx(p.x), sy(p.yc) + (p.off === 'up' ? rr(p) + 11 : -rr(p) - 4), (p.off === 'up' ? '▲ ' : '▼ ') + (p.y > 0 ? '+' : '') + p.y + '%', { 'text-anchor': 'middle', 'font-size': 9.5, fill: C.ink2 });
+      var ti = el('title', {}, c); ti.textContent = p.q.r.name + ' (' + (p.q.g === 'self' ? 'this holding' : p.q.g === 'coh' ? 'cohort peer' : 'sector peer') + '): Stock RS ' + p.q.r.rs.now + ', change over ' + xl + ' ' + intS(p.x) + '; ' + yl.replace(', %', '') + ' ' + pctI(p.y);
+      if (p.off) txt(svg, sx(p.x), sy(p.yc) + (p.off === 'up' ? rr(p) + 11 : -rr(p) - 4), (p.off === 'up' ? '▲ ' : '▼ ') + pctI(p.y), { 'text-anchor': 'middle', 'font-size': 9.5, fill: C.ink2 });
     });
     var labs = pts.filter(function (p) { return !compact || p.q.g === 'self' || p.q.r.held || Math.abs(p.x) > 15; }).map(function (p) { return { p: p, lx: sx(p.x) + rr(p) + 2, ly: sy(p.yc) + 4 }; }).sort(function (a, b) { return a.ly - b.ly; });
     for (var i = 1; i < labs.length; i++) { for (var j = 0; j < i; j++) { if (Math.abs(labs[i].lx - labs[j].lx) < 120 && Math.abs(labs[i].ly - labs[j].ly) < 12) labs[i].ly = labs[j].ly + 12; } }
     labs.forEach(function (o) { var right = o.lx > W - R - 70; txt(svg, right ? o.lx - 2 * rr(o.p) - 6 : o.lx, o.ly, o.p.q.r.name, { 'font-size': compact ? 9.5 : 10.5, fill: o.p.q.g === 'self' ? C.entry : C.ink, 'font-weight': o.p.q.g === 'self' ? 700 : 400, 'text-anchor': right ? 'end' : 'start', halo: true }); });
-    if (!compact) { txt(svg, L - 4, sy(yhi) + 4, '+' + yhi + '%', { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); txt(svg, L - 4, sy(ylo) + 4, ylo + '%', { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); txt(svg, sx(xlo), Hh - B + 14, String(xlo), { 'font-size': 10, fill: C.ink2 }); txt(svg, sx(xhi), Hh - B + 14, '+' + xhi, { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); }
+    if (!compact) { txt(svg, L - 4, sy(yhi) + 4, pctI(yhi), { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); txt(svg, L - 4, sy(ylo) + 4, pctI(ylo), { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); txt(svg, sx(xlo), Hh - B + 14, intS(xlo), { 'font-size': 10, fill: C.ink2 }); txt(svg, sx(xhi), Hh - B + 14, intS(xhi), { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2 }); }
     return pts.length;
   }
   function peersTable(m) {
-    var P = m.H.peers;
+    /* 27-Oct-2026 (Richard, 27b and AQ4): "Remove the "pool" labels and make the columns the same width. Improve formatting. Remove
+       the "sell side" momentum and technical momentum ratings columns. Add in Revenue revisions"; the ranked 3-month EPS revisions
+       chart's content sits here as a column, headed with its named FY */
+    var P = m.H.peers, fy = (m.H.ss2 || {}).fy ? ' FY' + m.H.ss2.fy : '';
     var d = function (r, k) { var a = r.rs.now, b = r.rs[k]; return (a == null || b == null) ? null : a - b; };
-    /* round 2 (Richard, image 10): green when positive, red when negative, darker and bold when large */
     var cc = function (v, big) { return v == null || v === 0 ? '' : (v > 0 ? 'pos' : 'neg') + (Math.abs(v) >= big ? ' lg' : ''); };
-    var dc = function (v) { return '<td class="num ' + cc(v, 10) + '">' + (v == null ? '<span class="mut">n/a</span>' : (v > 0 ? '+' : '') + v) + '</td>'; };
-    var rv = function (v) { return '<td class="num ' + cc(v, 5) + '">' + (v == null ? '<span class="mut">n/a</span>' : (v > 0 ? '+' : '') + v + '%') + '</td>'; };
-    var rg = function (g) { return g ? '<span class="rg" style="background:' + ratingColor(g) + '">' + esc(g) + '</span>' : '<span class="mut">&ndash;</span>'; };
-    var nm = function (r) { return esc(r.name) + (r.held && r.t !== m.t ? '<span class="chip held" title="a holding of ours">held</span>' : '') + (r.pool ? '<span class="chip pool" title="in the Pool of Stocks Eligible for Middle Innings Portfolio Selection">Pool</span>' : ''); };
-    var row = function (r, self) { return '<tr class="' + (self ? 'self' : '') + '"><td>' + nm(r) + '</td><td class="num">' + (r.rs.now == null ? 'n/a' : r.rs.now) + '</td>' + dc(d(r, 'm1')) + dc(d(r, 'm3')) + dc(d(r, 'm6')) + '<td class="num">' + rg(r.ssm) + '</td><td class="num">' + rg(r.tm) + '</td>' + rv(r.eps3) + '<td class="num ' + cc(r.nubs, 0.25) + '">' + (r.nubs == null ? '<span class="mut">n/a</span>' : pctS(r.nubs)) + '</td></tr>'; };
+    var na = '<span class="mut">n/a</span>';
+    var dc = function (v) { return '<td class="num ' + cc(v, 10) + '">' + (v == null ? na : intS(v)) + '</td>'; };
+    var rv = function (v) { return '<td class="num ' + cc(v, 5) + '">' + (v == null ? na : pctI(v)) + '</td>'; };
+    var nm = function (r) { return '<span class="pn">' + esc(r.name) + '</span>' + (r.held && r.t !== m.t ? '<span class="chip held" title="a holding of ours">held</span>' : ''); };
+    var row = function (r, self) { return '<tr class="' + (self ? 'self' : '') + '"><td>' + nm(r) + '</td><td class="num">' + (r.rs.now == null ? na : r.rs.now) + '</td>' + dc(d(r, 'm1')) + dc(d(r, 'm3')) + dc(d(r, 'm6')) + rv(r.eps3) + rv(r.sales3) + '<td class="num ' + cc(r.nubs, 0.25) + '">' + (r.nubs == null ? na : pctS(r.nubs)) + '</td></tr>'; };
     var worst = function (a) { return a.slice().sort(function (x, y) { var p = d(x, 'm3'), q = d(y, 'm3'); return (p == null ? 999 : p) - (q == null ? 999 : q); }); };
-    var h = '<table class="tbl"><tr><th>Company</th><th class="num">Stock RS</th><th class="num">Stock RS change, 1 month</th><th class="num">3 months</th><th class="num">6 months</th><th class="num">Sell-side Momentum</th><th class="num">Technical Momentum</th><th class="num">Earnings per share revisions, 3 months</th><th class="num">Net Upgrade Breadth, sales estimates</th></tr>';
+    var h = '<table class="tbl peers"><colgroup>' + new Array(9).join('<col>') + '</colgroup><thead><tr><th>Company</th><th class="num">Stock RS</th><th class="num">Stock RS change, 1M</th><th class="num">Stock RS change, 3M</th><th class="num">Stock RS change, 6M</th><th class="num">EPS revisions, 3M,' + fy + '</th><th class="num">Revenue revisions, 3M,' + fy + '</th><th class="num">NUB, Sales, 100-day</th></tr></thead><tbody>';
     h += row(P.self, true);
-    h += '<tr class="grp"><td colspan="9">Cohort peers (' + P.cohort.length + ' of ' + P.cohort_total + ', the largest by market value; the stronger dots), weakest first</td></tr>' + worst(P.cohort).map(function (r) { return row(r); }).join('');
-    h += '<tr class="grp"><td colspan="9">Sector peers (' + P.sector.length + ' of ' + P.sector_total + '; the paler dots), weakest first</td></tr>' + worst(P.sector).map(function (r) { return row(r); }).join('');
-    return h + '</table>';
+    h += '<tr class="grp"><td colspan="8">Cohort peers (' + P.cohort.length + ' of ' + P.cohort_total + ', the largest by market value), weakest 3M Stock RS change first</td></tr>' + worst(P.cohort).map(function (r) { return row(r); }).join('');
+    h += '<tr class="grp"><td colspan="8">Sector peers (' + P.sector.length + ' of ' + P.sector_total + ', the largest by market value), weakest 3M Stock RS change first</td></tr>' + worst(P.sector).map(function (r) { return row(r); }).join('');
+    return h + '</tbody></table>';
   }
 
   /* ------------------------------------------------------------------ ratings, context, judgement, placeholders, Experiment */
@@ -737,7 +835,98 @@
     if (location.hash === '#overlay') open(true);
   }
 
-  window.DASH = { C: C, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume,
+
+  /* ------------------------------------------------------------------ version 2 (27-Oct-2026): the sell-side items, one column */
+  var SNAMES = { eps: 'EPS', sales: 'Revenue (sales)', ebitda: 'EBITDA' };
+  function cellIn(host, title) { var c = document.createElement('div'); c.className = 'sscell'; c.innerHTML = '<div class="sst">' + title + '</div>'; host.appendChild(c); var h = document.createElement('div'); c.appendChild(h); return h; }
+  /* item 3: the snake charts, the live dashboard's consensus chart per named FY (round 2), one measure under the next */
+  function snakeRender(host, m, W) {
+    host.innerHTML = '';
+    var SS = m.H.ss || {}, Yr = SS.years, M = SS.metrics || {}, d1 = m.asof, d0 = addDays(m.asof, -730), labs = (Yr && Yr.labels) || [];
+    ['eps', 'sales', 'ebitda'].forEach(function (k) {
+      var X = Yr && Yr[k], ser = [], vals = [];
+      labs.forEach(function (y, yi) { var pts = ((X || {})[y] || []).filter(function (q) { return q.v != null && q.d >= d0; }); if (!pts.length) return; pts.forEach(function (q) { vals.push(q.v); }); var last = pts[pts.length - 1];
+        ser.push({ pts: pts, color: YC[yi], w: 2, label: 'FY' + y + ' consensus', fmt: fmtN, endLabel: 'FY' + y + ': ' + fmtN(last.v), endDy: yi ? -6 : 8 }); });
+      var dl = ((M[k] || {}).daily || []).filter(function (q) { return q.v != null && q.d >= d0; });
+      if (dl.length && ser.length && labs[0] && ser[0].label.indexOf(labs[0]) >= 0) { dl.forEach(function (q) { vals.push(q.v); }); var ld = dl[dl.length - 1]; ser[0].endLabel = ''; ser.push({ pts: dl, color: YC[0], w: 1.4, dash: '2 3', label: 'daily reading (FY' + labs[0] + ')', fmt: fmtN, endLabel: 'FY' + labs[0] + ': ' + fmtN(ld.v) + ' (' + fmtD(ld.d) + ')' }); }
+      var h2 = cellIn(host, SNAMES[k] + ' consensus, FY' + labs.join(' and FY') + ' <span class="mut">(last 24 months)</span>');
+      if (!ser.length) { h2.innerHTML = '<div class="nohist">No stored ' + SNAMES[k] + ' consensus for FY' + labs.join(' or FY') + ' for ' + esc(m.name) + '.</div>'; return; }
+      var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.12 || Math.abs(hi) * 0.05 || 1;
+      stack(h2, { d0: d0, d1: addDays(d1, 8), monthEnd: true, width: W, left: 56, right: 150, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: 120, labelEdge: true, series: ser, yDomain: [lo - pd, hi + pd] }] });
+    });
+  }
+  /* item 4: the % of Buys, Other and Sells (Richard, Q5 = A: Buys = Buy + Overweight, Sells = Sell + Underweight, Other = Hold),
+     above the live dashboard's target price against share price chart */
+  function ratingsRender(host, m, W, rows) {
+    host.innerHTML = '';
+    var S2 = m.H.ss2 || {}, d1 = m.asof, d0 = addDays(m.asof, -730), sc = S2.tp_scale || 1;
+    var rp = (S2.ratings || []).filter(function (q) { return q.d >= d0; }).map(function (q) { var n = q.buys + q.other + q.sells; return n ? { d: q.d, b: Math.round(q.buys / n * 100), o: Math.round(q.other / n * 100), s: Math.round(q.sells / n * 100), n: n } : null; }).filter(Boolean);
+    rp.forEach(function (q) { var t = q.b + q.o + q.s; if (t !== 100) q.o += 100 - t; });
+    var tp = ((m.H.ss.metrics || {}).tp || {}), tpp = (tp.monthly || []).concat(tp.daily || [], tp.daily_unjoined || []).filter(function (q) { return q.v != null && q.d >= d0; }).sort(function (a, b) { return a.d < b.d ? -1 : 1; }).map(function (q) { return { d: q.d, v: q.v * sc }; });
+    var seen = {}; tpp = tpp.filter(function (q) { if (seen[q.d]) return false; seen[q.d] = 1; return true; });
+    var px = (rows && rows.length ? rows.map(function (r) { return { d: r.date || r.d, v: r.close != null ? r.close : r.c }; }) : m.daily.map(function (q) { return { d: q.d, v: q.c }; })).filter(function (q) { return q.v != null && q.d >= d0 && q.d <= d1; });
+    var panels = [];
+    if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (month-ends)', h: 90, labelEdge: true, yDomain: [0, 100], yTicks: [0, 50, 100], yFmt: function (v) { return v + '%'; },
+      series: [{ kind: 'stacked', gap: 45, pts: rp, label: 'ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
+        layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] }] });
+    if (tpp.length || px.length) { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1, lt = tpp[tpp.length - 1], lp = px[px.length - 1];
+      panels.push({ title: 'Average PT against SP' + (sc !== 1 ? ' (PT converted from pounds to pence)' : ''), h: 120, labelEdge: true, yDomain: [lo3 - p3, hi3 + p3],
+        series: [{ pts: px, color: C.ink3, w: 1.2, label: 'SP', fmt: fmtN, endLabel: lp ? 'SP ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }, { pts: tpp, color: C.ink, w: 2, label: 'average PT', fmt: fmtN, endLabel: lt ? 'PT ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }] }); }
+    if (!panels.length) { host.innerHTML = '<div class="nohist">No ratings or PT history is stored for ' + esc(m.name) + '.</div>'; return; }
+    stack(host, { d0: d0, d1: addDays(d1, 8), monthEnd: true, width: W, left: 56, right: 150, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: panels });
+  }
+  /* item 5: Net Upgrade Breadth, next FY, last twelve months (Richard, D-PMS-V4-34, AQ5, AQ6): stacked counts (green raising,
+     red cutting, grey no change) with the number in each band, behind the NUB line */
+  var NUBK = [['eps', 'EPS'], ['sales', 'Revenue (sales)'], ['ebitda', 'EBITDA'], ['tp', 'PT'], ['buys', 'Buys']];
+  function nubRender(host, m, W) {
+    host.innerHTML = '';
+    var S2 = m.H.ss2 || {}, NC = S2.nubc || {}, d1 = m.asof, d0 = addDays(m.asof, -365);
+    var GR = { k: 'up', label: 'raising', color: 'rgba(26,127,55,0.38)', ink: '#116329', tip: '#7ee2a8' }, NC_ = { k: 'nc', label: 'no change', color: 'rgba(139,148,158,0.28)', ink: '#424a53', tip: '#d0d7de' }, RD = { k: 'dn', label: 'cutting', color: 'rgba(207,34,46,0.38)', ink: '#a40e26', tip: '#ffaba8' };
+    NUBK.forEach(function (kk) {
+      /* a month with no analyst counted has no breadth: it is left as a gap, never drawn as zero */
+      var k = kk[0], arr = (NC[k] || []).filter(function (q) { return q.d >= d0 && q.d <= d1 && (k === 'buys' ? (q.buys + q.other + q.sells) > 0 : q.n > 0); });
+      var buys = k === 'buys';
+      var pts = arr.map(function (q) { if (buys) { var n = q.buys + q.other + q.sells; return { d: q.d, up: q.buys, nc: q.other, dn: q.sells, n: n, v: n ? q.buys / n : null, fy: null, src: 'monthly' }; } return { d: q.d, up: q.up, dn: q.dn, nc: Math.max(0, q.n - q.up - q.dn), n: q.n, v: q.n ? (q.up - q.dn) / q.n : null, fy: q.fy, src: q.src }; });
+      var last = pts[pts.length - 1];
+      var fys = pts.map(function (q) { return q.fy; }).filter(Boolean), fyNow = fys.length ? fys[fys.length - 1] : null;
+      var head = kk[1] + (buys ? ': Buys, Other and Sells (counts) with % Buys' : ': NUB' + (fyNow ? ', FY' + fyNow : '') + ', 100-day count');
+      var latest = !last ? '' : buys ? fmtD(last.d) + ': ' + last.up + ' of ' + last.n + ' Buys (' + Math.round(last.v * 100) + '%)' : fmtD(last.d) + ': ' + last.up + ' of ' + last.n + ' raising, ' + last.dn + ' cutting, ' + last.nc + ' no change; NUB ' + pctS(last.v);
+      var h2 = cellIn(host, head + (latest ? ' <span class="mut">&middot; ' + latest + '</span>' : ''));
+      if (!pts.length) { h2.innerHTML = '<div class="nohist">No stored ' + kk[1] + ' counts for ' + esc(m.name) + ' in the last twelve months.</div>'; return; }
+      var mx = Math.max.apply(null, pts.map(function (q) { return q.n; }).concat([1]));
+      var markers = [];
+      for (var i = 1; i < pts.length; i++) if (pts[i].fy && pts[i - 1].fy && pts[i].fy !== pts[i - 1].fy) markers.push({ d: pts[i].d, label: 'FY' + pts[i].fy + ' from here', color: C.ink3 });
+      var layers = buys ? [{ k: 'up', label: 'Buys', color: GR.color, ink: GR.ink, tip: GR.tip }, { k: 'nc', label: 'Other', color: NC_.color, ink: NC_.ink, tip: NC_.tip }, { k: 'dn', label: 'Sells', color: RD.color, ink: RD.ink, tip: RD.tip }] : [GR, NC_, RD];
+      var line = { pts: pts.map(function (q) { return { d: q.d, v: q.v }; }), color: C.ink, w: 1.7, axis: 'right', gap: 45, label: buys ? '% Buys' : 'NUB', fmt: function (v) { return buys ? Math.round(v * 100) + '%' : pctS(v); } };
+      stack(h2, { d0: d0, d1: addDays(d1, 12), monthEnd: true, width: W, left: 56, right: 56, markers: markers, panels: [{ h: 112, yDomain: [0, mx * 1.08], yTicks: niceTicks(0, mx, 3).filter(function (v) { return v === Math.round(v); }), yFmt: function (v) { return String(v); },
+        yDomain2: buys ? [0, 1.08] : [-1.08, 1.08], yTicks2: buys ? [0, 0.5, 1] : [-1, 0, 1], yFmt2: function (v) { return buys ? Math.round(v * 100) + '%' : pctS(v); },
+        series: [{ kind: 'stacked', gap: 45, numbers: true, pts: pts, label: buys ? 'ratings' : 'analysts', layers: layers }, line] }] });
+    });
+  }
+
+  /* ------------------------------------------------------------------ the Market chart, front page (Richard, 27b Q3 and 27c, D-PMS-V4-23, V4-37, V4-38):
+     the Stoxx Europe 600 and each industry rebased to the index, last 3 and last 12 months; a different autumnal colour per line,
+     no conditional colouring; each line named in small letters on the right, no key */
+  var AUTUMN = ['#8c2d04', '#b35806', '#c97b28', '#a6761d', '#7f6a12', '#6b6b2a', '#4d6b35', '#356b5a', '#2f5f73', '#4f5b86', '#6a4c7d', '#8e3b62', '#a8423b', '#7a4a2a', '#9c6b4e', '#5c5348', '#8a7f3a', '#b0703c'];
+  function marketRender(host, M, W, win, title) {
+    host.innerHTML = '';
+    var X = M && M.windows && M.windows[String(win)];
+    if (!X) { host.innerHTML = '<div class="nohist">No market series for this window.</div>'; return; }
+    var ds = X.dates, names = Object.keys(X.series), idx = M.index || 'Stoxx Europe 600';
+    var ind = names.filter(function (n) { return n !== idx; }).sort();
+    var vals = []; names.forEach(function (n) { X.series[n].forEach(function (v) { if (v != null) vals.push(v); }); });
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.05 || 1;
+    var ret = function (a) { var f = a[0], l = a[a.length - 1]; return (f && l) ? (l / f - 1) : null; };
+    var fmtR = function (r) { if (r == null) return ''; var v = Math.round(r * 1000) / 10; return v > 0 ? '+' + v.toFixed(1) + '%' : v < 0 ? '(' + Math.abs(v).toFixed(1) + '%)' : '0.0%'; };
+    var series = ind.map(function (n, i) { var a = X.series[n]; return { pts: ds.map(function (d, k) { return { d: d, v: a[k] }; }), color: AUTUMN[i % AUTUMN.length], w: 1.25, label: n + ' ' + fmtR(ret(a)), fmt: function (v) { return v.toFixed(1); }, endLabel: n + ' ' + fmtR(ret(a)) }; });
+    var ia = X.series[idx];
+    series.push({ pts: ds.map(function (d, k) { return { d: d, v: ia[k] }; }), color: '#1f2328', w: 2.6, label: idx + ' ' + fmtR(ret(ia)), fmt: function (v) { return v.toFixed(1); }, endLabel: idx + ' ' + fmtR(ret(ia)) });
+    var cell = cellIn(host, title + ' <span class="mut">(' + fmtD(ds[0]) + '-' + D(ds[0]).getUTCFullYear() + ' to ' + fmtD(ds[ds.length - 1]) + '-' + D(ds[ds.length - 1]).getUTCFullYear() + ')</span>');
+    var Hh = Math.max(300, (series.length + 1) * 12 + 20);
+    stack(cell, { d0: ds[0], d1: ds[ds.length - 1], width: W, left: 52, right: 290, markers: [], panels: [{ h: Hh, labelEdge: true, labelGap: 11.5, labelSize: 9.5, series: series, yDomain: [lo - pd, hi + pd], yFmt: function (v) { return Math.round(v); } }] });
+  }
+
+  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume,
     rsPanel: rsPanel, relPanel: relPanel, statusPanel: statusPanel, ssPanels: ssPanels, ssLegend: ssLegend, ssTable: ssTable, valChart: valChart, valLine: valLine, pctNow: pctNow, peersPicture: peersPicture, peersTable: peersTable,
     renderRatings: renderRatings, renderContext: renderContext, renderJudgement: renderJudgement, renderPlaceholders: renderPlaceholders, renderExperiment: renderExperiment, overlay: overlay, CRIT_WORDS: CRIT_WORDS, addDays: addDays, ordinal: ordinal };
 })();
