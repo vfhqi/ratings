@@ -196,7 +196,7 @@
   }
 
   /* ------------------------------------------------------------------ MA SLs on every tranche (Richard, 27-Oct-2026: "All tranches, all investments") */
-  var CASE_WORDS = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link' };
+  var CASE_WORDS = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link', data: 'the exit is dated on or before the purchase: data to check' };
   function maTranches(m) {
     return (m.H.stops || []).map(function (s) {
       var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0] || {};
@@ -361,6 +361,8 @@
     if (add.open_case === 4) { var ex4 = maTranches(m).filter(function (t) { return t.state === 'exit_confirmed'; }).map(function (t) { return t.n; });
       return '<b>Open:</b> ' + trList(ex4) + (ex4.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit; whether a Core Investment is added to then is for your ruling at the APM PMS Q&A SOP run.'; }
     if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
+    if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
+    if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
     if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
     if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion is met, so the rule allows no add.';
     return '<b>No:</b> it holds ' + esc(String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '')) + '.';

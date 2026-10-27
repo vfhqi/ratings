@@ -65,7 +65,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var maDue = function (R) { return R.tranches.filter(function (t) { return t.ma_sl_session_due; }); };
     var maOpen = function (R) { return R.tranches.filter(function (t) { return t.ma_sl_open_cases && t.ma_sl_open_cases.length; }); };
     var trL = function (ns) { return ns.length > 1 ? 'tranches ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : 'tranche ' + ns[0]; };
-    var CASEW = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link' };
+    var CASEW = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link', data: 'the exit is dated on or before the purchase: data to check' };
     var maSentence = function (R) {
       var ex = maEx(R); if (!ex.length) { if (R.tranches.some(function (t) { return t.ma_sl && t.ma_sl.state === 'triggered'; })) return '<b>A tranche is below its MA SL, inside the five-day window.</b>';
         var nr = R.tranches.filter(function (t) { return t.ma_sl && t.ma_sl.pct_above_stop != null; }).sort(function (a, b) { return a.ma_sl.pct_above_stop - b.ma_sl.pct_above_stop; })[0];
@@ -139,6 +139,8 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       var add = R.add_rule || {}, sd = R._probing && !hasMA(R) ? stopDate(R) : null;
       if (add.open_case === 4) return '<b>Open:</b> a tranche has a confirmed MA SL exit; whether a Core Investment is added to then is for your ruling at the APM PMS Q&A SOP run.';
       if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
+      if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
+      if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
       if (sd) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sd) + ', so the rule allows no add.';
       if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
       if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion is met, so the rule allows no add.';
