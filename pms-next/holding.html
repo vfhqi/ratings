@@ -142,7 +142,7 @@
       var host = document.getElementById(a[1]);
       if (!has(a[0])) { var cur = V && V.current ? V.current[a[0]] : null; host.innerHTML = '<div class="nohist">No ' + a[2] + ' history is stored for ' + esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + a[2] + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
       var f = document.createElement('iframe'); f.className = 'valframe'; f.src = url; f.title = a[2] + ', the Master Dashboard valuation chart';
-      var fit = function () { try { var d = f.contentDocument; if (d && d.documentElement) { var h = d.documentElement.scrollHeight; if (h > 200) f.style.height = h + 'px'; } } catch (e) { /* another origin: keep the fixed height */ } };
+      var fit = function () { try { var d = f.contentDocument; if (d && d.documentElement) { var h = d.body ? d.body.scrollHeight + 12 : 0; if (h > 200) f.style.height = h + 'px'; } } catch (e) { /* another origin: keep the fixed height */ } };
       f.addEventListener('load', function () { fit(); [400, 1200, 2500, 5000].forEach(function (t) { setTimeout(fit, t); }); });
       window.addEventListener('resize', debounce(fit, 300));
       host.appendChild(f);
