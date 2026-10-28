@@ -1,5 +1,5 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.4 on 2026-10-28T18:06:51 from master-dashboard/index.html (md5 2194314b43dac908b37b4ebc92a27bc6),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.4 on 2026-10-28T18:36:03 from master-dashboard/index.html (md5 2194314b43dac908b37b4ebc92a27bc6),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 15. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
@@ -392,8 +392,8 @@ function drawMasterChart(ticker,_sspo){
       ctx.stroke();ctx.setLineDash([]);
       if(lastV!=null&&L.label){var _y=priceY(lastV),_o=_y<pad.t?-1:_y>pad.t+plotH?1:0;_labs.push({y:Math.max(pad.t+6,Math.min(pad.t+plotH-6,_y)),ly:_y+(L.labelDy||-5),t:(_o<0?'▲ ':_o>0?'▼ ':'')+L.label,c:L.color||'#cf222e',dash:L.dash||[4,3]})}});
     ctx.restore();
-    var _lx=W-pad.r+110,_lw=W-6-_lx;
-    if(_lw>=120){
+    var _lx=W-pad.r+104,_lw=W-6-_lx;
+    if(_lw>=100){
       ctx.font='bold 11px sans-serif';
       _labs.forEach(function(Q){var ws=String(Q.t).split(' '),ls=[],cu='';ws.forEach(function(w){var t=cu?cu+' '+w:w;if(ctx.measureText(t).width>_lw-18&&cu){ls.push(cu);cu=w}else cu=t});if(cu)ls.push(cu);Q.ls=ls;Q.h=ls.length*13});
       _labs.sort(function(a,b){return a.y-b.y});

@@ -995,7 +995,7 @@
     var seen = {}; tpp = tpp.filter(function (q) { if (seen[q.d]) return false; seen[q.d] = 1; return true; });
     var px = (rows && rows.length ? rows.map(function (r) { return { d: r.date || r.d, v: r.close != null ? r.close : r.c }; }) : m.daily.map(function (q) { return { d: q.d, v: q.c }; })).filter(function (q) { return q.v != null && q.d >= d0 && q.d <= d1; });
     var panels = [];
-    if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (month-ends)', h: 90, labelEdge: true, yDomain: [0, 100], yTicks: [0, 50, 100], yFmt: function (v) { return v + '%'; },
+    if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (month-ends, then the latest day)', h: 90, labelEdge: true, yDomain: [0, 100], yTicks: [0, 50, 100], yFmt: function (v) { return v + '%'; },
       series: [{ kind: 'stacked', gap: 45, pts: rp, label: 'ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
         layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] }] });
     if (tpp.length || px.length) { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1, lt = tpp[tpp.length - 1], lp = px[px.length - 1];
