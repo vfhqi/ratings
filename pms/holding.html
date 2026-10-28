@@ -15,8 +15,9 @@
      a new item 10, the stock against each Sell Criterion, written at each APM PMS Q&A SOP run. -->
 <div class="wrap">
   <div class="topbar">
-    <span class="brand">PMS Per-stock Dashboard</span>
+    <span class="brand" id="brand">PMS Per-stock Dashboard</span>
     <select id="picker" aria-label="Holding"></select>
+    <input id="find" list="find-list" placeholder="Any stock: name or ticker" autocomplete="off" aria-label="Any stock in the universe" style="min-width:230px;padding:5px 9px;border:1px solid #d0d7de;border-radius:6px;font:inherit;font-size:13px;background:#fff"><datalist id="find-list"></datalist>
     <a class="btnlink" href="holdings.html">All holdings</a>
     <span class="sp"></span>
     <span class="asof" id="asof"></span>
@@ -25,7 +26,7 @@
   <div class="head2" id="head"></div>
 
   <div class="sec" id="s1">
-    <h2><span>1. SP and MAs</span><span class="mut">daily; SL levels and tranches marked</span></h2>
+    <h2><span>1. SP and MAs</span><span class="mut" id="s1-say">daily; SL levels and tranches marked</span></h2>
     <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers</span></div>
     <div class="layers" id="legend"></div>
     <div class="xs"><div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div></div>
@@ -63,7 +64,7 @@
   </div>
 
   <div class="sec" id="s8">
-    <h2><span>8. Distance from SLs</span><span class="mut">nearest first</span></h2>
+    <h2><span>8. Distance from SLs</span><span class="mut" id="s8-say">nearest first</span></h2>
     <div class="xs"><div id="ladder"></div></div>
     <div class="ladkey ladkey2" id="ladkey"></div>
   </div>
@@ -92,7 +93,7 @@
 <div class="ov" id="ov">
   <div class="ov-hd"><b>Peers of <span id="ov-name"></span></b><input id="ov-q" placeholder="Search a ticker or company name" autocomplete="off"><button id="ov-close">Close</button></div>
   <div class="ov-cols" id="ov-cols"></div>
-  <div class="ov-foot">Click a name: a holding of ours (marked "held") opens its own page here; any other stock opens the Master Dashboard's Stock View in a new tab. The number beside each name is its Stock RS on the reading day. Escape or a click outside closes this panel.</div>
+  <div class="ov-foot">Click a name to open its Per-stock Dashboard here; our holdings are marked "held". The number beside each name is its Stock RS on the reading day. Escape or a click outside closes this panel.</div>
 </div>
 
 <script src="chart-renderer-dashboard.js"></script>
@@ -100,6 +101,9 @@
 <script>
 (function () {
   'use strict';
+  /* 28-Oct-2026 (Richard: "I want to be able to per-stock dashboard for any stock in our universe"; D-PMS-V4-102): a stock we hold
+     reads data/latest/, any other universe stock data/universe/ (scripts/pms_dashboard_universe.py); one page for both */
+  var UDATA = 'data/universe/', IDX = null;
   var DATA = 'data/latest/', MASTER = window.PMS_MASTER_BASE || '../../master/', HASHMODE = window.PMS_LINK_MODE === 'hash';
   var Q = new URLSearchParams(location.search), H0 = location.hash.slice(1), T = Q.get('t') || (H0 && H0 !== 'overlay' ? decodeURIComponent(H0) : null);
   if (HASHMODE) window.addEventListener('hashchange', function () { location.reload(); });
@@ -112,21 +116,38 @@
   function fail(msg) { document.getElementById('err').innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
   function getJSON(u) { return fetch(u, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(u + ': ' + r.status); return r.json(); }); }
 
-  getJSON(DATA + 'book.json').then(function (B) {
-    var hs = B.holdings;
+  Promise.all([getJSON(DATA + 'book.json'), getJSON(UDATA + 'index.json').catch(function () { return null; })]).then(function (res) {
+    var B = res[0], I = res[1], hs = B.holdings;
+    IDX = I && I.stocks && I.stocks.length ? I : null; links.anyStock = !!IDX;
     document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
     if (T && (B._meta.failed || []).indexOf(T) >= 0) { fail('No page could be built for ' + ((B._meta.failed_names || {})[T] || T) + ' in the last update (see the Daily Digest); the other holdings are in the picker.'); return; }
-    if (!T || !hs.some(function (h) { return h.t === T; })) T = hs.length ? hs[0].t : null;
+    if (!T) T = hs.length ? hs[0].t : null;
+    var held = !!T && hs.some(function (h) { return h.t === T; });
+    var ux = (!held && T && IDX) ? IDX.stocks.filter(function (s) { return s.t === T; })[0] : null;
     var groups = {}; hs.forEach(function (h) { var g = h.probing ? 'Early Innings Probing Bets' : 'Middle Innings Core Investments'; (groups[g] = groups[g] || []).push(h); });
-    document.getElementById('picker').innerHTML = Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    document.getElementById('picker').innerHTML = (ux ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
     document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value); };
+    findBox();
     if (!T) { fail('No holdings in the data file.'); return; }
-    return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
+    if (held) return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
+    if (!ux) { fail('No Per-stock Dashboard data for ' + T + ': it is not in the Master Dashboard universe' + (IDX ? '' : ', or the files for stocks we do not hold have not been published yet') + '.'); return; }
+    return getJSON(UDATA + ux.f).then(function (Hd) { start(Hd); });
   }).catch(function (e) { fail('The data for this page could not be loaded (' + e.message + ').'); });
+
+  /* any stock in the universe: type a name or ticker, pick it, and the page opens on it */
+  function findBox() {
+    var f = document.getElementById('find');
+    if (!IDX) { f.style.display = 'none'; return; }
+    document.getElementById('find-list').innerHTML = IDX.stocks.map(function (s) { return '<option value="' + esc(s.n + ' (' + s.t + ')') + '">' + (s.h ? 'held' : '') + '</option>'; }).join('');
+    var go = function () { var v = f.value || '', mm = /\(([^()]+)\)\s*$/.exec(v), t = mm ? mm[1] : v.trim().toUpperCase(); if (IDX.stocks.some(function (s) { return s.t === t; })) location.href = links.holding(t); };
+    f.addEventListener('change', go); f.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+  }
 
   function start(Hd) {
     m = DASH.model(Hd);
-    document.title = m.name + ': PMS Per-stock Dashboard';
+    var brand = m.notHeld ? 'Per-stock Dashboard' : 'PMS Per-stock Dashboard';
+    document.title = m.name + ': ' + brand; document.getElementById('brand').textContent = brand;
+    if (m.notHeld) { document.getElementById('s1-say').textContent = 'daily'; document.getElementById('s8-say').textContent = 'Sell Criteria 1 to 5, read as if held; nearest first'; }
     document.getElementById('asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
     renderHead();
     DASH.overlay(m, links);
@@ -141,7 +162,8 @@
     var R = m.R, trs = m.tranches.map(function (tr) { return 'tranche ' + tr.tranche_number + ' ' + fmtDY(tr.entry_date) + ' (' + tr.size_pct.toFixed(2) + '%)'; }).join(', ');
     document.getElementById('head').innerHTML = '<h1>' + esc(m.name) + ' <span class="tk">' + esc(m.t) + '</span></h1>' +
       '<div class="sub">' + esc(m.ind) + ' &middot; ' + esc(m.sec) + ' &middot; cohort: ' + esc(m.coh || 'none named') + '</div>' +
-      '<div class="sub"><span class="pill ' + (m.probing ? 'blue' : 'grey') + '">' + esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital: ' + esc(trs) + '</div>';
+      (m.notHeld ? '<div class="sub"><span class="pill grey">Not held</span> Sell Criteria 1 to 5 are read as if it were held, as the Master Dashboard reads them; no tranches, MA SLs or item 10.</div>'
+        : '<div class="sub"><span class="pill ' + (m.probing ? 'blue' : 'grey') + '">' + esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital: ' + esc(trs) + '</div>');
   }
   /* items 6 and 7: the Master Dashboard's valuation chart itself, embedded (Richard, 27c: "The valuation charts should be the one from the master dashboard") */
   function valFrames() {
@@ -219,6 +241,7 @@
       ['Peers', 'Chart: across, the change in Stock RS over the period chosen (right means strengthening); up, the 3-month revision to ' + fy + ' consensus, EPS or revenue. Green dots strengthening with upgrades; red weakening with downgrades; amber mixed. Cohort peers are the darker dots, sector peers the paler ones; dot size is market value. Purple ring: this holding; blue ring: another holding of ours. A reading beyond 40% either way is pinned at the edge with its true value. Table: this holding, then its cohort peers, then the sector peers not in the cohort, each group strongest Stock RS first; Net Upgrade Breadth, sales, 100-day is the Sell Criterion\'s month-end reading. The tab at the right edge (or the P key) lists every industry, sector, cohort and geography peer.'],
       ['The stock against each Sell Criterion', 'Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run (weekly), one to four sentences per Sell Criterion and for the MA SLs, on the trend, its context and the risks. It is dated and is not rewritten between runs, so read it beside today\'s readings in item 8.']
     ];
+    if (m.notHeld) N.forEach(function (n) { if (n[0] === 'Distance from SLs') n[1] = 'For a stock we do not hold, as here: Sell Criteria 1 to 5 read as if it were held, from the Master Dashboard\'s own readings (master-dashboard/data/pool-eligibility.json, the same Framework 14 arithmetic its Pool page uses), with no tranche, MA SL or 30% rows (decision D-PMS-V4-102). ' + n[1]; });
     document.getElementById('endnotes').innerHTML = N.map(function (n) { return '<li><b>' + n[0] + '.</b> ' + n[1] + '</li>'; }).join('');
   }
 })();

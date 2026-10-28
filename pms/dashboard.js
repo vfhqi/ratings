@@ -257,7 +257,7 @@
       sw('<svg width="26" height="22"><circle cx="13" cy="11" r="8" fill="#1f2328" stroke="#fff" stroke-width="2"/><circle cx="13" cy="11" r="10" fill="none" stroke="#1f2328" stroke-width="1" opacity=".45"/></svg><span><b>Today\'s value</b> (' + d(m.asof) + '), the large dot with the large number: <b style="color:' + C.red + '">red</b> if the Sell Criterion would be met on today\'s readings, <b style="color:' + C.amber + '">amber</b> if it is close, black if it is clear</span>'),
       sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="#1f2328" stroke-width="2.4"/></svg><span><b>The reading that decides a sale:</b> Friday ' + d(m.lastFriday) + ' for a row read each Friday; the ' + d(m.lastME) + ' month-end for a row read at the month-end. Coloured as above. For the MA SL rows and the 30% level row the rule reads each day\'s close, so today\'s value is the deciding reading</span>'),
       sw('<svg width="26" height="22"><circle cx="8" cy="11" r="3.6" fill="#8b949e"/><circle cx="19" cy="11" r="3.6" fill="#8b949e"/></svg><span><b>Grey dots:</b> the readings at the ' + d(m.me3) + ' and ' + d(m.me1) + ' month-ends</span>'),
-      sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="' + C.entry + '" stroke-width="2"/></svg><span><b>Purple ring:</b> the reading when tranche 1 was bought' + (t1 ? ' (' + d(t1.entry_date) + ')' : '') + '</span>'),
+      t1 ? sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="' + C.entry + '" stroke-width="2"/></svg><span><b>Purple ring:</b> the reading when tranche 1 was bought' + (t1 ? ' (' + d(t1.entry_date) + ')' : '') + '</span>') : '',
       sw('<svg width="26" height="22"><line x1="3" x2="17" y1="11" y2="11" stroke="' + TREND.away + '" stroke-width="2.6"/><path d="M24,11 l-8,-5 l0,10 Z" fill="' + TREND.away + '"/></svg><span><b>Arrow:</b> the move from the ' + d(m.trendFrom) + ' month-end to today: <b style="color:' + TREND.away + '">green</b> away from the selling zone, <b style="color:' + TREND.towards + '">dark red</b> towards it, <b style="color:' + TREND.flat + '">grey</b> little change (under 3% of the row\'s scale)</span>'),
       sw('<svg width="26" height="22"><line x1="3" x2="23" y1="11" y2="11" stroke="rgba(207,34,46,.35)" stroke-width="6" stroke-linecap="round"/></svg><span><b>Red band:</b> the selling zone, up to the red line that sells</span>')
     ].join('');
@@ -310,10 +310,16 @@
 
   /* ------------------------------------------------------------------ the model: the data file turned into what the panels draw */
   var CRIT_WORDS = { C1: 'Industry RS below 30', C2: 'The 200-day average of relative price falling over the month', C3: 'Sector RS below 50 and Stock RS below 70', C4: 'Stock RS below 50 and analysts cutting', C5: 'Relative price more than 25% below its 52-week high', C6: 'A tranche 30% below its highest close since purchase, with Stock RS below 70' };
+  /* 28-Oct-2026: a universe file (scripts/pms_dashboard_universe.py, extract --compact) writes daily and volume as columns and rows */
+  function expandCols(Hd) { ['daily', 'volume'].forEach(function (k) { var x = Hd[k]; if (x && !Array.isArray(x) && x.cols && x.rows) Hd[k] = x.rows.map(function (r) { var o = {}; x.cols.forEach(function (c, i) { o[c] = r[i]; }); return o; }); }); }
   function model(Hd) {
+    expandCols(Hd);
     var R = Hd.reading, m = { H: Hd, R: R };
     m.t = Hd.ticker; m.name = Hd.name; m.ind = Hd.industry; m.sec = Hd.sector; m.coh = Hd.cohort_name || Hd.cohort; m.probing = !!Hd.probing;
     m.status = R.holding_status === 'Core Investment' ? 'Middle Innings Core Investment' : (R.holding_status || ''); m.oneOff = !!R.one_off_in_out_link; m.order = R.order_state || '';
+    /* 28-Oct-2026 (Richard: "I want to be able to per-stock dashboard for any stock in our universe"; Watson's Q2 = A, D-PMS-V4-102): a stock
+       we do not hold has Sell Criteria 1 to 5 read as if held (the Master Dashboard's own readings), and no tranche, MA SL, 30% or item 10 rows */
+    m.notHeld = !!R.not_held;
     m.asof = Hd._meta.asof; window.__PMS_ASOF = m.asof; m.lastFriday = Hd._meta.last_friday; m.lastME = Hd._meta.last_month_end;
     m.daily = Hd.daily; m.rs = Hd.rs; m.nub = Hd.nub; m.tranches = R.tranches || [];
     m.e = Hd.at_entry.length ? Hd.at_entry[0] : null;
@@ -403,6 +409,7 @@
     m.todayBreadth = { v: bT, d: bTd };
     m.rows.forEach(function (r) {
       r.m1d = m.trendFrom;
+      if (m.notHeld && r.sub) r.sub = r.sub.replace('sells the whole holding', 'would sell a holding');
       if (r.id === 'C2') r.nfmt = function (v) { return br((v * 100).toFixed(1) + '%'); };
       if (r.id === 'C4b' && bT != null) r.marks.push({ v: bT, kind: 'today', d: bTd });
       if (r.id === 'C6' || /^MA/.test(r.id)) { r.ruleIsToday = true; r.todayState = r.state; return; }
@@ -952,8 +959,8 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') open(false); if ((e.key === 'p' || e.key === 'P') && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) open(!ov.classList.contains('open')); });
     document.getElementById('ov-name').textContent = m.name;
     var cols = [['Industry: ' + m.ind, O.industry], ['Sector: ' + m.sec, O.sector], ['Cohort: ' + (m.H.cohort_name || 'no named cohort'), O.cohort], ['Geography: listed in ' + m.H.country, O.geography]];
-    var href = function (r) { return r.held ? links.holding(r.t) : links.stockView(r.t); };
-    var render = function (q) { document.getElementById('ov-cols').innerHTML = cols.map(function (c) { var list = c[1] || []; return '<div class="ov-col"><h5>' + esc(c[0]) + ' <span class="mut">(' + list.length + ')</span></h5><div class="ov-list">' + list.filter(function (r) { return !q || (r.name + ' ' + r.t).toLowerCase().indexOf(q) >= 0; }).map(function (r) { return '<a class="' + (r.t === m.t ? 'self' : '') + '" href="' + esc(href(r)) + '"' + (r.held ? '' : ' target="_blank" rel="noopener" title="opens the Master Dashboard\'s Stock View in a new tab"') + '><span>' + esc(r.name) + (r.held && r.t !== m.t ? ' <span class="h">held</span>' : '') + (r.pool ? ' <span class="pl" title="in the Pool of Stocks Eligible for Middle Innings Portfolio Selection">Pool</span>' : '') + '</span><span class="rs">' + (r.rs == null ? '' : r.rs) + '</span></a>'; }).join('') + '</div></div>'; }).join(''); };
+    var href = function (r) { return (r.held || links.anyStock) ? links.holding(r.t) : links.stockView(r.t); };   /* 28-Oct-2026: every universe stock has a page */
+    var render = function (q) { document.getElementById('ov-cols').innerHTML = cols.map(function (c) { var list = c[1] || []; return '<div class="ov-col"><h5>' + esc(c[0]) + ' <span class="mut">(' + list.length + ')</span></h5><div class="ov-list">' + list.filter(function (r) { return !q || (r.name + ' ' + r.t).toLowerCase().indexOf(q) >= 0; }).map(function (r) { return '<a class="' + (r.t === m.t ? 'self' : '') + '" href="' + esc(href(r)) + '"' + ((r.held || links.anyStock) ? '' : ' target="_blank" rel="noopener" title="opens the Master Dashboard\'s Per-stock Chart in a new tab"') + '><span>' + esc(r.name) + (r.held && r.t !== m.t ? ' <span class="h">held</span>' : '') + (r.pool ? ' <span class="pl" title="in the Pool of Stocks Eligible for Middle Innings Portfolio Selection">Pool</span>' : '') + '</span><span class="rs">' + (r.rs == null ? '' : r.rs) + '</span></a>'; }).join('') + '</div></div>'; }).join(''); };
     render(''); document.getElementById('ov-q').oninput = function (e) { render(e.target.value.toLowerCase()); };
     if (location.hash === '#overlay') open(true);
   }
@@ -1047,6 +1054,7 @@
      the Assistant Portfolio Manager writes it at each APM PMS Q&A SOP run). Read from the note; the page only shows it, dated. */
   function insightsRender(host, say, m) {
     var I = m.H.insights;
+    if (m.notHeld) { say.textContent = ''; host.innerHTML = '<div class="nohist">Item 10 is written for holdings, at each APM PMS Q&amp;A SOP run; ' + esc(m.name) + ' is not held.</div>'; return; }
     if (!I || !I.items || !I.items.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     host.innerHTML = I.items.map(function (it) { return '<div class="ins"><div class="crit">' + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + '</div><div class="say">' + mdInline(it.text) + '</div></div>'; }).join('');
