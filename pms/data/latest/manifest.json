@@ -3,14 +3,14 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 271790,
+   "bytes": 271905,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 68, the reader says 67; the reader's value is used"
    ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 259528,
+   "bytes": 260140,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 58, the reader says 6; the reader's value is used"
    ]
@@ -22,7 +22,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 285844,
+   "bytes": 285883,
    "warnings": []
   },
   "FEVR-GB": {
@@ -32,29 +32,29 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 294101,
+   "bytes": 294229,
    "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 196318,
+   "bytes": 196394,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 294599,
+   "bytes": 294607,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 74, the reader says 73; the reader's value is used"
    ]
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 274718,
+   "bytes": 274928,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 273585,
+   "bytes": 273586,
    "warnings": []
   },
   "HTRO-SE": {
@@ -64,12 +64,12 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 285173,
+   "bytes": 285218,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 268142,
+   "bytes": 268306,
    "warnings": []
   },
   "HFG-GB": {
@@ -100,5 +100,5 @@
   "ALFEN-NL: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used",
   "ART-ES: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
  ],
- "seconds": 88.4
+ "seconds": 107.6
 }
