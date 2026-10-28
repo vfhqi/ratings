@@ -3,90 +3,90 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 264420,
+   "bytes": 271330,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 68, the reader says 67; the reader's value is used"
    ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 254007,
+   "bytes": 259526,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 58, the reader says 6; the reader's value is used"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 271891,
+   "bytes": 278051,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 280403,
+   "bytes": 285842,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 278131,
+   "bytes": 283437,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 287289,
+   "bytes": 294099,
    "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 189735,
+   "bytes": 196316,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 294602,
+   "bytes": 294597,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 74, the reader says 73; the reader's value is used"
    ]
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 268188,
+   "bytes": 274716,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 267947,
+   "bytes": 273583,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 274610,
+   "bytes": 280883,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 280293,
+   "bytes": 285171,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 262049,
+   "bytes": 268140,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 278821,
+   "bytes": 284024,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 274348,
+   "bytes": 280473,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
    ]
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 256425,
+   "bytes": 262717,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
    ]
@@ -100,5 +100,5 @@
   "ALFEN-NL: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used",
   "ART-ES: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
  ],
- "seconds": 76.0
+ "seconds": 76.9
 }
