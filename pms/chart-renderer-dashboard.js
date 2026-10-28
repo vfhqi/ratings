@@ -1,6 +1,6 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.2 on 2026-10-27T22:46:02 from master-dashboard/index.html (md5 8a57209f53c0da30145304df7106925f),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the twelve changes marked PMS-DASH 1 to 12. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.3 on 2026-10-28T17:40:02 from master-dashboard/index.html (md5 2194314b43dac908b37b4ebc92a27bc6),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 14. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
@@ -167,7 +167,13 @@ function drawMasterChart(ticker,_sspo){
     for(p=0;p<maPeriods.length;p++){var mk="ma"+maPeriods[p];if(chart[j][mk])allVals.push(chart[j][mk])}
   }
   var _pov=(_sspo&&_sspo.overlay)||window.PMS_OVERLAY||null; /* PMS-DASH 6 */
-  if(_pov&&_pov.lines){for(j=0;j<chart.length;j++){_pov.lines.forEach(function(L){var v=L.byDate[chart[j].d];if(v!=null)allVals.push(v)})}}
+  /* PMS-DASH 13 (28-Oct-2026, Richard: the scale must "dynamically update to use the space more effectively"; on 1M "all the info is in a narrow band"):
+     the price range fits the candles of the zoom shown; a switched-on MA or an exit level widens it only when it lies within 35% of the
+     candles' span beyond them; one further away is clipped at the plot's edge and named there (PMS-DASH 14) */
+  (function(){var lo=Infinity,hi=-Infinity,k,q;for(k=0;k<chart.length;k++){q=chart[k];if(q.l!=null&&q.l<lo)lo=q.l;if(q.h!=null&&q.h>hi)hi=q.h}
+    if(!(hi>=lo))return;var sp=(hi-lo)||Math.abs(hi)*0.05||1,a=lo-0.35*sp,b=hi+0.35*sp,keep=[lo,hi],add=function(v){if(v!=null&&v>=a&&v<=b)keep.push(v)};
+    for(k=0;k<chart.length;k++){for(var pp=0;pp<maPeriods.length;pp++){if(vis['ma'+maPeriods[pp]])add(chart[k]['ma'+maPeriods[pp]])}if(_pov&&_pov.lines)_pov.lines.forEach(function(L){add(L.byDate[chart[k].d])})}
+    allVals=keep})();
   var priceMin=Math.min.apply(null,allVals)*0.98;
   var priceMax=Math.max.apply(null,allVals)*1.02;
   var priceRange=priceMax-priceMin||1;
@@ -363,18 +369,20 @@ function drawMasterChart(ticker,_sspo){
   for(p=0;p<maPeriods.length;p++){
     var per=maPeriods[p];if(!vis["ma"+per])continue;
     var mk2="ma"+per;ctx.strokeStyle=maColors[per];ctx.lineWidth=maWidths[per];
-    ctx.setLineDash(per===100?[6,4]:[]);ctx.beginPath();var started=false;
+    ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip(); /* PMS-DASH 14 */ctx.setLineDash(per===100?[6,4]:[]);ctx.beginPath();var started=false;
     for(j=0;j<chart.length;j++){var mv=chart[j][mk2];if(mv){var mx=xPos(j),my=priceY(mv);if(!started){ctx.moveTo(mx,my);started=true}else ctx.lineTo(mx,my)}}
-    ctx.stroke();ctx.setLineDash([]);
+    ctx.stroke();ctx.setLineDash([]);ctx.restore(); /* PMS-DASH 14 */
     var lastMaVal=null;for(j=chart.length-1;j>=0;j--){if(chart[j][mk2]){lastMaVal=chart[j][mk2];break}}
-    if(lastMaVal!==null&&!(_sspo&&_sspo.noMaLabels)){var ly=priceY(lastMaVal); /* PMS-DASH 11: the summary's small chart drops the stacked end labels */ctx.fillStyle=maColors[per];ctx.font="bold 12px monospace";ctx.textAlign="left";ctx.fillText(lastMaVal.toFixed(lastMaVal<100?2:1),W-pad.r+6,ly+4)}
+    if(lastMaVal!==null&&!(_sspo&&_sspo.noMaLabels)){var ly=Math.max(pad.t+10,Math.min(pad.t+plotH-2,priceY(lastMaVal))); /* PMS-DASH 11: the summary's small chart drops the stacked end labels; 14: kept inside the plot */ctx.fillStyle=maColors[per];ctx.font="bold 12px monospace";ctx.textAlign="left";ctx.fillText((priceY(lastMaVal)<pad.t?'\u25B2':priceY(lastMaVal)>pad.t+plotH?'\u25BC':'')+lastMaVal.toFixed(lastMaVal<100?2:1),W-pad.r+6,ly+4) /* PMS-DASH 14 */}
   }
 
   /* PMS-DASH 7: exit levels as lines; tranches as dated vertical marks, no price label (D-BB-28) */
   if(_pov){var _idx={},_labs=[];for(j=0;j<chart.length;j++)_idx[chart[j].d]=j;
+    ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip(); /* PMS-DASH 14 */
     (_pov.lines||[]).forEach(function(L){ctx.strokeStyle=L.color||'#cf222e';ctx.lineWidth=L.width||1.6;ctx.setLineDash(L.dash||[4,3]);ctx.beginPath();var st=false,lastV=null;
       for(j=0;j<chart.length;j++){var v=L.byDate[chart[j].d];if(v==null)continue;var xx=xPos(j),yy=priceY(v);if(!st){ctx.moveTo(xx,yy);st=true}else ctx.lineTo(xx,yy);lastV=v}
-      ctx.stroke();ctx.setLineDash([]);if(lastV!=null&&L.label)_labs.push({y:priceY(lastV)+(L.labelDy||-5),t:L.label,c:L.color||'#cf222e'})});
+      ctx.stroke();ctx.setLineDash([]);if(lastV!=null&&L.label){var _y=priceY(lastV),_o=_y<pad.t+4?-1:_y>pad.t+plotH-2?1:0;_labs.push({y:_o<0?pad.t+14:_o>0?pad.t+plotH-6:_y+(L.labelDy||-5),t:(_o<0?'\u25B2 ':_o>0?'\u25BC ':'')+L.label,c:L.color||'#cf222e'})}});
+    ctx.restore(); /* PMS-DASH 14: the exit levels clipped to the plot; one off the scale is named at the top or bottom edge with an arrow */
     _labs.sort(function(a,b){return a.y-b.y});for(var _q=1;_q<_labs.length;_q++){if(_labs[_q].y<_labs[_q-1].y+14)_labs[_q].y=_labs[_q-1].y+14} /* PMS-DASH 12: the line labels never overlap (27-Oct-2026) */
     ctx.font='bold 11px sans-serif';ctx.textAlign='right';_labs.forEach(function(Q){var _tw=ctx.measureText(Q.t).width;ctx.fillStyle='rgba(255,255,255,0.88)';ctx.fillRect(W-pad.r-8-_tw,Q.y-11,_tw+6,14);ctx.fillStyle=Q.c;ctx.fillText(Q.t,W-pad.r-4,Q.y)});
     (_pov.marks||[]).forEach(function(M,mi){var k=_idx[M.d];if(k==null){for(j=0;j<chart.length;j++){if(chart[j].d>=M.d){k=j;break}}}if(k==null||chart[0].d>M.d)return;var xx=xPos(k);

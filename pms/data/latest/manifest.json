@@ -3,116 +3,102 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 269682,
-   "warnings": []
+   "bytes": 263843,
+   "warnings": [
+    "check rs: sector_rs on 2026-09-30 drawn 68, the reader says 67; the reader's value is used"
+   ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 255780,
+   "bytes": 253402,
    "warnings": [
-    "sell-side eps: not joined: no monthly value within 40 days before the first daily reading"
+    "check rs: sector_rs on 2026-09-30 drawn 58, the reader says 6; the reader's value is used"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 275881,
+   "bytes": 271087,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 283756,
+   "bytes": 279608,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 281284,
+   "bytes": 277334,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 290763,
-   "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (0.102) differs from the 2026-08-31 month-end (0.108) by -5.6%, so the two are on different bases"
-   ]
+   "bytes": 286494,
+   "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 193075,
+   "bytes": 188943,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 294142,
+   "bytes": 293807,
    "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (0.4039) differs from the 2026-08-31 month-end (0.4099) by -1.4%, so the two are on different bases"
+    "check rs: sector_rs on 2026-09-30 drawn 74, the reader says 73; the reader's value is used"
    ]
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 272104,
-   "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (6.1068) differs from the 2026-08-31 month-end (6.0453) by +1.0%, so the two are on different bases",
-    "sell-side sales: not joined: the daily file's value a month earlier (1256.4) differs from the 2026-08-31 month-end (1273.405) by -1.3%, so the two are on different bases"
-   ]
+   "bytes": 267397,
+   "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 270847,
+   "bytes": 267146,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 279086,
-   "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (2.656) differs from the 2026-08-31 month-end (2.89) by -8.1%, so the two are on different bases",
-    "sell-side ebitda: not joined: the daily file's value a month earlier (1278.85) differs from the 2026-08-31 month-end (1216.64) by +5.1%, so the two are on different bases",
-    "sell-side sales: not joined: the daily file's value a month earlier (9164.4) differs from the 2026-08-31 month-end (8961.48) by +2.3%, so the two are on different bases"
-   ]
+   "bytes": 273821,
+   "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 283554,
-   "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (16.498) differs from the 2026-08-31 month-end (16.7) by -1.2%, so the two are on different bases"
-   ]
+   "bytes": 279501,
+   "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 264657,
-   "warnings": [
-    "sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
-    "sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
-   ]
+   "bytes": 261250,
+   "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 281766,
+   "bytes": 278026,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 276845,
-   "warnings": []
+   "bytes": 273554,
+   "warnings": [
+    "check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
+   ]
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 258436,
-   "warnings": []
+   "bytes": 255638,
+   "warnings": [
+    "check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
+   ]
   }
  },
  "failed": [],
  "warnings": [
-  "BYLOT-GR: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
-  "HTWS-GB: sell-side eps: not joined: the daily file's value a month earlier (0.102) differs from the 2026-08-31 month-end (0.108) by -5.6%, so the two are on different bases",
-  "VLX-GB: sell-side eps: not joined: the daily file's value a month earlier (0.4039) differs from the 2026-08-31 month-end (0.4099) by -1.4%, so the two are on different bases",
-  "XVIVO-SE: sell-side eps: not joined: the daily file's value a month earlier (6.1068) differs from the 2026-08-31 month-end (6.0453) by +1.0%, so the two are on different bases",
-  "XVIVO-SE: sell-side sales: not joined: the daily file's value a month earlier (1256.4) differs from the 2026-08-31 month-end (1273.405) by -1.3%, so the two are on different bases",
-  "HTRO-SE: sell-side eps: not joined: the daily file's value a month earlier (2.656) differs from the 2026-08-31 month-end (2.89) by -8.1%, so the two are on different bases",
-  "HTRO-SE: sell-side ebitda: not joined: the daily file's value a month earlier (1278.85) differs from the 2026-08-31 month-end (1216.64) by +5.1%, so the two are on different bases",
-  "HTRO-SE: sell-side sales: not joined: the daily file's value a month earlier (9164.4) differs from the 2026-08-31 month-end (8961.48) by +2.3%, so the two are on different bases",
-  "SDIP.B-SE: sell-side eps: not joined: the daily file's value a month earlier (16.498) differs from the 2026-08-31 month-end (16.7) by -1.2%, so the two are on different bases",
-  "DIE-BE: sell-side eps: not joined: the daily file's value a month earlier (15.6297) differs from the 2026-08-31 month-end (16.0424) by -2.6%, so the two are on different bases",
-  "DIE-BE: sell-side ebitda: not joined: the daily file's value a month earlier (717.926) differs from the 2026-08-31 month-end (746.1033) by -3.8%, so the two are on different bases"
+  "AZA-SE: check rs: sector_rs on 2026-09-30 drawn 68, the reader says 67; the reader's value is used",
+  "BYLOT-GR: check rs: sector_rs on 2026-09-30 drawn 58, the reader says 6; the reader's value is used",
+  "VLX-GB: check rs: sector_rs on 2026-09-30 drawn 74, the reader says 73; the reader's value is used",
+  "ALFEN-NL: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used",
+  "ART-ES: check rs: sector_rs on 2026-09-30 drawn 70, the reader says 69; the reader's value is used"
  ],
- "seconds": 49.4
+ "seconds": 51.5
 }

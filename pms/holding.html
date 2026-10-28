@@ -9,7 +9,10 @@
 <body class="v2">
 <!-- version 2 (27-Oct-2026): Richard's rebuild, one column, his items only and in his order (D-PMS-V4-16, V4-33 to V4-57).
      1 SP and MAs; 2 volume, with relative price under it; 3 consensus by named FY; 4 analyst ratings and average PT against SP;
-     5 Net Upgrade Breadth; 6 valuation, P/E; 7 valuation, EV/Sales; 8 distance from SLs; 9 peers; end notes. -->
+     5 Net Upgrade Breadth; 6 valuation, P/E; 7 valuation, EV/Sales; 8 distance from SLs; 9 peers; end notes.
+     28-Oct-2026 (Richard's minor changes, D-PMS-V4-91 onwards): item 1 twice as tall, its price scale fitting the window; items 3 to 5
+     on one basis with no gap and a clearer time axis; item 8 with numbers, trend arrows and today's value first; item 9 side by side;
+     a new item 10, the stock against each Sell Criterion, written at each APM PMS Q&A SOP run. -->
 <div class="wrap">
   <div class="topbar">
     <span class="brand">PMS Per-stock Dashboard</span>
@@ -34,7 +37,7 @@
   </div>
 
   <div class="sec" id="s3">
-    <h2><span>3. Consensus by named FY: EPS, revenue, EBITDA</span><span class="mut">monthly, last 24 months</span></h2>
+    <h2><span>3. Consensus by named FY: EPS, revenue, EBITDA</span><span class="mut">month-ends, then the latest day; from the first stored month</span></h2>
     <div class="xs"><div id="snake"></div></div>
   </div>
 
@@ -45,7 +48,7 @@
 
   <div class="sec" id="s5">
     <h2><span>5. Net Upgrade Breadth: EPS, revenue, EBITDA, PT, Buys</span><span class="mut">next FY, last 12 months, 100-day counts</span></h2>
-    <div class="nubkey"><span><i style="background:rgba(26,127,55,0.38)"></i>raising</span><span><i style="background:rgba(139,148,158,0.28)"></i>no change</span><span><i style="background:rgba(207,34,46,0.38)"></i>cutting</span><span><i class="ln"></i>NUB (right-hand axis)</span></div>
+    <div class="nubkey"><span><i style="background:rgba(26,127,55,0.38)"></i>raising</span><span><i style="background:rgba(139,148,158,0.28)"></i>no change</span><span><i style="background:rgba(207,34,46,0.38)"></i>cutting</span><span><i class="ln" style="border-top-color:#0a3d91"></i>Net Upgrade Breadth, with each reading written above it (right-hand axis)</span><span><i class="ln" style="border-top-color:#000"></i>zero Net Upgrade Breadth</span><span>the counts are written in their band's colour</span></div>
     <div class="xs"><div id="nub"></div></div>
   </div>
 
@@ -62,13 +65,20 @@
   <div class="sec" id="s8">
     <h2><span>8. Distance from SLs</span><span class="mut">nearest first</span></h2>
     <div class="xs"><div id="ladder"></div></div>
-    <div class="ladkey"><span><span class="dot" style="background:#fff;border:2px solid #8250df"></span> at tranche 1's purchase</span><span><span class="dot" style="background:#8b949e"></span> three month-ends back, then the previous month-end</span><span><span class="dot" style="background:#1f2328"></span> the reading the rule acts on (red when met, amber when within reach)</span><span><span class="dot" style="background:#fff;border:1.5px solid #656d76"></span> today's value</span><span><span style="display:inline-block;width:14px;height:6px;background:rgba(207,34,46,.35);border-radius:3px"></span> the selling zone</span></div>
+    <div class="ladkey ladkey2" id="ladkey"></div>
   </div>
 
   <div class="sec" id="s9">
     <h2><span>9. Peers: cohort and sector</span><span class="mut"><span class="grp" id="peerx"></span> &middot; <span class="grp" id="peery"></span></span></h2>
-    <div class="xs"><div id="pc-plot"></div></div>
-    <div class="xs" style="margin-top:10px"><div id="pc-tbl"></div></div>
+    <div class="peers2wrap">
+      <div class="pc-left"><div class="xs"><div id="pc-plot"></div></div><div class="pkey2" id="pc-key"></div></div>
+      <div class="pc-right"><div class="xs"><div id="pc-tbl"></div></div></div>
+    </div>
+  </div>
+
+  <div class="sec" id="s10">
+    <h2><span>10. The stock against each Sell Criterion: trend, context and risks</span><span class="mut" id="ins-say"></span></h2>
+    <div id="insights"></div>
   </div>
 
   <div class="sec endnotes" id="notes">
@@ -148,7 +158,7 @@
       host.appendChild(f);
     });
   }
-  function widthOf(id) { var e = document.getElementById(id); return Math.max(620, Math.floor(e.clientWidth || 1200)); }
+  function widthOf(id) { var e = document.getElementById(id); return Math.max(id === 'pc-plot' ? 520 : 620, Math.floor(e.clientWidth || 1200)); }
   function drawAll() {
     if (!m) return;
     drawChart();
@@ -157,9 +167,11 @@
     DASH.nubRender(document.getElementById('nub'), m, widthOf('nub'));
     var W = widthOf('ladder'), lad = document.getElementById('ladder'); lad.innerHTML = '';
     DASH.ladder(lad, m.rowsSorted, { width: W, labelWidth: Math.min(310, Math.round(W * 0.30)), rightWidth: Math.min(380, Math.round(W * 0.34)) });
+    document.getElementById('ladkey').innerHTML = DASH.ladderKey(m);
     drawPeers();
+    DASH.insightsRender(document.getElementById('insights'), document.getElementById('ins-say'), m);
   }
-  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 330, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: 22, r: 68, b: 32, l: 78 } }; }
+  function chartOpts() { return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: 22, r: 68, b: 32, l: 78 } }; }
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
@@ -186,7 +198,8 @@
     px.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.x = b.dataset.x; drawPeers(); };
     py.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; peerAx.y = b.dataset.y; drawPeers(); };
     var host = document.getElementById('pc-plot'), W = widthOf('pc-plot');
-    DASH.peersPicture(host, m, peerAx, W, 380, false);
+    DASH.peersPicture(host, m, peerAx, W, 470, false);
+    document.getElementById('pc-key').innerHTML = DASH.peersKey();
     document.getElementById('pc-tbl').innerHTML = DASH.peersTable(m);
   }
   /* Richard, 27b: "Move all low importance "boilerplate" or "explainers" to end notes (not footnotes)" */
@@ -194,14 +207,15 @@
     var S2 = m.H.ss2 || {}, fy = S2.fy ? 'FY' + S2.fy : 'the next FY', mt = S2.monthly_to ? fmtDY(S2.monthly_to) : 'the last stored month-end';
     var probing = m.probing;
     var N = [
-      ['SP and MAs', 'The Master Dashboard\'s chart, as copied for this page: candlesticks and the 20D, 50D, 100D, 150D and 200D MAs; Layers switches each one on or off. ' + 'Red dotted, labelled "MA SL" (or "the stop"): each tranche\'s MA SL, its MA less the 2% buffer; it sells that tranche under the five-day stop rule (every tranche of every holding, your 27-Oct-2026 ruling). ' + (probing ? '' : 'Red dotted, labelled "30% below": the 30% level of each group of tranches; a close below it, with Stock RS below 70, sells those tranches. Magenta dashed: the SP below which relative price would be more than 25% under its 52W high with the market flat; read at the month-end, it sells the whole holding. ') + 'Purple: the tranches bought, by date.'],
+      ['SP and MAs', 'The Master Dashboard\'s chart, as copied for this page: candlesticks and the 20D, 50D, 100D, 150D and 200D MAs; Layers switches each one on or off. The price scale fits the bars of the zoom chosen; an MA or exit level far outside them is cut at the chart\'s top or bottom edge, where its name and value are written. ' + 'Red dotted, labelled "MA SL" (or "the stop"): each tranche\'s MA SL, its MA less the 2% buffer; it sells that tranche under the five-day stop rule (every tranche of every holding, your 27-Oct-2026 ruling). ' + (probing ? '' : 'Red dotted, labelled "30% below": the 30% level of each group of tranches; a close below it, with Stock RS below 70, sells those tranches. Magenta dashed: the SP below which relative price would be more than 25% under its 52W high with the market flat; read at the month-end, it sells the whole holding. ') + 'Purple: the tranches bought, by date.'],
       ['Volume and relative price', 'Volume bars: green an up day, red a down day; a dark red bar with &#9660; is a distribution day (a down close on volume above 1.25 times the 50D average volume). The shaded band is the last 25 sessions; 6 or more distribution days in it is the Master Dashboard\'s warning level. Up/down volume is volume on up days divided by volume on down days over 20 sessions; below 0.8 is the Master Dashboard\'s sign of selling in force. Relative price is the stock against all other European companies of EUR 500m or more.'],
-      ['Consensus by named FY', 'Each line is the mean estimate for one named FY at each month-end, in the company\'s reporting currency and units. A dotted line is the daily reading since 29-Sep-2026, drawn only where it is on the same basis as the monthly line. The monthly lines end at ' + mt + ', the last month-end in the stored FactSet files. FactSet stores the next two calendar-year-forward estimate years (here FY' + ((m.H.ss.years || {}).labels || []).join(' and FY') + '); for a December year-end that is next year and the year after. Purple dashes: tranche 1 bought.'],
+      ['Consensus by named FY', 'Each line is the consensus (the mean estimate) for one named FY, on FactSet\'s 100-day basis (estimates updated in the last 100 days), in the company\'s reporting currency and units: the month-ends in the stored FactSet history, the month-ends since then from the daily FactSet pull, and a final dot for the latest day. The value and date of each line\'s last reading are written at its end, so a line that ends early says so. Each chart starts at the first month with a stored estimate. FactSet stores the next two calendar-year-forward estimate years (here FY' + ((m.H.ss.years || {}).labels || []).join(' and FY') + '); for a December year-end that is next year and the year after. Purple dashes: tranche 1 bought.'],
       ['Analyst ratings and PT', 'Buys = Buy + Overweight; Other = Hold; Sells = Sell + Underweight; each as a share of the analysts rating the stock at the month-end (stored to ' + mt + '). Average PT is the mean of the analysts\' target prices, monthly, then daily since 29-Sep-2026' + (S2.tp_scale === 100 ? '; FactSet gives it in pounds, so it is shown in pence to match the SP' : '') + '.'],
-      ['Net Upgrade Breadth', 'For each month-end: of the analysts with an estimate for ' + fy + ' (FactSet\'s one-year-forward estimate year, which switches each January, marked on the chart), how many raised it, cut it or left it unchanged over the last 100 days. NUB = (raising &minus; cutting) &divide; analysts. Monthly counts are stored to ' + mt + '. For revenue and PT, FactSet\'s daily 100-day counts (stored from 2-Oct-2026) add the latest reading; there is none for September. For EPS and EBITDA no daily count is stored, so September and October are blank. Buys: the number of Buys, Other and Sells at each month-end, with % Buys on the right-hand axis.'],
+      ['Net Upgrade Breadth', 'For each month-end: of the analysts with an estimate for ' + fy + ' (FactSet\'s one-year-forward estimate year, which switches each January, marked on the chart), how many raised it (green), cut it (red) or left it unchanged (grey) over the last 100 days; each count is written in its band\'s colour. Net Upgrade Breadth = (raising &minus; cutting) &divide; analysts: the dark blue line, its value written above each reading, on the right-hand axis; the black line is zero. Monthly counts are stored to ' + mt + '; the later month-ends and the latest day come from FactSet\'s daily 100-day counts where they are pulled. Buys: the number of Buys, Other and Sells at each month-end, with % Buys on the right-hand axis.'],
       ['Valuation', 'Both charts are the Master Dashboard\'s valuation page, embedded unchanged, opened at 10 years: FactSet\'s 24-month-forward multiple at each month-end, the stock\'s own ten-year range in colour bands (10th, 35th, median, 75th and 90th percentiles; the dashed line is the mean), and the month-end SP. The page\'s own buttons work here.'],
-      ['Distance from SLs', 'One row per Sell Criterion and one per tranche\'s MA SL, nearest to selling first. An MA SL row shows how far the price is above the stop (below it when negative); its verdict is the five-day stop rule\'s. Each row reads the Framework 14 reader\'s own reading on the day the rule acts on it (each Friday, or the month-end); today\'s daily value is shown for information. ' + (probing ? 'For an Early Innings Probing Bet the MA SLs decide the sale, so the Sell Criteria rows are information only.' : '')],
-      ['Peers', 'Across: the change in Stock RS over the period chosen (right means strengthening). Up: the 3-month revision to ' + fy + ' consensus, EPS or revenue. Green dots strengthening with upgrades; red weakening with downgrades; amber mixed. Cohort peers are the stronger dots, sector peers the paler ones; dot size is market value. Purple ring: this holding; blue ring: another holding of ours. A reading beyond 40% either way is pinned at the edge with its true value. NUB, Sales, 100-day: the Sell Criterion\'s month-end reading. The tab at the right edge (or the P key) lists every industry, sector, cohort and geography peer.']
+      ['Distance from SLs', 'One row per Sell Criterion and one per tranche\'s MA SL, nearest to selling first; the key under the rows names each mark. Each row\'s verdict is read from the Framework 14 reader\'s reading on the day the rule acts on it (each Friday, or the month-end); today\'s value is the large dot, coloured as if the rule were read today. An MA SL row shows how far the price is above its stop (below it when negative); its verdict is the five-day stop rule\'s. For Net Upgrade Breadth, today\'s value is the weaker of the latest daily 100-day counts for sales estimates and target prices. ' + (probing ? 'For an Early Innings Probing Bet the MA SLs decide the sale, so the Sell Criteria rows are information only.' : '')],
+      ['Peers', 'Chart: across, the change in Stock RS over the period chosen (right means strengthening); up, the 3-month revision to ' + fy + ' consensus, EPS or revenue. Green dots strengthening with upgrades; red weakening with downgrades; amber mixed. Cohort peers are the darker dots, sector peers the paler ones; dot size is market value. Purple ring: this holding; blue ring: another holding of ours. A reading beyond 40% either way is pinned at the edge with its true value. Table: this holding, then its cohort peers, then the sector peers not in the cohort, each group strongest Stock RS first; Net Upgrade Breadth, sales, 100-day is the Sell Criterion\'s month-end reading. The tab at the right edge (or the P key) lists every industry, sector, cohort and geography peer.'],
+      ['The stock against each Sell Criterion', 'Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run (weekly), one to four sentences per Sell Criterion and for the MA SLs, on the trend, its context and the risks. It is dated and is not rewritten between runs, so read it beside today\'s readings in item 8.']
     ];
     document.getElementById('endnotes').innerHTML = N.map(function (n) { return '<li><b>' + n[0] + '.</b> ' + n[1] + '</li>'; }).join('');
   }
