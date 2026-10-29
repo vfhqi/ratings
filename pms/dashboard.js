@@ -1406,11 +1406,13 @@
       return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'information only for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
     }).join('');
   }
+  /* 29-Oct-2026 19:xx (D-PMS-V4-122): the note's date is the day it was WRITTEN, which is not always an APM PMS Q&A SOP run (the
+     concise items of 29-Oct were a rewrite in the Systems Architect window, while that day's run delivered separately); say only "written on". */
   function insightsRender(host, say, m) {
     var I = m.H.insights;
     if (m.notHeld) { say.textContent = ''; host.innerHTML = '<div class="nohist">Item 11 is written for holdings, at each APM PMS Q&amp;A SOP run; ' + esc(m.name) + ' is not held.</div>'; return; }
     if (!I || !I.items || !I.items.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
-    say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
+    say.innerHTML = 'written on ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     var tagged = I.items.some(function (it) { return it.id; });
     insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when there is no sell signal and little change, or when the test is information only (a Probing Bet\'s six Sell Criteria; a Core Investment\'s MA SLs); <b class="ck-green">green</b> when there is no sell signal and it has moved away.' : '');
   }
@@ -1418,7 +1420,7 @@
     var I = m.H.insights, A = I && I.adds;
     if (m.notHeld) { say.textContent = ''; host.innerHTML = '<div class="nohist">Item 12 is written for holdings, at each APM PMS Q&amp;A SOP run; ' + esc(m.name) + ' is not held.</div>'; return; }
     if (!A || !A.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
-    say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.adds_readings_asof || I.readings_asof ? ', on the readings of ' + fmtDY(I.adds_readings_asof || I.readings_asof) : '');
+    say.innerHTML = 'written on ' + fmtDY(I.date) + (I.adds_readings_asof || I.readings_asof ? ', on the readings of ' + fmtDY(I.adds_readings_asof || I.readings_asof) : '');
     insItems(host, A, m, 'Colour: <b class="ck-green">green</b> when the rule allows an add, or the setup is present; <b class="ck-red">red</b> when the rule blocks an add; <b class="ck-grey">grey</b> when the setup is absent, the case is open for your ruling, the rule does not apply, or the rule allows an add today but the latest daily readings show a sell signal ahead of its next reading day.');
   }
 

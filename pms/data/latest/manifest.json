@@ -18,7 +18,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 290489,
+   "bytes": 290471,
    "warnings": [
     "check rs: stock_rs on 2026-09-30 drawn 40, the reader says 39; the reader's value is used"
    ]
@@ -52,7 +52,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 280835,
+   "bytes": 280831,
    "warnings": []
   },
   "HTRO-SE": {
@@ -62,12 +62,12 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 292106,
+   "bytes": 292103,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 274919,
+   "bytes": 274946,
    "warnings": [
     "check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
    ]
@@ -94,5 +94,5 @@
   "XVIVO-SE: check rs: sector_rs on 2026-09-30 drawn 29, the reader says 27; the reader's value is used",
   "DIE-BE: check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
  ],
- "seconds": 74.7
+ "seconds": 70.9
 }
