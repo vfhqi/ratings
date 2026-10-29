@@ -1,0 +1,115 @@
+{
+ "_about": "Known mechanical-volume days for the five-day stop rule (Richard, 21-Sep-2026, D-PMS-V2-5): the volume test is not measured on these days; every other test still runs. Written by scripts/pms_mechanical_volume_days.py; edit that script, not this file.",
+ "generated": "2026-09-21",
+ "dates": [
+  {
+   "date": "2025-03-21",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2025-06-20",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2025-09-19",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2025-11-24",
+   "why": "MSCI November 2025 index review implemented as of the close",
+   "verified": true,
+   "source": "businesswire.com/news/home/20251105319981/en (5-Nov-2025)"
+  },
+  {
+   "date": "2025-12-19",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2026-02-27",
+   "why": "MSCI February 2026 index review implemented as of the close",
+   "verified": true,
+   "source": "MSCI announcement 10-Feb-2026 (\"as of the close of February 27, 2026\")"
+  },
+  {
+   "date": "2026-03-20",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2026-05-29",
+   "why": "MSCI May 2026 index review implemented as of the close; also the Nasdaq Stockholm OMXS30 semi-annual rebalance trade day (changes effective at the open of 1-Jun-2026)",
+   "verified": true,
+   "source": "MSCI announcement 12-May-2026; Nasdaq announcement 22-May-2026"
+  },
+  {
+   "date": "2026-06-19",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2026-08-31",
+   "why": "MSCI August 2026 index review implemented as of the close",
+   "verified": true,
+   "source": "ir.msci.com, MSCI Equity Indexes August 2026 Index Review (\"as of the close of August 31, 2026\")"
+  },
+  {
+   "date": "2026-09-18",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2026-11-30",
+   "why": "MSCI November 2026 index review, by MSCI's rule (last business day of November); the announced date governs once published",
+   "verified": false,
+   "source": "MSCI methodology (rule only); check the November 2026 announcement (due about 10-Nov-2026)"
+  },
+  {
+   "date": "2026-12-18",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2026-12-30",
+   "why": "Nasdaq Stockholm OMXS30 semi-annual rebalance trade day, by rule (last trading day before the January effective date; Stockholm is closed on 31-Dec)",
+   "verified": false,
+   "source": "Nasdaq OMXS30 methodology (rule only); check the December 2026 announcement"
+  },
+  {
+   "date": "2027-03-19",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2027-06-18",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2027-09-17",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  },
+  {
+   "date": "2027-12-17",
+   "why": "quarterly options and futures expiry (third Friday); the STOXX quarterly index review is implemented at this close (verified); the FTSE UK and Euronext quarterly reviews fall on the same Friday by their published rules (not re-verified on 21-Sep-2026)",
+   "verified": true,
+   "source": "computed: third Friday of Mar/Jun/Sep/Dec (STOXX Calculation Guide, April 2026)"
+  }
+ ],
+ "by_ticker": {}
+}

@@ -65,3 +65,26 @@ table.tbl.peers2 .chip.held { margin-left:6px; }
 .ins:nth-child(even) { background:var(--bg2); }
 @media (max-width:760px) { .ins { grid-template-columns:1fr; } .ins > div { padding:6px 10px; } }
 table.tbl.peers2 tr.self td.pos, table.tbl.peers2 tr.self td.neg { background:rgba(130,80,223,.08); }
+/* 29-Oct-2026 (Richard's "Q4", 08:33): items 11 and 12 as signposted bullets, each item coloured by how near its test is */
+.inskey { font-size:11.5px; color:var(--fg2); margin:2px 0 8px; line-height:1.5; }
+.inskey .ck-red, .ins2.ic-red .icw { color:#a40e26; } .inskey .ck-green, .ins2.ic-green .icw { color:#116329; } .inskey .ck-grey, .ins2.ic-grey .icw { color:#57606a; }
+.ins2 { border-left:4px solid transparent; }
+.ins2.ic-red { border-left-color:#cf222e; } .ins2.ic-green { border-left-color:#1a7f37; } .ins2.ic-grey { border-left-color:#8b949e; }
+.ins2.ic-red .crit { color:#a40e26; } .ins2.ic-green .crit { color:#116329; } .ins2.ic-grey .crit { color:#24292f; }
+.ins2 .icd { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:1px; background:#8b949e; }
+.ins2.ic-red .icd { background:#cf222e; } .ins2.ic-green .icd { background:#1a7f37; }
+.ins2 .icw { display:block; font-weight:500; font-size:11px; margin-top:4px; }
+.insb { margin:0; padding-left:18px; font-size:13px; line-height:1.5; color:var(--fg); }
+.insb li { margin:2px 0 5px; }
+.insb li b { color:#24292f; }
+/* item 2 (Volume): its key, and the header readings wrapping instead of running off */
+.vkey { display:flex; flex-wrap:wrap; gap:4px 18px; margin:2px 0 8px; font-size:11.5px; color:var(--fg2); }
+.vkey .lk { display:flex; gap:5px; align-items:center; }
+.sec h2 .wrap2 { white-space:normal; text-align:right; }
+/* 29-Oct-2026: items 4 and 5, each line's 1, 3 and 6-month changes above its chart, coloured by direction */
+.chips { display:flex; flex-wrap:wrap; gap:6px 22px; margin:6px 0 4px; font-weight:400; }
+.chipline { display:inline-flex; align-items:center; gap:6px; font-size:12px; }
+.chipline b { font-weight:650; margin-right:2px; }
+.cg { display:inline-block; padding:1px 7px; border-radius:10px; font-size:11.5px; font-weight:600; background:#eaeef2; color:#424a53; }
+.cg.up { background:#dafbe1; color:#116329; } .cg.dn { background:#ffebe9; color:#a40e26; }
+.cgk { font-size:11.5px; color:var(--fg2); align-self:center; }
