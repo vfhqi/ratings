@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 294626,
+   "bytes": 294627,
    "warnings": []
   },
   "THEON-NL": {
@@ -48,7 +48,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 273866,
+   "bytes": 273870,
    "warnings": []
   },
   "HTRO-SE": {
@@ -73,7 +73,7 @@
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 280753,
+   "bytes": 280765,
    "warnings": []
   },
   "ART-ES": {
@@ -84,5 +84,5 @@
  },
  "failed": [],
  "warnings": [],
- "seconds": 52.8
+ "seconds": 472.3
 }

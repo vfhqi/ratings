@@ -195,7 +195,7 @@
   }
   /* 28-Oct-2026 (Richard: "The text on the SP/MA chart should not run over the lines in the chart"): on a wide screen the exit levels
      are named in a right-hand margin beside the price scale and the tranche dates above the plot, so no text sits on the chart */
-  function chartOpts() { var cw = document.getElementById('chart-container').clientWidth || 0, rm = cw >= 1000 ? 300 : cw >= 760 ? 230 : 68; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: rm > 68 ? 50 : 22, r: rm, b: 32, l: 78 } }; } /* re-check 28-Oct: a 230-pixel margin from 760 pixels (an iPad), so the text stays off the chart there too */
+  function chartOpts() { var cw = document.getElementById('chart-container').clientWidth || 0, rm = cw >= 1000 ? 300 : cw >= 760 ? 230 : 68; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: rm > 68 ? 50 : 22, r: rm, b: 48, l: 78 } }; } /* 29-Oct-2026: b 32 to 48, room for the month names' row at 1M and 3M (PMS-DASH 16) */ /* re-check 28-Oct: a 230-pixel margin from 760 pixels (an iPad), so the text stays off the chart there too */
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');

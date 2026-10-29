@@ -334,9 +334,10 @@
     m.metCount = m.fired.length + (m.trFired.length ? 1 : 0);
     var me = m.rs.filter(function (q) { return q.k === 'me'; }).map(function (q) { return q.d; });
     m.me3 = me.length >= 4 ? me[me.length - 4] : null; m.me1 = me.length >= 2 ? me[me.length - 2] : null;
-    /* 28-Oct-2026 20:04 (Richard: "You decide on those questions"; Watson's Q1 = A, D-PMS-V4-101): the trend arrow starts at the LAST
-       month-end (me0), not two back; on the month-end day itself (me0 = today) it falls back to the month-end before, so it never shrinks to nothing */
-    m.me0 = me.length ? me[me.length - 1] : null; m.trendFrom = (m.me0 && m.me0 < m.asof) ? m.me0 : m.me1;
+    /* 29-Oct-2026 08:33 (Richard: "Q3 = B", D-PMS-V4-104; replaces 28-Oct's "from the last month-end"): the trend arrow starts at the last
+       month-end at least 14 calendar days before today's reading, else the month-end before it, so it always covers two to six weeks */
+    m.me0 = me.length ? me[me.length - 1] : null; m.trendFrom = null;
+    for (var tk = me.length - 1; tk >= 0; tk--) { if ((Date.parse(m.asof) - Date.parse(me[tk])) / 864e5 >= 14) { m.trendFrom = me[tk]; break; } }
     var fridayFor = function (d) { var f = m.rs.filter(function (q) { return (q.k === 'fr' || q.k === 'me') && q.d <= d; }); return f.length ? f[f.length - 1] : null; };
     var rsAt = function (d) { return m.rs.filter(function (q) { return q.d === d; })[0] || lastOnOrBefore(m.rs, 'd', d); };
     var dailyAt = function (d) { return lastOnOrBefore(m.daily, 'd', d); };
@@ -514,13 +515,16 @@
   }
 
   /* ------------------------------------------------------------------ the share price chart (the Master Dashboard's) and Treatment B for volume under it */
+  /* 29-Oct-2026 08:45 (Richard, item 1: "Do not have such extreme decimal places"): prices of 100 or more as whole numbers, 10 to 100 to one
+     decimal, below 10 to two; the same rule as the price scale (chart-renderer-dashboard.js, PMS-DASH 16) */
+  function fpx(v) { return v == null ? '' : v >= 100 ? String(Math.round(v)) : v >= 10 ? v.toFixed(1) : v.toFixed(2); }
   function overlayFor(m, short) {
     var H = m.H, lines = [];
     if (!m.probing) {
       var groups = {};
       H.levels.forEach(function (lv) { var k = lv.level.toFixed(4); (groups[k] = groups[k] || []).push(lv); });
       /* round 2 (Richard, image 1): each line's label says in words what the price on it means */
-      var fp = function (v) { return v == null ? '' : v < 100 ? v.toFixed(2) : v.toFixed(1); };
+      var fp = fpx; /* 29-Oct-2026 08:45 (Richard: "Do not have such extreme decimal places"): one rounding rule, fpx below */
       var trw = function (trs) { return trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0]; };
       Object.keys(groups).forEach(function (k, gi) { var g = groups[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; }); var trs = g.map(function (x) { return x.tranche; });
         lines.push({ label: short ? '30% level ' + fp(g[0].level) : fp(g[0].level) + ': 30% below the highest close since ' + trw(trs) + (trs.length > 1 ? ' were' : ' was') + ' bought', color: '#cf222e', dash: [3, 3], width: 1.7, byDate: by, labelDy: 14 }); });
@@ -534,9 +538,11 @@
       Object.keys(sg).forEach(function (k) { var g = sg[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; });
         var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; });
         /* 27-Oct-2026: on a Core Investment's chart the stop labels are short (up to four stops beside the 30% and 52-week lines would hide the latest prices); the end note says what a stop is */
-        var lvl = g[0].stop_level ? (Math.round(g[0].stop_level * 100) / 100) + ': ' : '';
-        lines.push({ label: m.probing ? lvl + 'the stop, the ' + String(g[0].stop_ma).replace('D', '-day') + ' average less 2%' + (short ? '' : ', for tranche' + (trs.length > 1 ? 's ' : ' ') + trs.join(', '))
-                                      : lvl + 'MA SL, tranche' + (trs.length > 1 ? 's ' : ' ') + trs.join(', '), color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
+        var lvl = g[0].stop_level ? fpx(g[0].stop_level) + ': ' : '';
+        /* 29-Oct-2026 08:45 (Richard: "mention which MA each refers to"): "869: 50D MA SL, tranche 3"; "860: 150D MA SL, tranches 1 and 2" */
+        var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0];
+        lines.push({ label: m.probing ? lvl + 'the stop, the ' + String(g[0].stop_ma).replace('D', '-day') + ' average less 2%' + (short ? '' : ', for ' + trj)
+                                      : lvl + (g[0].stop_ma ? g[0].stop_ma + ' ' : '') + 'MA SL, ' + trj, color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
     }
     var marks = m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
     return { lines: lines, marks: marks };
