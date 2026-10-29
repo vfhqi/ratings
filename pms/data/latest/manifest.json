@@ -18,7 +18,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 296663,
+   "bytes": 296681,
    "warnings": []
   },
   "FEVR-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 308085,
+   "bytes": 308095,
    "warnings": []
   },
   "THEON-NL": {
@@ -48,7 +48,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 287648,
+   "bytes": 287644,
    "warnings": []
   },
   "HTRO-SE": {
@@ -63,7 +63,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 282361,
+   "bytes": 282388,
    "warnings": []
   },
   "HFG-GB": {
@@ -73,7 +73,7 @@
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 295285,
+   "bytes": 295273,
    "warnings": []
   },
   "ART-ES": {
@@ -84,5 +84,5 @@
  },
  "failed": [],
  "warnings": [],
- "seconds": 74.4
+ "seconds": 109.9
 }
