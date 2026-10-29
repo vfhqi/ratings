@@ -722,7 +722,9 @@
   /* round 2 (Richard's images 7 and 8; Q7 = A): the consensus for the two named financial years, in the company's own units,
      over 24 months, one small chart per measure, with the target price against the share price; the 1, 3 and 6-month revisions
      in green or red beside each title; the indexed chart and the table are gone. The breadth pane is kept below. */
-  var YC = ['#0969da', '#bc4c00'];
+  var YC = ['#0969da', '#bc4c00', '#0f766e'];   /* FY3-B (29-Oct-2026): dark teal for the company's FY+3 */
+  var MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function fyList(a, last) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' ' + (last || 'and') + ' ' + a[a.length - 1]; }
   function revHtml(rv, yr) { if (!rv) return ''; var one = function (lab, v) { if (v == null) return '<span class="rv mut">' + lab + ' n/a</span>'; var c = v > 0 ? 'pos' : v < 0 ? 'neg' : 'zero'; return '<span class="rv ' + c + '">' + lab + ' ' + (v > 0 ? '+' : '') + v + '%</span>'; }; return '<span class="rvs" title="the change in the consensus over the last 1, 3 and 6 months, as the sell-side momentum store reports it">' + (yr ? 'revisions to the ' + yr + ' consensus' : 'revisions') + one('1 month', rv.L1M) + one('3 months', rv.L3M) + one('6 months', rv.L6M) + '</span>'; }
   function ssRender(host, m, W, only) {
     host.innerHTML = '';
@@ -992,16 +994,26 @@
      level"): one solid line per FY, on FactSet's 100-day basis: the stored month-ends, the month-ends since then from the daily
      store, and a last point (a dot) for the latest day; each line's last value and its date written at its end */
   function snakeRender(host, m, W) {
+    /* FY3-B (29-Oct-2026, Richard: "Q1 = B. Concur" and "Q2 = B. Yes, always; this should always be the case for anything related to the SS
+       estimates"): the lines are the company's FY+1, FY+2 and FY+3 (its first, second and third unreported years), named as the company
+       names them (Yr.names; FactSet's label + 1 for a year ending January to May), in its reporting currency (Yr.currency), so exchange-rate
+       moves never show as revisions. The analysts with an estimate on each line's last reading go in the grey subtitle. */
     host.innerHTML = '';
     var SS = m.H.ss || {}, Yr = SS.years, d1 = m.asof, labs = (Yr && Yr.labels) || [];
+    var names = (Yr && Yr.names && Yr.names.length === labs.length) ? Yr.names : labs.map(function (y) { return 'FY' + y; });
+    var ccy = Yr && Yr.currency, fyeM = Yr && Yr.fye_month;
+    var basisTxt = [ccy ? ccy + ', the company\'s reporting currency' : '', fyeM && fyeM !== 12 ? 'years to ' + MONTHS_LONG[fyeM - 1] : ''].filter(Boolean).join('; ');
     var all = []; ['eps', 'sales', 'ebitda'].forEach(function (k) { labs.forEach(function (y) { all.push(((Yr || {})[k] || {})[y]); }); });
     var d0 = dataStart(all, m.asof, 730), f0 = firstDate(all) || d0, fromTxt = monYY(f0 > d0 ? f0 : d0);
     ['eps', 'sales', 'ebitda'].forEach(function (k) {
-      var X = Yr && Yr[k], ser = [], vals = [];
+      var X = Yr && Yr[k], ser = [], vals = [], nCnt = [], stale = [];
       labs.forEach(function (y, yi) { var pts = ((X || {})[y] || []).filter(function (q) { return q.v != null && q.d >= d0; }); if (!pts.length) return; pts.forEach(function (q) { vals.push(q.v); }); var last = pts[pts.length - 1];
-        ser.push({ pts: pts, color: YC[yi], w: 2, label: 'FY' + y + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest'; }, dotR: 3.6, endLabel: 'FY' + y + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')' }); });
-      var h2 = cellIn(host, SNAMES[k] + ' consensus, FY' + labs.join(' and FY') + ' <span class="mut">(from ' + fromTxt + ')</span>');
-      if (!ser.length) { h2.innerHTML = '<div class="nohist">No stored ' + SNAMES[k] + ' consensus for FY' + labs.join(' or FY') + ' for ' + esc(m.name) + '.</div>'; return; }
+        var nn = (((Yr || {}).n || {})[k] || {})[y]; if (nn && nn.n != null) { if (nn.d === last.d) nCnt.push(names[yi] + ' ' + nn.n); else if (nn.n === 0 && nn.d > last.d) stale.push(names[yi]); }
+        ser.push({ pts: pts, color: YC[yi], w: 2, label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest' || pts.length === 1; }, dotR: 3.6, endLabel: names[yi] + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')' }); });
+      var missing = names.filter(function (nm) { return !ser.some(function (sr) { return sr.label === nm + ' consensus'; }); });
+      var sub = ['from ' + fromTxt, basisTxt, nCnt.length ? 'analysts with an estimate: ' + nCnt.join(', ') : '', stale.length ? 'no analyst now has an ' + fyList(stale, 'or') + ' estimate, so ' + (stale.length > 1 ? 'those lines end' : 'that line ends') + ' at the last month with one' : '', ser.length && missing.length ? 'FactSet holds no ' + fyList(missing, 'or') + ' consensus' : ''].filter(Boolean).join('; ');
+      var h2 = cellIn(host, SNAMES[k] + ' consensus, ' + (names.length ? fyList(names) : 'the next three financial years') + ' <span class="mut">(' + sub + ')</span>');
+      if (!ser.length) { h2.innerHTML = '<div class="nohist">FactSet holds no ' + SNAMES[k] + ' consensus for ' + (names.length ? fyList(names, 'or') : 'the next three financial years') + ' for ' + esc(m.name) + '.</div>'; return; }
       var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.12 || Math.abs(hi) * 0.05 || 1;
       stack(h2, { d0: d0, d1: addDays(d1, 8), monthEnd: true, axis: 'my', width: W, left: 56, right: 160, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: 120, labelEdge: true, series: ser, yDomain: [lo - pd, hi + pd] }] });
     });
