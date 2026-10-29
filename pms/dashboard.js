@@ -280,14 +280,17 @@
     ].join('');
   }
 
-  /* ------------------------------------------------------------------ MA SLs on every tranche (Richard, 27-Oct-2026: "All tranches, all investments") */
+  /* ------------------------------------------------------------------ MA SLs on every tranche (Richard, 27-Oct-2026: "All tranches, all investments")
+     29-Oct-2026 (D-PMS-V4-115; Richard: "Q3 - build it. I know it contradicts what I previously wrote. Concur. Option A."): MA SLs
+     SELL Early Innings Probing Bets only. A Middle Innings Core Investment's MA SL rows stay on the page, grey, as information only
+     (t.info); its six Sell Criteria decide its sale and its adds. */
   var CASE_WORDS = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link', data: 'the exit is dated on or before the purchase: data to check' };
   function maTranches(m) {
     return (m.H.stops || []).map(function (s) {
       var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0] || {};
       var ma = tr.ma_sl || {}, dm = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(s.label || '');
       return { s: s, n: tr.tranche_number || '?', entry: tr.entry_date || s.entry_date, state: s.state, date: ma.exit_confirmed_date || (dm ? dm[1] : null),
-        due: tr.ma_sl_session_due || null, cases: tr.ma_sl_open_cases || null, known: !!tr.ma_sl_status, pct: ma.pct_above_stop };
+        due: tr.ma_sl_session_due || null, cases: tr.ma_sl_open_cases || null, known: !!tr.ma_sl_status, pct: ma.pct_above_stop, info: !m.probing };
     }).sort(function (a, b) { return a.n - b.n; });
   }
   function trList(ns) { ns = ns.map(String); return (ns.length > 1 ? 'tranches ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : 'tranche ' + ns[0]); }
@@ -298,7 +301,13 @@
     if (past) return 'The rule\'s sale fell due at the Tuesday session of ' + ds.map(function (d) { return fmtD(d) + ' (' + trList(g[d]) + ')'; }).join(' and of ') + ', and has not been made.';
     return 'The rule sells ' + ds.map(function (d) { return trList(g[d]) + ' at the Tuesday session of ' + fmtD(d); }).join(' and ') + '.';
   }
+  var MA_INFO = 'for a Core Investment the MA SL is information only and the six Sell Criteria decide the sale';
   function maRowText(t, now) {
+    if (t.info) {
+      if (t.state === 'exit_confirmed') return 'Information only: tranche ' + t.n + '\'s MA SL exit was confirmed on ' + fmtD(t.date) + '; ' + MA_INFO + '.';
+      if (t.state === 'triggered') return 'Information only: tranche ' + t.n + ' is below its MA SL, inside the five-day window; ' + MA_INFO + '.';
+      return now == null ? 'No reading.' : 'Information only: tranche ' + t.n + ' is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' its MA SL; ' + MA_INFO + '.';
+    }
     if (t.state === 'exit_confirmed') {
       var w = 'Exit confirmed on ' + fmtD(t.date) + ', not yet sold';
       if (t.due) return 'Met: ' + w + '; the rule\'s sale ' + (t.due < (window.__PMS_ASOF || '9') ? 'fell due' : 'falls due') + ' at the Tuesday session of ' + fmtD(t.due) + '.';
@@ -404,8 +413,8 @@
       var stopAt = function (d) { var v = null; for (var i = 0; i < pts.length; i++) { if (pts[i][0] <= d) v = pts[i][1]; else break; } return v; };
       var dAbove = function (d) { if (!d) return null; var st = stopAt(d), c = dailyAt(d); return (st != null && c && c.c) ? (c.c - st) / c.c : null; };
       var now = dAbove(m.asof), ma = String(s.stop_ma || '').replace('D', '-day');
-      var st = t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (now != null && now <= 0.05)) ? 'near' : 'clear';
-      m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + '\'s MA SL, the ' + ma + ' average less 2%', sub: 'the five-day stop rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
+      var st = t.info ? 'info' : t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (now != null && now <= 0.05)) ? 'near' : 'clear';
+      m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + '\'s MA SL, the ' + ma + ' average less 2%', sub: t.info ? 'information only: MA SLs sell Early Innings Probing Bets only (your ruling of 29-Oct-2026)' : 'the five-day stop rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
         marks: [{ v: dAbove(t.entry), kind: 'entry', label: 'bought' }, { v: dAbove(m.me3), kind: 'm3' }, { v: dAbove(m.me1), kind: 'm1' }, { v: dAbove(m.me0), kind: 'm0' }, { v: dAbove(m.trendFrom), kind: 'tf' }, { v: now, kind: 'latest' }],
         text: maRowText(t, now), text2: 'The stop is ' + (s.stop_level != null ? (+s.stop_level).toFixed(2) : 'n/a') + (now != null ? '; the price is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' it.' : '.') });
     });
@@ -462,7 +471,7 @@
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
     if (m.probing) return 'Early Innings Probing Bet: its MA SLs decide the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
-    var ma = maTranches(m).some(function (t) { return t.state !== 'clear'; }) ? ' ' + maWords(m) : '';
+    var ma = '';   /* 29-Oct-2026: a Core Investment's MA SLs are information only, so they never enter its order words */
     var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order;
     if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
     if (/^SELL/.test(o)) return o + ma;
@@ -473,7 +482,7 @@
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
     if (m.probing) return m.name + ' is an Early Innings Probing Bet, so its MA SLs decide the sale. ' + maWords(m) + lose;
-    var nr = m.nearestRow, ex = maTranches(m).some(function (t) { return t.state !== 'clear'; });
+    var nr = m.nearestRow, ex = false;   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
     return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
 
@@ -494,7 +503,7 @@
   }
   function renderHeader(el_, m) {
     var R = m.R, e = m.e, now = m.H.at_now || null;
-    var pill = m.probing ? 'blue' : /^AWAITING|^SELL|^MA SL/.test(m.order) || m.metCount || maTranches(m).some(function (t) { return t.state === 'exit_confirmed'; }) ? 'red' : 'grey';
+    var pill = m.probing ? 'blue' : /^AWAITING|^SELL|^MA SL/.test(m.order) || m.metCount ? 'red' : 'grey';
     var c3 = m.c('C3'), c1 = m.c('C1'), c5 = m.c('C5');
     var add = R.add_rule || {};
     el_.innerHTML =
@@ -556,7 +565,7 @@
         /* 29-Oct-2026 08:45 (Richard: "mention which MA each refers to"): "869: 50D MA SL, tranche 3"; "860: 150D MA SL, tranches 1 and 2" */
         var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0];
         lines.push({ label: m.probing ? lvl + 'the stop, the ' + String(g[0].stop_ma).replace('D', '-day') + ' average less 2%' + (short ? '' : ', for ' + trj)
-                                      : lvl + (g[0].stop_ma ? g[0].stop_ma + ' ' : '') + 'MA SL, ' + trj, color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
+                                      : lvl + (g[0].stop_ma ? g[0].stop_ma + ' ' : '') + 'MA SL, ' + trj + ' (information only)', color: m.probing ? '#cf222e' : '#8c959f', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
     }
     var marks = m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
     return { lines: lines, marks: marks };
@@ -1287,6 +1296,7 @@
   var TESTROWS = { C1: ['C1'], C2: ['C2'], C3: ['C3s', 'C34'], C4: ['C4b', 'C34'], C5: ['C5'], C6: ['C6'] };
   function testColour(m, id) {
     if (/^(red|green|grey)$/.test(id || '')) return id;
+    if (id === 'MA' && !m.probing) return 'grey';   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
     var rs = id === 'MA' ? m.rows.filter(function (r) { return /^MA/.test(r.id); }) : (TESTROWS[id] || []).map(function (k) { return m.rows.filter(function (r) { return r.id === k; })[0]; }).filter(Boolean);
     if (!rs.length) return null;
     var red = false, green = true;
@@ -1297,7 +1307,7 @@
   function insItems(host, items, m, key) {
     host.innerHTML = (key ? '<div class="inskey">' + key + '</div>' : '') + items.map(function (it) {
       var col = testColour(m, it.id), bl = it.bullets && it.bullets.length ? '<ul class="insb">' + it.bullets.map(function (b) { return '<li>' + (b.sign ? '<b>' + esc(b.sign) + ':</b> ' : '') + mdInline(b.text) + '</li>'; }).join('') + '</ul>' : '<div class="say">' + mdInline(it.text || '') + '</div>';
-      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + COLWORD[col] + '</span>' : '') + '</div><div>' + bl + '</div></div>';
+      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'information only for a Core Investment' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
     }).join('');
   }
   function insightsRender(host, say, m) {
