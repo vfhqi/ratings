@@ -3,86 +3,86 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 284142,
+   "bytes": 277074,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 269773,
+   "bytes": 263282,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 292291,
+   "bytes": 284678,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 296681,
+   "bytes": 290393,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 296183,
+   "bytes": 289940,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 308095,
+   "bytes": 300369,
    "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 209724,
+   "bytes": 202467,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 305353,
+   "bytes": 301023,
    "warnings": []
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 287971,
+   "bytes": 280385,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 287644,
+   "bytes": 280844,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 293049,
+   "bytes": 286164,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 297996,
+   "bytes": 292095,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 282388,
+   "bytes": 274839,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 297782,
+   "bytes": 291970,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 295273,
+   "bytes": 287550,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 274775,
+   "bytes": 267343,
    "warnings": []
   }
  },
  "failed": [],
  "warnings": [],
- "seconds": 109.9
+ "seconds": 59.7
 }

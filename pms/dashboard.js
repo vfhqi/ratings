@@ -271,7 +271,7 @@
     var d = function (s) { return s ? fmtDY(s) : 'n/a'; }, t1 = m.tranches.length ? m.tranches.slice().sort(function (a, b) { return a.tranche_number - b.tranche_number; })[0] : null;
     var sw = function (inner) { return '<span class="lk">' + inner + '</span>'; };
     return [
-      sw('<svg width="26" height="22"><circle cx="13" cy="11" r="8" fill="#1f2328" stroke="#fff" stroke-width="2"/><circle cx="13" cy="11" r="10" fill="none" stroke="#1f2328" stroke-width="1" opacity=".45"/></svg><span><b>Today\'s value</b> (' + d(m.asof) + '), the large dot with the large number: <b style="color:' + C.red + '">red</b> if the Sell Criterion would be met on today\'s readings, <b style="color:' + C.amber + '">amber</b> if it is close, black if it is clear</span>'),
+      sw('<svg width="26" height="22"><circle cx="13" cy="11" r="8" fill="#1f2328" stroke="#fff" stroke-width="2"/><circle cx="13" cy="11" r="10" fill="none" stroke="#1f2328" stroke-width="1" opacity=".45"/></svg><span><b>Today\'s value</b> (' + d(m.asof) + '), the large dot with the large number: <b style="color:' + C.red + '">red</b> if today\'s readings would give a sell signal, <b style="color:' + C.amber + '">amber</b> if close, black if no sell signal</span>'),
       sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="#1f2328" stroke-width="2.4"/></svg><span><b>The reading that decides a sale:</b> Friday ' + d(m.lastFriday) + ' for a row read each Friday; the ' + d(m.lastME) + ' month-end for a row read at the month-end. Coloured as above. For the MA SL rows and the 30% level row the rule reads each day\'s close, so today\'s value is the deciding reading</span>'),
       sw('<svg width="34" height="22"><circle cx="6" cy="11" r="4" fill="' + ME_COL.m3 + '"/><circle cx="17" cy="11" r="4" fill="' + ME_COL.m1 + '"/><circle cx="28" cy="11" r="4" fill="' + ME_COL.m0 + '"/></svg><span><b>Month-end dots, each with its date:</b> the readings at the ' + d(m.me3) + ' (palest), ' + d(m.me1) + ' and ' + d(m.me0) + ' (darkest) month-ends. On a row read at the month-end, the ' + d(m.me0) + ' reading is the ring that decides a sale, so it is shown as the ring, with its date</span>'),
       t1 ? sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="' + C.entry + '" stroke-width="2"/></svg><span><b>Purple ring:</b> the reading when tranche 1 was bought' + (t1 ? ' (' + d(t1.entry_date) + ')' : '') + '</span>') : '',
@@ -310,7 +310,7 @@
     }
     if (t.state === 'exit_confirmed') {
       var w = 'Exit confirmed on ' + fmtD(t.date) + ', not yet sold';
-      if (t.due) return 'Met: ' + w + '; the rule\'s sale ' + (t.due < (window.__PMS_ASOF || '9') ? 'fell due' : 'falls due') + ' at the Tuesday session of ' + fmtD(t.due) + '.';
+      if (t.due) return 'Sell signal: ' + w + '; the rule\'s sale ' + (t.due < (window.__PMS_ASOF || '9') ? 'fell due' : 'falls due') + ' at the Tuesday session of ' + fmtD(t.due) + '.';
       if (t.cases && t.cases.length) return w + '; the rules leave it open (' + t.cases.map(function (c) { return CASE_WORDS[c] || 'case ' + c; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.';
       return w + '.';
     }
@@ -367,35 +367,40 @@
     var nubAt = function (d) { var n = m.nub.filter(function (q) { return q.d <= d; }); return n.length ? n[n.length - 1] : null; };
     var minNub = function (n) { if (!n) return null; var a = [n.sales, n.tp].filter(function (v) { return v != null; }); return a.length ? Math.min.apply(null, a) : null; };
     var near = function (v, trig, band) { return v != null && (v - trig) <= band; };
+    /* 29-Oct-2026 (D-PMS-V4-118; Richard on Carlsberg's 200D MA item, "CHECK IF THIS IS CORRECT"): the relative 200D MA's change
+       over the month is "close" to its sell line only at +0.1% or below, or when falling fast enough (today against the last
+       Friday reading) to reach 0 by the next Friday. The old 1-point band showed Carlsberg at +0.31% and rising as red. */
+    var c2near = function (v) { var c = (Hd.reading.criteria || []).filter(function (x) { return x.id === 'C2'; })[0] || {};
+      return v != null && (v <= 0.001 || (c.today != null && c.value != null && c.today < c.value && 2 * c.today - c.value <= 0)); };
     var e = m.e, info = m.probing;
     var f1 = function (d, k) { var q = d ? fridayFor(d) : null; return q ? q[k] : null; };
     m.rows = [];
     var c1 = m.c('C1'), c2 = m.c('C2'), c3 = m.c('C3'), c4 = m.c('C4'), c5 = m.c('C5');
     m.rows.push({ id: 'C1', label: 'Industry RS below 30', sub: 'read each Friday; sells the whole holding', lo: 0, hi: 99, trigger: 30, triggerSide: 'below', state: info ? 'info' : c1.fires ? 'fires' : near(c1.value, 30, 10) ? 'near' : 'clear',
       marks: [{ v: e ? e.ind : null, kind: 'entry', label: 'bought' }, { v: f1(m.me3, 'ind'), kind: 'm3' }, { v: f1(m.me1, 'ind'), kind: 'm1' }, { v: f1(m.me0, 'ind'), kind: 'm0' }, { v: f1(m.trendFrom, 'ind'), kind: 'tf' }, { v: c1.value, kind: 'latest' }, { v: c1.today, kind: 'today' }],
-      text: c1.fires ? 'Met: Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + '.' : 'Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + ', ' + (c1.value - 30) + ' points above 30.', text2: e ? 'It was ' + e.ind + ' when tranche 1 was bought.' : '' });
+      text: c1.fires ? 'Sell signal: Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + '.' : 'Industry RS was ' + c1.value + ' on ' + fmtD(c1.reading_day) + ', ' + (c1.value - 30) + ' points above 30.', text2: e ? 'It was ' + e.ind + ' when tranche 1 was bought.' : '' });
     var sl = function (d) { var q = d ? fridayFor(d) : null; var x = q ? dailyAt(q.d) : null; return x ? x.slope : null; };
-    m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return br((v * 100).toFixed(0) + '%'); }, state: info ? 'info' : c2.fires ? 'fires' : near(c2.value, 0, 0.01) ? 'near' : 'clear',
+    m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return br((v * 100).toFixed(1) + '%'); }, state: info ? 'info' : c2.fires ? 'fires' : c2near(c2.value) ? 'near' : 'clear',
       marks: [{ v: e ? e.slope : null, kind: 'entry', label: 'bought' }, { v: sl(m.me3), kind: 'm3' }, { v: sl(m.me1), kind: 'm1' }, { v: sl(m.me0), kind: 'm0' }, { v: sl(m.trendFrom), kind: 'tf' }, { v: c2.value, kind: 'latest' }, { v: c2.today, kind: 'today' }],
-      text: (c2.fires ? 'Met: the average ' : 'The average ') + (Math.abs(c2.value) < 0.0005 ? 'was flat (a change of less than 0.1%)' : (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '%') + ' over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
+      text: (c2.fires ? 'Sell signal: the average ' : 'No sell signal: the average ') + (Math.abs(c2.value) < 0.0005 ? 'was flat (a change of less than 0.1%)' : (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '%') + ' over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
     var v3 = c3.value, s3met = v3.sector_rs != null && v3.sector_rs < 50, s3other = v3.stock_rs != null && v3.stock_rs < 70;   /* 29-Oct-2026 re-check: a missing reading is never "below" a line */
     var r3 = function (d, k) { var q = d ? rsAt(d) : null; return q ? q[k] : null; };
     m.rows.push({ id: 'C3s', label: 'Sector RS below 50 (sells with Stock RS below 70)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 50, triggerSide: 'below', state: info ? 'info' : c3.fires ? 'fires' : (s3met || s3other || near(v3.sector_rs, 50, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.sec : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 'sec'), kind: 'm3' }, { v: r3(m.me1, 'sec'), kind: 'm1' }, { v: r3(m.me0, 'sec'), kind: 'm0' }, { v: r3(m.trendFrom, 'sec'), kind: 'tf' }, { v: v3.sector_rs, kind: 'latest' }, { v: (c3.today || {}).sector_rs, kind: 'today' }],
-      text: c3.fires ? 'Met: Sector RS was ' + v3.sector_rs + ' and Stock RS ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end.' : s3met ? 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, below 50, but ' + (v3.stock_rs == null ? 'Stock RS has no reading.' : 'Stock RS ' + v3.stock_rs + ' was not below 70.') : 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.sector_rs - 50) + ' above 50.', text2: e ? 'It was ' + e.sec + ' when tranche 1 was bought.' : '' });
+      text: c3.fires ? 'Sell signal: Sector RS was ' + v3.sector_rs + ' and Stock RS ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end.' : s3met ? 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, below 50, but ' + (v3.stock_rs == null ? 'Stock RS has no reading.' : 'Stock RS ' + v3.stock_rs + ' was not below 70.') : 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.sector_rs - 50) + ' above 50.', text2: e ? 'It was ' + e.sec + ' when tranche 1 was bought.' : '' });
     m.rows.push({ id: 'C34', label: 'Stock RS: 70 line (sells with Sector RS below 50); 50 line (sells with analysts cutting)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 70, trigger2: 50, triggerSide: 'below', state: info ? 'info' : (c3.fires || c4.fires) ? 'fires' : (s3other || near(v3.stock_rs, 70, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.s : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 's'), kind: 'm3' }, { v: r3(m.me1, 's'), kind: 'm1' }, { v: r3(m.me0, 's'), kind: 'm0' }, { v: r3(m.trendFrom, 's'), kind: 'tf' }, { v: v3.stock_rs, kind: 'latest' }, { v: (c3.today || {}).stock_rs, kind: 'today' }],
       text: 'Stock RS was ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.stock_rs < 50 ? 'below both lines.' : v3.stock_rs < 70 ? 'below 70 but above 50.' : (v3.stock_rs - 70) + ' above 70.'), text2: e ? 'It was ' + e.s + ' when tranche 1 was bought.' : '' });
     var v4 = c4.value || {}, b4 = minNub({ sales: v4.ss_sales_nub100, tp: v4.ss_pt_nub100 });
     m.rows.push({ id: 'C4b', label: 'Net Upgrade Breadth, the weaker of the two counts (sells with Stock RS below 50)', sub: 'read at the month-end on the 100-day count', lo: -1, hi: 1, trigger: 0, triggerSide: 'below', fmt: function (v) { return pctS(v); }, state: info ? 'info' : c4.fires ? 'fires' : (b4 != null && b4 <= 0.1) ? 'near' : 'clear',
       marks: [{ v: e ? minNub(nubAt(e.grid_day)) : null, kind: 'entry', label: 'bought' }, { v: m.me3 ? minNub(nubAt(m.me3)) : null, kind: 'm3' }, { v: m.me1 ? minNub(nubAt(m.me1)) : null, kind: 'm1' }, { v: m.me0 ? minNub(nubAt(m.me0)) : null, kind: 'm0' }, { v: m.trendFrom ? minNub(nubAt(m.trendFrom)) : null, kind: 'tf' }, { v: b4, kind: 'latest' }],
-      text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Met: ' : '') + 'Net Upgrade Breadth was ' + (v4.ss_sales_nub100 == null ? 'not available' : pctS(v4.ss_sales_nub100)) + ' on sales estimates and ' + (v4.ss_pt_nub100 == null ? 'not available' : pctS(v4.ss_pt_nub100)) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
+      text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Sell signal: ' : '') + 'Net Upgrade Breadth was ' + (v4.ss_sales_nub100 == null ? 'not available' : pctS(v4.ss_sales_nub100)) + ' on sales estimates and ' + (v4.ss_pt_nub100 == null ? 'not available' : pctS(v4.ss_pt_nub100)) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
       text2: v4.stock_rs == null ? 'Stock RS has no reading, so this rule cannot sell.' : 'Stock RS was ' + v4.stock_rs + (v4.stock_rs < 50 ? ', below 50, so this rule can sell.' : ', above 50, so this rule cannot sell yet.') });
     var dl = dailyAt(m.asof) || {}, cl = dl.c;
     var rd = function (d) { var q = d ? dailyAt(d) : null; return q ? q.rdh : null; };
     m.rows.push({ id: 'C5', label: 'Relative price against its 52-week high (sells more than 25% below)', sub: 'read at the month-end; sells the whole holding', lo: -0.5, hi: 0, trigger: -0.25, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: info ? 'info' : c5.fires ? 'fires' : near(c5.value, -0.25, 0.05) ? 'near' : 'clear',
       marks: [{ v: e ? e.rdh : null, kind: 'entry', label: 'bought' }, { v: rd(m.me3), kind: 'm3' }, { v: rd(m.me1), kind: 'm1' }, { v: rd(m.me0), kind: 'm0' }, { v: rd(m.trendFrom), kind: 'tf' }, { v: c5.value, kind: 'latest' }, { v: c5.today, kind: 'today' }],
-      text: (c5.fires ? 'Met: relative price was ' : 'Relative price was ') + Math.round(-c5.value * 100) + '% below its 52-week high at the ' + fmtD(c5.reading_day) + ' month-end.', text2: (dl.trig && cl) ? (dl.trig <= cl ? 'Today the share price is ' + Math.round((cl - dl.trig) / cl * 100) + '% above the price at which this rule sells, about ' + Math.round(dl.trig) + '.' : 'Today the share price is ' + Math.round((dl.trig - cl) / dl.trig * 100) + '% below the price at which this rule sells, about ' + Math.round(dl.trig) + '.') : '' });
+      text: (c5.fires ? 'Sell signal: relative price was ' : 'No sell signal: relative price was ') + Math.round(-c5.value * 100) + '% below its 52-week high at the ' + fmtD(c5.reading_day) + ' month-end.', text2: (dl.trig && cl) ? (dl.trig <= cl ? 'Today the share price is ' + Math.round((cl - dl.trig) / cl * 100) + '% above the price at which this rule sells, about ' + Math.round(dl.trig) + '.' : 'Today the share price is ' + Math.round((dl.trig - cl) / dl.trig * 100) + '% below the price at which this rule sells, about ' + Math.round(dl.trig) + '.') : '' });
     if (m.tranches.length) {
       var tr = m.tranches.slice().sort(function (a, b) { return a.distance_to_level_pct - b.distance_to_level_pct; })[0];
       var lv = (Hd.levels.filter(function (x) { return x.tranche === tr.tranche_number; })[0] || { pts: [] }).pts;
@@ -403,7 +408,7 @@
       var lt = tr.distance_to_level_pct / 100;
       m.rows.push({ id: 'C6', label: 'The nearest tranche\'s distance to its 30% level', sub: 'a close below it, with Stock RS below 70, sells it', lo: -0.1, hi: 0.35, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: info ? 'info' : tr.state !== 'no trigger' ? 'fires' : lt <= 0.10 ? 'near' : 'clear',
         marks: [{ v: 0.30, kind: 'entry', label: 'bought' }, { v: fallAt(m.me3), kind: 'm3' }, { v: fallAt(m.me1), kind: 'm1' }, { v: fallAt(m.me0), kind: 'm0' }, { v: fallAt(m.trendFrom), kind: 'tf' }, { v: lt, kind: 'latest' }],
-        text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; if (info) return 'Tranche ' + tr.tranche_number + ' fell below its 30% level' + (td ? ' on ' + fmtD(td) : '') + '; for a Probing Bet this is information only.'; return 'Met' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
+        text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; if (info) return 'Tranche ' + tr.tranche_number + ' fell below its 30% level' + (td ? ' on ' + fmtD(td) : '') + '; for a Probing Bet this is information only.'; return 'Triggered' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
         text2: (tr.state !== 'no trigger' ? 'The price is ' + Math.round(tr.distance_to_level_pct) + '% above the 30% level; ' : '') + 'Stock RS today is ' + tr.stock_rs_today + '.' });
     }
     /* 27-Oct-2026 (Richard: "All tranches, all investments"): one row per tranche's MA SL, on every holding; the five-day
@@ -428,7 +433,7 @@
     var lt = function (a, b) { return a != null && b != null && a < b; };   /* 29-Oct-2026 re-check: null is never below a line */
     var tState = {
       C1: function (v) { return v < 30 ? 'fires' : near(v, 30, 10) ? 'near' : 'clear'; },
-      C2: function (v) { return v <= 0 ? 'fires' : near(v, 0, 0.01) ? 'near' : 'clear'; },
+      C2: function (v) { return v <= 0 ? 'fires' : c2near(v) ? 'near' : 'clear'; },
       C3s: function (v) { return (v < 50 && lt(stT, 70)) ? 'fires' : (v < 50 || lt(stT, 70) || near(v, 50, 10)) ? 'near' : 'clear'; },
       C34: function (v) { return ((v < 70 && lt(seT, 50)) || (v < 50 && bT != null && bT < 0)) ? 'fires' : (v < 70 || near(v, 70, 10)) ? 'near' : 'clear'; },
       C4b: function (v) { return (v < 0 && stT != null && stT < 50) ? 'fires' : v <= 0.1 ? 'near' : 'clear'; },
@@ -464,7 +469,7 @@
     var c3t = c3.today || {}, early = [];
     if (!c3.fires && c3t.sector_rs < 50 && c3t.stock_rs < 70) early.push('Sector RS is ' + c3t.sector_rs + ', below 50, with Stock RS ' + c3t.stock_rs + ', below 70');
     if (!c5.fires && c5.today != null && c5.today < -0.25) early.push('relative price is ' + Math.round(-c5.today * 100) + '% below its 52-week high');
-    m.earlyText = early.length ? 'On today\'s daily readings, ' + early.join(', and ') + ', so ' + (early.length > 1 ? 'those Sell Criteria' : 'that Sell Criterion') + ' would be met if the month-end reading stays there.' : '';
+    m.earlyText = early.length ? 'On today\'s daily readings, ' + early.join(', and ') + ', so ' + (early.length > 1 ? 'those Sell Criteria' : 'that Sell Criterion') + ' would give a sell signal if the month-end reading stays there.' : '';
     return m;
   }
 
@@ -473,9 +478,9 @@
     if (m.probing) return 'Early Innings Probing Bet: its MA SLs decide the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
     var ma = '';   /* 29-Oct-2026: a Core Investment's MA SLs are information only, so they never enter its order words */
     var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order;
-    if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
+    if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + '; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
     if (/^SELL/.test(o)) return o + ma;
-    if (o === 'no signal' || !o) return (ma ? ma.slice(1) + ' ' : '') + 'No Sell Criterion is met.';
+    if (o === 'no signal' || !o) return (ma ? ma.slice(1) + ' ' : '') + 'No sell signal from any of the six Sell Criteria.';
     return o + ma;
   }
   function oneLine(m) {
@@ -483,7 +488,7 @@
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
     if (m.probing) return m.name + ' is an Early Innings Probing Bet, so its MA SLs decide the sale. ' + maWords(m) + lose;
     var nr = m.nearestRow, ex = false;   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
-    return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'is' : 'are') + ' met' + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No Sell Criterion is met. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
+    return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No sell signal from any of the six Sell Criteria. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
 
   function below(v) { return v == null ? 'n/a against' : Math.round(Math.abs(v) * 100) + '% ' + (v < 0 ? 'below' : 'above'); }
@@ -498,7 +503,7 @@
     if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
     if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
     if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
-    if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion is met, so the rule allows no add.';
+    if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion gives a sell signal, so the rule allows no add.';
     return '<b>No:</b> it holds ' + esc(String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '')) + '.';
   }
   function renderHeader(el_, m) {
@@ -674,8 +679,19 @@
       sw('<svg width="14" height="16"><text x="7" y="7" font-size="8" text-anchor="middle" fill="#cf222e">▼</text><rect x="4" y="8" width="6" height="8" fill="rgba(207,34,46,0.95)"/></svg>', '<b>distribution day</b>: a down close on volume above 1.25 times the 50D average'),
       sw(bar('rgba(139,148,158,0.30)'), '<b>quiet day</b> (paler): volume below half the 50D average'),
       sw('<svg width="12" height="14"><defs><pattern id="hk" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#57606a" stroke-width="1.6"/></pattern></defs><rect x="3" y="2" width="6" height="12" fill="url(#hk)"/></svg>', '<b>index review or option expiry day</b> (hatched; volume driven by the event, hover for the reason)'),
-      sw(ln(C.stock), '20D average volume'), sw(ln(C.ink3, '4 3'), '50D average volume'), sw(ln(C.red, '2 3', 1.3), '1.25 times the 50D average: a down day above it is a distribution day')].join('');
+      sw(ln(C.red, '2 3', 1.3), '1.25 times the 50D average: a down day above it is a distribution day'), sw(ln('#1a7f37', '', 2.2), 'average volume of the up days, last 20 sessions (dashed: last 50)'), sw(ln(C.red, '', 2.2), 'average volume of the down days, last 20 sessions (dashed: last 50)')].join('');
   }
+  /* 29-Oct-2026 16:01 and 16:19 (Richard: image 3 "doesn't communicate anything of value to me on volume trends. It needs to show the
+     average volume for L20D and L50D for down days and up days. Remove the today value - useless"; images 1 and 2 "confusing";
+     "You decide on it all"; D-PMS-V4-119): four panes, one message each:
+     A. daily volume bars (green up, red down; ▼ a distribution day, ▲ an accumulation day; the 1.25-times line that defines them);
+     B. average volume per day of the up days against the down days, over the last 20 sessions (solid) and 50 (dashed), the gap
+        between the 20-session lines shaded green where up days are heavier and red where down days are (replaces the up/down ratio);
+     C. distribution days in the last 25 sessions (6 or more: the warning level), alone;
+     D. relative price as one line, % below its 52W high, with the (25%) sell line (the 52W high, its 200D MA and the two scales gone;
+        the relative 200D MA now has its own charts under item 1).
+     The averages follow the house convention of the header's up/down ratio (every day included; N rows, N - 1 comparisons) and are
+     computed from the full history, so they are right from the first day drawn. */
   function drawVolume(host, m, layout) {
     host.innerHTML = '';
     if (!layout || !layout.dates || !layout.dates.length) return;
@@ -683,78 +699,97 @@
     var V = m.H.volume, by = {}; V.forEach(function (q) { by[q.d] = q; });
     var DL = {}; m.daily.forEach(function (q) { DL[q.d] = q; });
     var rows = layout.dates.map(function (d) { return by[d] || null; }), drows = layout.dates.map(function (d) { return DL[d] || null; });
-    var h1 = 180, h3 = 74, h2 = 135, gap = 30, TB = 22, LBL = 34;
-    var top1 = LBL + TB, top3 = top1 + h1 + gap + 14 + TB, top2 = top3 + h3 + gap + TB, Htot = top2 + h2 + 40;
+    var TB = 22, LBL = 34, gap = 30, hA = 170, hB = 150, hC = 70, hD = 130;
+    var topA = LBL + TB, topB = topA + hA + gap + 14 + TB, topC = topB + hB + gap + TB, topD = topC + hC + gap + TB, Htot = topD + hD + 40;
     var svg = el('svg', { width: W, height: Htot, viewBox: '0 0 ' + W + ' ' + Htot, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, host);
     el('defs', {}, svg).innerHTML = '<pattern id="vhatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#57606a" stroke-width="1.5" opacity="0.75"/></pattern>';
     var lastQ = null; for (var li = n - 1; li >= 0; li--) if (rows[li]) { lastQ = rows[li]; break; }
-    var v50now = lastQ ? lastQ.v50 : null;
-    /* ---- pane 1: volume */
-    tdBand(svg, F, top1, 'Volume (shares, left); multiples of today\'s 50D average volume (right)');
+    var v50now = lastQ ? lastQ.v50 : null, GREEN = '#1a7f37';
+    /* ---- pane A: daily volume */
+    tdBand(svg, F, topA, 'Daily volume (shares): green an up day, red a down day; ▼ a distribution day, ▲ an accumulation day (volume above 1.25 times the 50D average, the dotted line)', 'Daily volume: ▼ distribution day, ▲ accumulation day (above 1.25 times the 50D average)');
     var vals = rows.filter(Boolean), vmax = Math.max.apply(null, vals.map(function (q) { return q.v; }).concat([1])), v50m = Math.max.apply(null, vals.map(function (q) { return q.v50 || 0; }).concat([1]));
     var capRaw = Math.min(vmax, 3 * v50m) * 1.05, NT = niceTicks(0, capRaw, 4), cap = NT[NT.length - 1] >= capRaw ? NT[NT.length - 1] : capRaw;
-    var y1 = function (v) { return top1 + h1 - Math.min(v, cap) / cap * h1; };
-    tdGrid(svg, F, top1, h1);
-    NT.forEach(function (v) { if (v > cap) return; el('line', { x1: pad.l, x2: W - pad.r, y1: y1(v), y2: y1(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y1(v) + 4, v ? fmtVol(v) : '0', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
-    if (v50now) { [0.5, 1, 1.25, 2, 3].forEach(function (k) { var v = k * v50now; if (v > cap) return; el('line', { x1: W - pad.r, x2: W - pad.r + 4, y1: y1(v), y2: y1(v), stroke: C.ink3 }, svg); txt(svg, W - pad.r + 6, y1(v) + 4, k + 'x', { 'font-size': 10.5, fill: k === 1.25 ? C.red : C.ink2, 'font-weight': k === 1.25 || k === 1 ? 650 : 400 }); });
-      if (F.wide) txt(svg, W - pad.r + 6, top1 - 6, '50D avg', { 'font-size': 9.5, fill: C.ink3 }); }
-    /* the last 25 sessions, the window of the distribution-day count: a bracket over the pane */
-    if (n > 25) { var b0 = F.edge(n - 25), b1 = W - pad.r, by_ = top1 + h1 + 6; el('path', { d: 'M' + b0 + ',' + by_ + ' l0,4 L' + b1 + ',' + (by_ + 4) + ' l0,-4', fill: 'none', stroke: C.ink2, 'stroke-width': 1.1 }, svg); txt(svg, b1, by_ + 16, 'the last 25 sessions: the distribution-day count\'s window', { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2, halo: true }); }
+    var yA = function (v) { return topA + hA - Math.min(v, cap) / cap * hA; };
+    tdGrid(svg, F, topA, hA);
+    NT.forEach(function (v) { if (v > cap) return; el('line', { x1: pad.l, x2: W - pad.r, y1: yA(v), y2: yA(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, yA(v) + 4, v ? fmtVol(v) : '0', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+    if (v50now) { [0.5, 1, 1.25, 2, 3].forEach(function (k) { var v = k * v50now; if (v > cap) return; el('line', { x1: W - pad.r, x2: W - pad.r + 4, y1: yA(v), y2: yA(v), stroke: C.ink3 }, svg); txt(svg, W - pad.r + 6, yA(v) + 4, k + 'x', { 'font-size': 10.5, fill: k === 1.25 ? C.red : C.ink2, 'font-weight': k === 1.25 || k === 1 ? 650 : 400 }); });
+      if (F.wide) txt(svg, W - pad.r + 6, topA - 6, 'x the 50D average', { 'font-size': 9.5, fill: C.ink3 }); }
+    if (n > 25) { var b0 = F.edge(n - 25), b1 = W - pad.r, by_ = topA + hA + 6; el('path', { d: 'M' + b0 + ',' + by_ + ' l0,4 L' + b1 + ',' + (by_ + 4) + ' l0,-4', fill: 'none', stroke: C.ink2, 'stroke-width': 1.1 }, svg); txt(svg, b1, by_ + 16, 'the last 25 sessions: the distribution-day count\'s window', { 'text-anchor': 'end', 'font-size': 10, fill: C.ink2, halo: true }); }
     var bwx = Math.max(1, Math.min(bw * 0.72, 16));
     rows.forEach(function (q, i) {
-      if (!q) return; var hgt = Math.max(1, top1 + h1 - y1(q.v)), r = q.v50 > 0 ? q.v / q.v50 : null, dist = !q.up && r > 1.25, acc = q.up && r > 1.25, quiet = r != null && r < 0.5, mech = MECH && MECH[q.d];
+      if (!q) return; var hgt = Math.max(1, topA + hA - yA(q.v)), r = q.v50 > 0 ? q.v / q.v50 : null, dist = !q.up && r > 1.25, acc = q.up && r > 1.25, quiet = r != null && r < 0.5, mech = MECH && MECH[q.d];
       var fill = dist ? 'rgba(207,34,46,0.95)' : acc ? 'rgba(26,127,55,0.95)' : quiet ? (q.up ? 'rgba(26,127,55,0.20)' : 'rgba(207,34,46,0.17)') : q.up ? 'rgba(26,127,55,0.50)' : 'rgba(207,34,46,0.40)';
-      el('rect', { x: xi(i) - bwx / 2, y: top1 + h1 - hgt, width: bwx, height: hgt, fill: fill }, svg);
-      if (mech) el('rect', { x: xi(i) - bwx / 2, y: top1 + h1 - hgt, width: bwx, height: hgt, fill: 'url(#vhatch)' }, svg);
-      if (q.v > cap) el('rect', { x: xi(i) - bwx / 2, y: top1, width: bwx, height: 2, fill: C.ink }, svg);
-      if (dist || acc) txt(svg, xi(i), Math.max(top1 + 9, top1 + h1 - hgt - 3), dist ? '▼' : '▲', { 'text-anchor': 'middle', 'font-size': bw >= 6 ? 10 : 8, fill: dist ? C.red : '#1a7f37' });
+      el('rect', { x: xi(i) - bwx / 2, y: topA + hA - hgt, width: bwx, height: hgt, fill: fill }, svg);
+      if (mech) el('rect', { x: xi(i) - bwx / 2, y: topA + hA - hgt, width: bwx, height: hgt, fill: 'url(#vhatch)' }, svg);
+      if (q.v > cap) el('rect', { x: xi(i) - bwx / 2, y: topA, width: bwx, height: 2, fill: C.ink }, svg);
+      if (dist || acc) txt(svg, xi(i), Math.max(topA + 9, topA + hA - hgt - 3), dist ? '▼' : '▲', { 'text-anchor': 'middle', 'font-size': bw >= 6 ? 10 : 8, fill: dist ? C.red : GREEN });
     });
-    tdPath(svg, F, rows.map(function (q) { return q && q.v50 ? q.v50 * 1.25 : null; }), y1, C.red, 1.1, '2 3', 0.75);
-    tdPath(svg, F, rows.map(function (q) { return q ? q.v50 : null; }), y1, C.ink3, 1.5, '5 3');
-    tdPath(svg, F, rows.map(function (q) { return q ? q.v20 : null; }), y1, C.stock, 1.6);
-    el('line', { x1: pad.l, x2: W - pad.r, y1: top1 + h1, y2: top1 + h1, stroke: C.border }, svg);
-    if (lastQ) tdEnds(svg, F, [{ y: y1(lastQ.v20) + 4, t: '20D ' + fmtVol(lastQ.v20), c: C.stock }, { y: y1(lastQ.v50) + 4, t: '50D ' + fmtVol(lastQ.v50), c: C.ink2, dash: '5 3' }, { y: y1(lastQ.v) + 4, t: 'today ' + fmtVol(lastQ.v) + (lastQ.v50 ? ' (' + (lastQ.v / lastQ.v50).toFixed(2) + 'x)' : ''), c: lastQ.up ? '#1a7f37' : C.red }], top1, h1);
-    /* ---- pane 2: the distribution-day count and the up/down volume ratio, over time */
-    tdBand(svg, F, top3, 'Distribution days in the last 25 sessions (red, left; 6 is the warning level) and up/down volume over 20 sessions (blue, right; below 0.8, sellers in force)', 'Distribution days in 25 sessions (red, left; warning at 6); up/down volume, 20 sessions (blue, right)');
-    tdGrid(svg, F, top3, h3);
-    var dmax = Math.max(8, Math.max.apply(null, vals.map(function (q) { return q.dist25 || 0; }))), yd = function (v) { return top3 + h3 - v / dmax * h3; };
-    var udv = vals.map(function (q) { return q.ud20; }).filter(function (v) { return v != null; }), uLo = Math.min(0.5, Math.min.apply(null, udv.concat([1]))), uHi = Math.max(1.6, Math.max.apply(null, udv.concat([1]))), yu = function (v) { return top3 + h3 - (Math.max(uLo, Math.min(uHi, v)) - uLo) / (uHi - uLo) * h3; };
-    [0, 3, 6].forEach(function (v) { if (v > dmax) return; txt(svg, pad.l - 6, yd(v) + 4, String(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: v === 6 ? C.red : C.ink2, 'font-weight': v === 6 ? 650 : 400 }); });
-    el('line', { x1: pad.l, x2: W - pad.r, y1: yd(6), y2: yd(6), stroke: C.red, 'stroke-dasharray': '5 3', 'stroke-width': 1, opacity: 0.7 }, svg);
-    [0.8, 1, 1.5].forEach(function (v) { if (v < uLo || v > uHi) return; txt(svg, W - pad.r + 6, yu(v) + 4, v.toFixed(1), { 'font-size': 10.5, fill: v === 0.8 ? C.stock : C.ink2, 'font-weight': v === 0.8 ? 650 : 400 }); if (v === 1) el('line', { x1: pad.l, x2: W - pad.r, y1: yu(v), y2: yu(v), stroke: C.grid }, svg); });
-    el('line', { x1: pad.l, x2: W - pad.r, y1: yu(0.8), y2: yu(0.8), stroke: C.stock, 'stroke-dasharray': '5 3', 'stroke-width': 1, opacity: 0.6 }, svg);
-    var dp = ''; rows.forEach(function (q, i) { if (!q || q.dist25 == null) return; var x0 = F.edge(i), x1 = F.edge(i + 1); dp += (dp ? 'L' : 'M') + x0.toFixed(1) + ',' + yd(q.dist25).toFixed(1) + 'L' + x1.toFixed(1) + ',' + yd(q.dist25).toFixed(1); });
-    if (dp) { el('path', { d: dp + 'L' + (W - pad.r) + ',' + (top3 + h3) + 'L' + pad.l + ',' + (top3 + h3) + 'Z', fill: 'rgba(207,34,46,0.10)', stroke: 'none' }, svg); el('path', { d: dp, fill: 'none', stroke: C.red, 'stroke-width': 1.6 }, svg); }
-    tdPath(svg, F, rows.map(function (q) { return q ? q.ud20 : null; }), yu, C.stock, 1.6);
-    el('line', { x1: pad.l, x2: W - pad.r, y1: top3 + h3, y2: top3 + h3, stroke: C.border }, svg);
-    if (lastQ) tdEnds(svg, F, [{ y: yd(lastQ.dist25) + 4, t: lastQ.dist25 + ' distribution day' + (lastQ.dist25 === 1 ? '' : 's'), c: C.red }, { y: yu(lastQ.ud20 == null ? 1 : lastQ.ud20) + 4, t: 'up/down ' + (lastQ.ud20 == null ? 'n/a' : lastQ.ud20.toFixed(2)), c: C.stock }], top3, h3);
-    /* ---- pane 3: relative price against its 52W high */
-    tdBand(svg, F, top2, 'Relative price (left), and % below today\'s 52W high of relative price (right)');
-    tdGrid(svg, F, top2, h2);
-    var rv = []; drows.forEach(function (q) { if (q) [q.rel, q.rhi, q.rhi != null ? q.rhi * 0.75 : null, q.rma].forEach(function (v) { if (v != null) rv.push(v); }); });
-    var lastD = null; for (var k2 = n - 1; k2 >= 0; k2--) if (drows[k2] && drows[k2].rel != null) { lastD = drows[k2]; break; }
-    if (rv.length) {
-      var lo = Math.min.apply(null, rv), hi = Math.max.apply(null, rv), pv = (hi - lo) * 0.06 || 1; lo -= pv; hi += pv;
-      var y2 = function (v) { return top2 + h2 - (v - lo) / (hi - lo) * h2; };
-      niceTicks(lo, hi, 4).forEach(function (v) { if (v < lo || v > hi) return; el('line', { x1: pad.l, x2: W - pad.r, y1: y2(v), y2: y2(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y2(v) + 4, fmtN(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
-      if (lastD && lastD.rhi) [0, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5].forEach(function (p) { var v = lastD.rhi * (1 - p); if (v < lo || v > hi) return; el('line', { x1: W - pad.r, x2: W - pad.r + 4, y1: y2(v), y2: y2(v), stroke: C.ink3 }, svg); txt(svg, W - pad.r + 6, y2(v) + 4, p ? '(' + Math.round(p * 100) + '%)' : '0%', { 'font-size': 10.5, fill: p === 0.25 ? C.red : C.ink2, 'font-weight': p === 0.25 || !p ? 650 : 400 }); });
-      tdPath(svg, F, drows.map(function (q) { return q && q.rhi != null ? q.rhi * 0.75 : null; }), y2, C.red, 1.2, '2 2');
-      tdPath(svg, F, drows.map(function (q) { return q ? q.rhi : null; }), y2, C.ink3, 1.1);
-      tdPath(svg, F, drows.map(function (q) { return q ? q.rma : null; }), y2, C.ma, 1.4, '6 3');
-      tdPath(svg, F, drows.map(function (q) { return q ? q.rel : null; }), y2, C.rel, 1.8);
-      var sh_ = pad.r < 290;
-      if (lastD) tdEnds(svg, F, [{ y: y2(lastD.rel) + 4, t: sh_ ? 'relative price ' + pct0(lastD.rdh) : 'relative price ' + pct0(lastD.rdh) + ' against its 52W high', c: C.rel }, { y: y2(lastD.rma) + 4, t: 'its 200D MA', c: C.ink2, dash: '6 3' }, { y: y2(lastD.rhi) + 4, t: 'its 52W high', c: C.ink3 }, { y: y2(lastD.rhi * 0.75) + 4, t: sh_ ? '25% below: sells' : '25% below the 52W high: sells', c: C.red, dash: '2 2' }], top2, h2);
+    tdPath(svg, F, rows.map(function (q) { return q && q.v50 ? q.v50 * 1.25 : null; }), yA, C.red, 1.1, '2 3', 0.75);
+    el('line', { x1: pad.l, x2: W - pad.r, y1: topA + hA, y2: topA + hA, stroke: C.border }, svg);
+    /* ---- pane B: average volume per day, up days against down days */
+    /* the house convention, exactly as the extract's ud20 and the Master Dashboard's utr_updown_ratio: the last N rows give N - 1
+       day-on-day comparisons (the first row of the window is the base), every day included; so the header's "up/down volume, 20
+       sessions" is exactly the ratio of the two solid lines' latest values (re-check 29-Oct-2026) */
+    var UD = (function () { var out = {}, VV = V.filter(function (q) { return q && q.v != null; });
+      for (var k = 0; k < VV.length; k++) { var o = {};
+        [20, 50].forEach(function (N) { var su = 0, nu = 0, sd = 0, nd = 0; for (var j = Math.max(1, k - N + 2); j <= k; j++) { if (VV[j].up) { su += VV[j].v; nu++; } else { sd += VV[j].v; nd++; } }
+          o['u' + N] = nu ? su / nu : null; o['d' + N] = nd ? sd / nd : null; o['nu' + N] = nu; o['nd' + N] = nd; });
+        out[VV[k].d] = o; }
+      return out; })();
+    var udRow = function (i) { for (var j = i; j >= 0; j--) { var o = UD[layout.dates[j]]; if (o) return o; } return null; };
+    var UR = layout.dates.map(function (d, i) { return udRow(i); });
+    var ser = function (key) { return UR.map(function (o) { return o ? o[key] : null; }); };
+    var u20 = ser('u20'), d20 = ser('d20'), u50 = ser('u50'), d50 = ser('d50');
+    tdBand(svg, F, topB, 'Average volume per day: up days (green) against down days (red); solid the last 20 sessions, dashed the last 50; shaded green where up days trade heavier over 20 sessions, red where down days do', 'Average volume per day: up days (green) against down days (red); solid 20 sessions, dashed 50');
+    var bv = u20.concat(d20, u50, d50).filter(function (v) { return v != null; });
+    if (bv.length) {
+      var bLo = Math.min.apply(null, bv), bHi = Math.max.apply(null, bv), bp = (bHi - bLo) * 0.08 || bHi * 0.05; bLo = Math.max(0, bLo - bp); bHi += bp;
+      var yB = function (v) { return topB + hB - (v - bLo) / (bHi - bLo) * hB; };
+      tdGrid(svg, F, topB, hB);
+      niceTicks(bLo, bHi, 5).forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: yB(v), y2: yB(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, yB(v) + 4, fmtVol(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+      for (var i2 = 0; i2 < n; i2++) { if (u20[i2] == null || d20[i2] == null) continue; var upH = u20[i2] >= d20[i2];
+        el('rect', { x: F.edge(i2), y: Math.min(yB(u20[i2]), yB(d20[i2])), width: bw + 0.4, height: Math.max(0.5, Math.abs(yB(u20[i2]) - yB(d20[i2]))), fill: upH ? 'rgba(26,127,55,0.16)' : 'rgba(207,34,46,0.16)' }, svg); }
+      tdPath(svg, F, u50, yB, GREEN, 1.5, '6 3'); tdPath(svg, F, d50, yB, C.red, 1.5, '6 3');
+      tdPath(svg, F, u20, yB, GREEN, 2.2); tdPath(svg, F, d20, yB, C.red, 2.2);
+      var L = n - 1, ends = [];
+      [[u20, 'up days, last 20 sessions', GREEN, ''], [d20, 'down days, last 20 sessions', C.red, ''], [u50, 'up days, last 50 sessions', GREEN, '6 3'], [d50, 'down days, last 50 sessions', C.red, '6 3']].forEach(function (a) { if (a[0][L] != null) ends.push({ y: yB(a[0][L]) + 4, t: a[1] + ' ' + fmtVol(a[0][L]), c: a[2], dash: a[3] }); });
+      if (F.wide) tdEnds(svg, F, ends, topB, hB);
     }
-    el('line', { x1: pad.l, x2: W - pad.r, y1: top2 + h2, y2: top2 + h2, stroke: C.border }, svg);
-    tdTranches(svg, F, m, top1, top2 + h2, 25);
-    tdLabels(svg, F, top2 + h2 + 14);
+    el('line', { x1: pad.l, x2: W - pad.r, y1: topB + hB, y2: topB + hB, stroke: C.border }, svg);
+    /* ---- pane C: distribution days */
+    tdBand(svg, F, topC, 'Distribution days in the last 25 sessions (6 or more is the warning level)');
+    tdGrid(svg, F, topC, hC);
+    var dmax = Math.max(8, Math.max.apply(null, vals.map(function (q) { return q.dist25 || 0; }))), yC = function (v) { return topC + hC - v / dmax * hC; };
+    [0, 3, 6].forEach(function (v) { if (v > dmax) return; el('line', { x1: pad.l, x2: W - pad.r, y1: yC(v), y2: yC(v), stroke: v === 6 ? C.red : C.grid, 'stroke-dasharray': v === 6 ? '5 3' : '', opacity: v === 6 ? 0.7 : 1 }, svg); txt(svg, pad.l - 6, yC(v) + 4, String(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: v === 6 ? C.red : C.ink2, 'font-weight': v === 6 ? 650 : 400 }); });
+    var dp = ''; rows.forEach(function (q, i) { if (!q || q.dist25 == null) return; var x0 = F.edge(i), x1 = F.edge(i + 1); dp += (dp ? 'L' : 'M') + x0.toFixed(1) + ',' + yC(q.dist25).toFixed(1) + 'L' + x1.toFixed(1) + ',' + yC(q.dist25).toFixed(1); });
+    if (dp) { el('path', { d: dp + 'L' + (W - pad.r) + ',' + (topC + hC) + 'L' + pad.l + ',' + (topC + hC) + 'Z', fill: 'rgba(207,34,46,0.10)', stroke: 'none' }, svg); el('path', { d: dp, fill: 'none', stroke: C.red, 'stroke-width': 1.8 }, svg); }
+    el('line', { x1: pad.l, x2: W - pad.r, y1: topC + hC, y2: topC + hC, stroke: C.border }, svg);
+    if (lastQ && lastQ.dist25 != null && F.wide) tdEnds(svg, F, [{ y: yC(lastQ.dist25) + 4, t: lastQ.dist25 + ' distribution day' + (lastQ.dist25 === 1 ? '' : 's'), c: C.red }], topC, hC);
+    /* ---- pane D: relative price against its 52W high, one line */
+    tdBand(svg, F, topD, 'Relative price against its 52W high (%): more than 25% below at a month-end is a sell signal', 'Relative price against its 52W high (%): below (25%) at a month-end is a sell signal');
+    tdGrid(svg, F, topD, hD);
+    var rd = drows.map(function (q) { return q && q.rdh != null ? q.rdh * 100 : null; }), rdv = rd.filter(function (v) { return v != null; });
+    var dLo = Math.min(-35, Math.floor((Math.min.apply(null, rdv.concat([0])) - 3) / 5) * 5), dHi = 0;
+    var yD = function (v) { return topD + hD - (v - dLo) / (dHi - dLo) * hD; };
+    for (var t = 0; t >= dLo; t -= (dLo < -60 ? 20 : 10)) { el('line', { x1: pad.l, x2: W - pad.r, y1: yD(t), y2: yD(t), stroke: C.grid }, svg); txt(svg, pad.l - 6, yD(t) + 4, t ? '(' + (-t) + '%)' : '0%', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); }
+    el('rect', { x: pad.l, y: yD(-25), width: W - pad.l - pad.r, height: topD + hD - yD(-25), fill: 'rgba(207,34,46,0.06)' }, svg);
+    el('line', { x1: pad.l, x2: W - pad.r, y1: yD(-25), y2: yD(-25), stroke: C.red, 'stroke-dasharray': '3 2', 'stroke-width': 1.4 }, svg);
+    txt(svg, pad.l - 6, yD(-25) + 4, '(25%)', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.red, 'font-weight': 700 });
+    tdPath(svg, F, rd, yD, C.rel, 1.9);
+    el('line', { x1: pad.l, x2: W - pad.r, y1: topD + hD, y2: topD + hD, stroke: C.border }, svg);
+    var lastD = null; for (var k2 = n - 1; k2 >= 0; k2--) if (rd[k2] != null) { lastD = k2; break; }
+    if (F.wide) tdEnds(svg, F, [{ y: yD(-25) + 4, t: '(25%): the sell line, read at the month-end', c: C.red, dash: '3 2' }].concat(lastD != null ? [{ y: yD(rd[lastD]) + 4, t: '(' + Math.round(-rd[lastD]) + '%) below its 52W high', c: C.rel }] : []), topD, hD);
+    tdTranches(svg, F, m, topA, topD + hD, 25);
+    tdLabels(svg, F, topD + hD + 14);
     /* hover: the day's figures */
-    var cross = el('line', { x1: 0, x2: 0, y1: top1, y2: top2 + h2, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
+    var cross = el('line', { x1: 0, x2: 0, y1: topA, y2: topD + hD, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
     var tip = document.createElement('div'); tip.className = 'tip'; tip.style.display = 'none'; host.style.position = 'relative'; host.appendChild(tip);
-    svg.addEventListener('mousemove', function (ev) { var r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width), i = Math.floor((px - pad.l) / bw); if (i < 0 || i >= n) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; } var q = rows[i], dq = drows[i]; if (!q) return; cross.setAttribute('x1', xi(i)); cross.setAttribute('x2', xi(i)); cross.setAttribute('opacity', 1);
+    svg.addEventListener('mousemove', function (ev) { var r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width), i = Math.floor((px - pad.l) / bw); if (i < 0 || i >= n) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; } var q = rows[i], o = UR[i]; if (!q) return; cross.setAttribute('x1', xi(i)); cross.setAttribute('x2', xi(i)); cross.setAttribute('opacity', 1);
       var rr = q.v50 > 0 ? q.v / q.v50 : null, kind = !q.up && rr > 1.25 ? 'a distribution day' : q.up && rr > 1.25 ? 'an accumulation day' : rr != null && rr < 0.5 ? 'a quiet day' : '';
-      tip.innerHTML = '<b>' + fmtDY(q.d) + '</b><div>volume ' + fmtVol(q.v) + (rr != null ? ', ' + rr.toFixed(2) + ' times the 50D average' : '') + ' (' + (q.up ? 'an up day' : 'a down day') + (kind ? ', ' + kind : '') + ')</div>' + (MECH && MECH[q.d] ? '<div>an index review or option expiry day: ' + esc(MECH[q.d]) + '</div>' : '') + '<div>20D average ' + fmtVol(q.v20) + '; 50D average ' + fmtVol(q.v50) + '</div><div>up/down volume, 20 sessions: ' + (q.ud20 == null ? (q.ud20_no_down ? 'no down day' : 'n/a') : q.ud20.toFixed(2)) + '; distribution days in 25 sessions: ' + q.dist25 + '</div>' + (dq && dq.rel != null ? '<div>relative price ' + dq.rel.toFixed(1) + ', ' + pct0(dq.rdh) + ' against its 52W high</div>' : '');
-      tip.style.display = 'block'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 290)) + 'px'; tip.style.top = (ev.clientY - r.top + 10) + 'px'; });
+      tip.innerHTML = '<b>' + fmtDY(q.d) + '</b><div>volume ' + fmtVol(q.v) + (rr != null ? ', ' + rr.toFixed(2) + ' times the 50D average' : '') + ' (' + (q.up ? 'an up day' : 'a down day') + (kind ? ', ' + kind : '') + ')</div>' + (MECH && MECH[q.d] ? '<div>an index review or option expiry day: ' + esc(MECH[q.d]) + '</div>' : '') +
+        (o ? '<div>average volume per day, last 20 sessions: up days ' + fmtVol(o.u20) + ' (' + o.nu20 + '), down days ' + fmtVol(o.d20) + ' (' + o.nd20 + ')</div><div>last 50 sessions: up days ' + fmtVol(o.u50) + ' (' + o.nu50 + '), down days ' + fmtVol(o.d50) + ' (' + o.nd50 + ')</div>' : '') +
+        '<div>distribution days in 25 sessions: ' + q.dist25 + '</div>' + (rd[i] != null ? '<div>relative price ' + (rd[i] >= 0 ? 'at' : '(' + Math.round(-rd[i]) + '%) below') + ' its 52W high</div>' : '');
+      tip.style.display = 'block'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 320)) + 'px'; tip.style.top = (ev.clientY - r.top + 10) + 'px'; });
     svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
   }
   /* item 3: RS, on the SP chart's trading days. Each Friday's reading (and the latest day's) is a point; the month-end readings are dots;
@@ -792,6 +827,62 @@
       var o = null; P.forEach(function (p) { if (p.i <= i) o = p; }); if (!o) return; cross.setAttribute('x1', xi(o.i)); cross.setAttribute('x2', xi(o.i)); cross.setAttribute('opacity', 1);
       tip.innerHTML = '<b>' + fmtDY(o.q.d) + '</b> <span class="mut">(' + (o.q.k === 'me' ? 'month-end' : o.q.k === 'fr' ? 'Friday' : 'latest day') + ')</span><div>Stock RS ' + o.q.s + '; Sector RS ' + o.q.sec + '; Industry RS ' + o.q.ind + '</div>';
       tip.style.display = 'block'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 290)) + 'px'; tip.style.top = (ev.clientY - r.top + 10) + 'px'; });
+    svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
+  }
+
+  /* 29-Oct-2026 15:44 and 15:47 (Richard: "Show me the 200D MA relative price chart in chart form for last 12 months";
+     "Include these 2x charts in SP and MAs section"; D-PMS-V4-118): under item 1, on item 1's trading days and zoom (12M by
+     default), two panes: (1) relative price (the stock against the average of the universe's stocks of EUR 500m or more,
+     the Framework 14 reader's line) and its 200D MA; (2) the sell test read each Friday: the 200D MA's change over the month
+     (21 sessions), red at or below 0 (a sell signal), green above. Fridays are drawn solid, other days faint. */
+  function drawRelMA(host, m, layout) {
+    host.innerHTML = '';
+    if (!layout || !layout.dates || !layout.dates.length) return;
+    var F = tdFrame(layout), W = F.W, pad = F.pad, n = F.n, xi = F.xi, bw = F.bw;
+    var DL = {}; m.daily.forEach(function (q) { DL[q.d] = q; });
+    var rows = layout.dates.map(function (d) { return DL[d] || null; });
+    var rel = rows.map(function (q) { return q && q.rel != null ? q.rel : null; }), rma = rows.map(function (q) { return q && q.rma != null ? q.rma : null; });
+    var slo = rows.map(function (q) { return q && q.slope != null ? q.slope * 100 : null; });
+    var h1 = 230, h2 = 150, gap = 34, TB = 22, LBL = 30, top1 = LBL + TB, top2 = top1 + h1 + gap + TB, Htot = top2 + h2 + 40;
+    var svg = el('svg', { width: W, height: Htot, viewBox: '0 0 ' + W + ' ' + Htot, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, host);
+    /* pane 1: relative price and its 200D MA */
+    tdBand(svg, F, top1, 'Relative price (against the average of the universe\'s stocks of EUR 500m or more) and its 200D MA', 'Relative price and its 200D MA');
+    var vv = rel.concat(rma).filter(function (v) { return v != null; });
+    var lo = vv.length ? Math.min.apply(null, vv) : 0, hi = vv.length ? Math.max.apply(null, vv) : 1, padv = (hi - lo) * 0.06 || 1;
+    var y0 = lo - padv, y1v = hi + padv, T1 = niceTicks(y0, y1v, 8);   /* the scale is the data's range; gridlines inside it (render test 29-Oct: ticks as the range let the line run out of the pane) */
+    var y1 = function (v) { return top1 + h1 - (v - y0) / (y1v - y0) * h1; };
+    tdGrid(svg, F, top1, h1);
+    T1.forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y1(v), y2: y1(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y1(v) + 4, String(Math.round(v)), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+    tdPath(svg, F, rel, y1, C.ink, 1.5);
+    tdPath(svg, F, rma, y1, '#5a32a3', 3);
+    el('line', { x1: pad.l, x2: W - pad.r, y1: top1 + h1, y2: top1 + h1, stroke: C.border }, svg);
+    var lastI = -1; for (var k = n - 1; k >= 0; k--) if (rel[k] != null) { lastI = k; break; }
+    var ends = [];
+    if (lastI >= 0) { ends.push({ y: y1(rel[lastI]) + 4, t: 'relative price ' + rel[lastI].toFixed(0), c: C.ink }); if (rma[lastI] != null) ends.push({ y: y1(rma[lastI]) + 4, t: '200D MA ' + rma[lastI].toFixed(0), c: '#5a32a3' }); }
+    if (F.wide) tdEnds(svg, F, ends, top1, h1);
+    tdTranches(svg, F, m, top1, top1 + h1, 22);
+    /* pane 2: the sell test */
+    tdBand(svg, F, top2, 'The sell test, read each Friday: the 200D MA\'s change over the month (%). At or below 0 (red) is a sell signal', 'Sell test: 200D MA change over the month (%); at or below 0 is a sell signal');
+    var sv = slo.filter(function (v) { return v != null; }), smin = Math.min.apply(null, sv.concat([-0.5])), smax = Math.max.apply(null, sv.concat([0.5]));
+    var T2 = niceTicks(smin, smax, 4), z0 = Math.min(T2[0], smin), z1 = Math.max(T2[T2.length - 1], smax);
+    var y2 = function (v) { return top2 + h2 - (v - z0) / (z1 - z0) * h2; };
+    tdGrid(svg, F, top2, h2);
+    el('rect', { x: pad.l, y: y2(0), width: W - pad.l - pad.r, height: top2 + h2 - y2(0), fill: 'rgba(207,34,46,0.06)' }, svg);
+    T2.forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y2(v), y2: y2(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y2(v) + 4, (v > 0 ? '+' : '') + v.toFixed(Math.abs(v) < 1 && v !== 0 ? 1 : 0) + '%', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+    var bwid = Math.max(1, Math.min(bw * 0.8, 10));
+    slo.forEach(function (v, i) { if (v == null) return; var fri = F.ds[i].getUTCDay() === 5, col = v <= 0 ? C.red : C.industry;
+      el('rect', { x: xi(i) - bwid / 2, y: Math.min(y2(v), y2(0)), width: bwid, height: Math.max(1, Math.abs(y2(v) - y2(0))), fill: col, opacity: fri ? 0.95 : 0.3 }, svg); });
+    el('line', { x1: pad.l, x2: W - pad.r, y1: y2(0), y2: y2(0), stroke: C.ink, 'stroke-width': 1.4 }, svg);
+    if (F.wide) txt(svg, W - pad.r + 6, y2(0) + 4, '0: the sell line', { 'font-size': 10, fill: C.ink, 'font-weight': 700 });
+    if (lastI >= 0 && slo[lastI] != null && F.wide) txt(svg, W - pad.r + 6, Math.min(top2 + h2, Math.max(top2 + 10, y2(slo[lastI]) + 4 + (Math.abs(y2(slo[lastI]) - y2(0)) < 13 ? (slo[lastI] > 0 ? -13 : 13) : 0))), 'today ' + (slo[lastI] > 0 ? '+' : '') + slo[lastI].toFixed(2) + '%', { 'font-size': 10, fill: slo[lastI] <= 0 ? C.red : C.industry, 'font-weight': 700 });
+    tdLabels(svg, F, top2 + h2 + 14);
+    if (!vv.length) txt(svg, (pad.l + W - pad.r) / 2, top1 + h1 / 2, 'No relative price is stored for these dates.', { 'text-anchor': 'middle', fill: C.ink3, 'font-size': 12 });
+    var cross = el('line', { x1: 0, x2: 0, y1: top1, y2: top2 + h2, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
+    var tip = document.createElement('div'); tip.className = 'tip'; tip.style.display = 'none'; host.style.position = 'relative'; host.appendChild(tip);
+    svg.addEventListener('mousemove', function (ev) { var r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * (W / r.width), i = Math.floor((px - pad.l) / bw); if (i < 0 || i >= n || !rows[i]) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; }
+      cross.setAttribute('x1', xi(i)); cross.setAttribute('x2', xi(i)); cross.setAttribute('opacity', 1); var q = rows[i], sl = slo[i];
+      tip.innerHTML = '<b>' + fmtDY(q.d) + '</b>' + (F.ds[i].getUTCDay() === 5 ? ' <span class="mut">(Friday: the reading the rule acts on)</span>' : '') + '<div>relative price ' + (q.rel != null ? q.rel.toFixed(1) : 'n/a') + '; its 200D MA ' + (q.rma != null ? q.rma.toFixed(1) : 'n/a') + '</div><div>200D MA change over the month: <b style="color:' + (sl != null && sl <= 0 ? C.red : C.industry) + '">' + (sl == null ? 'n/a' : (sl > 0 ? '+' : '') + sl.toFixed(2) + '%') + '</b> (' + (sl == null ? '' : sl <= 0 ? 'a sell signal on a Friday' : 'no sell signal') + ')</div>';
+      tip.style.display = 'block'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 300)) + 'px'; tip.style.top = (ev.clientY - r.top + 10) + 'px'; });
     svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
   }
 
@@ -1184,7 +1275,7 @@
     if (pts.length === 1) out.push({ pts: pts, color: TRC.flat, w: FYW[yi] || 2.3, dotAt: function () { return true; }, dotR: 3.6 });
     return out;
   }
-  function chip(lab, c, fmtc) { var k = trKind(c, 0.005); return '<span class="cg ' + k + '">' + lab + ' ' + (c == null ? 'n/a' : fmtc ? fmtc(c) : pctS1(c)) + '</span>'; }
+  function chip(lab, c, fmtc, band) { var k = trKind(c, band || 0.005); return '<span class="cg ' + k + '">' + lab + ' ' + (c == null ? 'n/a' : fmtc ? fmtc(c) : pctS1(c)) + '</span>'; }
   function pctS1(c) { var v = Math.round(c * 1000) / 10; return v > 0 ? '+' + v.toFixed(1) + '%' : v < 0 ? '(' + Math.abs(v).toFixed(1) + '%)' : '0.0%'; }
   function swatch(yi, col) { return '<svg width="26" height="10"><line x1="1" x2="25" y1="5" y2="5" stroke="' + (col || '#57606a') + '" stroke-width="' + (FYW[yi] || 2.3) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
   function trMarker(m) { if (!m.tranches.length) return []; var t1 = m.tranches.slice().sort(function (a, b) { return a.tranche_number - b.tranche_number; })[0]; return [{ d: t1.entry_date, label: 'tranche 1 bought, ' + fmtD(t1.entry_date) }]; }
@@ -1205,13 +1296,17 @@
       labs.forEach(function (y, yi) { var pts = ((X || {})[y] || []).filter(function (q) { return q.v != null && q.d >= d0; }); if (!pts.length) return; pts.forEach(function (q) { vals.push(q.v); }); var last = pts[pts.length - 1];
         var nn = (((Yr || {}).n || {})[k] || {})[y]; if (nn && nn.n != null) { if (nn.d === last.d) nCnt.push(names[yi] + ' ' + nn.n); else if (nn.n === 0 && nn.d > last.d) stale.push(names[yi]); }
         var c1 = chgOver(pts, 30), c3 = chgOver(pts, 91), c6 = chgOver(pts, 182), lk = trKind(c3, 0.01);
-        segSeries(pts, yi, names[yi], fmtN, 0.005).forEach(function (sg_) { ser.push(sg_); });
-        ser.push({ pts: pts, color: TRC[lk], w: 0.5, opacity: 0.001, label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest'; }, dotR: 3.6, endLabel: names[yi] + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')', yi: yi, c1: c1, c3: c3, c6: c6 }); });
+        /* 29-Oct-2026 16:19 (D-PMS-V4-119; Richard 16:03: the colour coding "not clear"): one colour per year for the whole line, from
+           that year's change over 3 months (green rising more than 1%, red falling more than 1%, grey between); the year is told by
+           the line style (solid, dashed, dotted). Replaces the month-by-month colouring, which made one line change colour along its length. */
+        ser.push({ pts: pts, color: TRC[lk], w: FYW[yi] || 2.3, dash: FYDASH[yi] || '', label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest'; }, dotR: 3.6, endLabel: names[yi] + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')', yi: yi, c1: c1, c3: c3, c6: c6 }); });
       var missing = names.filter(function (nm) { return !ser.some(function (sr) { return sr.label === nm + ' consensus'; }); });
-      var mains = ser.filter(function (sr) { return sr.label; }), chips = mains.map(function (sr) { return '<span class="chipline">' + swatch(sr.yi, TRC[trKind(sr.c3, 0.01)]) + '<b>' + esc(sr.label.replace(' consensus', '')) + '</b>' + chip('1M', sr.c1) + chip('3M', sr.c3) + chip('6M', sr.c6) + '</span>'; }).join('');
-      var c3s = mains.slice(0, 2).map(function (sr) { return sr.c3; }).filter(function (v) { return v != null; }), c3m = c3s.length ? c3s.reduce(function (a, b) { return a + b; }, 0) / c3s.length : null, ck = trKind(c3m, 0.01);
+      var mains = ser.filter(function (sr) { return sr.label; }), chips = mains.map(function (sr) { return '<span class="chipline">' + swatch(sr.yi, TRC[trKind(sr.c3, 0.01)]) + '<b>' + esc(sr.label.replace(' consensus', '')) + '</b>' + chip('1M', sr.c1) + chip('3M', sr.c3, null, 0.01) + chip('6M', sr.c6) + '</span>'; }).join('');
+      /* the background: FY+2's 3-month trend (the year the investment case rests on; FY+1 fills in only while FY+2 is missing). It was the
+         average of FY+1 and FY+2, which let a near-reported FY+1 jump tint Carlsberg's chart "rising" while FY+2 and FY+3 were being cut. */
+      var bgS = mains.filter(function (sr) { return sr.yi === 1; })[0] || mains[0], c3m = bgS ? bgS.c3 : null, ck = trKind(c3m, 0.01), bgName = bgS ? bgS.label.replace(' consensus', '') : '';
       var sub = ['from ' + fromTxt, basisTxt, nCnt.length ? 'analysts with an estimate: ' + nCnt.join(', ') : '', stale.length ? 'no analyst now has an ' + fyList(stale, 'or') + ' estimate, so ' + (stale.length > 1 ? 'those lines end' : 'that line ends') + ' at the last month with one' : '', ser.length && missing.length ? 'FactSet holds no ' + fyList(missing, 'or') + ' consensus' : ''].filter(Boolean).join('; ');
-      var h2 = cellIn(host, SNAMES[k] + ' consensus, ' + (names.length ? fyList(names) : 'the next three financial years') + ' <span class="mut">(' + sub + ')</span>' + (mains.length ? '<div class="chips">' + chips + '<span class="cgk">3-month trend: <b class="cg ' + ck + '">' + (ck === 'up' ? 'rising' : ck === 'dn' ? 'falling' : 'flat (within 1%)') + '</b></span></div>' : ''));
+      var h2 = cellIn(host, SNAMES[k] + ' consensus, ' + (names.length ? fyList(names) : 'the next three financial years') + ' <span class="mut">(' + sub + ')</span>' + (mains.length ? '<div class="chips">' + chips + '<span class="cgk">background: ' + esc(bgName) + ', 3 months: <b class="cg ' + ck + '">' + (ck === 'up' ? 'rising' : ck === 'dn' ? 'falling' : 'flat (within 1%)') + '</b></span></div>' : ''));
       if (!ser.length) { h2.innerHTML = '<div class="nohist">FactSet holds no ' + SNAMES[k] + ' consensus for ' + (names.length ? fyList(names, 'or') : 'the next three financial years') + ' for ' + esc(m.name) + '.</div>'; return; }
       var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.12 || Math.abs(hi) * 0.05 || 1;
       stack(h2, { d0: d0, d1: addDays(d1, 8), monthEnd: true, axis: 'my', width: W, left: 64, right: 160, markers: trMarker(m), panels: [{ h: 360, labelEdge: true, series: ser, yDomain: [lo - pd, hi + pd], yTicks: niceTicks(lo - pd, hi + pd, 9).filter(function (v) { return v >= lo - pd && v <= hi + pd; }), bg: TRBG[ck] }] });
@@ -1234,13 +1329,13 @@
     var ck = function (c, band) { return c == null ? 'flat' : c <= -band ? 'dn' : c >= band ? 'up' : 'flat'; };
     var bk = ck(b3, 3), pk = trKind(pt3, 0.01);
     var chipsR = '<div class="chips">' + (rp.length ? '<span class="chipline"><b>% Buys</b>' + [['1M', b1], ['3M', b3], ['6M', b6]].map(function (a) { return '<span class="cg ' + ck(a[1], 1) + '">' + a[0] + ' ' + (a[1] == null ? 'n/a' : pts_(a[1])) + '</span>'; }).join('') + '</span>' : '') +
-      (tpp.length ? '<span class="chipline">' + swatch(0, TRC[pk]) + '<b>average PT</b>' + chip('1M', pt1) + chip('3M', pt3) + chip('6M', pt6) + '</span>' : '') +
+      (tpp.length ? '<span class="chipline">' + swatch(0, TRC[pk]) + '<b>average PT</b>' + chip('1M', pt1) + chip('3M', pt3, null, 0.01) + chip('6M', pt6) + '</span>' : '') +
       (px.length ? '<span class="chipline"><svg width="26" height="10"><line x1="1" x2="25" y1="5" y2="5" stroke="#8b949e" stroke-width="1.4"/></svg><b>SP</b>' + chip('1M', sp1) + chip('3M', sp3) + chip('6M', sp6) + '</span>' : '') + '</div>';
     if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (month-ends, then the latest day); 3-month trend in % Buys: ' + (bk === 'up' ? 'rising' : bk === 'dn' ? 'falling' : 'flat (within 3 points)'), h: 240, labelEdge: true, yDomain: [0, 100], yTicks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], yFmt: function (v) { return v + '%'; },
       series: [{ kind: 'stacked', gap: 45, pts: rp, label: 'ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
         layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] }] });
     if (tpp.length || px.length) { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1, lt = tpp[tpp.length - 1], lp = px[px.length - 1];
-      var ptSer = [{ pts: px, color: C.ink3, w: 1.2, label: 'SP', fmt: fmtN, endLabel: lp ? 'SP ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }].concat(segSeries(tpp, 0, 'PT', fmtN, 0.005), [{ pts: tpp, color: TRC[pk], w: 0.5, opacity: 0.001, label: 'average PT', fmt: fmtN, endLabel: lt ? 'PT ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }]);
+      var ptSer = [{ pts: px, color: C.ink3, w: 1.2, label: 'SP', fmt: fmtN, endLabel: lp ? 'SP ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }].concat([{ pts: tpp, color: TRC[pk], w: FYW[0], label: 'average PT', fmt: fmtN, endLabel: lt ? 'PT ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }]);
       panels.push({ title: 'Average PT against SP' + (sc !== 1 ? ' (PT converted from pounds to pence)' : '') + '; 3-month trend in the average PT: ' + (pk === 'up' ? 'rising' : pk === 'dn' ? 'falling' : 'flat (within 1%)'), h: 360, labelEdge: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 9).filter(function (v) { return v >= lo3 - p3 && v <= hi3 + p3; }), bg: TRBG[pk],
         series: ptSer }); }
     if (!panels.length) { host.innerHTML = '<div class="nohist">No ratings or PT history is stored for ' + esc(m.name) + '.</div>'; return; }
@@ -1297,17 +1392,18 @@
   function testColour(m, id) {
     if (/^(red|green|grey)$/.test(id || '')) return id;
     if (id === 'MA' && !m.probing) return 'grey';   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
+    if (m.probing && /^C[1-6]$/.test(id || '')) return 'grey';   /* 29-Oct-2026 re-check (D-PMS-V4-118): a Probing Bet's Sell Criteria are information only (all seven of Alfen's items showed red) */
     var rs = id === 'MA' ? m.rows.filter(function (r) { return /^MA/.test(r.id); }) : (TESTROWS[id] || []).map(function (k) { return m.rows.filter(function (r) { return r.id === k; })[0]; }).filter(Boolean);
     if (!rs.length) return null;
     var red = false, green = true;
     rs.forEach(function (r) { var st = r.todayState || r.state, tr = trendOf(r); if (st === 'fires' || st === 'near' || (tr && tr.kind === 'towards')) red = true; if (!(tr && tr.kind === 'away')) green = false; });
     return red ? 'red' : green ? 'green' : 'grey';
   }
-  var COLWORD = { red: 'met, within reach, or moving towards being met', green: 'clear, and moving away', grey: 'clear, with little change' };
+  var COLWORD = { red: 'sell signal, close to one, or moving towards one', green: 'no sell signal, and moving away', grey: 'no sell signal, little change' };
   function insItems(host, items, m, key) {
     host.innerHTML = (key ? '<div class="inskey">' + key + '</div>' : '') + items.map(function (it) {
       var col = testColour(m, it.id), bl = it.bullets && it.bullets.length ? '<ul class="insb">' + it.bullets.map(function (b) { return '<li>' + (b.sign ? '<b>' + esc(b.sign) + ':</b> ' : '') + mdInline(b.text) + '</li>'; }).join('') + '</ul>' : '<div class="say">' + mdInline(it.text || '') + '</div>';
-      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'information only for a Core Investment' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
+      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'information only for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
     }).join('');
   }
   function insightsRender(host, say, m) {
@@ -1316,14 +1412,14 @@
     if (!I || !I.items || !I.items.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     var tagged = I.items.some(function (it) { return it.id; });
-    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the sell test is met, within reach, or has moved towards being met since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when it is clear, with little change; <b class="ck-green">green</b> when it is clear and has moved away.' : '');
+    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when it is clear, with little change; <b class="ck-green">green</b> when it is clear and has moved away.' : '');
   }
   function addsRender(host, say, m) {
     var I = m.H.insights, A = I && I.adds;
     if (m.notHeld) { say.textContent = ''; host.innerHTML = '<div class="nohist">Item 12 is written for holdings, at each APM PMS Q&amp;A SOP run; ' + esc(m.name) + ' is not held.</div>'; return; }
     if (!A || !A.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.adds_readings_asof || I.readings_asof ? ', on the readings of ' + fmtDY(I.adds_readings_asof || I.readings_asof) : '');
-    insItems(host, A, m, 'Colour: <b class="ck-green">green</b> when the rule allows an add, or the setup is present; <b class="ck-red">red</b> when the rule blocks an add; <b class="ck-grey">grey</b> when the setup is absent, the case is open for your ruling, the rule does not apply, or the rule allows an add today but the latest daily readings show a sell test met ahead of its next reading day.');
+    insItems(host, A, m, 'Colour: <b class="ck-green">green</b> when the rule allows an add, or the setup is present; <b class="ck-red">red</b> when the rule blocks an add; <b class="ck-grey">grey</b> when the setup is absent, the case is open for your ruling, the rule does not apply, or the rule allows an add today but the latest daily readings show a sell signal ahead of its next reading day.');
   }
 
   /* ------------------------------------------------------------------ the Market chart, front page (Richard, 27b Q3 and 27c, D-PMS-V4-23, V4-37, V4-38):
@@ -1348,7 +1444,7 @@
     stack(cell, { d0: ds[0], d1: ds[ds.length - 1], width: W, left: 52, right: 290, markers: [], panels: [{ h: Hh, labelEdge: true, labelGap: 11.5, labelSize: 9.5, series: series, yDomain: [lo - pd, hi + pd], yFmt: function (v) { return Math.round(v); } }] });
   }
 
-  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume, drawRS: drawRS, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
+  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume, drawRS: drawRS, drawRelMA: drawRelMA, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
     rsPanel: rsPanel, relPanel: relPanel, statusPanel: statusPanel, ssPanels: ssPanels, ssLegend: ssLegend, ssTable: ssTable, valChart: valChart, valLine: valLine, pctNow: pctNow, peersPicture: peersPicture, peersTable: peersTable, peersKey: peersKey, ladderKey: ladderKey, insightsRender: insightsRender, addsRender: addsRender,
     renderRatings: renderRatings, renderContext: renderContext, renderJudgement: renderJudgement, renderPlaceholders: renderPlaceholders, renderExperiment: renderExperiment, overlay: overlay, CRIT_WORDS: CRIT_WORDS, addDays: addDays, ordinal: ordinal };
 })();
