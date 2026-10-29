@@ -8,7 +8,7 @@
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 260067,
+   "bytes": 260202,
    "warnings": []
   },
   "CARL.B-DK": {
@@ -18,7 +18,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 286219,
+   "bytes": 286201,
    "warnings": []
   },
   "FEVR-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 294627,
+   "bytes": 294626,
    "warnings": []
   },
   "THEON-NL": {
@@ -48,7 +48,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 273870,
+   "bytes": 273866,
    "warnings": []
   },
   "HTRO-SE": {
@@ -63,7 +63,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 268593,
+   "bytes": 268620,
    "warnings": []
   },
   "HFG-GB": {
@@ -84,5 +84,5 @@
  },
  "failed": [],
  "warnings": [],
- "seconds": 130.5
+ "seconds": 52.8
 }

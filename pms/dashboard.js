@@ -174,6 +174,9 @@
      prominent visual but its the opposite. Fix it". Today's value is now the large filled dot with the largest number; the reading
      the rule decides on is a ring; the arrow under the track runs from the last month-end's reading to today's value (D-PMS-V4-101). */
   var TREND = { away: '#1a7f37', towards: '#a40e26', flat: '#8b949e' };
+  var NOREAD = { C1: 'No Industry RS reading on the day this rule reads it.', C2: 'No reading: the 200-day average of relative price needs at least 150 days of prices.',
+    C3s: 'No Sector RS reading at the month-end.', C34: 'No Stock RS reading at the month-end: Stock RS needs about a year (253 sessions) of prices.',
+    C4b: 'No Net Upgrade Breadth reading at the month-end.', C5: 'No reading: the 52-week high of relative price needs about 200 days of prices.' };
   function stateCol(st) { return st === 'fires' ? C.red : st === 'near' ? C.amber : st === 'info' ? C.neutral : C.ink; }
   function markOf(r, k) { return r.marks.filter(function (q) { return q.kind === k; })[0] || null; }
   function todayMark(r) { var t = markOf(r, 'today'); if (t && t.v != null) return t; var l = markOf(r, 'latest'); return (r.ruleIsToday && l && l.v != null) ? l : null; }
@@ -351,19 +354,19 @@
     m.rows.push({ id: 'C2', label: 'The 200-day average of relative price: change over the month', sub: 'read each Friday; sells at 0 or below', lo: -0.04, hi: 0.08, trigger: 0, triggerSide: 'below', fmt: function (v) { return br((v * 100).toFixed(0) + '%'); }, state: info ? 'info' : c2.fires ? 'fires' : near(c2.value, 0, 0.01) ? 'near' : 'clear',
       marks: [{ v: e ? e.slope : null, kind: 'entry', label: 'bought' }, { v: sl(m.me3), kind: 'm3' }, { v: sl(m.me1), kind: 'm1' }, { v: sl(m.trendFrom), kind: 'tf' }, { v: c2.value, kind: 'latest' }, { v: c2.today, kind: 'today' }],
       text: (c2.fires ? 'Met: the average ' : 'The average ') + (Math.abs(c2.value) < 0.0005 ? 'was flat (a change of less than 0.1%)' : (c2.value >= 0 ? 'rose ' : 'fell ') + Math.abs(c2.value * 100).toFixed(1) + '%') + ' over the month to ' + fmtD(c2.reading_day) + '.', text2: e && e.slope != null ? 'When tranche 1 was bought, it had ' + (e.slope >= 0 ? 'risen ' : 'fallen ') + Math.abs(e.slope * 100).toFixed(1) + '% over the month.' : '' });
-    var v3 = c3.value, s3met = v3.sector_rs < 50, s3other = v3.stock_rs < 70;
+    var v3 = c3.value, s3met = v3.sector_rs != null && v3.sector_rs < 50, s3other = v3.stock_rs != null && v3.stock_rs < 70;   /* 29-Oct-2026 re-check: a missing reading is never "below" a line */
     var r3 = function (d, k) { var q = d ? rsAt(d) : null; return q ? q[k] : null; };
     m.rows.push({ id: 'C3s', label: 'Sector RS below 50 (sells with Stock RS below 70)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 50, triggerSide: 'below', state: info ? 'info' : c3.fires ? 'fires' : (s3met || s3other || near(v3.sector_rs, 50, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.sec : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 'sec'), kind: 'm3' }, { v: r3(m.me1, 'sec'), kind: 'm1' }, { v: r3(m.trendFrom, 'sec'), kind: 'tf' }, { v: v3.sector_rs, kind: 'latest' }, { v: (c3.today || {}).sector_rs, kind: 'today' }],
-      text: c3.fires ? 'Met: Sector RS was ' + v3.sector_rs + ' and Stock RS ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end.' : s3met ? 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, below 50, but Stock RS ' + v3.stock_rs + ' was not below 70.' : 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.sector_rs - 50) + ' above 50.', text2: e ? 'It was ' + e.sec + ' when tranche 1 was bought.' : '' });
-    m.rows.push({ id: 'C34', label: 'Stock RS: 70 line (sells with Sector RS below 50); 50 line (sells with analysts cutting)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 70, trigger2: 50, triggerSide: 'below', state: info ? 'info' : (c3.fires || c4.fires) ? 'fires' : (v3.stock_rs < 70 || near(v3.stock_rs, 70, 10)) ? 'near' : 'clear',
+      text: c3.fires ? 'Met: Sector RS was ' + v3.sector_rs + ' and Stock RS ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end.' : s3met ? 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, below 50, but ' + (v3.stock_rs == null ? 'Stock RS has no reading.' : 'Stock RS ' + v3.stock_rs + ' was not below 70.') : 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.sector_rs - 50) + ' above 50.', text2: e ? 'It was ' + e.sec + ' when tranche 1 was bought.' : '' });
+    m.rows.push({ id: 'C34', label: 'Stock RS: 70 line (sells with Sector RS below 50); 50 line (sells with analysts cutting)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 70, trigger2: 50, triggerSide: 'below', state: info ? 'info' : (c3.fires || c4.fires) ? 'fires' : (s3other || near(v3.stock_rs, 70, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.s : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 's'), kind: 'm3' }, { v: r3(m.me1, 's'), kind: 'm1' }, { v: r3(m.trendFrom, 's'), kind: 'tf' }, { v: v3.stock_rs, kind: 'latest' }, { v: (c3.today || {}).stock_rs, kind: 'today' }],
       text: 'Stock RS was ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.stock_rs < 50 ? 'below both lines.' : v3.stock_rs < 70 ? 'below 70 but above 50.' : (v3.stock_rs - 70) + ' above 70.'), text2: e ? 'It was ' + e.s + ' when tranche 1 was bought.' : '' });
     var v4 = c4.value || {}, b4 = minNub({ sales: v4.ss_sales_nub100, tp: v4.ss_pt_nub100 });
     m.rows.push({ id: 'C4b', label: 'Net Upgrade Breadth, the weaker of the two counts (sells with Stock RS below 50)', sub: 'read at the month-end on the 100-day count', lo: -1, hi: 1, trigger: 0, triggerSide: 'below', fmt: function (v) { return pctS(v); }, state: info ? 'info' : c4.fires ? 'fires' : (b4 != null && b4 <= 0.1) ? 'near' : 'clear',
       marks: [{ v: e ? minNub(nubAt(e.grid_day)) : null, kind: 'entry', label: 'bought' }, { v: m.me3 ? minNub(nubAt(m.me3)) : null, kind: 'm3' }, { v: m.me1 ? minNub(nubAt(m.me1)) : null, kind: 'm1' }, { v: m.trendFrom ? minNub(nubAt(m.trendFrom)) : null, kind: 'tf' }, { v: b4, kind: 'latest' }],
       text: v4.analyst_data === false ? 'No analyst data was held at the ' + fmtD(c4.reading_day) + ' month-end.' : (c4.fires ? 'Met: ' : '') + 'Net Upgrade Breadth was ' + (v4.ss_sales_nub100 == null ? 'not available' : pctS(v4.ss_sales_nub100)) + ' on sales estimates and ' + (v4.ss_pt_nub100 == null ? 'not available' : pctS(v4.ss_pt_nub100)) + ' on target prices at the ' + fmtD(c4.reading_day) + ' month-end.',
-      text2: 'Stock RS was ' + v4.stock_rs + (v4.stock_rs < 50 ? ', below 50, so this rule can sell.' : ', above 50, so this rule cannot sell yet.') });
+      text2: v4.stock_rs == null ? 'Stock RS has no reading, so this rule cannot sell.' : 'Stock RS was ' + v4.stock_rs + (v4.stock_rs < 50 ? ', below 50, so this rule can sell.' : ', above 50, so this rule cannot sell yet.') });
     var dl = dailyAt(m.asof) || {}, cl = dl.c;
     var rd = function (d) { var q = d ? dailyAt(d) : null; return q ? q.rdh : null; };
     m.rows.push({ id: 'C5', label: 'Relative price against its 52-week high (sells more than 25% below)', sub: 'read at the month-end; sells the whole holding', lo: -0.5, hi: 0, trigger: -0.25, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: info ? 'info' : c5.fires ? 'fires' : near(c5.value, -0.25, 0.05) ? 'near' : 'clear',
@@ -398,11 +401,12 @@
     var c3t_ = c3.today || {}, SSm = (Hd.ss || {}).metrics || {}, lastBD = function (k) { var a = ((SSm[k] || {}).breadth_daily || []).filter(function (q) { return q.v != null; }); return a.length ? a[a.length - 1] : null; };
     var bS = lastBD('sales'), bP = lastBD('tp'), bT = minNub({ sales: bS ? bS.v : null, tp: bP ? bP.v : null }), bTd = [bS, bP].filter(Boolean).map(function (q) { return q.d; }).sort().pop() || null;
     var stT = c3t_.stock_rs, seT = c3t_.sector_rs;
+    var lt = function (a, b) { return a != null && b != null && a < b; };   /* 29-Oct-2026 re-check: null is never below a line */
     var tState = {
       C1: function (v) { return v < 30 ? 'fires' : near(v, 30, 10) ? 'near' : 'clear'; },
       C2: function (v) { return v <= 0 ? 'fires' : near(v, 0, 0.01) ? 'near' : 'clear'; },
-      C3s: function (v) { return (v < 50 && stT < 70) ? 'fires' : (v < 50 || stT < 70 || near(v, 50, 10)) ? 'near' : 'clear'; },
-      C34: function (v) { return ((v < 70 && seT < 50) || (v < 50 && bT != null && bT < 0)) ? 'fires' : (v < 70 || near(v, 70, 10)) ? 'near' : 'clear'; },
+      C3s: function (v) { return (v < 50 && lt(stT, 70)) ? 'fires' : (v < 50 || lt(stT, 70) || near(v, 50, 10)) ? 'near' : 'clear'; },
+      C34: function (v) { return ((v < 70 && lt(seT, 50)) || (v < 50 && bT != null && bT < 0)) ? 'fires' : (v < 70 || near(v, 70, 10)) ? 'near' : 'clear'; },
       C4b: function (v) { return (v < 0 && stT != null && stT < 50) ? 'fires' : v <= 0.1 ? 'near' : 'clear'; },
       C5: function (v) { return v < -0.25 ? 'fires' : near(v, -0.25, 0.05) ? 'near' : 'clear'; }
     };
@@ -416,6 +420,9 @@
       if (r.state === 'info') { r.todayState = 'info'; return; }
       var t = r.marks.filter(function (q) { return q.kind === 'today'; })[0];
       if (t && t.v != null && tState[r.id]) r.todayState = tState[r.id](t.v);
+      /* 29-Oct-2026 re-check (Ashtead and six other recent listings): no reading on the rule's day is said plainly, never as a number */
+      var la_ = r.marks.filter(function (q) { return q.kind === 'latest'; })[0];
+      if (!la_ || la_.v == null) { r.state = 'clear'; r.noReading = true; r.text = NOREAD[r.id] || 'No reading on the day this rule reads it.'; r.text2 = ''; }
     });
     var order = { fires: 0, near: 1, clear: 2, info: 3 };
     /* 18-Oct-2026 re-check: "nearest first" now means nearest, measured as the distance from the reading the rule acts on to the
