@@ -18,7 +18,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 296681,
+   "bytes": 296663,
    "warnings": []
   },
   "FEVR-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 308081,
+   "bytes": 308085,
    "warnings": []
   },
   "THEON-NL": {
@@ -48,7 +48,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 287644,
+   "bytes": 287648,
    "warnings": []
   },
   "HTRO-SE": {
@@ -84,5 +84,5 @@
  },
  "failed": [],
  "warnings": [],
- "seconds": 72.6
+ "seconds": 74.4
 }
