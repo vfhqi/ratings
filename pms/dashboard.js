@@ -1412,7 +1412,7 @@
     if (!I || !I.items || !I.items.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written at the APM PMS Q&amp;A SOP run of ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     var tagged = I.items.some(function (it) { return it.id; });
-    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when it is clear, with little change; <b class="ck-green">green</b> when it is clear and has moved away.' : '');
+    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when there is no sell signal and little change, or when the test is information only (a Probing Bet\'s six Sell Criteria; a Core Investment\'s MA SLs); <b class="ck-green">green</b> when there is no sell signal and it has moved away.' : '');
   }
   function addsRender(host, say, m) {
     var I = m.H.insights, A = I && I.adds;

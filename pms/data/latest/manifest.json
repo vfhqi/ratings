@@ -3,12 +3,12 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 277074,
+   "bytes": 277062,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 263282,
+   "bytes": 263279,
    "warnings": []
   },
   "CARL.B-DK": {
@@ -18,71 +18,81 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 290393,
-   "warnings": []
+   "bytes": 290489,
+   "warnings": [
+    "check rs: stock_rs on 2026-09-30 drawn 40, the reader says 39; the reader's value is used"
+   ]
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 289940,
+   "bytes": 289942,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 300369,
+   "bytes": 300365,
    "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 202467,
+   "bytes": 202469,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 301023,
+   "bytes": 301007,
    "warnings": []
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 280385,
-   "warnings": []
+   "bytes": 280480,
+   "warnings": [
+    "check rs: sector_rs on 2026-09-30 drawn 29, the reader says 27; the reader's value is used"
+   ]
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 280844,
+   "bytes": 280835,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 286164,
+   "bytes": 286173,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 292095,
+   "bytes": 292106,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 274839,
-   "warnings": []
+   "bytes": 274919,
+   "warnings": [
+    "check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
+   ]
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 291970,
+   "bytes": 292132,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 287550,
+   "bytes": 287560,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 267343,
+   "bytes": 267367,
    "warnings": []
   }
  },
  "failed": [],
- "warnings": [],
- "seconds": 59.7
+ "warnings": [
+  "CVSG-GB: check rs: stock_rs on 2026-09-30 drawn 40, the reader says 39; the reader's value is used",
+  "XVIVO-SE: check rs: sector_rs on 2026-09-30 drawn 29, the reader says 27; the reader's value is used",
+  "DIE-BE: check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
+ ],
+ "seconds": 74.7
 }
