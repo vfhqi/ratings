@@ -1,98 +1,88 @@
 {
- "asof": "2026-10-28",
+ "asof": "2026-10-29",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 277062,
+   "bytes": 277095,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 263279,
+   "bytes": 263268,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 284678,
+   "bytes": 284756,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 290471,
-   "warnings": [
-    "check rs: stock_rs on 2026-09-30 drawn 40, the reader says 39; the reader's value is used"
-   ]
+   "bytes": 290445,
+   "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 289942,
+   "bytes": 289926,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 300365,
+   "bytes": 300443,
    "warnings": []
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 202469,
+   "bytes": 202648,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 301007,
+   "bytes": 301041,
    "warnings": []
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 280480,
-   "warnings": [
-    "check rs: sector_rs on 2026-09-30 drawn 29, the reader says 27; the reader's value is used"
-   ]
+   "bytes": 280478,
+   "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 280831,
+   "bytes": 280804,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 286173,
+   "bytes": 286299,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 292103,
+   "bytes": 292178,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 274946,
-   "warnings": [
-    "check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
-   ]
+   "bytes": 274816,
+   "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 292132,
+   "bytes": 292138,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 287560,
+   "bytes": 287632,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 267367,
+   "bytes": 267423,
    "warnings": []
   }
  },
  "failed": [],
- "warnings": [
-  "CVSG-GB: check rs: stock_rs on 2026-09-30 drawn 40, the reader says 39; the reader's value is used",
-  "XVIVO-SE: check rs: sector_rs on 2026-09-30 drawn 29, the reader says 27; the reader's value is used",
-  "DIE-BE: check rs: sector_rs on 2026-09-30 drawn 35, the reader says 33; the reader's value is used"
- ],
- "seconds": 70.9
+ "warnings": [],
+ "seconds": 54.4
 }
