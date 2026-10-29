@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-27",
+ "current_week": "2026-10-28",
  "prior_week": "2026-08-28",
  "industry": {
   "A. Consumer staples": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "A.2. Tobacco": {
@@ -106,11 +106,11 @@
    "prior": "D"
   },
   "B.5. Medtech - consumables": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
-   "current": "B",
+   "current": "A",
    "prior": "B"
   },
   "B.7. Pharma/biotech": {
@@ -118,7 +118,7 @@
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
@@ -130,11 +130,11 @@
    "prior": "D"
   },
   "D.3. Infrastructure - telecom towers": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "E.1. Utilities - regulated networks": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "E.2. Utilities - integrated and multi-utilities": {
@@ -154,7 +154,7 @@
    "prior": "D"
   },
   "G.1. Insurance": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "G.10. Asset and wealth managers": {
@@ -166,7 +166,7 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -221,12 +221,12 @@
    "current": "A",
    "prior": "A"
   },
-  "H.6. Gambling - B2C operators": {
+  "H.6. Gambling - operators and B2B suppliers": {
    "current": "F",
-   "prior": "F"
+   "prior": "D"
   },
   "H.9. Hotels, leisure and hospitality": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "I.1. Logistics": {
@@ -246,12 +246,12 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "J.5. Software - VMS": {
    "current": "C",
-   "prior": "B"
+   "prior": "F"
   },
   "J.7. Software - Computer games": {
    "current": "F",
@@ -266,7 +266,7 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "K.11. Information services": {
@@ -299,7 +299,7 @@
   },
   "M.3. Chemicals - Specialty and industrial gases": {
    "current": "B",
-   "prior": "D"
+   "prior": "C"
   },
   "M.4. Chemicals - Base": {
    "current": "F",
@@ -358,8 +358,8 @@
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "B",
-   "prior": "C"
+   "current": "C",
+   "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
    "current": "B",
@@ -382,7 +382,7 @@
    "prior": "C"
   },
   "O.8. Mining, construction and material-handling equipment": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "P.1. Energy - downstream distribution": {
@@ -402,7 +402,7 @@
    "prior": "D"
   },
   "P.5. Metals and mining": {
-   "current": "C",
+   "current": "D",
    "prior": "A"
   }
  }
