@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-28",
+ "current_week": "2026-10-29",
  "prior_week": "2026-08-28",
  "industry": {
   "A. Consumer staples": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "A.2. Tobacco": {
@@ -102,7 +102,7 @@
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "B.5. Medtech - consumables": {
@@ -122,15 +122,15 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "D.3. Infrastructure - telecom towers": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "E.1. Utilities - regulated networks": {
@@ -226,11 +226,11 @@
    "prior": "D"
   },
   "H.9. Hotels, leisure and hospitality": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "I.1. Logistics": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "J.1. IT services - consulting": {
@@ -238,7 +238,7 @@
    "prior": "B"
   },
   "J.2. IT services - reselling": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "J.3. Fintech/payment processing": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "J.5. Software - VMS": {
@@ -254,7 +254,7 @@
    "prior": "F"
   },
   "J.7. Software - Computer games": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "J.8. Hardware": {
@@ -266,7 +266,7 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "K.11. Information services": {
@@ -354,11 +354,11 @@
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
@@ -374,7 +374,7 @@
    "prior": "D"
   },
   "O.4. Electrical equipment, grid and automation": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "O.7. Flow control, process and production machinery": {
@@ -382,7 +382,7 @@
    "prior": "C"
   },
   "O.8. Mining, construction and material-handling equipment": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "P.1. Energy - downstream distribution": {
@@ -402,7 +402,7 @@
    "prior": "D"
   },
   "P.5. Metals and mining": {
-   "current": "D",
+   "current": "C",
    "prior": "A"
   }
  }
