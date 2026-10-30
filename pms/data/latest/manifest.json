@@ -13,7 +13,7 @@
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 284756,
+   "bytes": 284754,
    "warnings": []
   },
   "CVSG-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 300443,
+   "bytes": 300453,
    "warnings": []
   },
   "THEON-NL": {
@@ -68,7 +68,7 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 292138,
+   "bytes": 292153,
    "warnings": []
   },
   "ALFEN-NL": {
@@ -84,5 +84,5 @@
  },
  "failed": [],
  "warnings": [],
- "seconds": 54.4
+ "seconds": 95.3
 }
