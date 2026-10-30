@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-10-29",
+ "current_week": "2026-10-30",
  "prior_week": "2026-08-28",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "F"
   },
   "D. Infrastructure": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "E. Utilities": {
@@ -60,7 +60,7 @@
    "prior": "F"
   },
   "O. Industrials and capital goods": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -70,11 +70,11 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "A.4. Household products": {
@@ -86,7 +86,7 @@
    "prior": "C"
   },
   "A.6. Food production": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "A.7. General retail": {
@@ -102,7 +102,7 @@
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "B.5. Medtech - consumables": {
@@ -122,11 +122,11 @@
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "D.3. Infrastructure - telecom towers": {
@@ -138,7 +138,7 @@
    "prior": "C"
   },
   "E.2. Utilities - integrated and multi-utilities": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "E.3. Utilities - renewable generators and developers": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "F.2. Defence - Non-primes": {
@@ -158,11 +158,11 @@
    "prior": "B"
   },
   "G.10. Asset and wealth managers": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "G.13. Banks": {
-   "current": "B",
+   "current": "C",
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
@@ -210,7 +210,7 @@
    "prior": "F"
   },
   "H.2. Retail - apparel": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "H.3. Retail - general/physical": {
@@ -223,14 +223,14 @@
   },
   "H.6. Gambling - operators and B2B suppliers": {
    "current": "F",
-   "prior": "D"
+   "prior": "F"
   },
   "H.9. Hotels, leisure and hospitality": {
    "current": "B",
    "prior": "C"
   },
   "I.1. Logistics": {
-   "current": "B",
+   "current": "A",
    "prior": "B"
   },
   "J.1. IT services - consulting": {
@@ -250,7 +250,7 @@
    "prior": "C"
   },
   "J.5. Software - VMS": {
-   "current": "C",
+   "current": "B",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -259,10 +259,10 @@
   },
   "J.8. Hardware": {
    "current": "D",
-   "prior": "F"
+   "prior": "D"
   },
   "J.9. Semiconductors": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
@@ -302,7 +302,7 @@
    "prior": "C"
   },
   "M.4. Chemicals - Base": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "M.6. Construction and infrastructure contractors": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "C",
+   "current": "B",
    "prior": "A"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
@@ -358,19 +358,19 @@
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.2. Building technology and products": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "O.4. Electrical equipment, grid and automation": {
@@ -402,7 +402,7 @@
    "prior": "D"
   },
   "P.5. Metals and mining": {
-   "current": "C",
+   "current": "F",
    "prior": "A"
   }
  }
