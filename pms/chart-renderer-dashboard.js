@@ -1,6 +1,6 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.5 on 2026-10-30T06:12:02 from master-dashboard/index.html (md5 61f90d1c05a31562c7474ec9884cec6d),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 17. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.6 on 2026-10-30T16:54:02 from master-dashboard/index.html (md5 61f90d1c05a31562c7474ec9884cec6d),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 18. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
@@ -459,7 +459,7 @@ function chartLegendHTML(){
     {key:"ma5",label:"MA-5D",color:"#8b0000"},{key:"ma10",label:"MA-10D",color:"#e88a9a"},
     {key:"ma20",label:"MA-20D",color:"#e74c3c"},{key:"ma50",label:"MA-50D",color:"#ff8c00"},
     {key:"ma100",label:"MA-100D",color:"#2ca02c"},{key:"ma150",label:"MA-150D",color:"#1a5276"},
-    {key:"ma200",label:"MA-200D",color:"#4a3d9e"},{key:"obv",label:"OBV",color:"#bc8cff"},
+    {key:"ma200",label:"MA-200D (absolute)",color:"#4a3d9e"} /* PMS-DASH 18 (30-Oct-2026, Richard: "Make sure any reference to the 200D MAs is called either relative or absolute") */,{key:"obv",label:"OBV",color:"#bc8cff"},
     {key:"vol",label:"Volume",color:"rgba(204,180,0,0.6)"},{key:"vol50",label:"Vol 50D MA",color:"#9a6700"},
     {key:"vol20",label:"Vol 20D MA",color:"#0969da"}
   ];
