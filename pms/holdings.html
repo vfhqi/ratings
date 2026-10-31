@@ -144,7 +144,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
       if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
       if (sd) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sd) + ', so the rule allows no add.';
-      var A = ahead(R); if (add.allowed && A.length) return '<b>Yes today, but not if the expected sell signal comes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital now, but on the latest daily readings ' + A.map(function (a) { return a.words; }).join(', and ') + ', which would give a sell signal at ' + A[0].when + ' and stop adds.';
+      var A = ahead(R); if (add.allowed && A.length) return DASH.aheadAddWords(A, add);   /* 31-Oct-2026: one copy, in dashboard.js */
       if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
       if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion gives a sell signal, so the rule allows no add.';
       var w = String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '');

@@ -259,7 +259,7 @@
       /* round 3 (17-Oct-2026): the right-hand readings are short sentences, wrapped to the column */
       var wrap = function (s, n) { var out = [], cur = ''; String(s || '').split(' ').forEach(function (w) { if ((cur + ' ' + w).trim().length > n && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); return out; };
       var n1 = Math.floor((RW - 16) / 6.4), n2 = Math.floor((RW - 16) / 5.3), ty = top + 19;
-      var l1s = wrap(r.text, n1).slice(0, 3), l2s = wrap(info ? 'Information only: the moving-average stop decides the sale.' : r.text2, n2).slice(0, Math.max(2, 5 - l1s.length));
+      var l1s = wrap(r.text, n1).slice(0, 3), l2s = wrap(info ? (/^MA/.test(r.id || '') ? 'Information only: the six Sell Criteria decide the sale.' : 'Information only: the moving-average stop decides the sale.') : r.text2, n2).slice(0, Math.max(2, 5 - l1s.length));
       l1s.forEach(function (l) { txt(g, x1 + 12, ty, l, { fill: col, 'font-size': 11.5, 'font-weight': 700 }); ty += 13; });
       l2s.forEach(function (l) { txt(g, x1 + 12, ty, l, { fill: info ? C.neutral : C.ink2, 'font-size': 10 }); ty += 12; });
     });
@@ -349,7 +349,7 @@
   function lookAhead(R, asof, nubToday) {
     if (!R || !R.criteria || !asof) return [];
     var c = {}; R.criteria.forEach(function (x) { c[x.id] = x; }); var out = [], fr = nextFriday(asof), me = monthEndOf(asof);
-    var add = function (id, words, day) { if (c[id].reading_day && c[id].reading_day >= day) return; /* the formal reading for that day has been taken: it decides, not the look-ahead */ out.push({ id: id, words: words, day: day, when: day === me ? 'the ' + fmtD(day) + ' month-end reading' : 'the Friday ' + fmtD(day) + ' reading' }); };
+    var add = function (id, words, day) { if (c[id].reading_day && c[id].reading_day >= day) return; /* the formal reading for that day has been taken: it decides, not the look-ahead */ out.push({ id: id, words: words, day: day, near: (D(day) - D(asof)) / 864e5 <= 7, when: day === me ? 'the ' + fmtD(day) + ' month-end reading' : 'the Friday ' + fmtD(day) + ' reading' }); };
     if (c.C1 && !c.C1.fires && c.C1.today != null && c.C1.today < 30) add('C1', 'Industry RS is ' + c.C1.today + ', below 30', fr);
     if (c.C2 && !c.C2.fires && c.C2.today != null && c.C2.today <= 0) add('C2', 'the relative 200D MA is ' + (c.C2.today < 0 ? 'falling' : 'flat') + ' over the month', fr);
     var t3 = (c.C3 && c.C3.today) || {};
@@ -363,7 +363,11 @@
     var g = {}; A.forEach(function (a) { (g[a.when] = g[a.when] || []).push(a.words); });
     return 'On the latest daily readings (' + fmtD(asof) + '), ' + Object.keys(g).map(function (w) { return g[w].join(', and ') + ': a sell signal if still so at ' + w; }).join('; ') + '.';
   }
-  function aheadPill(A) { if (!A || !A.length) return ''; var w = A.map(function (a) { return a.when; }).sort()[0]; return 'SELL SIGNAL LIKELY AT ' + w.replace(/^the /, '').replace(' reading', '').toUpperCase(); }
+  /* 31-Oct-2026 re-check (D-PMS-V4-126): "likely" only when the reading day is within a week; a month-end reading weeks away is only "if still so" */
+  function aheadPill(A) { if (!A || !A.length) return ''; var a0 = A.slice().sort(function (p, q) { return p.day < q.day ? -1 : 1; })[0]; return (a0.near ? 'SELL SIGNAL LIKELY AT ' : 'SELL SIGNAL IF STILL SO AT ') + a0.when.replace(/^the /, '').replace(' reading', '').toUpperCase(); }
+  /* the add words with a look-ahead, one copy for the per-stock page and the holdings list page */
+  function aheadAddWords(A, add) { var a0 = A.slice().sort(function (p, q) { return p.day < q.day ? -1 : 1; })[0];
+    return '<b>Yes today, but not if ' + (a0.near ? 'the expected' : 'that') + ' sell signal comes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital now, but on the latest daily readings ' + A.map(function (a) { return a.words; }).join(', and ') + ', which would give a sell signal at ' + a0.when + ' and stop adds.'; }
   function model(Hd) {
     expandCols(Hd);
     var R = Hd.reading, m = { H: Hd, R: R };
@@ -443,7 +447,7 @@
       var s = t.s, pts = s.pts || [];
       var stopAt = function (d) { var v = null; for (var i = 0; i < pts.length; i++) { if (pts[i][0] <= d) v = pts[i][1]; else break; } return v; };
       var dAbove = function (d) { if (!d) return null; var st = stopAt(d), c = dailyAt(d); return (st != null && c && c.c) ? (c.c - st) / c.c : null; };
-      var now = dAbove(m.asof), ma = s.stop_ma === '200D' ? 'absolute 200D MA' : String(s.stop_ma || '').replace('D', '-day') + ' average';
+      var now = dAbove(m.asof), ma = s.stop_ma === '200D' ? 'absolute 200D MA' : String(s.stop_ma || '') + ' MA';
       var st = t.info ? 'info' : t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (now != null && now <= 0.05)) ? 'near' : 'clear';
       m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + '\'s MA SL, the ' + ma + ' less 2%', sub: t.info ? 'information only: MA SLs sell Early Innings Probing Bets only (your ruling of 29-Oct-2026)' : 'the five-day stop rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
         marks: [{ v: dAbove(t.entry), kind: 'entry', label: 'bought' }, { v: dAbove(m.me3), kind: 'm3' }, { v: dAbove(m.me1), kind: 'm1' }, { v: dAbove(m.me0), kind: 'm0' }, { v: dAbove(m.trendFrom), kind: 'tf' }, { v: now, kind: 'latest' }],
@@ -507,6 +511,47 @@
     if (o === 'no signal' || !o) return (ma ? ma.slice(1) + ' ' : '') + (m.ahead && m.ahead.length ? 'No sell signal yet at the six Sell Criteria\'s last readings. ' + m.earlyText : 'No sell signal from any of the six Sell Criteria.');
     return o + ma;
   }
+  /* 31-Oct-2026 re-check (D-PMS-V4-126): the per-stock page's header had no order line, so after the 30-Oct month-end Arteche's page
+     said nowhere at the top that the rules sell it on Tuesday 3-Nov, while items 11 and 12, written on the 29-Oct readings, still said
+     "no sell signal" and "the rules allow an add". One line now says what the rules do today, from the readings, with the add room. */
+  var ME_TESTS = { C3: 1, C4: 1, C5: 1 };
+  function firedWords(m) {
+    return m.fired.map(function (id) { var c = m.c(id), w = CRIT_WORDS[id] || id; w = w.replace(/^(Relative|The|A) /, function (s) { return s.toLowerCase(); });   /* Sector RS, Stock RS and Industry RS keep their capitals */
+      return w + ' (' + (ME_TESTS[id] ? 'the ' + fmtD(c.reading_day) + ' month-end reading' : 'the Friday ' + fmtD(c.reading_day) + ' reading') + ')'; }).join('; ');
+  }
+  function orderLine(m) {
+    if (m.notHeld) return '';
+    var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order, tue = (/(\d{4}-\d{2}-\d{2})/.exec(o || '') || [])[1], pill = '', words;
+    if (m.probing) words = esc(stateWords(m));
+    else if (/^AWAITING/.test(o) && m.fired.length) { pill = 'AWAITING REPLACEMENT'; words = '<b>Sell signal:</b> ' + esc(firedWords(m)) + '. It is held under your one-off in/out link, so the rules sell it when its replacement is bought.'; }
+    else if (/^SELL/.test(o) && m.fired.length) { pill = 'SELL ON TUESDAY' + (tue ? ' ' + fmtD(tue).toUpperCase() : ''); words = '<b>Sell signal:</b> ' + esc(firedWords(m)) + '. The rules sell the whole holding at the Tuesday ' + (tue ? fmtD(tue) + ' ' : '') + 'session.'; }
+    else if (/^(SELL|AWAITING)/.test(o)) { pill = /^AWAITING/.test(o) ? 'AWAITING REPLACEMENT' : 'SELL ON TUESDAY'; words = esc(o); }
+    else if (m.ahead && m.ahead.length) { pill = aheadPill(m.ahead); words = '<b>No sell signal yet</b> at the six Sell Criteria\'s last readings. ' + esc(m.earlyText); }
+    else words = '<b>No sell signal</b> from any of the six Sell Criteria.';
+    return '<div class="sub orderline">' + (pill ? '<span class="pill red">' + esc(pill) + '</span> ' : '') + words + '</div>' +
+      '<div class="sub">Room to add: ' + roomWords(m, m.R.add_rule || {}) + '</div>';
+  }
+  /* items 11 and 12 are written at a run, on that day's readings; when a Friday or month-end reading has been taken since, say so above
+     them, with what that reading gives, so the written text can never stand alone against today's readings */
+  function writtenBefore(m, wr) {
+    if (!wr || m.notHeld) return '';
+    var days = {}; m.R.criteria.forEach(function (c) { if (c.reading_day && c.reading_day > wr) days[c.reading_day] = 1; });
+    var dl = Object.keys(days).sort(); if (!dl.length) return '';
+    var f = firedWords(m), n = m.fired.length, o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order, tue = (/(\d{4}-\d{2}-\d{2})/.exec(o || '') || [])[1];
+    var gives = m.probing ? (n ? (n === 1 ? 'would give a sell signal' : 'would give sell signals') + ' for a Core Investment (information only for an Early Innings Probing Bet): ' + f : 'would give no sell signal even for a Core Investment')
+      : n ? (n === 1 ? 'give a sell signal: ' : 'give sell signals: ') + f + (/^AWAITING/.test(o) ? '. It is held under your one-off in/out link, so the rules sell it when its replacement is bought' : /^SELL/.test(o) ? '. The rules sell the whole holding at the Tuesday ' + (tue ? fmtD(tue) + ' ' : '') + 'session' : '')
+      : 'give no sell signal from the six Sell Criteria';
+    return '<div class="wbefore" style="border-left:3px solid ' + C.amber + ';background:rgba(191,135,0,0.08);padding:6px 10px;margin:2px 0 10px;font-size:13px;line-height:1.45">' +
+      '<b>Written before the ' + dl.map(function (d) { return fmtD(d); }).join(' and ') + ' readings.</b> The ' + dl.map(function (d) { return fmtD(d); }).join(' and ') + ' readings ' + esc(gives) + '. ' +
+      'Where this text differs from the top of the page or item 10 (Distance from SLs), those show today\'s readings.</div>';
+  }
+  /* item 12's two rule items are coloured from today's readings for a Core Investment (the writer's colour is for the day it was written) */
+  function ruleColour(m, it) {
+    if (m.probing || !it || !it.criterion) return it.id;
+    if (/^The rules: no sell signal/.test(it.criterion)) return m.metCount ? 'red' : (m.ahead && m.ahead.length ? 'grey' : 'green');
+    if (/^The rules: room below/.test(it.criterion)) { var r = (m.R.add_rule || {}).room_pct; return r == null ? it.id : r >= 1.67 ? 'green' : r > 0 ? 'grey' : 'red'; }
+    return it.id;
+  }
   function oneLine(m) {
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
@@ -526,7 +571,7 @@
     if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
     if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
     if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
-    if (add.allowed && m.ahead && m.ahead.length) return '<b>Yes today, but not if the expected sell signal comes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital now, but on the latest daily readings ' + m.ahead.map(function (a) { return a.words; }).join(', and ') + ', which would give a sell signal at ' + m.ahead[0].when + ' and stop adds.';
+    if (add.allowed && m.ahead && m.ahead.length) return aheadAddWords(m.ahead, add);
     if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
     if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion gives a sell signal, so the rule allows no add.';
     return '<b>No:</b> it holds ' + esc(String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '')) + '.';
@@ -594,7 +639,7 @@
         var lvl = g[0].stop_level ? fpx(g[0].stop_level) + ': ' : '';
         /* 29-Oct-2026 08:45 (Richard: "mention which MA each refers to"): "869: 50D MA SL, tranche 3"; "860: 150D MA SL, tranches 1 and 2" */
         var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0];
-        lines.push({ label: m.probing ? lvl + 'the stop, the ' + (g[0].stop_ma === '200D' ? 'absolute 200D MA' : String(g[0].stop_ma).replace('D', '-day') + ' average') + ' less 2%' + (short ? '' : ', for ' + trj)
+        lines.push({ label: m.probing ? lvl + 'the stop, the ' + (g[0].stop_ma === '200D' ? 'absolute 200D MA' : String(g[0].stop_ma) + ' MA') + ' less 2%' + (short ? '' : ', for ' + trj)
                                       : lvl + (g[0].stop_ma ? (g[0].stop_ma === '200D' ? 'absolute 200D ' : g[0].stop_ma + ' ') : '') + 'MA SL, ' + trj + ' (information only)', color: m.probing ? '#cf222e' : '#8c959f', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
     }
     var marks = m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
@@ -1443,14 +1488,19 @@
     if (!I || !I.items || !I.items.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written on ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     var tagged = I.items.some(function (it) { return it.id; });
+    var wb11 = writtenBefore(m, I.readings_asof);
     insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when there is no sell signal and little change, or when the test is information only (a Probing Bet\'s six Sell Criteria; a Core Investment\'s MA SLs); <b class="ck-green">green</b> when there is no sell signal and it has moved away.' : '');
+    if (wb11) host.insertAdjacentHTML('afterbegin', wb11);
   }
   function addsRender(host, say, m) {
     var I = m.H.insights, A = I && I.adds;
     if (m.notHeld) { say.textContent = ''; host.innerHTML = '<div class="nohist">Item 12 is written for holdings, at each APM PMS Q&amp;A SOP run; ' + esc(m.name) + ' is not held.</div>'; return; }
     if (!A || !A.length) { say.textContent = ''; host.innerHTML = '<div class="nohist">Written by the Assistant Portfolio Manager at each APM PMS Q&A SOP run. None has been written yet for ' + esc(m.name) + '; it appears after the next run.</div>'; return; }
     say.innerHTML = 'written on ' + fmtDY(I.date) + (I.adds_readings_asof || I.readings_asof ? ', on the readings of ' + fmtDY(I.adds_readings_asof || I.readings_asof) : '');
+    var wb12 = writtenBefore(m, I.adds_readings_asof || I.readings_asof);
+    A = A.map(function (it) { var c = ruleColour(m, it); return c === it.id ? it : Object.assign({}, it, { id: c }); });
     insItems(host, A, m, 'Colour: <b class="ck-green">green</b> when the rule allows an add, or the setup is present; <b class="ck-red">red</b> when the rule blocks an add; <b class="ck-grey">grey</b> when the setup is absent, the case is open for your ruling, the rule does not apply, or the rule allows an add today but the latest daily readings show a sell signal ahead of its next reading day.');
+    if (wb12) host.insertAdjacentHTML('afterbegin', wb12);
   }
 
   /* ------------------------------------------------------------------ the Market chart, front page (Richard, 27b Q3 and 27c, D-PMS-V4-23, V4-37, V4-38):
@@ -1475,7 +1525,7 @@
     stack(cell, { d0: ds[0], d1: ds[ds.length - 1], width: W, left: 52, right: 290, markers: [], panels: [{ h: Hh, labelEdge: true, labelGap: 11.5, labelSize: 9.5, series: series, yDomain: [lo - pd, hi + pd], yFmt: function (v) { return Math.round(v); } }] });
   }
 
-  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
+  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, aheadAddWords: aheadAddWords, orderLine: orderLine, writtenBefore: writtenBefore, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
     rsPanel: rsPanel, relPanel: relPanel, statusPanel: statusPanel, ssPanels: ssPanels, ssLegend: ssLegend, ssTable: ssTable, valChart: valChart, valLine: valLine, pctNow: pctNow, peersPicture: peersPicture, peersTable: peersTable, peersKey: peersKey, ladderKey: ladderKey, insightsRender: insightsRender, addsRender: addsRender,
     renderRatings: renderRatings, renderContext: renderContext, renderJudgement: renderJudgement, renderPlaceholders: renderPlaceholders, renderExperiment: renderExperiment, overlay: overlay, CRIT_WORDS: CRIT_WORDS, addDays: addDays, ordinal: ordinal };
 })();

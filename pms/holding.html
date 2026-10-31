@@ -183,7 +183,7 @@
     document.getElementById('head').innerHTML = '<h1>' + esc(m.name) + ' <span class="tk">' + esc(m.t) + '</span></h1>' +
       '<div class="sub">' + esc(m.ind) + ' &middot; ' + esc(m.sec) + ' &middot; cohort: ' + esc(m.coh || 'none named') + '</div>' +
       (m.notHeld ? '<div class="sub"><span class="pill grey">Not held</span> Sell Criteria 1 to 5 are read as if it were held, as the Master Dashboard reads them; no tranches, MA SLs or item 10.</div>'
-        : '<div class="sub"><span class="pill ' + (m.probing ? 'blue' : 'grey') + '">' + esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital: ' + esc(trs) + '</div>');
+        : '<div class="sub"><span class="pill ' + (m.probing ? 'blue' : 'grey') + '">' + esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital: ' + esc(trs) + '</div>' + DASH.orderLine(m));   /* 31-Oct-2026 (D-PMS-V4-126): what the rules do today, and the room to add, at the top */
   }
   /* items 6 and 7: the Master Dashboard's valuation chart itself, embedded (Richard, 27c: "The valuation charts should be the one from the master dashboard") */
   function valFrames() {
