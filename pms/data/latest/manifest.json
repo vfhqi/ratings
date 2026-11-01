@@ -24,7 +24,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 285966,
+   "bytes": 285964,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
@@ -38,7 +38,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 294406,
+   "bytes": 294402,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
@@ -88,7 +88,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 269345,
+   "bytes": 269363,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
@@ -139,5 +139,5 @@
   "ART-ES: check rs: sector_rs on 2026-10-30 drawn 25, the reader says 26; the reader's value is used",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
  ],
- "seconds": 97.9
+ "seconds": 62.1
 }
