@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-01",
+ "generated": "2026-11-02",
  "count": 346,
  "stocks": {
   "1U1-DE": {
@@ -5568,7 +5568,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -17337,7 +17337,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -19423,7 +19423,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -21559,7 +21559,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": ""
     },
     {
@@ -23044,7 +23044,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -28181,7 +28181,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 57 | B | 7th of 35",
+       "label": "Risks (group judgement) | 57 | B | 8th of 37",
        "question": "Risks",
        "grade": "B",
        "ras": [
@@ -28194,42 +28194,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 64 | B | 8th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 64 | B | 9th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C+ | 11th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C | 13th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 55 | C+ | 10th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 55 | C+ | 11th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 19th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 20th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C+ | 11th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C | 12th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 2nd of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 3rd of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "A",
          "cqs": []
@@ -28244,7 +28244,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 52 | C- | 16th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 52 | C- | 17th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -28259,7 +28259,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 46 | C- | 16th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 46 | C- | 17th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -28274,7 +28274,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 45 | D | 21st of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 45 | D | 23rd of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "D",
          "cqs": []
@@ -30831,7 +30831,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 57 | B | 7th of 35",
+       "label": "Risks (group judgement) | 57 | B | 8th of 37",
        "question": "Risks",
        "grade": "B",
        "ras": [
@@ -30844,42 +30844,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 66 | B+ | 6th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 66 | B | 6th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C+ | 11th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C | 13th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 55 | C+ | 10th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 55 | C+ | 11th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 40 | F | 33rd of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 40 | F | 35th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 14th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 15th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 46 | D | 23rd of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 46 | D | 25th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "D",
          "cqs": []
@@ -30894,7 +30894,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 56 | C | 12th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 56 | C | 13th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -30909,7 +30909,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 34 | F | 31st of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 34 | F | 33rd of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "F",
          "cqs": []
@@ -30924,7 +30924,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 27th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 29th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -31934,7 +31934,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 54 | C | 14th of 35",
+       "label": "Risks (group judgement) | 54 | C- | 15th of 37",
        "question": "Risks",
        "grade": "C",
        "ras": [
@@ -31947,42 +31947,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 21st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 23rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 55 | B | 8th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 55 | C+ | 9th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
-         "grade": "B",
+         "grade": "C",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 18th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 19th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 12th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 13th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 47 | F | 29th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 47 | F | 31st of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B+ | 5th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B | 6th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "B",
          "cqs": []
@@ -31997,7 +31997,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 44 | F | 27th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 44 | F | 28th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -32012,7 +32012,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 46 | C- | 16th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 46 | C- | 17th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -32027,7 +32027,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 60 | A | 3rd of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 60 | A | 3rd of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "A",
          "cqs": []
@@ -37533,7 +37533,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 52 | D | 19th of 35",
+       "label": "Risks (group judgement) | 52 | D | 20th of 37",
        "question": "Risks",
        "grade": "D",
        "ras": [
@@ -37546,42 +37546,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 13th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 15th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 47 | D | 19th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 47 | D | 21st of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 24th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 26th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 70 | A | 1st of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 70 | A | 1st of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 60 | B+ | 5th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 60 | B | 5th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 48 | D | 19th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 48 | D | 21st of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "D",
          "cqs": []
@@ -37596,7 +37596,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 18th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 19th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -37611,7 +37611,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 36 | F | 29th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 36 | F | 31st of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "F",
          "cqs": []
@@ -37626,7 +37626,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 46 | D | 18th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 46 | D | 20th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "D",
          "cqs": []
@@ -37744,7 +37744,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": ""
     },
     {
@@ -53608,7 +53608,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 47 | F | 27th of 35",
+       "label": "Risks (group judgement) | 47 | F | 29th of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -53621,42 +53621,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 21st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 23rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C+ | 11th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 52 | C | 13th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 18th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 19th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 9th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 10th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 25th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 26th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 38 | F | 34th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 38 | F | 36th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "F",
          "cqs": []
@@ -53671,7 +53671,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 40 | F | 31st of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 40 | F | 33rd of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -53686,9 +53686,9 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 38 | D | 26th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 38 | F | 28th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         }
        ]
@@ -53701,7 +53701,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 35 | F | 35th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 35 | F | 37th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -71659,7 +71659,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -100066,7 +100066,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-f"
     },
     {
@@ -140662,7 +140662,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -143840,7 +143840,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 60 | B+ | 4th of 35",
+       "label": "Risks (group judgement) | 60 | B+ | 4th of 37",
        "question": "Risks",
        "grade": "B",
        "ras": [
@@ -143853,42 +143853,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 68 | B+ | 4th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 68 | B+ | 4th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 48 | C- | 17th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 48 | D | 19th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
-         "grade": "C",
+         "grade": "D",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 64 | A | 3rd of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 64 | A | 3rd of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 9th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 10th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 58 | C+ | 9th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 58 | C+ | 10th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B+ | 5th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B | 6th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "B",
          "cqs": []
@@ -143903,7 +143903,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 42 | F | 29th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 42 | F | 30th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -143918,9 +143918,9 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 38 | D | 26th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 38 | F | 28th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         }
        ]
@@ -143933,7 +143933,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 40 | F | 31st of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 40 | F | 33rd of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -144943,7 +144943,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 52 | D | 19th of 35",
+       "label": "Risks (group judgement) | 52 | D | 20th of 37",
        "question": "Risks",
        "grade": "D",
        "ras": [
@@ -144956,42 +144956,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 13th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 15th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 48 | C- | 17th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 48 | D | 19th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
-         "grade": "C",
+         "grade": "D",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 24th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 26th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 52 | C- | 15th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 52 | C- | 16th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 14th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 15th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 55 | C+ | 9th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 55 | C+ | 10th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "C",
          "cqs": []
@@ -145006,7 +145006,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 56 | C | 12th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 56 | C | 13th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -145021,7 +145021,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 47 | C | 15th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 47 | C | 15th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -145036,7 +145036,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 27th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 29th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -157056,7 +157056,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 52 | D | 19th of 35",
+       "label": "Risks (group judgement) | 52 | D | 20th of 37",
        "question": "Risks",
        "grade": "D",
        "ras": [
@@ -157069,42 +157069,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 62 | C+ | 11th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 62 | C | 13th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 50 | C | 14th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 50 | C- | 16th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 47 | D | 22nd of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 47 | D | 23rd of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 12th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 13th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 58 | C+ | 9th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 58 | C+ | 10th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 45 | D | 25th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 45 | D | 27th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "D",
          "cqs": []
@@ -157119,7 +157119,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 48 | D | 22nd of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 48 | D | 23rd of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -157134,7 +157134,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -157149,7 +157149,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 44 | D | 24th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 44 | D | 26th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "D",
          "cqs": []
@@ -161099,7 +161099,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 42 | F | 33rd of 35",
+       "label": "Risks (group judgement) | 42 | F | 35th of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -161112,42 +161112,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 21st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 23rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 35 | F | 34th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 35 | F | 36th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 35 | F | 32nd of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 35 | F | 34th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 48 | F | 27th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 48 | F | 28th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 46 | F | 32nd of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 46 | F | 34th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 38 | F | 34th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 38 | F | 36th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "F",
          "cqs": []
@@ -161162,7 +161162,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 47 | D | 23rd of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 47 | D | 24th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -161177,7 +161177,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 33 | F | 32nd of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 33 | F | 34th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "F",
          "cqs": []
@@ -161192,7 +161192,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 44 | D | 24th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 44 | D | 26th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "D",
          "cqs": []
@@ -162202,7 +162202,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 46 | F | 30th of 35",
+       "label": "Risks (group judgement) | 46 | F | 32nd of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -162215,42 +162215,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 52 | F | 31st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 52 | F | 33rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 44 | D | 26th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 44 | F | 28th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 38 | F | 30th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 38 | F | 32nd of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 47 | F | 29th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 47 | F | 30th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 25th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 26th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 52 | C | 15th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 52 | C- | 16th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "C",
          "cqs": []
@@ -162265,7 +162265,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 44 | F | 27th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 44 | F | 28th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -162280,7 +162280,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 32 | F | 33rd of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 32 | F | 35th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "F",
          "cqs": []
@@ -162295,7 +162295,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 40 | F | 31st of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 40 | F | 33rd of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -166923,7 +166923,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 47 | F | 27th of 35",
+       "label": "Risks (group judgement) | 47 | F | 29th of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -166936,42 +166936,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 21st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 58 | D | 23rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 38 | F | 31st of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 38 | F | 33rd of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 42 | F | 27th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 42 | F | 29th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 40 | F | 33rd of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 40 | F | 35th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 46 | F | 32nd of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 46 | F | 34th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 2nd of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 3rd of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "A",
          "cqs": []
@@ -166986,7 +166986,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 54 | C | 15th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 54 | C- | 16th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -167001,7 +167001,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 58 | A | 3rd of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 58 | A | 3rd of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "A",
          "cqs": []
@@ -167016,7 +167016,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 65 | A | 1st of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 65 | A | 1st of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "A",
          "cqs": []
@@ -167968,7 +167968,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -188536,7 +188536,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -189306,7 +189306,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -195841,7 +195841,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 60 | B+ | 4th of 35",
+       "label": "Risks (group judgement) | 60 | B+ | 4th of 37",
        "question": "Risks",
        "grade": "B",
        "ras": [
@@ -195854,42 +195854,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 64 | B | 8th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 64 | B | 9th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 57 | B | 7th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 57 | B | 7th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 63 | B+ | 4th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 63 | A | 4th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
-         "grade": "B",
+         "grade": "A",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 12th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 54 | C | 13th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 60 | B+ | 5th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 60 | B | 5th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 55 | C+ | 9th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 55 | C+ | 10th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "C",
          "cqs": []
@@ -195904,7 +195904,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 58 | C+ | 8th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 58 | C+ | 9th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -195919,7 +195919,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -195934,7 +195934,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 27th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 42 | F | 29th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -207601,7 +207601,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -226812,7 +226812,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -234049,7 +234049,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -241223,7 +241223,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 56 | C+ | 11th of 35",
+       "label": "Risks (group judgement) | 56 | C+ | 12th of 37",
        "question": "Risks",
        "grade": "C",
        "ras": [
@@ -241236,42 +241236,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 13th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 15th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 62 | A | 2nd of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 62 | A | 2nd of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 50 | C- | 16th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 50 | C- | 17th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 58 | B | 7th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 58 | B | 8th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C+ | 11th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C | 12th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 48 | D | 19th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 48 | D | 21st of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "D",
          "cqs": []
@@ -241286,7 +241286,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 18th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 19th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -241301,7 +241301,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 62 | A | 2nd of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 62 | A | 2nd of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "A",
          "cqs": []
@@ -241316,7 +241316,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 56 | B | 8th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 56 | B | 8th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "B",
          "cqs": []
@@ -247472,7 +247472,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 47 | F | 27th of 35",
+       "label": "Risks (group judgement) | 47 | F | 29th of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -247485,42 +247485,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 55 | F | 29th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 55 | F | 31st of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 42 | F | 28th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 42 | F | 30th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 38 | F | 30th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 38 | F | 32nd of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 19th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 20th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 52 | D | 22nd of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 52 | D | 23rd of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 60 | A | 1st of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 60 | A | 2nd of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "A",
          "cqs": []
@@ -247535,7 +247535,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 18th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 19th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -247550,7 +247550,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 52 | B | 7th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 52 | B | 7th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "B",
          "cqs": []
@@ -247565,7 +247565,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 58 | B+ | 4th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 58 | B+ | 4th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "B",
          "cqs": []
@@ -255838,7 +255838,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 50 | D | 24th of 35",
+       "label": "Risks (group judgement) | 50 | D | 26th of 37",
        "question": "Risks",
        "grade": "D",
        "ras": [
@@ -255851,42 +255851,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 50 | F | 34th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 50 | F | 36th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 45 | D | 21st of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 45 | D | 23rd of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 18th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 19th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 19th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 50 | D | 20th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 25th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 50 | D | 26th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 45 | D | 25th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 45 | D | 27th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "D",
          "cqs": []
@@ -255901,7 +255901,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 40 | F | 31st of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 40 | F | 33rd of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -255916,7 +255916,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 58 | A | 3rd of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 58 | A | 3rd of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "A",
          "cqs": []
@@ -255931,7 +255931,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 62 | A | 2nd of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 62 | A | 2nd of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "A",
          "cqs": []
@@ -257746,7 +257746,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -258163,7 +258163,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -258587,7 +258587,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -269649,7 +269649,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -273849,7 +273849,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 54 | C | 14th of 35",
+       "label": "Risks (group judgement) | 54 | C- | 15th of 37",
        "question": "Risks",
        "grade": "C",
        "ras": [
@@ -273862,42 +273862,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 13th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 15th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 47 | D | 19th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 47 | D | 21st of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 50 | C- | 16th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 50 | C- | 17th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 52 | C- | 15th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 52 | C- | 16th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 14th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 55 | C- | 15th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B+ | 5th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 56 | B | 6th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "B",
          "cqs": []
@@ -273912,7 +273912,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 62 | B+ | 5th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 62 | B+ | 6th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "B",
          "cqs": []
@@ -273927,7 +273927,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 56 | B+ | 5th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 56 | B+ | 5th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "B",
          "cqs": []
@@ -273942,7 +273942,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 55 | C | 11th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 55 | C+ | 11th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "C",
          "cqs": []
@@ -274952,7 +274952,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 50 | D | 24th of 35",
+       "label": "Risks (group judgement) | 50 | D | 26th of 37",
        "question": "Risks",
        "grade": "D",
        "ras": [
@@ -274965,42 +274965,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 55 | F | 29th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 55 | F | 31st of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 40 | F | 30th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 40 | F | 32nd of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 24th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 44 | D | 26th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 48 | F | 27th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 48 | F | 28th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 52 | D | 22nd of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 52 | D | 23rd of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 2nd of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 58 | A | 3rd of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "A",
          "cqs": []
@@ -275015,7 +275015,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 58 | C+ | 8th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 58 | C+ | 9th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "C",
          "cqs": []
@@ -275030,7 +275030,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 50 | C+ | 10th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "C",
          "cqs": []
@@ -275045,7 +275045,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 57 | B | 7th of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 57 | B | 7th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "B",
          "cqs": []
@@ -280224,7 +280224,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -283440,7 +283440,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 53 | C- | 17th of 35",
+       "label": "Risks (group judgement) | 53 | C- | 18th of 37",
        "question": "Risks",
        "grade": "C",
        "ras": [
@@ -283453,44 +283453,44 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 13th of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 60 | C- | 15th of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 42 | F | 28th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 42 | F | 30th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 18th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 48 | D | 19th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 9th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 55 | C+ | 10th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C+ | 11th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 56 | C | 12th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 50 | C- | 16th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 50 | D | 18th of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
-         "grade": "C",
+         "grade": "D",
          "cqs": []
         }
        ]
@@ -283503,7 +283503,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 18th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 50 | D | 19th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "D",
          "cqs": []
@@ -283518,7 +283518,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 40 | D | 24th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 40 | D | 25th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "D",
          "cqs": []
@@ -283533,7 +283533,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 38 | F | 33rd of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 38 | F | 35th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []
@@ -288125,7 +288125,7 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Risks (group judgement) | 42 | F | 33rd of 35",
+       "label": "Risks (group judgement) | 42 | F | 35th of 37",
        "question": "Risks",
        "grade": "F",
        "ras": [
@@ -288138,42 +288138,42 @@
         },
         {
          "code": "D-02",
-         "label": "To what extent does past and present fundamental delivery make the ex… | 52 | F | 31st of 35",
+         "label": "To what extent does past and present fundamental delivery make the ex… | 52 | F | 33rd of 37",
          "question": "To what extent does past and present fundamental delivery make the expected change plausible, and to what extent does the thesis rely only on strengths the business demonstrably has, rather than on strengths it would need to acquire?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-03",
-         "label": "In relation to the differences between the forecasts over the next 18… | 35 | F | 34th of 35",
+         "label": "In relation to the differences between the forecasts over the next 18… | 35 | F | 36th of 37",
          "question": "In relation to the differences between the forecasts over the next 18 months to four years, vs. the last four to six years' financials, how diffuse or concentrated are the key drivers that generate the differences?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-04",
-         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 30 | F | 35th of 35",
+         "label": "How wide is the cone of plausible outcomes over the next 18 months, h… | 30 | F | 37th of 37",
          "question": "How wide is the cone of plausible outcomes over the next 18 months, how skewed is it, and so how predictable is the case?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-05",
-         "label": "How helpful is the company's disclosure on operating momentum and key… | 58 | B | 7th of 35",
+         "label": "How helpful is the company's disclosure on operating momentum and key… | 58 | B | 8th of 37",
          "question": "How helpful is the company's disclosure on operating momentum and key drivers of the thesis to monitor the case over about the next six months?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "D-06",
-         "label": "How clearly does what the company says it will achieve trace into spe… | 45 | F | 34th of 35",
+         "label": "How clearly does what the company says it will achieve trace into spe… | 45 | F | 36th of 37",
          "question": "How clearly does what the company says it will achieve trace into specific operational drivers, onto identifiable revenue, cost and margin lines (the key fundamental milestones and measures), and through to earnings per share; and how clear is the external transmission from value-chain dynamics to earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "D-07",
-         "label": "To what extent do the share price and the multiple move with sector a… | 42 | F | 30th of 35",
+         "label": "To what extent do the share price and the multiple move with sector a… | 42 | F | 32nd of 37",
          "question": "To what extent do the share price and the multiple move with sector and industry peers rather than idiosyncratically (on a rolling six-month basis), and so how far is the multiple company-driven rather than industry-driven?",
          "grade": "F",
          "cqs": []
@@ -288188,7 +288188,7 @@
        "ras": [
         {
          "code": "I-01",
-         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 32 | F | 35th of 35",
+         "label": "How likely is company guidance to be raised, met or reduced at the ne… | 32 | F | 37th of 37",
          "question": "How likely is company guidance to be raised, met or reduced at the next few earnings events (all such events over the next 18 months), and what would drive each outcome? Secondarily, how likely is any guidance, mid-term target or ambition for 18 months to three years out to be raised, met or reduced?",
          "grade": "F",
          "cqs": []
@@ -288203,7 +288203,7 @@
        "ras": [
         {
          "code": "I-02",
-         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 28 | F | 35th of 35",
+         "label": "How likely are sell-side consensus forecasts, and the net breadth of… | 28 | F | 37th of 37",
          "question": "How likely are sell-side consensus forecasts, and the net breadth of revisions, to move higher or lower over the next few earnings events (over the next 18 months): to be upgraded, cut or held, and why? Secondarily, how likely are the consensus forecasts for 18 months to three years out to be upgraded, cut or held?",
          "grade": "F",
          "cqs": []
@@ -288218,7 +288218,7 @@
        "ras": [
         {
          "code": "I-03",
-         "label": "How comprehensively are these dynamics articulated in the current nar… | 38 | F | 33rd of 35",
+         "label": "How comprehensively are these dynamics articulated in the current nar… | 38 | F | 35th of 37",
          "question": "How comprehensively are these dynamics articulated in the current narrative of (i) sell-side commentary and (ii) investor commentary (for example on Twitter): how well known is each of them to investors who own or cover the company or its sector, primarily for the next 18 months and secondarily for 18 months to three years out?",
          "grade": "F",
          "cqs": []

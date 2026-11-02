@@ -1,6 +1,6 @@
 {
  "ticker": "FEVR-GB",
- "generated": "2026-11-01 21:00:02",
+ "generated": "2026-11-02 21:00:55",
  "builder": "build-canonical-ratings.py 1.2",
  "rule": {
   "bands": "A above 90%; B+ above 82.5% to 90%; B above 75% to 82.5%; C+ above 66.67% to 75%; C above 58.33% to 66.67%; C- above 50% to 58.33%; D above 25% to 50%; F up to 25%",
