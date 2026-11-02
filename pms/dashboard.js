@@ -13,6 +13,11 @@
    and each chart starting at its first reading; Net Upgrade Breadth named in full, its zero line, its dark blue line with each reading
    written; item 8 with numbers, trend arrows and today's value first, and a key in plain words; item 9 side by side and reordered;
    item 10 added. */
+/* version 2.2 (2-Nov-2026, D-PMS-V4-132; Richard's words in RICHARD-VERBATIM-2026-11-02-POSITION-ENTRY-AND-EXIT-RULES-SUMMARY-CHANGES-
+   AND-ANSWERS.md): MA SLs are retired for Middle Innings Core Investments (no rows, lines or texts; the six Sell Criteria alone);
+   an Early Innings Probing Bet's tranches are sold by the 10-day stop-loss rule (the MA and the stop-loss, the MA less the tranche's
+   buffer_pct), each drawn as two lines; the cases the rules left to Richard are retired (only "data to check" remains); Sell
+   Criterion 4 is written breadth first; a Probing Bet's next add carries the reader's tranche_size_why. */
 (function () {
   'use strict';
   var C = {
@@ -259,7 +264,7 @@
       /* round 3 (17-Oct-2026): the right-hand readings are short sentences, wrapped to the column */
       var wrap = function (s, n) { var out = [], cur = ''; String(s || '').split(' ').forEach(function (w) { if ((cur + ' ' + w).trim().length > n && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); return out; };
       var n1 = Math.floor((RW - 16) / 6.4), n2 = Math.floor((RW - 16) / 5.3), ty = top + 19;
-      var l1s = wrap(r.text, n1).slice(0, 3), l2s = wrap(info ? (/^MA/.test(r.id || '') ? 'Information only: the six Sell Criteria decide the sale.' : 'Information only: the moving-average stop decides the sale.') : r.text2, n2).slice(0, Math.max(2, 5 - l1s.length));
+      var l1s = wrap(r.text, n1).slice(0, 3), l2s = wrap(info ? 'Information only: the 10-day stop-loss rule decides the sale.' : r.text2, n2).slice(0, Math.max(2, 5 - l1s.length));
       l1s.forEach(function (l) { txt(g, x1 + 12, ty, l, { fill: col, 'font-size': 11.5, 'font-weight': 700 }); ty += 13; });
       l2s.forEach(function (l) { txt(g, x1 + 12, ty, l, { fill: info ? C.neutral : C.ink2, 'font-size': 10 }); ty += 12; });
     });
@@ -272,7 +277,7 @@
     var sw = function (inner) { return '<span class="lk">' + inner + '</span>'; };
     return [
       sw('<svg width="26" height="22"><circle cx="13" cy="11" r="8" fill="#1f2328" stroke="#fff" stroke-width="2"/><circle cx="13" cy="11" r="10" fill="none" stroke="#1f2328" stroke-width="1" opacity=".45"/></svg><span><b>Today\'s value</b> (' + d(m.asof) + '), the large dot with the large number: <b style="color:' + C.red + '">red</b> if today\'s readings would give a sell signal, <b style="color:' + C.amber + '">amber</b> if close, black if no sell signal</span>'),
-      sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="#1f2328" stroke-width="2.4"/></svg><span><b>The reading that decides a sale:</b> Friday ' + d(m.lastFriday) + ' for a row read each Friday; the ' + d(m.lastME) + ' month-end for a row read at the month-end. Coloured as above. For the MA SL rows and the 30% level row the rule reads each day\'s close, so today\'s value is the deciding reading</span>'),
+      sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="#1f2328" stroke-width="2.4"/></svg><span><b>The reading that decides a sale:</b> Friday ' + d(m.lastFriday) + ' for a row read each Friday; the ' + d(m.lastME) + ' month-end for a row read at the month-end. Coloured as above. For a tranche\'s 10-day stop-loss rule row and the 30% level row the rule reads each day\'s close, so today\'s value is the deciding reading</span>'),
       sw('<svg width="34" height="22"><circle cx="6" cy="11" r="4" fill="' + ME_COL.m3 + '"/><circle cx="17" cy="11" r="4" fill="' + ME_COL.m1 + '"/><circle cx="28" cy="11" r="4" fill="' + ME_COL.m0 + '"/></svg><span><b>Month-end dots, each with its date:</b> the readings at the ' + d(m.me3) + ' (palest), ' + d(m.me1) + ' and ' + d(m.me0) + ' (darkest) month-ends. On a row read at the month-end, the ' + d(m.me0) + ' reading is the ring that decides a sale, so it is shown as the ring, with its date</span>'),
       t1 ? sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5.5" fill="#fff" stroke="' + C.entry + '" stroke-width="2"/></svg><span><b>Purple ring:</b> the reading when tranche 1 was bought' + (t1 ? ' (' + d(t1.entry_date) + ')' : '') + '</span>') : '',
       sw('<svg width="26" height="22"><line x1="3" x2="17" y1="11" y2="11" stroke="' + TREND.away + '" stroke-width="2.6"/><path d="M24,11 l-8,-5 l0,10 Z" fill="' + TREND.away + '"/></svg><span><b>Arrow:</b> the move from the ' + d(m.trendFrom) + ' month-end to today: <b style="color:' + TREND.away + '">green</b> away from the selling zone, <b style="color:' + TREND.towards + '">dark red</b> towards it, <b style="color:' + TREND.flat + '">grey</b> little change (under 3% of the row\'s scale)</span>'),
@@ -280,19 +285,26 @@
     ].join('');
   }
 
-  /* ------------------------------------------------------------------ MA SLs on every tranche (Richard, 27-Oct-2026: "All tranches, all investments")
-     29-Oct-2026 (D-PMS-V4-115; Richard: "Q3 - build it. I know it contradicts what I previously wrote. Concur. Option A."): MA SLs
-     SELL Early Innings Probing Bets only. A Middle Innings Core Investment's MA SL rows stay on the page, grey, as information only
-     (t.info); its six Sell Criteria decide its sale and its adds. */
-  var CASE_WORDS = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link', data: 'the exit is dated on or before the purchase: data to check' };
+  /* ------------------------------------------------------------------ the 10-day stop-loss rule, Early Innings Probing Bets only
+     2-Nov-2026 (D-PMS-V4-132; Richard: MA SLs on a Core Investment, "we should retire this concept from the PMS please"): a Middle
+     Innings Core Investment has no MA SL rows, lines or words; the data carries none (H.stops is empty, each tranche's ma_sl null).
+     A Probing Bet's tranche has two levels, the MA Richard chose (any length) and the stop-loss (the MA less its buffer_pct, 6% by
+     default). The cases the rules left to Richard are retired ("Q4 = A"); the reader flags only an exit dated on or before the
+     purchase, as data to check. */
+  var DATA_CHECK = 'the exit is dated on or before the purchase: data to check';
+  function bufWords(b) { return b == null ? '' : (Math.round(b * 1000) / 10) + '%'; }
+  function maName(x) { return x === '200D' ? 'absolute 200D MA' : String(x || '') + ' MA'; }
   function maTranches(m) {
+    if (!m.probing) return [];
     return (m.H.stops || []).map(function (s) {
       var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0] || {};
-      var ma = tr.ma_sl || {}, dm = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(s.label || '');
+      var ma = tr.ma_sl || {}, dm = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(s.label || ''), dr = /day (\d+) of (\d+)/i.exec(s.label || '');
       return { s: s, n: tr.tranche_number || '?', entry: tr.entry_date || s.entry_date, state: s.state, date: ma.exit_confirmed_date || (dm ? dm[1] : null),
-        due: tr.ma_sl_session_due || null, cases: tr.ma_sl_open_cases || null, known: !!tr.ma_sl_status, pct: ma.pct_above_stop, info: !m.probing };
+        due: tr.ma_sl_session_due || null, dataCheck: (tr.ma_sl_open_cases || []).indexOf('data') >= 0, known: !!tr.ma_sl_status, pct: ma.pct_above_stop,
+        day: s.day_of_run != null ? s.day_of_run : ma.day_of_run != null ? ma.day_of_run : (dr ? +dr[1] : null), buf: s.buffer_pct != null ? s.buffer_pct : ma.buffer_pct };
     }).sort(function (a, b) { return a.n - b.n; });
   }
+  function testWords(t) { return 'testing, day ' + (t.day != null ? t.day : '?') + ' of 10'; }
   function trList(ns) { ns = ns.map(String); return (ns.length > 1 ? 'tranches ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : 'tranche ' + ns[0]); }
   /* the sale date(s) the rule set, grouped by date; a date already past is said as such (Alfen: 18-Aug and 1-Sep) */
   function dueWords(xs, asof) {
@@ -301,41 +313,34 @@
     if (past) return 'The rule\'s sale fell due at the Tuesday session of ' + ds.map(function (d) { return fmtD(d) + ' (' + trList(g[d]) + ')'; }).join(' and of ') + ', and has not been made.';
     return 'The rule sells ' + ds.map(function (d) { return trList(g[d]) + ' at the Tuesday session of ' + fmtD(d); }).join(' and ') + '.';
   }
-  var MA_INFO = 'for a Core Investment the MA SL is information only and the six Sell Criteria decide the sale';
   function maRowText(t, now) {
-    if (t.info) {
-      if (t.state === 'exit_confirmed') return 'Information only: tranche ' + t.n + '\'s MA SL exit was confirmed on ' + fmtD(t.date) + '; ' + MA_INFO + '.';
-      if (t.state === 'triggered') return 'Information only: tranche ' + t.n + ' is below its MA SL, inside the five-day window; ' + MA_INFO + '.';
-      return now == null ? 'No reading.' : 'Information only: tranche ' + t.n + ' is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' its MA SL; ' + MA_INFO + '.';
-    }
     if (t.state === 'exit_confirmed') {
       var w = 'Exit confirmed on ' + fmtD(t.date) + ', not yet sold';
       if (t.due) return 'Sell signal: ' + w + '; the rule\'s sale ' + (t.due < (window.__PMS_ASOF || '9') ? 'fell due' : 'falls due') + ' at the Tuesday session of ' + fmtD(t.due) + '.';
-      if (t.cases && t.cases.length) return w + '; the rules leave it open (' + t.cases.map(function (c) { return CASE_WORDS[c] || 'case ' + c; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.';
+      if (t.dataCheck) return w + '; ' + DATA_CHECK + '.';
       return w + '.';
     }
-    if (t.state === 'triggered') return 'Below its stop, inside the five-day window: the five-day stop rule decides.';
-    return now == null ? 'No reading.' : 'Tranche ' + t.n + ' can fall a further ' + Math.round(now * 100) + '% before it reaches its stop.';
+    if (t.state === 'triggered') return 'Tranche ' + t.n + ' is ' + testWords(t) + ': it closed at or below its MA, and the 10-day stop-loss rule decides.';
+    return now == null ? 'No reading.' : 'Tranche ' + t.n + ' can fall a further ' + Math.round(now * 100) + '% before it reaches its stop-loss.';
   }
-  /* one or two sentences, action first: what the MA SLs say for the holding */
+  /* one or two sentences, action first: what the 10-day stop-loss rule says for a Probing Bet */
   function maWords(m, bold) {
     var T = maTranches(m), ex = T.filter(function (t) { return t.state === 'exit_confirmed'; }), hit = T.filter(function (t) { return t.state === 'triggered'; });
     var b = function (s) { return bold ? '<b>' + s + '</b>' : s; }, out = [];
     if (!T.length) return '';
-    if (!ex.length) { if (hit.length) return b(trList(hit.map(function (t) { return t.n; })).replace(/^t/, 'T') + (hit.length > 1 ? ' are' : ' is') + ' below ' + (hit.length > 1 ? 'their MA SLs' : 'its MA SL') + ', inside the five-day window.');
+    if (!ex.length) { if (hit.length) return b(hit.map(function (t) { return 'Tranche ' + t.n + ' is ' + testWords(t); }).join('; ') + ' under the 10-day stop-loss rule (a close at or below its MA).');
       var nr = T.filter(function (t) { return t.pct != null; }).sort(function (a, b) { return a.pct - b.pct; })[0];
-      return 'Every tranche is above its MA SL' + (nr ? '; the nearest, tranche ' + nr.n + ', is ' + Math.round(nr.pct) + '% above it.' : '.'); }
-    out.push(trList(ex.map(function (t) { return t.n; })).replace(/^t/, 'T') + (ex.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit (' + ex.map(function (t) { return fmtD(t.date); }).join(', ') + ') and ' + (ex.length > 1 ? 'are' : 'is') + ' not yet sold.');
-    var due = ex.filter(function (t) { return t.due; }), open = ex.filter(function (t) { return t.cases && t.cases.length; });
+      return 'Every tranche is above its MA and its stop-loss' + (nr ? '; the nearest, tranche ' + nr.n + ', is ' + Math.round(nr.pct) + '% above its stop-loss.' : '.'); }
+    out.push(trList(ex.map(function (t) { return t.n; })).replace(/^t/, 'T') + (ex.length > 1 ? ' have' : ' has') + ' a confirmed exit under the 10-day stop-loss rule (' + ex.map(function (t) { return fmtD(t.date); }).join(', ') + ') and ' + (ex.length > 1 ? 'are' : 'is') + ' not yet sold.');
+    var due = ex.filter(function (t) { return t.due; }), chk = ex.filter(function (t) { return t.dataCheck; });
     if (due.length) out.push(dueWords(due.map(function (t) { return { n: t.n, d: t.due }; }), m.asof));
-    if (open.length) { var cs = {}; open.forEach(function (t) { t.cases.forEach(function (c) { cs[c] = 1; }); });
-      out.push('The rules leave ' + (open.length > 1 ? 'them' : 'it') + ' open (' + Object.keys(cs).sort().map(function (c) { return CASE_WORDS[c] || 'case ' + c; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.'); }
-    if (!ex[0].known && m.probing) out.push('The rule sells ' + (ex.length > 1 ? 'them' : 'it') + ' at the next Tuesday session.');
+    if (chk.length) out.push('For ' + trList(chk.map(function (t) { return t.n; })) + ', ' + DATA_CHECK + '.');
+    if (!ex[0].known) out.push('The rule sells ' + (ex.length > 1 ? 'them' : 'it') + ' at the next Tuesday session.');
     return b(out.join(' '));
   }
 
   /* ------------------------------------------------------------------ the model: the data file turned into what the panels draw */
-  var CRIT_WORDS = { C1: 'Industry RS below 30', C2: 'The relative 200D MA falling over the month', C3: 'Sector RS below 50 and Stock RS below 70', C4: 'Stock RS below 50 and analysts cutting', C5: 'Relative price more than 25% below its 52-week high', C6: 'A tranche 30% below its highest close since purchase, with Stock RS below 70' };
+  var CRIT_WORDS = { C1: 'Industry RS below 30', C2: 'The relative 200D MA falling over the month', C3: 'Sector RS below 50 and Stock RS below 70', C4: 'SS Sales or SS PT Net Upgrade Breadth below zero AND Stock RS below 50', C5: 'Relative price more than 25% below its 52-week high', C6: 'A tranche 30% below its highest close since purchase, with Stock RS below 70' };
   /* 28-Oct-2026: a universe file (scripts/pms_dashboard_universe.py, extract --compact) writes daily and volume as columns and rows */
   function expandCols(Hd) { ['daily', 'volume'].forEach(function (k) { var x = Hd[k]; if (x && !Array.isArray(x) && x.cols && x.rows) Hd[k] = x.rows.map(function (r) { var o = {}; x.cols.forEach(function (c, i) { o[c] = r[i]; }); return o; }); }); }
   /* 30-Oct-2026 (D-PMS-V4-124; Richard 16:32: the holdings page said "no signal" and "Yes" to an add for Arteche while the APM
@@ -354,7 +359,7 @@
     if (c.C2 && !c.C2.fires && c.C2.today != null && c.C2.today <= 0) add('C2', 'the relative 200D MA is ' + (c.C2.today < 0 ? 'falling' : 'flat') + ' over the month', fr);
     var t3 = (c.C3 && c.C3.today) || {};
     if (c.C3 && !c.C3.fires && t3.sector_rs != null && t3.sector_rs < 50 && t3.stock_rs < 70) add('C3', 'Sector RS is ' + t3.sector_rs + ', below 50, with Stock RS ' + t3.stock_rs + ', below 70', me);
-    if (c.C4 && !c.C4.fires && nubToday != null && t3.stock_rs != null && t3.stock_rs < 50 && nubToday < 0) add('C4', 'Stock RS is ' + t3.stock_rs + ', below 50, with Net Upgrade Breadth below zero', me);
+    if (c.C4 && !c.C4.fires && nubToday != null && t3.stock_rs != null && t3.stock_rs < 50 && nubToday < 0) add('C4', 'Net Upgrade Breadth is below zero AND Stock RS is ' + t3.stock_rs + ', below 50', me);
     if (c.C5 && !c.C5.fires && c.C5.today != null && c.C5.today < -0.25) add('C5', 'relative price is ' + Math.round(-c.C5.today * 100) + '% below its 52W high', me);
     return out;
   }
@@ -418,7 +423,7 @@
     m.rows.push({ id: 'C3s', label: 'Sector RS below 50 (sells with Stock RS below 70)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 50, triggerSide: 'below', state: info ? 'info' : c3.fires ? 'fires' : (s3met || s3other || near(v3.sector_rs, 50, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.sec : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 'sec'), kind: 'm3' }, { v: r3(m.me1, 'sec'), kind: 'm1' }, { v: r3(m.me0, 'sec'), kind: 'm0' }, { v: r3(m.trendFrom, 'sec'), kind: 'tf' }, { v: v3.sector_rs, kind: 'latest' }, { v: (c3.today || {}).sector_rs, kind: 'today' }],
       text: c3.fires ? 'Sell signal: Sector RS was ' + v3.sector_rs + ' and Stock RS ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end.' : s3met ? 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, below 50, but ' + (v3.stock_rs == null ? 'Stock RS has no reading.' : 'Stock RS ' + v3.stock_rs + ' was not below 70.') : 'Sector RS was ' + v3.sector_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.sector_rs - 50) + ' above 50.', text2: e ? 'It was ' + e.sec + ' when tranche 1 was bought.' : '' });
-    m.rows.push({ id: 'C34', label: 'Stock RS: 70 line (sells with Sector RS below 50); 50 line (sells with analysts cutting)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 70, trigger2: 50, triggerSide: 'below', state: info ? 'info' : (c3.fires || c4.fires) ? 'fires' : (s3other || near(v3.stock_rs, 70, 10)) ? 'near' : 'clear',
+    m.rows.push({ id: 'C34', label: 'Stock RS: 70 line (sells with Sector RS below 50); 50 line (sells with SS Breadth below zero)', sub: 'read at the month-end; sells the whole holding', lo: 0, hi: 99, trigger: 70, trigger2: 50, triggerSide: 'below', state: info ? 'info' : (c3.fires || c4.fires) ? 'fires' : (s3other || near(v3.stock_rs, 70, 10)) ? 'near' : 'clear',
       marks: [{ v: e ? e.s : null, kind: 'entry', label: 'bought' }, { v: r3(m.me3, 's'), kind: 'm3' }, { v: r3(m.me1, 's'), kind: 'm1' }, { v: r3(m.me0, 's'), kind: 'm0' }, { v: r3(m.trendFrom, 's'), kind: 'tf' }, { v: v3.stock_rs, kind: 'latest' }, { v: (c3.today || {}).stock_rs, kind: 'today' }],
       text: 'Stock RS was ' + v3.stock_rs + ' at the ' + fmtD(c3.reading_day) + ' month-end, ' + (v3.stock_rs < 50 ? 'below both lines.' : v3.stock_rs < 70 ? 'below 70 but above 50.' : (v3.stock_rs - 70) + ' above 70.'), text2: e ? 'It was ' + e.s + ' when tranche 1 was bought.' : '' });
     var v4 = c4.value || {}, b4 = minNub({ sales: v4.ss_sales_nub100, tp: v4.ss_pt_nub100 });
@@ -441,22 +446,24 @@
         text: (function () { if (tr.state === 'no trigger') return 'Tranche ' + tr.tranche_number + ' can fall a further ' + Math.round(tr.distance_to_level_pct) + '% before it reaches its 30% level.'; var rel = /close >= ([0-9.]+)/.exec(tr.state), td = tr.trigger && tr.trigger.day; if (info) return 'Tranche ' + tr.tranche_number + ' fell below its 30% level' + (td ? ' on ' + fmtD(td) : '') + '; for a Probing Bet this is information only.'; return 'Triggered' + (td ? ' on ' + fmtD(td) : '') + ': tranche ' + tr.tranche_number + ' is in its release window, sold after a close at or above ' + (rel ? (+rel[1]).toFixed(2) : 'its release price') + ' or on the 63rd trading day.'; })(),
         text2: (tr.state !== 'no trigger' ? 'The price is ' + Math.round(tr.distance_to_level_pct) + '% above the 30% level; ' : '') + 'Stock RS today is ' + tr.stock_rs_today + '.' });
     }
-    /* 27-Oct-2026 (Richard: "All tranches, all investments"): one row per tranche's MA SL, on every holding; the five-day
-       stop rule's verdict is the alignment calculation script's (H.stops), the open cases are the Framework 14 reader's */
+    /* 2-Nov-2026 (D-PMS-V4-132): one row per Early Innings Probing Bet tranche under the 10-day stop-loss rule (a Core Investment has
+       none); the rule's verdict is the alignment calculation script's (H.stops), the sale date and data check the Framework 14 reader's.
+       The row measures the price against the stop-loss; it is "near" while testing or within 3% of the MA. */
     maTranches(m).forEach(function (t) {
-      var s = t.s, pts = s.pts || [];
-      var stopAt = function (d) { var v = null; for (var i = 0; i < pts.length; i++) { if (pts[i][0] <= d) v = pts[i][1]; else break; } return v; };
-      var dAbove = function (d) { if (!d) return null; var st = stopAt(d), c = dailyAt(d); return (st != null && c && c.c) ? (c.c - st) / c.c : null; };
-      var now = dAbove(m.asof), ma = s.stop_ma === '200D' ? 'absolute 200D MA' : String(s.stop_ma || '') + ' MA';
-      var st = t.info ? 'info' : t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (now != null && now <= 0.05)) ? 'near' : 'clear';
-      m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + '\'s MA SL, the ' + ma + ' less 2%', sub: t.info ? 'information only: MA SLs sell Early Innings Probing Bets only (your ruling of 29-Oct-2026)' : 'the five-day stop rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
+      var s = t.s, pts = s.pts || [], mpts = s.ma_pts || [];
+      var at = function (a, d) { var v = null; for (var i = 0; i < a.length; i++) { if (a[i][0] <= d) v = a[i][1]; else break; } return v; };
+      var dAbove = function (d) { if (!d) return null; var st = at(pts, d), c = dailyAt(d); return (st != null && c && c.c) ? (c.c - st) / c.c : null; };
+      var now = dAbove(m.asof), maNow = s.ma_level != null ? s.ma_level : at(mpts, m.asof), cNow = (dailyAt(m.asof) || {}).c;
+      var aboveMa = (maNow != null && cNow) ? (cNow - maNow) / cNow : null, bw = bufWords(t.buf);
+      var st = t.state === 'exit_confirmed' ? 'fires' : (t.state === 'triggered' || (aboveMa != null && aboveMa <= 0.03)) ? 'near' : 'clear';
+      m.rows.push({ id: 'MA' + t.n, label: 'Tranche ' + t.n + ': the ' + maName(s.stop_ma) + ' and its stop-loss' + (bw ? ' (the MA less ' + bw + ')' : ''), sub: 'the 10-day stop-loss rule; sells this tranche', lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: function (v) { return pct0(v); }, state: st,
         marks: [{ v: dAbove(t.entry), kind: 'entry', label: 'bought' }, { v: dAbove(m.me3), kind: 'm3' }, { v: dAbove(m.me1), kind: 'm1' }, { v: dAbove(m.me0), kind: 'm0' }, { v: dAbove(m.trendFrom), kind: 'tf' }, { v: now, kind: 'latest' }],
-        text: maRowText(t, now), text2: 'The stop is ' + (s.stop_level != null ? (+s.stop_level).toFixed(2) : 'n/a') + (now != null ? '; the price is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' it.' : '.') });
+        text: maRowText(t, now), text2: 'The MA is ' + (maNow != null ? fpx(maNow) : 'n/a') + ' and the stop-loss ' + (s.stop_level != null ? fpx(+s.stop_level) : 'n/a') + (now != null ? '; the price is ' + Math.round(Math.abs(now) * 100) + '% ' + (now >= 0 ? 'above' : 'below') + ' the stop-loss' + (aboveMa != null ? ' and ' + Math.round(Math.abs(aboveMa) * 100) + '% ' + (aboveMa > 0 ? 'above' : 'at or below') + ' the MA.' : '.') : '.') });
     });
     /* 28-Oct-2026 (Richard: "today's value ... should be most prominent visual"): today's value is the large mark; its colour says
        whether the Sell Criterion would be met on today's readings (red), is close (amber) or is clear (black). Net Upgrade Breadth
        gets a today's value too: the weaker of the latest daily 100-day counts for sales estimates and target prices (the same
-       counts the month-end rule reads). The MA SL rows and the 30% level row read each day's close, so their deciding reading is today's. */
+       counts the month-end rule reads). A Probing Bet's 10-day stop-loss rule rows and the 30% level row read each day's close, so their deciding reading is today's. */
     var c3t_ = c3.today || {}, SSm = (Hd.ss || {}).metrics || {}, lastBD = function (k) { var a = ((SSm[k] || {}).breadth_daily || []).filter(function (q) { return q.v != null; }); return a.length ? a[a.length - 1] : null; };
     var bS = lastBD('sales'), bP = lastBD('tp'), bT = minNub({ sales: bS ? bS.v : null, tp: bP ? bP.v : null }), bTd = [bS, bP].filter(Boolean).map(function (q) { return q.d; }).sort().pop() || null;
     var stT = c3t_.stock_rs, seT = c3t_.sector_rs;
@@ -503,8 +510,8 @@
 
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
-    if (m.probing) return 'Early Innings Probing Bet: its MA SLs decide the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
-    var ma = '';   /* 29-Oct-2026: a Core Investment's MA SLs are information only, so they never enter its order words */
+    if (m.probing) return 'Early Innings Probing Bet: the 10-day stop-loss rule decides the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
+    var ma = '';   /* 2-Nov-2026: MA SLs are retired for a Core Investment; its order words are the six Sell Criteria's */
     var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order;
     if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + '; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
     if (/^SELL/.test(o)) return o + ma;
@@ -555,8 +562,8 @@
   function oneLine(m) {
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
-    if (m.probing) return m.name + ' is an Early Innings Probing Bet, so its MA SLs decide the sale. ' + maWords(m) + lose;
-    var nr = m.nearestRow, ex = false;   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
+    if (m.probing) return m.name + ' is an Early Innings Probing Bet, so the 10-day stop-loss rule decides the sale. ' + maWords(m) + lose;
+    var nr = m.nearestRow, ex = false;   /* 2-Nov-2026: MA SLs are retired for a Core Investment */
     return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No sell signal from any of the six Sell Criteria. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }
 
@@ -565,14 +572,11 @@
      the front page was fixed in round 2, this fixes the holding page. The data's add rule does not yet know about stop exits. */
   function roomWords(m, add) {
     var sx = m.probing && !/MA SL/.test(add.why || '') ? /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec((m.H.stops && m.H.stops[0] && m.H.stops[0].label) || '') : null;
-    if (sx) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sx[1]) + ', so the rule allows no add.';
-    if (add.open_case === 4) { var ex4 = maTranches(m).filter(function (t) { return t.state === 'exit_confirmed'; }).map(function (t) { return t.n; });
-      return '<b>Open:</b> ' + trList(ex4) + (ex4.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit; whether a Core Investment is added to then is for your ruling at the APM PMS Q&A SOP run.'; }
-    if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
-    if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
-    if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
+    if (sx) return '<b>No:</b> its exit under the 10-day stop-loss rule was confirmed on ' + fmtD(sx[1]) + ', so the rule allows no add.';
+    if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> a tranche is testing its MA or has a confirmed exit under the 10-day stop-loss rule, so the rule allows no add to a Probing Bet.';
+    if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no reading under the 10-day stop-loss rule.';
     if (add.allowed && m.ahead && m.ahead.length) return aheadAddWords(m.ahead, add);
-    if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
+    if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit' + (add.tranche_size_why ? '; tranche size: ' + esc(add.tranche_size_why) : '') + ').';
     if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion gives a sell signal, so the rule allows no add.';
     return '<b>No:</b> it holds ' + esc(String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '')) + '.';
   }
@@ -630,17 +634,19 @@
       var lastT = H.daily[H.daily.length - 1].trig;
       lines.push({ label: short ? '52-week-high line ' + (lastT ? fp(lastT) : '') : (lastT ? fp(lastT) + ': ' : '') + 'below this price, relative price is more than 25% under its 52-week high', color: '#bf3989', dash: [6, 3], width: 1.4, byDate: bt, labelDy: -5 });
     }
-    { /* 27-Oct-2026: each tranche's MA SL on every holding (Richard: "All tranches, all investments"), drawn as on a Probing Bet's chart */
+    if (m.probing) { /* 2-Nov-2026 (D-PMS-V4-132): an Early Innings Probing Bet's two levels per tranche under the 10-day stop-loss rule, from the
+         alignment calculation script's own levels: the stop-loss (pts, red dotted, as before) and the MA chosen for the tranche (ma_pts, the
+         same red, paler and dashed). Tranches on the same MA and stop-loss share one pair of lines. A Core Investment has none. */
       var sg = {};
-      (H.stops || []).forEach(function (s) { var k = (s.stop_level || 0).toFixed(4) + s.stop_ma; (sg[k] = sg[k] || []).push(s); });
-      Object.keys(sg).forEach(function (k) { var g = sg[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; });
-        var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; });
-        /* 27-Oct-2026: on a Core Investment's chart the stop labels are short (up to four stops beside the 30% and 52-week lines would hide the latest prices); the end note says what a stop is */
-        var lvl = g[0].stop_level ? fpx(g[0].stop_level) + ': ' : '';
-        /* 29-Oct-2026 08:45 (Richard: "mention which MA each refers to"): "869: 50D MA SL, tranche 3"; "860: 150D MA SL, tranches 1 and 2" */
-        var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0];
-        lines.push({ label: m.probing ? lvl + 'the stop, the ' + (g[0].stop_ma === '200D' ? 'absolute 200D MA' : String(g[0].stop_ma) + ' MA') + ' less 2%' + (short ? '' : ', for ' + trj)
-                                      : lvl + (g[0].stop_ma ? (g[0].stop_ma === '200D' ? 'absolute 200D ' : g[0].stop_ma + ' ') : '') + 'MA SL, ' + trj + ' (information only)', color: m.probing ? '#cf222e' : '#8c959f', dash: [3, 3], width: 1.8, byDate: by, labelDy: m.probing ? 14 : -5 }); });
+      (H.stops || []).forEach(function (s) { var k = (s.stop_level || 0).toFixed(4) + '|' + s.stop_ma + '|' + s.buffer_pct; (sg[k] = sg[k] || []).push(s); });
+      Object.keys(sg).forEach(function (k) { var g = sg[k], lg = g.slice().sort(function (a, b) { return (b.pts || []).length - (a.pts || []).length; })[0], by = {}, bym = {};
+        (lg.pts || []).forEach(function (q) { by[q[0]] = q[1]; }); (lg.ma_pts || []).forEach(function (q) { bym[q[0]] = q[1]; });
+        var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; }).sort();
+        var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0], trp = trj + '\'s';
+        var lvl = g[0].stop_level ? fpx(g[0].stop_level) + ': ' : '', bw = bufWords(g[0].buffer_pct), mlv = g[0].ma_level != null ? fpx(g[0].ma_level) + ': ' : '';
+        lines.push({ label: lvl + 'the stop-loss, the ' + maName(g[0].stop_ma) + ' less ' + (bw || 'its buffer') + (short ? '' : ', for ' + trj), color: '#cf222e', dash: [3, 3], width: 1.8, byDate: by, labelDy: 14 });
+        if (Object.keys(bym).length) lines.push({ label: mlv + (trs.length > 1 ? 'the MA of ' + trj : trp + ' MA') + ' (the ' + maName(g[0].stop_ma) + ')', color: 'rgba(207,34,46,0.5)', dash: [7, 4], width: 1.4, byDate: bym, labelDy: -5 });
+      });
     }
     var marks = m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
     return { lines: lines, marks: marks };
@@ -738,7 +744,7 @@
     var sw = function (svg, t) { return '<span class="lk">' + svg + '<span>' + t + '</span></span>'; };
     return [sw('<svg width="22" height="14"><line x1="1" x2="21" y1="7" y2="7" stroke="' + C.stock + '" stroke-width="2"/></svg>', 'Stock RS'), sw('<svg width="22" height="14"><line x1="1" x2="21" y1="7" y2="7" stroke="' + C.sector + '" stroke-width="2"/></svg>', 'Sector RS'), sw('<svg width="22" height="14"><line x1="1" x2="21" y1="7" y2="7" stroke="' + C.industry + '" stroke-width="2"/></svg>', 'Industry RS'),
       sw('<svg width="12" height="14"><circle cx="6" cy="7" r="3.4" fill="#57606a"/></svg>', 'a month-end reading'),
-      sw(ln(C.stock), '<b>70</b>: Stock RS below it sells, with Sector RS below 50'), sw(ln(C.sector), '<b>50</b>: Sector RS below it sells, with Stock RS below 70; Stock RS below it sells, with analysts cutting'), sw(ln(C.industry), '<b>30</b>: Industry RS below it sells (shaded)')].join('');
+      sw(ln(C.stock), '<b>70</b>: Stock RS below it sells, with Sector RS below 50'), sw(ln(C.sector), '<b>50</b>: Sector RS below it sells, with Stock RS below 70; SS Sales or SS PT Net Upgrade Breadth below zero AND Stock RS below it sells'), sw(ln(C.industry), '<b>30</b>: Industry RS below it sells (shaded)')].join('');
   }
   function volumeKey() {
     var sw = function (svg, t) { return '<span class="lk">' + svg + '<span>' + t + '</span></span>'; };
@@ -971,7 +977,7 @@
         { pts: pts(rsW, 'ind'), color: C.industry, w: 1.6, label: 'Industry RS', endLabel: compact ? String(lfr.ind) : 'Industry RS ' + lfr.ind + ' at ' + fmtD(m.lastFriday), endDy: -12 },
         { kind: 'dots', pts: pts(me, 's'), color: C.stock, r: compact ? 2.2 : 3 }, { kind: 'dots', pts: pts(me, 'sec'), color: C.sector, r: compact ? 2.2 : 3 }],
       thresholds: compact ? [{ v: 70, color: C.stock }, { v: 50, color: C.sector }, { v: 30, color: C.industry, zone: 'below', fill: 'rgba(207,34,46,0.06)' }]
-        : [{ v: 80, color: C.stock, label: 'Stock RS 80: the Pool\'s test' }, { v: 70, color: C.stock, label: 'Stock RS 70: sells with Sector RS below 50' }, { v: 50, color: C.sector, label: 'Sector RS 50: sells with Stock RS below 70 (and Stock RS 50: sells with analysts cutting)' }, { v: 30, color: C.industry, label: 'Industry RS 30: below it, sells', zone: 'below', fill: 'rgba(207,34,46,0.06)' }],
+        : [{ v: 80, color: C.stock, label: 'Stock RS 80: the Pool\'s test' }, { v: 70, color: C.stock, label: 'Stock RS 70: sells with Sector RS below 50' }, { v: 50, color: C.sector, label: 'Sector RS 50: sells with Stock RS below 70 (and Stock RS 50: sells with SS Breadth below zero)' }, { v: 30, color: C.industry, label: 'Industry RS 30: below it, sells', zone: 'below', fill: 'rgba(207,34,46,0.06)' }],
       yDomain: [0, 100], yTicks: [0, 50, 100] };
   }
   function relPanel(m, h) {
@@ -997,7 +1003,7 @@
       { k: 'Industry RS below 30', pts: fr.map(function (q) { return { d: q.d, on: q.ind < 30 }; }) },
       { k: 'The relative 200D MA falling', pts: fr.map(function (q) { return { d: q.d, on: (dAt(q.d).slope || 0) <= 0 }; }) },
       { k: 'Sector RS below 50 with Stock RS below 70', pts: me.map(function (q) { return { d: q.d, on: q.sec < 50 && q.s < 70 }; }) },
-      { k: 'Stock RS below 50 with analysts cutting', pts: me.map(function (q) { var n = nAt(q.d); return { d: q.d, on: !!(n && q.s < 50 && ((n.sales != null && n.sales < 0) || (n.tp != null && n.tp < 0))) }; }) },
+      { k: 'SS Breadth below zero AND Stock RS below 50', pts: me.map(function (q) { var n = nAt(q.d); return { d: q.d, on: !!(n && q.s < 50 && ((n.sales != null && n.sales < 0) || (n.tp != null && n.tp < 0))) }; }) },
       { k: 'Relative price over 25% below its 52-week high', pts: me.map(function (q) { return { d: q.d, on: (dAt(q.d).rdh || 0) < -0.25 }; }) }];
     if (!m.probing && lv.length) rows.push({ k: 'A tranche 30% below its high, with Stock RS below 70', pts: fr.map(function (q) { return { d: q.d, on: trOn(q) }; }) });
     var N = rows.length, series = []; rows.forEach(function (r, i) { series.push({ kind: 'dots', pts: r.pts.map(function (q) { return { d: q.d, v: N - i - 0.5 }; }), color: C.border, r: 2.5 }); series.push({ kind: 'dots', pts: r.pts.filter(function (q) { return q.on; }).map(function (q) { return { d: q.d, v: N - i - 0.5 }; }), color: C.red, r: 4 }); });
@@ -1036,7 +1042,7 @@
       [['eps', M.eps && M.eps.breadth], ['ebitda', M.ebitda && M.ebitda.breadth]].forEach(function (a) { if (a[1] && a[1].length) bseries.push({ pts: a[1].filter(function (q) { return q.d >= since; }).map(function (q) { return { d: q.d, v: q.breadth }; }), color: col[a[0]], w: 1.4, label: 'Net Upgrade Breadth, ' + (a[0] === 'eps' ? 'earnings per share estimates' : 'EBITDA estimates') + ' (month-end)', fmt: pctS }); });
       bseries.push({ pts: m.nub.filter(function (q) { return q.d >= since; }).map(function (q) { return { d: q.d, v: q.sales }; }), color: col.sales, w: 1.8, label: 'Net Upgrade Breadth, sales estimates (month-end, the count the Sell Criterion reads)', fmt: pctS });
       bseries.push({ pts: m.nub.filter(function (q) { return q.d >= since; }).map(function (q) { return { d: q.d, v: q.tp }; }), color: col.tp, w: 1.8, label: 'Net Upgrade Breadth, target prices (month-end, the count the Sell Criterion reads)', fmt: pctS });
-      out.panels.push({ title: 'Net Upgrade Breadth on the 100-day count, the four metrics, at month-ends: with Stock RS below 50, a reading below zero on sales estimates or target prices sells', h: hBot, series: bseries, thresholds: [{ v: 0, color: C.red, zone: 'below', fill: 'rgba(207,34,46,0.07)' }], yDomain: [-1, 1], yTicks: [-1, 0, 1], yFmt: function (v) { return (v * 100) + '%'; } });
+      out.panels.push({ title: 'Net Upgrade Breadth on the 100-day count, the four metrics, at month-ends: a reading below zero on sales estimates or target prices, AND Stock RS below 50, sells', h: hBot, series: bseries, thresholds: [{ v: 0, color: C.red, zone: 'below', fill: 'rgba(207,34,46,0.07)' }], yDomain: [-1, 1], yTicks: [-1, 0, 1], yFmt: function (v) { return (v * 100) + '%'; } });
     }
     return out;
   }
@@ -1099,7 +1105,7 @@
         stack(h3, { d0: d0, d1: d1, width: cw, left: 52, right: 86, markers: m.tranches.length ? [{ d: m.tranches[0].entry_date }] : [], panels: [{ h: 95, yDomain: [lo3 - p3, hi3 + p3], series: [{ pts: px, color: C.ink3, w: 1.2, label: 'share price', fmt: fmtN, endLabel: lp ? 'price ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }, { pts: tpp, color: C.ink, w: 2, label: 'target price (mean)', fmt: fmtN, endLabel: lt ? 'target ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }] }] }); }
       var bp = ssPanels(m, d0, false, 10, 90).panels[1];
       if (lastMonthly) { var kn = document.createElement('div'); kn.className = 'key'; kn.textContent = 'The monthly consensus lines end at ' + fmtDY(lastMonthly) + ', the last month-end in the stored monthly files; today\'s value is written above each chart.'; host.appendChild(kn); }
-      if (bp) { var bh = document.createElement('div'); bh.style.marginTop = '8px'; host.appendChild(bh); bp.title = 'Net Upgrade Breadth on the 100-day count, at month-ends (with Stock RS below 50, a reading below zero on sales estimates or target prices sells)'; stack(bh, { d0: d0, d1: d1, width: W, right: 30, markers: [], panels: [bp] }); }
+      if (bp) { var bh = document.createElement('div'); bh.style.marginTop = '8px'; host.appendChild(bh); bp.title = 'Net Upgrade Breadth on the 100-day count, at month-ends (a reading below zero on sales estimates or target prices, AND Stock RS below 50, sells)'; stack(bh, { d0: d0, d1: d1, width: W, right: 30, markers: [], panels: [bp] }); }
     }
     return drawn;
   }
@@ -1465,7 +1471,7 @@
   var TESTROWS = { C1: ['C1'], C2: ['C2'], C3: ['C3s', 'C34'], C4: ['C4b', 'C34'], C5: ['C5'], C6: ['C6'] };
   function testColour(m, id) {
     if (/^(red|green|grey)$/.test(id || '')) return id;
-    if (id === 'MA' && !m.probing) return 'grey';   /* 29-Oct-2026: a Core Investment's MA SLs are information only */
+    if (id === 'MA' && !m.probing) return 'grey';   /* 2-Nov-2026: MA SLs are retired for a Core Investment; an older note's {MA} tag reads grey */
     if (m.probing && /^C[1-6]$/.test(id || '')) return 'grey';   /* 29-Oct-2026 re-check (D-PMS-V4-118): a Probing Bet's Sell Criteria are information only (all seven of Alfen's items showed red) */
     var rs = id === 'MA' ? m.rows.filter(function (r) { return /^MA/.test(r.id); }) : (TESTROWS[id] || []).map(function (k) { return m.rows.filter(function (r) { return r.id === k; })[0]; }).filter(Boolean);
     if (!rs.length) return null;
@@ -1477,7 +1483,7 @@
   function insItems(host, items, m, key) {
     host.innerHTML = (key ? '<div class="inskey">' + key + '</div>' : '') + items.map(function (it) {
       var col = testColour(m, it.id), bl = it.bullets && it.bullets.length ? '<ul class="insb">' + it.bullets.map(function (b) { return '<li>' + (b.sign ? '<b>' + esc(b.sign) + ':</b> ' : '') + mdInline(b.text) + '</li>'; }).join('') + '</ul>' : '<div class="say">' + mdInline(it.text || '') + '</div>';
-      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'information only for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
+      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'MA SLs are retired for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
     }).join('');
   }
   /* 29-Oct-2026 19:xx (D-PMS-V4-122): the note's date is the day it was WRITTEN, which is not always an APM PMS Q&A SOP run (the
@@ -1489,7 +1495,7 @@
     say.innerHTML = 'written on ' + fmtDY(I.date) + (I.readings_asof ? ', on the readings of ' + fmtDY(I.readings_asof) : '') + (I.date && m.asof && I.date < addDays(m.asof, -7) ? ' <b style="color:' + C.amber + '">(more than a week old)</b>' : '');
     var tagged = I.items.some(function (it) { return it.id; });
     var wb11 = writtenBefore(m, I.readings_asof);
-    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when there is no sell signal and little change, or when the test is information only (a Probing Bet\'s six Sell Criteria; a Core Investment\'s MA SLs); <b class="ck-green">green</b> when there is no sell signal and it has moved away.' : '');
+    insItems(host, I.items, m, tagged ? 'Colour, from today\'s readings in item 10 (Distance from SLs): <b class="ck-red">red</b> when the test gives a sell signal, is close to one, or has moved towards one since the ' + fmtD(m.trendFrom || m.lastME) + ' month-end; <b class="ck-grey">grey</b> when there is no sell signal and little change, or when the test is information only (a Probing Bet\'s six Sell Criteria); <b class="ck-green">green</b> when there is no sell signal and it has moved away.' : '');
     if (wb11) host.insertAdjacentHTML('afterbegin', wb11);
   }
   function addsRender(host, say, m) {

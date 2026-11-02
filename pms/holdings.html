@@ -31,7 +31,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     <h2>The book, the holdings needing action first <span class="mut">sorted: first the holdings the rule sells at the next Tuesday session; then a tranche in its release window; then a holding likely to give a sell signal at its next reading; then the Middle Innings Core Investments by the number of Sell Criteria giving a sell signal; then the rest; within each, the nearest to selling first</span></h2>
     <div class="howto"><b>How to read this page:</b> each row is one holding, and the holdings the rule says to act on come first. Read across a row to see its status, what the order sheet says, which of the six Sell Criteria give a sell signal, how near it is to the next one, its size, what we could lose, whether the rule allows an add, and whether it has moved nearer to selling since last week. Click a row to open the holding's own page.</div>
     <div style="overflow-x:auto"><table class="book" id="tbl"></table></div>
-    <div class="key">The six boxes, left to right: Industry RS below 30; the relative 200D MA falling over the month; Sector RS below 50 with Stock RS below 70; Stock RS below 50 with analysts cutting; relative price more than 25% below its 52-week high; a tranche 30% below its highest close since purchase. Red: a sell signal. Amber: one part of a two-part test past its line. Grey outline: information only (a Probing Bet, whose moving-average stop governs). Since last week compares the nearest tranche's distance to its 30% level with the readings a week earlier: green when it moved further from that level, red when it moved nearer, grey when it moved less than 2 points. No profit and loss is shown on this page.</div>
+    <div class="key">The six boxes, left to right: Industry RS below 30; the relative 200D MA falling over the month; Sector RS below 50 with Stock RS below 70; SS Sales or SS PT Net Upgrade Breadth below zero AND Stock RS below 50; relative price more than 25% below its 52-week high; a tranche 30% below its highest close since purchase. Red: a sell signal. Amber: one part of a two-part test past its line. Grey outline: information only (a Probing Bet, sold by the 10-day stop-loss rule). Since last week compares the nearest tranche's distance to its 30% level with the readings a week earlier: green when it moved further from that level, red when it moved nearer, grey when it moved less than 2 points. No profit and loss is shown on this page.</div>
   </div>
 </div>
 <script src="dashboard.js"></script>
@@ -58,28 +58,30 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     /* 18-Oct-2026 third check: the holdings the rule sells at the next Tuesday session come first (a confirmed moving-average stop exit, a
        sell signal not held back by the one-off in/out link, a released tranche); the round-two order had put them last (Richard's Higher
        Intent for this page: "you leave knowing the action the rules require") */
-    /* 27-Oct-2026 (Richard: "All tranches, all investments"): MA SLs on every tranche of every holding; the reader marks each confirmed
-       exit as a sale due or as a case the rules leave open for Richard (APM PMS Q&A SOP section 9). Older data has no MA SL fields. */
-    var hasMA = function (R) { return R.tranches.some(function (t) { return 'ma_sl_status' in t; }); };
+    /* 2-Nov-2026 (D-PMS-V4-132): MA SLs are retired for a Middle Innings Core Investment (its tranches carry ma_sl null); an Early
+       Innings Probing Bet's tranches are sold by the 10-day stop-loss rule (the MA and the stop-loss). The cases the rules left to
+       Richard are retired; the reader flags only an exit dated on or before the purchase, as data to check. Older data has no fields. */
+    var hasMA = function (R) { return R._probing && R.tranches.some(function (t) { return 'ma_sl_status' in t; }); };
     var maEx = function (R) { return R.tranches.filter(function (t) { return t.ma_sl && t.ma_sl.state === 'exit_confirmed'; }); };
     var maDue = function (R) { return R.tranches.filter(function (t) { return t.ma_sl_session_due; }); };
-    var maOpen = function (R) { return R.tranches.filter(function (t) { return t.ma_sl_open_cases && t.ma_sl_open_cases.length; }); };
+    var maChk = function (R) { return R.tranches.filter(function (t) { return (t.ma_sl_open_cases || []).indexOf('data') >= 0; }); };
     var trL = function (ns) { return ns.length > 1 ? 'tranches ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : 'tranche ' + ns[0]; };
-    var CASEW = { 1: 'confirmed before your 27-Oct-2026 ruling', 2: 'the price has since closed back above the stop', 3: 'held under your one-off in/out link', data: 'the exit is dated on or before the purchase: data to check' };
+    var dayOf = function (t) { var d = t.ma_sl && t.ma_sl.day_of_run; if (d == null) { var mm = /day (\d+) of/i.exec((t.ma_sl && t.ma_sl.label) || ''); d = mm ? +mm[1] : null; } return d == null ? '?' : d; };
     var maSentence = function (R) {
-      var ex = maEx(R); if (!ex.length) { if (R.tranches.some(function (t) { return t.ma_sl && t.ma_sl.state === 'triggered'; })) return '<b>A tranche is below its MA SL, inside the five-day window.</b>';
+      var ex = maEx(R); if (!ex.length) { var tst = R.tranches.filter(function (t) { return t.ma_sl && t.ma_sl.state === 'triggered'; });
+        if (tst.length) return '<b>' + tst.map(function (t) { return 'Tranche ' + t.tranche_number + ' is testing, day ' + dayOf(t) + ' of 10'; }).join('; ') + ' under the 10-day stop-loss rule.</b>';
         var nr = R.tranches.filter(function (t) { return t.ma_sl && t.ma_sl.pct_above_stop != null; }).sort(function (a, b) { return a.ma_sl.pct_above_stop - b.ma_sl.pct_above_stop; })[0];
-        return 'Every tranche is above its MA SL' + (nr ? '; the nearest, tranche ' + nr.tranche_number + ', is ' + Math.round(nr.ma_sl.pct_above_stop) + '% above it.' : '.'); }
-      var out = [trL(ex.map(function (t) { return t.tranche_number; })).replace(/^t/, 'T') + (ex.length > 1 ? ' have' : ' has') + ' a confirmed MA SL exit (' + ex.map(function (t) { return fmtD(t.ma_sl.exit_confirmed_date); }).join(', ') + ') and ' + (ex.length > 1 ? 'are' : 'is') + ' not yet sold.'];
-      var d = maDue(R), o = maOpen(R), cs = {};
+        return 'Every tranche is above its MA and its stop-loss' + (nr ? '; the nearest, tranche ' + nr.tranche_number + ', is ' + Math.round(nr.ma_sl.pct_above_stop) + '% above its stop-loss.' : '.'); }
+      var out = [trL(ex.map(function (t) { return t.tranche_number; })).replace(/^t/, 'T') + (ex.length > 1 ? ' have' : ' has') + ' a confirmed exit under the 10-day stop-loss rule (' + ex.map(function (t) { return fmtD(t.ma_sl.exit_confirmed_date); }).join(', ') + ') and ' + (ex.length > 1 ? 'are' : 'is') + ' not yet sold.'];
+      var d = maDue(R), k = maChk(R);
       if (d.length) { var g = {}; d.forEach(function (t) { (g[t.ma_sl_session_due] = g[t.ma_sl_session_due] || []).push(t.tranche_number); }); var ds = Object.keys(g).sort();
         out.push(ds.every(function (x) { return x < ASOF; }) ? 'The rule\'s sale fell due at the Tuesday session of ' + ds.map(function (x) { return fmtD(x) + ' (' + trL(g[x]) + ')'; }).join(' and of ') + ', and has not been made.'
           : 'The rule sells ' + ds.map(function (x) { return trL(g[x]) + ' at the Tuesday session of ' + fmtD(x); }).join(' and ') + '.'); }
-      if (o.length) { o.forEach(function (t) { t.ma_sl_open_cases.forEach(function (c) { cs[c] = 1; }); }); out.push('The rules leave ' + (o.length > 1 ? 'them' : 'it') + ' open (' + Object.keys(cs).sort().map(function (c) { return CASEW[c]; }).join('; ') + '), for your ruling at the APM PMS Q&A SOP run.'); }
+      if (k.length) out.push('For ' + trL(k.map(function (t) { return t.tranche_number; })) + ', the exit is dated on or before the purchase: data to check.');
       return '<b>' + out.join(' ') + '</b>';
     };
     var sellNow = function (R) { return (!hasMA(R) && R._probing && /EXIT CONFIRMED/.test(R._stop || '')) || /^SELL/.test(R.order_state || '') || (R.tranche_sales_due && R.tranche_sales_due.length > 0); };
-    var openNow = function (R) { return hasMA(R) && maOpen(R).length > 0; };
+    var openNow = function (R) { return hasMA(R) && maChk(R).length > 0; };   /* 2-Nov-2026: only "data to check" remains */
     /* 30-Oct-2026 (D-PMS-V4-124; Richard 16:32 on Arteche: this page said "no signal" and "Yes" to an add while the APM PMS Q&A SOP note said
        it "will very probably sell in full at the Tue 3-Nov session"): the shared look-ahead (DASH.lookAhead in dashboard.js) names any Sell
        Criterion whose daily reading is already past its line before the reading day that acts on it; such a holding ranks just below a sale. */
@@ -91,11 +93,11 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var nRel = hs.filter(rel).length, nAw = hs.filter(function (R) { return /^AWAITING/.test(R.order_state || ''); }).length, nNo = hs.filter(function (R) { return !R._probing && (R.order_state === 'no signal'); }).length, nPb = hs.filter(function (R) { return R._probing; }).length;
     var nPbX = hs.filter(function (R) { return !hasMA(R) && R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).length;
     var dueH = hs.filter(function (R) { return hasMA(R) && maDue(R).length; }), openH = hs.filter(openNow);
-    var maSum = (dueH.length ? '<b>MA SL exits the rule sells at the Tuesday session: ' + dueH.map(function (R) { return esc(R.name) + ' (' + trL(maDue(R).map(function (t) { return t.tranche_number; })) + ')'; }).join(', ') + '.</b> ' : '') +
-      (openH.length ? '<b>MA SL exits the rules leave open, for your ruling at the APM PMS Q&A SOP run: ' + openH.map(function (R) { return esc(R.name) + ' (' + trL(maOpen(R).map(function (t) { return t.tranche_number; })) + ')'; }).join(', ') + '.</b> ' : '');
+    var maSum = (dueH.length ? '<b>Exits under the 10-day stop-loss rule that the rule sells at the Tuesday session: ' + dueH.map(function (R) { return esc(R.name) + ' (' + trL(maDue(R).map(function (t) { return t.tranche_number; })) + ')'; }).join(', ') + '.</b> ' : '') +
+      (openH.length ? '<b>Exits under the 10-day stop-loss rule dated on or before the purchase, data to check: ' + openH.map(function (R) { return esc(R.name) + ' (' + trL(maChk(R).map(function (t) { return t.tranche_number; })) + ')'; }).join(', ') + '.</b> ' : '');
     document.getElementById('sum').innerHTML = '<div class="kv"><span class="k">Holdings</span><span class="v"><span class="big">' + hs.length + '</span> holdings in ' + trn + ' tranches, ' + cap.toFixed(2) + '% of capital at purchase sizes.</span></div>' +
       '<div class="kv"><span class="k">What we could lose (% of capital)</span><span class="v"><span class="big">' + lossN.toFixed(2) + '%</span> if every price fell to each tranche\'s nearer exit level; ' + loss30.toFixed(2) + '% if every price fell to the 30% levels only.</span></div>' +
-      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + maSum + (nPbX ? '<b>' + nPbX + ' Early Innings Probing Bet' + (nPbX === 1 ? ' has a confirmed stop exit' : 's have confirmed stop exits') + ' not yet sold, so the rule sells ' + (nPbX === 1 ? 'it' : 'them') + ' at the next Tuesday session: ' + hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).map(function (R) { return esc(R.name); }).join(', ') + '.</b> ' : '') + nRel + ' holding' + (nRel === 1 ? ' has a tranche' : 's have tranches') + ' in the release window. ' + nAw + ' Middle Innings Core Investment' + (nAw === 1 ? ' is' : 's are') + ' awaiting replacement under your one-off in/out link. ' + nNo + (nNo === 1 ? ' has' : ' have') + ' no sell signal from any Sell Criterion. ' + nPb + ' Early Innings Probing Bets are sold on their moving-average stops.</span></div>';
+      '<div class="kv" style="grid-column:1 / -1"><span class="k">Order sheet</span><span class="v">' + maSum + (nPbX ? '<b>' + nPbX + ' Early Innings Probing Bet' + (nPbX === 1 ? ' has a confirmed stop-loss exit' : 's have confirmed stop-loss exits') + ' not yet sold, so the rule sells ' + (nPbX === 1 ? 'it' : 'them') + ' at the next Tuesday session: ' + hs.filter(function (R) { return R._probing && /EXIT CONFIRMED/.test(R._stop || ''); }).map(function (R) { return esc(R.name); }).join(', ') + '.</b> ' : '') + nRel + ' holding' + (nRel === 1 ? ' has a tranche' : 's have tranches') + ' in the release window. ' + nAw + ' Middle Innings Core Investment' + (nAw === 1 ? ' is' : 's are') + ' awaiting replacement under your one-off in/out link. ' + nNo + (nNo === 1 ? ' has' : ' have') + ' no sell signal from any Sell Criterion. ' + nPb + ' Early Innings Probing Bet' + (nPb === 1 ? ' is' : 's are') + ' sold by the 10-day stop-loss rule.</span></div>';
     var boxes = function (R) {
       var c = R.criteria, info = R._probing;
       var part3 = function (v) { return v && typeof v === 'object' && ((v.sector_rs < 50) !== (v.stock_rs < 70)); };
@@ -105,18 +107,18 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     };
     /* round 3 (17-Oct-2026): every cell is a sentence that reads on its own; one count throughout (of the six Sell Criteria,
        as the six boxes show); "Since last week" names what moved; the nearest-tranche bar is folded into the sentences */
-    var CW = { C1: 'Industry RS below 30', C2: 'the relative 200D MA falling over the month', C3: 'Sector RS below 50 with Stock RS below 70', C4: 'Stock RS below 50 with analysts cutting', C5: 'relative price more than 25% below its 52-week high' };
+    var CW = { C1: 'Industry RS below 30', C2: 'the relative 200D MA falling over the month', C3: 'Sector RS below 50 with Stock RS below 70', C4: 'SS Sales or SS PT Net Upgrade Breadth below zero AND Stock RS below 50', C5: 'relative price more than 25% below its 52-week high' };
     var stopDate = function (R) { var m = /EXIT CONFIRMED (\d{4}-\d{2}-\d{2})/.exec(R._stop || ''); return m ? m[1] : null; };
     var nearT = function (R) { return R.tranches.slice().sort(function (a, b) { return a.distance_to_level_pct - b.distance_to_level_pct; })[0]; };
     var nearestTxt = function (R) {
       var nm = esc(R.name), out = [];
       if (R._probing) {
         var sd = stopDate(R);
-        out.push(nm + ' is an Early Innings Probing Bet, so its MA SLs decide the sale and the six Sell Criteria are information only.');
-        out.push(hasMA(R) ? maSentence(R) : sd ? '<b>Its stop exit was confirmed on ' + fmtD(sd) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.</b>' : 'Its price is above its stop.');
+        out.push(nm + ' is an Early Innings Probing Bet, so the 10-day stop-loss rule decides the sale and the six Sell Criteria are information only.');
+        out.push(hasMA(R) ? maSentence(R) : sd ? '<b>Its stop-loss exit was confirmed on ' + fmtD(sd) + ' and it is not yet sold, so the rule sells it at the next Tuesday session.</b>' : 'Its price is above its stop-loss.');
         return out.join(' ');
       }
-      /* 29-Oct-2026 (D-PMS-V4-115, Richard's Q3): a Core Investment's MA SLs are information only, so they are not named here */
+      /* 2-Nov-2026 (D-PMS-V4-132): MA SLs are retired for a Core Investment; it is sold by the six Sell Criteria alone */
       var tr = nearT(R), fired = R.criteria.filter(function (c) { return c.fires; });
       var rw = R.tranches.filter(function (x) { return x.state !== 'no trigger'; }).map(function (x) { return x.tranche_number; });
       var met = fired.map(function (c) { return CW[c.id]; }); if (rw.length) met.push('a tranche 30% below its highest close since purchase, with Stock RS below 70');
@@ -130,7 +132,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       return out.join(' ');
     };
     var arrow = function (R) {
-      if (R._probing) return '<span class="mut">Not shown: a Probing Bet is sold on its moving-average stop, not on its 30% levels.</span>';
+      if (R._probing) return '<span class="mut">Not shown: a Probing Bet is sold by the 10-day stop-loss rule, not on its 30% levels.</span>';
       var rwt = R.tranches.filter(function (x) { return x.state !== 'no trigger'; });
       if (rwt.length) { var rp = /close >= ([0-9.]+)/.exec(rwt[0].state), rpv = rp ? +rp[1] : null; return '<b>In the release window:</b> a close at or above ' + (rpv ? rpv.toFixed(2) : 'the release price') + ' releases the sale' + (R.last_close && rpv ? '; the last close was ' + (+R.last_close).toFixed(2) + ', ' + Math.abs(Math.round((R.last_close / rpv - 1) * 100)) + '% ' + (R.last_close < rpv ? 'below' : 'above') + ' it.' : '.'); }
       var s = R._slw || {}; if (s.nearest_now == null || s.nearest_prev == null) return '<span class="mut">No reading a week earlier.</span>';
@@ -139,13 +141,11 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
       return Math.abs(d) < 2 ? '<span class="arrow" style="color:' + C.ink3 + '">&#9644;</span> <b>About the same:</b> ' + t : d > 0 ? '<span class="arrow" style="color:' + C.industry + '">&#9650;</span> <b style="color:' + C.industry + '">Further from its 30% level:</b> ' + t : '<span class="arrow" style="color:' + C.red + '">&#9660;</span> <b style="color:' + C.red + '">Nearer to its 30% level:</b> ' + t; };
     var roomTxt = function (R) {
       var add = R.add_rule || {}, sd = R._probing && !hasMA(R) ? stopDate(R) : null;
-      if (add.open_case === 4) return '<b>Open:</b> a tranche has a confirmed MA SL exit; whether a Core Investment is added to then is for your ruling at the APM PMS Q&A SOP run.';
-      if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> its MA SL is not intact, so the rule allows no add to a Probing Bet.';
-      if (add.open_case === 2) return '<b>Open:</b> the price has closed back above the stop since the MA SL exit; whether its SL is intact again is for your ruling at the APM PMS Q&A SOP run.';
-      if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no MA SL reading.';
-      if (sd) return '<b>No:</b> its moving-average stop exit was confirmed on ' + fmtD(sd) + ', so the rule allows no add.';
+      if (/MA SL is not intact/.test(add.why || '')) return '<b>No:</b> a tranche is testing its MA or has a confirmed exit under the 10-day stop-loss rule, so the rule allows no add to a Probing Bet.';
+      if (add.allowed === null && /no MA SL reading/.test(add.why || '')) return '<b>Not known:</b> a tranche has no reading under the 10-day stop-loss rule.';
+      if (sd) return '<b>No:</b> its exit under the 10-day stop-loss rule was confirmed on ' + fmtD(sd) + ', so the rule allows no add.';
       var A = ahead(R); if (add.allowed && A.length) return DASH.aheadAddWords(A, add);   /* 31-Oct-2026: one copy, in dashboard.js */
-      if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit).';
+      if (add.allowed) return '<b>Yes:</b> the rule allows a next add of ' + add.next_add_pct + '% of capital (' + (add.room_pct != null ? add.room_pct.toFixed(2) : 'n/a') + '% of room below its ' + add.limit_pct + '% limit' + (add.tranche_size_why ? '; tranche size: ' + esc(add.tranche_size_why) : '') + ').';
       if (/Sell Criterion has fired/.test(add.why || '')) return '<b>No:</b> a Sell Criterion gives a sell signal, so the rule allows no add.';
       var w = String(add.why || '').split(';')[0].replace(/ \(.*\)$/, '');
       return '<b>No:</b> it holds ' + esc(w) + '.';
@@ -154,7 +154,7 @@ td.sent2 { min-width:200px; max-width:280px; font-size:12px; line-height:1.4; }
     var h = '<tr>' + th('Holding') + th('Status') + th('Order sheet') + th('The six Sell Criteria', 'One box per Sell Criterion: red when it gives a sell signal; amber when one part of a two-part test is past its line.') + th('Sell signals, and how near the next one is', 'Which Sell Criteria give a sell signal, which are likely to at their next reading, and how far the price can fall before the next one does.') + th('Tranches', 'Purchases held.', 'num') + th('% of capital', 'Its size, at purchase sizes.', 'num') + th('Could lose (% of capital)', 'If the price fell to each tranche\'s nearer exit level.', 'num') + th('Room to add', 'Whether the rule allows another tranche now.') + th('Since last week', 'How the nearest tranche\'s distance to its 30% level changed in a week.') + '</tr>';
     hs.forEach(function (R) {
       var sd = R._probing ? stopDate(R) : null;
-      var state = hasMA(R) && maDue(R).length ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : (hasMA(R) && !/^AWAITING/.test(R.order_state || '') && openNow(R)) ? '<span class="pill red statepill">MA SL EXIT, FOR YOUR RULING</span>' : (R._probing && hasMA(R)) ? (R.tranches.some(function (t) { return t.ma_sl && t.ma_sl.state === 'triggered'; }) ? '<span class="pill red statepill">BELOW ITS STOP</span>' : '<span class="pill blue statepill">price above its stops</span>') : R._probing ? (sd ? '<span class="pill red statepill">STOP EXIT CONFIRMED</span>' : '<span class="pill blue statepill">price above its stop</span>') : /^AWAITING/.test(R.order_state || '') ? '<span class="pill red statepill">AWAITING REPLACEMENT</span>' : rel(R) ? '<span class="pill red statepill">RELEASE WINDOW</span>' : /^SELL/.test(R.order_state || '') ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : ahead(R).length ? '<span class="pill red statepill">' + DASH.aheadPill(ahead(R)) + '</span>' : '<span class="pill grey statepill">no sell signal</span>';
+      var state = hasMA(R) && maDue(R).length ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : (hasMA(R) && !/^AWAITING/.test(R.order_state || '') && openNow(R)) ? '<span class="pill red statepill">EXIT: DATA TO CHECK</span>' : (R._probing && hasMA(R)) ? (R.tranches.some(function (t) { return t.ma_sl && t.ma_sl.state === 'triggered'; }) ? '<span class="pill red statepill">TESTING ITS MA</span>' : '<span class="pill blue statepill">price above its stop-losses</span>') : R._probing ? (sd ? '<span class="pill red statepill">STOP-LOSS EXIT CONFIRMED</span>' : '<span class="pill blue statepill">price above its stop-loss</span>') : /^AWAITING/.test(R.order_state || '') ? '<span class="pill red statepill">AWAITING REPLACEMENT</span>' : rel(R) ? '<span class="pill red statepill">RELEASE WINDOW</span>' : /^SELL/.test(R.order_state || '') ? '<span class="pill red statepill">SELL ON TUESDAY</span>' : ahead(R).length ? '<span class="pill red statepill">' + DASH.aheadPill(ahead(R)) + '</span>' : '<span class="pill grey statepill">no sell signal</span>';
       h += '<tr class="row" data-t="' + esc(R._t) + '"><td><a class="nm" href="' + hl(R._t) + '">' + esc(R.name) + '</a><div class="mut">' + esc(R.sector) + '</div></td><td>' + (R._probing ? 'Early Innings Probing Bet' : 'Middle Innings Core Investment' + (R.one_off_in_out_link ? ' <span class="mut">(held under your one-off in/out link)</span>' : '')) + '</td><td>' + state + '</td><td>' + boxes(R) + '</td><td class="sent">' + nearestTxt(R) + '</td><td class="num">' + R.tranches.length + '</td><td class="num">' + R.size_pct.toFixed(2) + '%</td><td class="num">' + Math.max(0, R.est_loss_nearer_pct_of_capital || 0).toFixed(2) + '</td><td class="sent2">' + roomTxt(R) + '</td><td class="sent2">' + arrow(R) + '</td></tr>';
     });
     var tbl = document.getElementById('tbl'); tbl.innerHTML = h;

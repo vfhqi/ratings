@@ -3,116 +3,113 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 270161,
+   "bytes": 266431,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 260011,
+   "bytes": 257626,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 278454,
+   "bytes": 271507,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 285979,
+   "bytes": 281313,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 286095,
+   "bytes": 288830,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 294397,
+   "bytes": 287226,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 197533,
+   "bytes": 192142,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 296978,
+   "bytes": 291846,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 272586,
+   "bytes": 265131,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 275156,
+   "bytes": 276544,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 280102,
+   "bytes": 271175,
    "warnings": [
-    "check rs: sector_rs on 2026-10-30 drawn 26, the reader says 25; the reader's value is used",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 277686,
+   "bytes": 269569,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 269363,
+   "bytes": 270986,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 287796,
+   "bytes": 292541,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 283317,
+   "bytes": 290004,
    "warnings": [
-    "check rs: sector_rs on 2026-10-30 drawn 25, the reader says 26; the reader's value is used",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 260126,
+   "bytes": 255235,
    "warnings": [
-    "check rs: sector_rs on 2026-10-30 drawn 25, the reader says 26; the reader's value is used",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
    ]
   }
@@ -129,15 +126,12 @@
   "VLX-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
   "XVIVO-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
   "IMCD-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
-  "HTRO-SE: check rs: sector_rs on 2026-10-30 drawn 26, the reader says 25; the reader's value is used",
   "HTRO-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
   "SDIP.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
   "DIE-BE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
   "HFG-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
-  "ALFEN-NL: check rs: sector_rs on 2026-10-30 drawn 25, the reader says 26; the reader's value is used",
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md",
-  "ART-ES: check rs: sector_rs on 2026-10-30 drawn 25, the reader says 26; the reader's value is used",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-10-30-the-session-run-on-friday-on-the-29-oct-close.md"
  ],
- "seconds": 80.1
+ "seconds": 70.9
 }
