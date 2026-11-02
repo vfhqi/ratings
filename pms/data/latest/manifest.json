@@ -24,7 +24,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 281313,
+   "bytes": 281324,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -38,7 +38,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 287667,
+   "bytes": 287671,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -94,7 +94,7 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 293114,
+   "bytes": 293083,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -133,5 +133,5 @@
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
  ],
- "seconds": 57.5
+ "seconds": 97.1
 }
