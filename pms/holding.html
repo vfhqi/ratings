@@ -122,7 +122,7 @@
   'use strict';
   /* 28-Oct-2026 (Richard: "I want to be able to per-stock dashboard for any stock in our universe"; D-PMS-V4-102): a stock we hold
      reads data/latest/, any other universe stock data/universe/ (scripts/pms_dashboard_universe.py); one page for both */
-  var UDATA = 'data/universe/', IDX = null;
+  var UDATA = 'https://vfhqi.github.io/pms-universe/', IDX = null; /* 3-Nov-2026 (D-PMS-V4-112, Richard 29-Oct "Q1 = Concur"): the universe files' own site, replaced each night with no history (scripts/deploy_pms_dashboard.py v1.3) */
   var DATA = 'data/latest/', MASTER = window.PMS_MASTER_BASE || '../../master/', HASHMODE = window.PMS_LINK_MODE === 'hash';
   var Q = new URLSearchParams(location.search), H0 = location.hash.slice(1), T = Q.get('t') || (H0 && H0 !== 'overlay' ? decodeURIComponent(H0) : null);
   if (HASHMODE) window.addEventListener('hashchange', function () { location.reload(); });

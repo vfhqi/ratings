@@ -17,7 +17,7 @@
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 271858,
+   "bytes": 271843,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -52,7 +52,7 @@
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 292000,
+   "bytes": 292021,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -80,7 +80,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 270701,
+   "bytes": 270684,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
    ]
@@ -133,5 +133,5 @@
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-02-the-session-run-on-monday-on-the-30-oct-close.md"
  ],
- "seconds": 80.0
+ "seconds": 66.1
 }
