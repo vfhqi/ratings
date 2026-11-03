@@ -1,44 +1,44 @@
 {
- "asof": "2026-11-02",
+ "asof": "2026-11-03",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 267158,
+   "bytes": 267379,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 257820,
+   "bytes": 258023,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 272125,
+   "bytes": 272380,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 281841,
+   "bytes": 282057,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 291156,
+   "bytes": 291411,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 286413,
+   "bytes": 286656,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -48,14 +48,14 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 193785,
+   "bytes": 194009,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 290230,
+   "bytes": 290503,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -65,56 +65,56 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 266190,
+   "bytes": 266430,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 278478,
+   "bytes": 278715,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 272364,
+   "bytes": 272638,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 271402,
+   "bytes": 271665,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 272801,
+   "bytes": 273051,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 294079,
+   "bytes": 294382,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 291083,
+   "bytes": 291449,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 255532,
+   "bytes": 255793,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
    ]
@@ -145,5 +145,5 @@
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-03-the-session-run-on-tuesday-on-the-2-nov-close.md"
  ],
- "seconds": 80.9
+ "seconds": 57.1
 }
