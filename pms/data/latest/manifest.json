@@ -27,7 +27,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 274039,
+   "bytes": 273968,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md"
    ]
@@ -76,14 +76,22 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 266054,
+   "bytes": 266360,
    "warnings": [
+    "check stop: the alignment calculation script gave no levels_series for tranche PB2",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md"
    ]
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
    "bytes": 273249,
+   "warnings": [
+    "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md"
+   ]
+  },
+  "SDIP.B-SE": {
+   "file": "SDIP_B-SE.json",
+   "bytes": 273006,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md"
    ]
@@ -117,9 +125,7 @@
    ]
   }
  },
- "failed": [
-  "SDIP.B-SE"
- ],
+ "failed": [],
  "warnings": [
   "AZA-SE: check rs: sector_rs on 2026-10-30 drawn 18, the reader says 17; the reader's value is used",
   "AZA-SE: check level30: tranche 1 line ends at 285.81, the reader says 212.3702",
@@ -140,13 +146,14 @@
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "XVIVO-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
+  "IMCD-NL: check stop: the alignment calculation script gave no levels_series for tranche PB2",
   "IMCD-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "HTRO-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
-  "SDIP.B-SE FAILED: '<' not supported between instances of 'NoneType' and 'float' Traceback (most recent call last):\n  File \"C:\\Users\\richb\\Documents\\COWORK\\scripts\\pms_dashboard_extract.py\", line 1043, in main\n    near_now = min([tr[\"distance_to_level_pct\"] for tr in R.get(\"tranches\", [])] or [None]) if R.get(\"tranches\") else None\n               ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: '<' not supported between instances of 'NoneType' and 'float'\n",
+  "SDIP.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "DIE-BE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "HFG-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-04-the-session-run-on-wednesday-on-the-3-nov-close.md"
  ],
- "seconds": 54.2
+ "seconds": 74.5
 }
