@@ -2129,6 +2129,21 @@ function hasEdit(invIdx, slotType) {
 }
 
 // === Tester logic ===
+// D-PMS-V4-146 (Richard, 4-Nov-2026: "B is the right approach", divide by today's fund value from UBS): the twin of
+// scripts/pms_book.py fund_factor. (EUR per unit of the stock's currency now / at entry) / (fund value per certificate now
+// / at entry), from POSITIONS.fund_basis (generate_position_data.py). 1 when the series is missing or the date impossible.
+function pmsFundFactor(ticker, entryDate) {
+  var b = (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.fund_basis) || null;
+  if (!b || !entryDate || String(entryDate) < '2020-01-01') return 1;
+  var e = String(entryDate).slice(0, 10);
+  var sfx = String(ticker || '').split('-').pop().toUpperCase();
+  var ccy = (b.suffix_ccy || {})[sfx] || 'EUR';
+  function onb(arr, d) { var v = null; for (var i = 0; i < arr.length; i++) { if (arr[i][0] <= d) v = arr[i][1]; else break; } return v != null ? v : (arr.length ? arr[0][1] : null); }
+  var re = onb(b.rpl || [], e), rn = b.rpl_now;
+  var fxe = ccy === 'EUR' ? 1 : onb((b.fx || {})[ccy] || [], e), fxn = ccy === 'EUR' ? 1 : (b.fx_now || {})[ccy];
+  if (!re || !rn || !fxe || !fxn) return 1;
+  return (fxn / fxe) / (rn / re);
+}
 function findIndexByDate(ticker, dateStr) {
   var series = (CHART_DATA.data || {})[ticker];
   if (!series || !dateStr) return -1;
@@ -2457,14 +2472,18 @@ function runTesterAll(ticker, pctAum, entryDateStr, stopMa, bufferOverride, hist
   var paperPnlAum = (pctAum || 0) * paperPnlPerShare;
   // CURRENT-AUM-2026-11-04 (Richard, 4-Nov-2026: every % of AUM is the CURRENT % of AUM unless it says at entry): the loss
   // if the stop-loss is hit is lost from what the tranche is worth NOW (Value AUM), not from its size at entry.
-  var _valueNow = (pctAum && entry.c) ? pctAum * (latest.c / entry.c) : null;
+  // D-PMS-V4-146: an impossible entry date (before 2020, e.g. a half-typed 0002-11-04) is valued at its entry size, as
+  // pms_book does, never against the first close the chart happens to hold.
+  var _dateOk = !!entryDateStr && String(entryDateStr) >= '2020-01-01';
+  var _valueNow = !pctAum ? null : (!_dateOk ? pctAum : (entry.c ? pctAum * (latest.c / entry.c) * pmsFundFactor(ticker, entryDateStr) : null));
   var lossRiskAum = (currentStop && pctAum) ? (_valueNow != null ? _valueNow : pctAum) * (currentStop / latest.c - 1) : null;
   var entryWarn = null;
   if (entry.c < entryStop) entryWarn = 'BELOW_STOP';
   else if (entryMa != null && entry.c < entryMa) entryWarn = 'BELOW_MA_ABOVE_STOP';
   var breach = walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType);
   // D-PMS-59: Value AUM = original size × (current price / entry close) — % AUM the tranche is worth right now
-  var valueAumPct = (pctAum && entry.c) ? pctAum * (latest.c / entry.c) : null;
+  // D-PMS-V4-146: x the currency's move / the fund's move since entry (today's fund value from UBS), as pms_book.current_value
+  var valueAumPct = _valueNow;
   return { ok: true, entry_close: entry.c, entry_date_actual: entry.d, entry_ma: entryMa, entry_stop: entryStop,
     initial_stop_distance_pct: (entryStop != null) ? (entryStop / entry.c - 1) : null,
     current_price: latest.c, current_ma: currentMa, current_stop: currentStop,
