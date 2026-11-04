@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-02",
+ "current_week": "2026-11-03",
  "prior_week": "2026-09-04",
  "industry": {
   "A. Consumer staples": {
@@ -40,11 +40,11 @@
    "prior": "A"
   },
   "J. Technology": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "K. Professional, business and consumer services": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "L. Media": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "A.2. Tobacco": {
@@ -134,11 +134,11 @@
    "prior": "F"
   },
   "E.1. Utilities - regulated networks": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "E.2. Utilities - integrated and multi-utilities": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "E.3. Utilities - renewable generators and developers": {
@@ -238,7 +238,7 @@
    "prior": "B"
   },
   "J.2. IT services - reselling": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "J.3. Fintech/payment processing": {
@@ -250,7 +250,7 @@
    "prior": "C"
   },
   "J.5. Software - VMS": {
-   "current": "C",
+   "current": "B",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "P.4. Agriculture": {
