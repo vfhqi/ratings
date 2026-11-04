@@ -2455,7 +2455,10 @@ function runTesterAll(ticker, pctAum, entryDateStr, stopMa, bufferOverride, hist
   var currentStop = calcStop(currentMa, bufferOverride);
   var paperPnlPerShare = (latest.c / entry.c - 1);
   var paperPnlAum = (pctAum || 0) * paperPnlPerShare;
-  var lossRiskAum = (currentStop && pctAum) ? pctAum * (currentStop / latest.c - 1) : null;
+  // CURRENT-AUM-2026-11-04 (Richard, 4-Nov-2026: every % of AUM is the CURRENT % of AUM unless it says at entry): the loss
+  // if the stop-loss is hit is lost from what the tranche is worth NOW (Value AUM), not from its size at entry.
+  var _valueNow = (pctAum && entry.c) ? pctAum * (latest.c / entry.c) : null;
+  var lossRiskAum = (currentStop && pctAum) ? (_valueNow != null ? _valueNow : pctAum) * (currentStop / latest.c - 1) : null;
   var entryWarn = null;
   if (entry.c < entryStop) entryWarn = 'BELOW_STOP';
   else if (entryMa != null && entry.c < entryMa) entryWarn = 'BELOW_MA_ABOVE_STOP';
@@ -4178,11 +4181,12 @@ function renderKpis() {
     TRADE_TYPES.forEach(function(slotType) {
       var edit = getEdit(invIdx, slotType);
       if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
-      // D-PMS-190: deployed = committed entry size, independent of current price data.
-      deployed += edit.target_size_pct;
+      // CURRENT-AUM-2026-11-04: deployed = what the tranches are worth NOW (Value AUM, the current % of AUM); a tranche the
+      // page cannot price counts at its entry size, so nothing drops out (D-PMS-190's intent kept).
       activeTrades += 1; hasAny = true;
       var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
       var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at, slotType);
+      deployed += (r && r.ok && r.value_aum_pct != null) ? r.value_aum_pct : edit.target_size_pct;
       if (!r || !r.ok) return;
       pnl += (r.paper_pnl_aum || 0);
       risk += (r.loss_risk_aum || 0);
@@ -4191,7 +4195,7 @@ function renderKpis() {
     if (hasAny) activeInvs += 1;
   });
   var el = document.getElementById('portfolioSummary');
-  el.innerHTML = kpiCard('Deployed', pct(deployed), deployed > 0.8 ? 'val-warn' : deployed > 0 ? 'val-pos' : 'val-muted')
+  el.innerHTML = kpiCard('Deployed (current % of AUM)', pct(deployed), deployed > 0.8 ? 'val-warn' : deployed > 0 ? 'val-pos' : 'val-muted')
     + kpiCard('At-Risk Loss', pctBp(risk), risk < -0.005 ? 'val-neg' : 'val-warn')
     + kpiCard('Paper P&L', pctBp(pnl), pnl > 0 ? 'val-pos' : pnl < 0 ? 'val-neg' : '')
     + kpiCard('Active Investments', activeInvs + ' / ' + CONFIG.investments.length, '')
