@@ -1,5 +1,5 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.6 on 2026-11-05T06:12:02 from master-dashboard/index.html (md5 0032622fabff226aef4e85c89d0335f9),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.6 on 2026-11-05T22:46:03 from master-dashboard/index.html (md5 94b4c48d24ba72404fd63df66a528596),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 18. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
@@ -73,11 +73,62 @@ function _expandChartRows(rows){
   return out;
 }
 
+/* MD-SPEED-2026-11-05 (D-MD-SPEED-1, Systems Architect, Ricky login; Richard, 5-Nov-26: "The charts in the MD take a long
+   time to load when I click on a stock"): the chart store. Each chart file fetched is also kept in the browser's own store
+   (Cache Storage "vf-charts-v1", one store for every page on vfhqi.github.io, so the PMS Per-stock Dashboard, whose copy of
+   this code is built from this page, reads and fills the same store). A stock opened before is drawn at once from its
+   stored copy; the published file is then fetched quietly and, if it differs, stored and the chart drawn again. A copy
+   that does not end the way a whole chart file ends is never stored or used. Anything that fails falls back to the
+   script-tag load, exactly as before; on file:// or without Cache Storage only the script-tag load runs. */
+var _VFC_NAME="vf-charts-v1",_VFC_MAX=600,_vfcLast=null,_vfcQ=[],_vfcBusy=0;
+function _vfcOk(){try{return typeof caches!=="undefined"&&!!caches.open&&typeof fetch==="function"&&typeof Response==="function"&&(location.protocol==="https:"||location.protocol==="http:");}catch(e){return false;}}
+function _vfcGood(t){return typeof t==="string"&&t.length>200&&t.indexOf("CHART_REGISTRY[")>=0&&/\]\];?\s*$/.test(t);}
+function _vfcRun(t){var s=document.createElement("script");s.text=t;document.head.appendChild(s);document.head.removeChild(s);}
+function _vfcGet(key){
+  return caches.open(_VFC_NAME).then(function(c){return c.match(key);}).then(function(r){
+    if(!r)return null;var v=r.headers.get("X-VF-Ver")||"";
+    return r.text().then(function(t){return {t:t,v:v};});
+  }).catch(function(){return null;});
+}
+function _vfcPut(key,t,ver){
+  try{caches.open(_VFC_NAME).then(function(c){
+    return c.put(key,new Response(t,{headers:{"Content-Type":"text/javascript","X-VF-Ver":ver||""}})).then(function(){
+      if(Math.random()<0.05)return c.keys().then(function(ks){for(var i=0;i<ks.length-_VFC_MAX;i++)c["delete"](ks[i]);});
+    });
+  }).catch(function(){});}catch(e){}
+}
+function _vfcFetch(url){return fetch(url).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();});}
+function _chartUrl(ticker){
+  var _cb=(typeof D!=="undefined"&&D&&D.meta&&D.meta.generated)?String(D.meta.generated).replace(/[^0-9]/g,""):"";
+  var url=(window.PMS_CHART_BASE||"charts/")+_safeTickerFile(ticker)+".js"+(_cb?("?v="+_cb):"");
+  var key=url.split("?")[0];try{key=new URL(key,location.href).href;}catch(e){}
+  return {url:url,ver:_cb,key:key};
+}
+/* MD-SPEED-2026-11-05 (D-MD-SPEED-2): the store filled ahead of a click. Two at a time, the latest request first, at most 20
+   waiting; a stock already stored from this build is skipped; nothing is drawn. */
+function _vfcPrefetch(ticker){
+  if(!ticker||!_vfcOk()||CHART_REGISTRY[ticker]||_chartLoading[ticker])return;
+  for(var i=0;i<_vfcQ.length;i++)if(_vfcQ[i]===ticker)return;
+  _vfcQ.push(ticker);if(_vfcQ.length>20)_vfcQ.shift();_vfcPump();
+}
+function _vfcPump(){
+  while(_vfcBusy<2&&_vfcQ.length){
+    (function(t){
+      _vfcBusy++;var u=_chartUrl(t);
+      _vfcGet(u.key).then(function(hit){
+        if(hit&&u.ver&&hit.v===u.ver&&_vfcGood(hit.t))return;
+        return _vfcFetch(u.url).then(function(txt){if(_vfcGood(txt))_vfcPut(u.key,txt,u.ver);});
+      }).catch(function(){}).then(function(){_vfcBusy--;_vfcPump();});
+    })(_vfcQ.pop());
+  }
+}
+
 function loadChartData(ticker, callback){
   // SESSION 12 D-MD-CHART-1: pure script-tag injection. XHR+eval path failed silently
   // on GitHub Pages because eval(xhr.responseText) runs in IIFE-local scope, and the
   // chart file's `var CHART_REGISTRY=CHART_REGISTRY||{}` shadows the global registry.
   // Script-tag injection executes at GLOBAL scope and writes to window.CHART_REGISTRY directly.
+  // (MD-SPEED-2026-11-05: a stored or fetched file is run the same way, as a script element, so it registers globally too.)
   // Already loaded?
   if(CHART_REGISTRY[ticker]){
     callback(_expandChartRows(CHART_REGISTRY[ticker]));
@@ -89,22 +140,49 @@ function loadChartData(ticker, callback){
     return;
   }
   _chartLoading[ticker]=[callback];
-  var _cb=(typeof D!=="undefined"&&D&&D.meta&&D.meta.generated)?String(D.meta.generated).replace(/[^0-9]/g,""):"";
-  var url=(window.PMS_CHART_BASE||"charts/")+_safeTickerFile(ticker)+".js"+(_cb?("?v="+_cb):"");
-  var s=document.createElement("script");
-  s.src=url;
-  s.onload=function(){
+  _vfcLast=ticker;
+  var u=_chartUrl(ticker),url=u.url;
+  function deliver(data){
     var cbs=_chartLoading[ticker]||[];
     delete _chartLoading[ticker];
-    var data=CHART_REGISTRY[ticker]?_expandChartRows(CHART_REGISTRY[ticker]):null;
-    for(var i=0;i<cbs.length;i++)cbs[i](data);
-  };
-  s.onerror=function(){
-    var cbs=_chartLoading[ticker]||[];
-    delete _chartLoading[ticker];
-    for(var i=0;i<cbs.length;i++)cbs[i](null);
-  };
-  document.head.appendChild(s);
+    if(data===undefined)data=CHART_REGISTRY[ticker]?_expandChartRows(CHART_REGISTRY[ticker]):null;
+    for(var i=0;i<cbs.length;i++){try{cbs[i](data);}catch(e){(function(er){setTimeout(function(){throw er;},0);})(e);}}
+    return cbs;
+  }
+  function viaTag(){
+    var s=document.createElement("script");
+    s.src=url;
+    s.onload=function(){deliver();};
+    s.onerror=function(){deliver(null);};
+    document.head.appendChild(s);
+  }
+  if(!_vfcOk()){viaTag();return;}
+  _vfcGet(u.key).then(function(hit){
+    if(hit&&_vfcGood(hit.t)){try{_vfcRun(hit.t);}catch(e){}}
+    if(CHART_REGISTRY[ticker]){
+      var cbs=deliver();
+      _vfcFetch(url).then(function(t){
+        if(!_vfcGood(t))return;
+        if(t===hit.t){if(hit.v!==u.ver)_vfcPut(u.key,t,u.ver);return;}
+        _vfcRun(t);_vfcPut(u.key,t,u.ver);
+        if(_vfcLast===ticker&&CHART_REGISTRY[ticker]){
+          var d=_expandChartRows(CHART_REGISTRY[ticker]);
+          for(var i=0;i<cbs.length;i++){try{cbs[i](d);}catch(e){}}
+        }
+      }).catch(function(){});
+      return;
+    }
+    return _vfcFetch(url).then(function(t){
+      if(!_vfcGood(t))throw new Error("incomplete chart file");
+      _vfcRun(t);
+      if(!CHART_REGISTRY[ticker])throw new Error("chart file did not register");
+      _vfcPut(u.key,t,u.ver);
+      deliver();
+    });
+  }).catch(function(){
+    if(!_chartLoading[ticker])return;
+    if(CHART_REGISTRY[ticker])deliver();else viaTag();
+  });
 }
 // === END LAZY CHART LOADER ===
 
