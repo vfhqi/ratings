@@ -31,6 +31,9 @@
     Array.prototype.slice.call(host.children).forEach(function (c) { if (!c.classList.contains('ov6')) host.removeChild(c); });
     var sz = sizeOf(host), W = Math.max(100, sz.w), Hh = Math.max(90, sz.h);
     var L = o.L == null ? 34 : o.L, R = o.R == null ? 40 : o.R, T = o.T == null ? 8 : o.T, B = 26, ph = Hh - T - B;
+    /* the margins widen to the longest axis number, so a six-figure scale (Carlsberg's revenue, DKK) is never cut off (UI QC 6-Nov-2026) */
+    var tl = (o.yTicks || niceTicks(o.yDomain[0], o.yDomain[1], 3)).map(function (v) { return String((o.yFmt || fmtN)(v)).length; }), tmax = tl.length ? Math.max.apply(null, tl) : 0;
+    L = Math.max(L, Math.round(tmax * 5.6 + 7)); if (o.rightTicks) R = Math.max(R, Math.round(tmax * 5.6 + 6));
     var d0 = o.d0, d1 = o.d1, span = (D(d1) - D(d0)) || 1, x = function (s) { return L + (D(s) - D(d0)) / span * (W - L - R); };
     var svg = el('svg', { width: W, height: Hh, viewBox: '0 0 ' + W + ' ' + Hh, style: 'display:block;font-family:Segoe UI,system-ui,sans-serif' }, host);
     var cid = 'cl' + Math.random().toString(36).slice(2, 8); el('defs', {}, svg).innerHTML = '<clipPath id="' + cid + '"><rect x="' + L + '" y="' + (T - 2) + '" width="' + (W - L - R) + '" height="' + (ph + 4) + '"/></clipPath><pattern id="h' + cid + '" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#8b949e" stroke-width="1" opacity="0.35"/></pattern>';
@@ -306,7 +309,7 @@
     if (!m) return;
     save();
     buttons(document.getElementById('os-tg4'), [['L6M', 'L6M'], ['L3M', 'L3M'], ['L1M', 'L1M']], st.est, function (k) { st.est = k; drawEst(); });
-    var host = document.getElementById('os-est3'); host.innerHTML = ''; host.className = 'q3 ' + st.estL; var GRID = st.estL === 'grid';
+    var host = document.getElementById('os-est3'); host.innerHTML = ''; host.className = 'q3 os-est-' + st.estL; var GRID = st.estL === 'grid';
     var days = WIN[st.est], d0 = addDays(m.asof, -days), d1 = addDays(m.asof, 3), band = st.est === 'L1M' ? 0.005 : 0.01, Yr = m.H.ss.years, labs = Yr.labels, names = Yr.names;
     var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? L_.v / b.v - 1 : null; };
     var chg = function (pts) { return chgD(pts, days); };
@@ -425,8 +428,12 @@
       var ti = el('title', {}, c); ti.textContent = p.q.r.name + ' (' + (p.q.g === 'self' ? 'this holding' : p.q.g === 'coh' ? 'cohort peer' : 'sector peer') + '): Stock RS ' + p.q.r.rs.now + ', change over ' + xl + ' ' + intS(p.x) + '; revision ' + pctI(p.y);
       if (p.off) txt(svg, sx(p.x), sy(p.yc) + (p.off === 'up' ? rr(p) + 10 : -rr(p) - 3), (p.off === 'up' ? '▲ ' : '▼ ') + pctI(p.y), { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink2 }); });
     var labs = pts.map(function (p) { return { p: p, lx: sx(p.x) + rr(p) + 2, ly: sy(p.yc) + 3.5 }; }).sort(function (a, b) { return a.ly - b.ly; });
-    for (var i = 1; i < labs.length; i++) { for (var j = 0; j < i; j++) { if (Math.abs(labs[i].lx - labs[j].lx) < 90 && Math.abs(labs[i].ly - labs[j].ly) < 11) labs[i].ly = labs[j].ly + 11; } }
-    labs.forEach(function (o) { var right = o.lx > W - R - 75; txt(svg, right ? o.lx - 2 * rr(o.p) - 5 : o.lx, o.ly, o.p.q.r.name, { 'font-size': 9.5, fill: o.p.q.g === 'self' ? C.entry : C.ink, 'font-weight': o.p.q.g === 'self' ? 700 : 400, 'text-anchor': right ? 'end' : 'start', halo: true }); });
+    labs.forEach(function (o) { o.w = String(o.p.q.r.name).length * 5.4; o.right = o.lx + o.w > W - R - 4; o.x0 = o.right ? o.lx - 2 * rr(o.p) - 5 - o.w : o.lx; });
+    /* names kept apart by their real widths (UI QC 6-Nov-2026: "Coca-Cola Europacific Partners" ran into "Campari"): a name that would touch one
+       already placed moves down a line, then up, until clear */
+    for (var i = 1; i < labs.length; i++) { var tries = 0, clash = function () { return labs.slice(0, i).some(function (o) { return labs[i].x0 < o.x0 + o.w + 4 && labs[i].x0 + labs[i].w + 4 > o.x0 && Math.abs(labs[i].ly - o.ly) < 11; }); };
+      var y0 = labs[i].ly; while (clash() && tries < 8) { tries++; labs[i].ly = y0 + (tries % 2 ? 1 : -1) * Math.ceil(tries / 2) * 11; } }
+    labs.forEach(function (o) { txt(svg, o.x0, o.ly, o.p.q.r.name, { 'font-size': 9.5, fill: o.p.q.g === 'self' ? C.entry : C.ink, 'font-weight': o.p.q.g === 'self' ? 700 : 400, halo: true }); });
   }
   var KEY6 = '<span style="color:#1a7f37">&#9679;</span><span style="color:#9a6700">&#9679;</span><span style="color:#cf222e">&#9679;</span> dot colour: its quarter &middot; darker: cohort peer, paler: sector peer &middot; size: market value &middot; <span style="color:#8250df">&#9711;</span> this holding, <span style="color:#0969da">&#9711;</span> another holding of ours';
   /* the peers table sized to its panel, so it never needs a scroll bar (Richard, 6-Nov 14:14): the font and row padding step down until it fits */

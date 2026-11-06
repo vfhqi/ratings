@@ -100,5 +100,7 @@
 /* smaller screens: wrap onto a second line rather than clip (UI QC 6-Nov-2026: nothing cut off at 1490x905, 1536x730, 1366x657) */
 @media (max-width:1760px) { #os .pnl > .ph { flex-wrap:wrap; row-gap:2px; } #os .rskey1 { flex-wrap:wrap; row-gap:1px; white-space:normal; } }
 @media (max-width:1500px) { #os .hdr { flex-wrap:wrap; row-gap:3px; white-space:normal; } #os .hdr .hsub { white-space:normal; } }
-#os .q3.rows { grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(3, minmax(0,1fr)); }
-#os .q3.grid { grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:repeat(2, minmax(0,1fr)); }
+#os .q3.os-est-rows { grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(3, minmax(0,1fr)); }
+#os .q3.os-est-grid { grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:repeat(2, minmax(0,1fr)); }
+/* the header wraps rather than clip a long industry or sector name (UI QC 6-Nov-2026, Volex) */
+#os .hdr { flex-wrap:wrap; row-gap:3px; white-space:normal; } #os .hdr .hsub { white-space:normal; } #os .hdr input { min-width:150px; }

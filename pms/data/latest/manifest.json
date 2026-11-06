@@ -116,7 +116,7 @@
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 261732,
+   "bytes": 261723,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-06-the-session-run-on-friday-on-the-5-nov-close.md"
    ]
@@ -149,5 +149,5 @@
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-06-the-session-run-on-friday-on-the-5-nov-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-06-the-session-run-on-friday-on-the-5-nov-close.md"
  ],
- "seconds": 68.8
+ "seconds": 75.6
 }
