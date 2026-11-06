@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-04",
+ "current_week": "2026-11-05",
  "prior_week": "2026-09-04",
  "industry": {
   "A. Consumer staples": {
@@ -8,7 +8,7 @@
    "prior": "D"
   },
   "B. Healthcare": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "C. Telecoms": {
@@ -64,7 +64,7 @@
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   }
  },
@@ -74,15 +74,15 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "A.4. Household products": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "A.5. Food retail": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -90,11 +90,11 @@
    "prior": "D"
   },
   "A.7. General retail": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "B.11. Biotech - clinical stage": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "B.3. Hospitals, clinics and care homes": {
@@ -102,11 +102,11 @@
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
-   "current": "C",
+   "current": "B",
    "prior": "F"
   },
   "B.5. Medtech - consumables": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
@@ -114,15 +114,15 @@
    "prior": "C"
   },
   "B.7. Pharma/biotech": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
@@ -138,7 +138,7 @@
    "prior": "D"
   },
   "E.2. Utilities - integrated and multi-utilities": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "E.3. Utilities - renewable generators and developers": {
@@ -190,7 +190,7 @@
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
@@ -250,7 +250,7 @@
    "prior": "C"
   },
   "J.5. Software - VMS": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -262,7 +262,7 @@
    "prior": "D"
   },
   "J.9. Semiconductors": {
-   "current": "C",
+   "current": "D",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
@@ -294,15 +294,15 @@
    "prior": "C"
   },
   "M.10. Building materials - cement and aggregates": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "M.4. Chemicals - Base": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "M.6. Construction and infrastructure contractors": {
@@ -354,23 +354,23 @@
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.2. Building technology and products": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.4. Electrical equipment, grid and automation": {
@@ -394,11 +394,11 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "P.4. Agriculture": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "P.5. Metals and mining": {
