@@ -1,6 +1,6 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.6 on 2026-11-06T14:26:02 from master-dashboard/index.html (md5 dc7fcb6ed47a48fe3f166ac11ef5a231),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 18. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-06T15:00:27 from master-dashboard/index.html (md5 dc7fcb6ed47a48fe3f166ac11ef5a231),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 19. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
@@ -341,7 +341,7 @@ function drawMasterChart(ticker,_sspo){
       priceTickList=fbNT.ticks;
     }
   }else{
-    var priceTickTarget=H>500?9:6;
+    var priceTickTarget=(_sspo&&_sspo.priceTicks)||(H>500?9:6); /* PMS-DASH 19 (6-Nov-2026, Richard: "Include more y-axis gridlines for ... the SP/MA chart"; the one-screen view asks for about 14) */
     var priceNT=niceTicks(priceLo,priceHi,priceTickTarget);
     priceMin=priceNT.min;priceMax=priceNT.max;priceRange=priceMax-priceMin||1;
     priceTickList=priceNT.ticks;

@@ -4,6 +4,7 @@
 <title>PMS Per-stock Dashboard</title>
 <link rel="stylesheet" href="dashboard.css">
 <link rel="stylesheet" href="dashboard-v2.css">
+<link rel="stylesheet" href="onescreen.css">
 <script>window.PMS_LINK_MODE='query';window.PMS_MASTER_BASE='https://vfhqi.github.io/master/';window.PMS_CHART_BASE='https://vfhqi.github.io/master/charts/';</script>
 </head>
 <body class="v2">
@@ -13,12 +14,66 @@
      28-Oct-2026 (Richard's minor changes, D-PMS-V4-91 onwards): item 1 twice as tall, its price scale fitting the window; items 3 to 5
      on one basis with no gap and a clearer time axis; item 8 with numbers, trend arrows and today's value first; item 9 side by side;
      a new item 10, the stock against each Sell Criterion, written at each APM PMS Q&A SOP run. -->
+<!-- 6-Nov-2026 (D-PMS-V4-151, Richard: "Please publish this to the per stock dashboard and to the Masterdashboard as an option"; his "Concur" to
+     Watson's picks: it opens first, each browser remembers the choice, every stock, the Master Dashboard's panel shows this same page):
+     the one-screen six-panel view (onescreen.js, onescreen.css). The full page below is unchanged and drawn only when shown. -->
+<div id="os">
+  <div class="hdr">
+    <span class="brand">PMS Per-stock Dashboard</span>
+    <select id="os-picker" aria-label="Holding"></select>
+    <input id="os-find" list="find-list" placeholder="Any stock: name or ticker" autocomplete="off" aria-label="Any stock in the universe">
+    <a class="btnlink" href="holdings.html">All holdings</a>
+    <h1 id="os-nm"></h1>
+    <span class="hsub" id="os-hsub"></span>
+    <span class="sp"></span>
+    <span class="vtog" role="group" aria-label="View"><button data-v="one" class="on">One screen</button><button data-v="full">Full page</button></span>
+    <span class="asof" id="os-asof"></span>
+  </div>
+  <div class="grid6">
+    <!-- 1 -->
+    <div class="pnl" id="os-p1">
+      <div class="ph"><b>1. SP and MAs</b><span class="sp"></span><span class="tg" id="os-zooms"></span><span class="tg" id="os-scales"></span><span class="lay1" id="os-legend"></span></div>
+      <div class="pb" style="display:flex;flex-direction:column">
+        <div style="flex:1 1 auto;min-height:0;position:relative"><div id="os-chart-container"><canvas id="os-canvas" style="width:100%;display:block"></canvas></div></div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="pnl" id="os-p2">
+      <div class="ph"><b>2. Volume, and relative price against its 52W high</b><span class="sp"></span><span class="tg" id="os-tg2"></span></div>
+      <div class="pb"><div class="q4" id="os-vol4"></div></div>
+    </div>
+    <!-- 3 -->
+    <div class="pnl" id="os-p3">
+      <div class="ph"><b>3. RS: Stock RS, Sector RS and Industry RS</b><span class="mut">each Friday and the latest day; dots at month-ends</span><span class="sp"></span><span class="tg zshared" id="os-tg3"></span></div>
+      <div class="pb" style="display:flex;flex-direction:column">
+        <div class="rskey1"><span><i style="border-color:#0969da"></i>Stock RS</span><span><i style="border-color:#bf3989"></i>Sector RS</span><span><i style="border-color:#1a7f37"></i>Industry RS</span><span><i class="d" style="border-color:#0969da"></i>70</span><span><i class="d" style="border-color:#bf3989"></i>50</span><span><i class="d" style="border-color:#1a7f37"></i>30, shaded below</span><span style="color:#8b949e">the lines the Sell Criteria read</span></div>
+        <div style="flex:1 1 auto;min-height:0;position:relative" id="os-rsc"></div>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="pnl" id="os-p4">
+      <div class="ph"><b>4. SS estimate upgrades: EPS, revenue, PT</b><span class="mut" id="os-p4say"></span><span class="sp"></span><span class="tg" id="os-tg4"></span></div>
+      <div class="pb"><div class="q3" id="os-est3"></div></div>
+    </div>
+    <!-- 5 -->
+    <div class="pnl" id="os-p5">
+      <div class="ph"><b>5. SS upgrade breadth: EPS, revenue, PT, Buys</b><span class="mut" id="os-p5say"></span><span class="sp"></span><span class="tg" id="os-tg5"></span></div>
+      <div class="pb"><div class="q4" id="os-nub4"></div></div>
+    </div>
+    <!-- 6 -->
+    <div class="pnl" id="os-p6">
+      <div class="ph"><b>6. Peers: cohort and sector</b><span class="tg" id="os-peerv"></span><span class="sp"></span><span class="tg" id="os-peerx"></span><span class="tg" id="os-peery"></span></div>
+      <div class="pb"><div class="pw chart" id="os-pw"><div class="pl"><div id="os-pc-plot" style="flex:1 1 auto;min-height:0;position:relative"></div></div><div class="pr" id="os-pc-tbl"></div></div></div>
+    </div>
+  </div>
+</div>
 <div class="wrap">
   <div class="topbar">
     <span class="brand" id="brand">PMS Per-stock Dashboard</span>
     <select id="picker" aria-label="Holding"></select>
     <input id="find" list="find-list" placeholder="Any stock: name or ticker" autocomplete="off" aria-label="Any stock in the universe" style="min-width:230px;padding:5px 9px;border:1px solid #d0d7de;border-radius:6px;font:inherit;font-size:13px;background:#fff"><datalist id="find-list"></datalist>
     <a class="btnlink" href="holdings.html">All holdings</a>
+    <span class="vtog" role="group" aria-label="View"><button data-v="one">One screen</button><button data-v="full" class="on">Full page</button></span>
     <span class="sp"></span>
     <span class="asof" id="asof"></span>
   </div>
@@ -117,6 +172,7 @@
 
 <script src="chart-renderer-dashboard.js"></script>
 <script src="dashboard.js"></script>
+<script src="onescreen.js"></script>
 <script>
 (function () {
   'use strict';
@@ -129,14 +185,14 @@
   var fileOf = function (t) { return t.replace(/[.\/]/g, '_') + '.json'; };
   var links = { holding: function (t) { return HASHMODE ? 'holding.html#' + t : 'holding.html?t=' + encodeURIComponent(t); }, stockView: function (t) { return MASTER + '?stock=' + encodeURIComponent(t); } };
   var esc = DU.esc, fmtD = DU.fmtD, fmtDY = DU.fmtDY;
-  var m = null, peerAx = { x: 'm3', y: 'eps3' }, lastW = 0;
+  var MECH0 = null, m = null, peerAx = { x: 'm3', y: 'eps3' }, lastW = 0;
   chartVis.vol = false; chartVis.vol20 = false; chartVis.vol50 = false; chartVis.obv = false;
   chartZoom = '12M';
   function fail(msg) { document.getElementById('err').innerHTML = '<div class="err">' + esc(msg) + '</div>'; }
   function getJSON(u) { return fetch(u, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(u + ': ' + r.status); return r.json(); }); }
 
   Promise.all([getJSON(DATA + 'book.json'), getJSON(UDATA + 'index.json').catch(function () { return null; }), getJSON('data/mechanical-volume-days.json').catch(function () { return null; })]).then(function (res) {
-    DASH.setMech(res[2]);   /* 29-Oct-2026: index review and option expiry days, hatched on item 2 (Volume) */
+    DASH.setMech(res[2]); MECH0 = res[2];   /* 29-Oct-2026: index review and option expiry days, hatched on item 2 (Volume) */
     var B = res[0], I = res[1], hs = B.holdings;
     IDX = I && I.stocks && I.stocks.length ? I : null; links.anyStock = !!IDX;
     document.getElementById('err').innerHTML = DU.warnBanner(B._meta);
@@ -147,6 +203,7 @@
     var groups = {}; hs.forEach(function (h) { var g = h.probing ? 'Early Innings Probing Bets' : 'Middle Innings Core Investments'; (groups[g] = groups[g] || []).push(h); });
     document.getElementById('picker').innerHTML = (ux ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
     document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value); };
+    var op = document.getElementById('os-picker'); op.innerHTML = document.getElementById('picker').innerHTML; op.value = T; op.onchange = document.getElementById('picker').onchange;   /* the one-screen header's copy */
     findBox();
     if (!T) { fail('No holdings in the data file.'); return; }
     if (held) return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
@@ -156,7 +213,10 @@
 
   /* any stock in the universe: type a name or ticker, pick it, and the page opens on it */
   function findBox() {
-    var f = document.getElementById('find');
+    ['find', 'os-find'].forEach(function (id) { findOne(document.getElementById(id)); });
+  }
+  function findOne(f) {
+    if (!f) return;
     if (!IDX) { f.style.display = 'none'; return; }
     document.getElementById('find-list').innerHTML = IDX.stocks.map(function (s) { return '<option value="' + esc(s.n + ' (' + s.t + ')') + '">' + (s.h ? 'held' : '') + '</option>'; }).join('');
     var go = function () { var v = f.value || '', mm = /\(([^()]+)\)\s*$/.exec(v), t = mm ? mm[1] : v.trim().toUpperCase(); if (IDX.stocks.some(function (s) { return s.t === t; })) location.href = links.holding(t); };
@@ -171,11 +231,23 @@
     document.getElementById('asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
     renderHead();
     DASH.overlay(m, links);
-    valFrames();
-    endNotes();
-    drawAll();
+    /* 6-Nov-2026 (D-PMS-V4-151): two views of the one page, the one-screen six panels (the default) and this full page; each browser
+       remembers the last one chosen; a view is drawn only while it shows, so every chart measures its real size */
+    window.ONESCREEN.start(m, { mech: MECH0 });
+    setView(viewNow());
+    Array.prototype.forEach.call(document.querySelectorAll('.vtog'), function (g) { g.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setView(b.dataset.v, true); }); });
     lastW = window.innerWidth;
-    window.addEventListener('resize', debounce(function () { if (Math.abs(window.innerWidth - lastW) < 2) return; lastW = window.innerWidth; drawAll(); }, 200));
+    window.addEventListener('resize', debounce(function () { if (!fullDrawn || document.body.classList.contains('os-on')) return; if (Math.abs(window.innerWidth - lastW) < 2) return; lastW = window.innerWidth; drawAll(); }, 200));
+  }
+  var fullDrawn = false;
+  function viewNow() { try { var v = localStorage.getItem('pmsPerStockView'); if (v === 'one' || v === 'full') return v; } catch (e) { /* storage refused: the default */ } return 'one'; }
+  function setView(v, save) {
+    document.body.classList.toggle('os-on', v === 'one'); document.documentElement.classList.toggle('os-on', v === 'one');
+    Array.prototype.forEach.call(document.querySelectorAll('.vtog button'), function (b) { b.classList.toggle('on', b.dataset.v === v); });
+    if (save) { try { localStorage.setItem('pmsPerStockView', v); } catch (e) { /* not kept: fine */ } }
+    if (v === 'one') { window.ONESCREEN.show(); return; }
+    if (!fullDrawn) { fullDrawn = true; valFrames(); endNotes(); }
+    lastW = window.innerWidth; drawAll();
   }
   function debounce(fn, ms) { var h; return function () { clearTimeout(h); h = setTimeout(fn, ms); }; }
   function renderHead() {
