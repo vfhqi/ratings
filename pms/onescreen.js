@@ -119,11 +119,11 @@
   function tbRow(swv, lab, cs, fmt) { return '<span>' + swv + '</span><span class="lab">' + lab + '</span>' + cs.map(function (c) { var k = c[0] == null ? 'flat' : trKind(c[0], c[1]); var v = c[0] == null ? 'n/a' : fmt ? fmt(c[0]) : (function (x) { var r = Math.round(x * 1000) / 10; return r > 0 ? '+' + r.toFixed(1) : r < 0 ? '(' + Math.abs(r).toFixed(1) + ')' : '0.0'; })(c[0]); return '<span class="n ' + k + '">' + v + '</span>'; }).join(''); }
   function sw(yi, col) { return '<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + col + '" stroke-width="' + (FYW[yi] || 2) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
 
-  var m = null, X = null, chartRows = null, MECHD = {}, OPTS = {}, st = { vol: 'L3M', est: 'L6M', nub: 'L3M', px: 'm3', py: 'eps3', pv: 'chart', rsz: '12M', estL: 'cols' };
+  var m = null, X = null, chartRows = null, MECHD = {}, OPTS = {}, st = { vol: 'L3M', est: 'L6M', nub: 'L3M', px: 'm3', py: 'eps3', pv: 'chart', rsz: '12M', estL: 'rows', p6: 'peers', vf: 'pe' };
   /* the settings chosen are kept in this browser and used for the next stock opened (Richard, 6-Nov-2026 15:13: "Remember the historical settings
      (e.g. what timeframe) when I load a new stock"): every panel's window, item 1's zoom, scale and MAs shown, RS's zoom, the peers chart or table */
   var KEY = 'pmsOneScreenSettings';
-  function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (typeof o[k] === 'string') st[k] = o[k];
+  function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (k !== 'estL' && typeof o[k] === 'string') st[k] = o[k];   /* the estimates layout is fixed: three stacked (Richard, 6-Nov 15:41) */
     if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
   function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200'].forEach(function (k) { o.mas[k] = !!chartVis[k]; }); localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
   var WIN = { L1M: 30, L3M: 91, L6M: 182 };
@@ -381,17 +381,48 @@
   function drawPeers() {
     save();
     /* chart or table, one at a time (Richard, 6-Nov 14:02: "add a toggle between CHART and TABLE and only display either/or in the panel") */
-    var pv = st.pv || 'chart';
+    /* Peers or Valuation in this panel (Richard, 6-Nov 15:42: "Add a toggle for the bottom right frame that toggles between "6. Peers: cohort and
+       sector" as you have it now and "valuation" charts, and in the valuation charts panel, have a toggle between P/E and EV/Sales") */
+    var p6 = st.p6 === 'val' ? 'val' : 'peers', pv = st.pv || 'chart', show = function (id, on) { document.getElementById(id).style.display = on ? '' : 'none'; };
+    buttons(document.getElementById('os-p6v'), [['peers', 'Peers'], ['val', 'Valuation']], p6, function (k) { st.p6 = k; drawPeers(); });
+    show('os-peerv', p6 === 'peers'); show('os-valf', p6 === 'val'); show('os-vallink', p6 === 'val');
+    if (p6 === 'val') { show('os-peerx', false); show('os-peery', false); drawVal(); return; }
+    document.getElementById('os-p6t').textContent = '6. Peers: cohort and sector';
     buttons(document.getElementById('os-peerv'), [['chart', 'Chart'], ['table', 'Table']], pv, function (k) { st.pv = k; drawPeers(); });
     document.getElementById('os-pw').className = 'pw ' + pv;
     document.getElementById('os-peerx').style.display = document.getElementById('os-peery').style.display = pv === 'chart' ? '' : 'none';
     if (pv === 'table') { var tb = document.getElementById('os-pc-tbl'); tb.innerHTML = DASH.peersTable(m); fitTable(tb); return; }
-    buttons(document.getElementById('os-peerx'), [['m1', '1M'], ['m3', '3M'], ['m6', '6M']], st.px, function (k) { st.px = k; drawPeers(); }, 'Stock RS change');
-    buttons(document.getElementById('os-peery'), [['eps3', 'EPS'], ['sales3', 'revenue']], st.py, function (k) { st.py = k; drawPeers(); }, '3M revisions');
+    buttons(document.getElementById('os-peerx'), [['m1', '1M'], ['m3', '3M'], ['m6', '6M']], st.px, function (k) { st.px = k; drawPeers(); });
+    buttons(document.getElementById('os-peery'), [['eps3', 'EPS'], ['sales3', 'revenue']], st.py, function (k) { st.py = k; drawPeers(); });
     var host = document.getElementById('os-pc-plot'), sz = sizeOf(host);
     peersMini(host, { x: st.px, y: st.py }, sz.w, sz.h);
   }
 
+
+  /* the valuation charts: the Master Dashboard's own valuation page, embedded as the full page's items 7 and 8 embed it (Richard, 27-Oct: "The
+     valuation charts should be the one from the master dashboard"), 10 years, tranche purchases marked; fitted to the panel */
+  var valSrc = null;
+  function drawVal() {
+    var f = st.vf === 'evs' ? 'evs' : 'pe', nm = f === 'pe' ? '24M fwd P/E' : '24M fwd EV/Sales', MB = window.PMS_MASTER_BASE || 'https://vfhqi.github.io/master/';
+    buttons(document.getElementById('os-valf'), [['pe', 'P/E'], ['evs', 'EV/Sales']], f, function (k) { st.vf = k; save(); drawVal(); });
+    document.getElementById('os-p6t').textContent = '6. Valuation: ' + nm + ', last 10 years';
+    document.getElementById('os-pw').className = 'pw val';
+    var host = document.getElementById('os-val'), V = m.H.valuation, has = !!(V && (V[f] || []).some(function (v) { return v != null; }));
+    var link = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&win=10&field=' + f; document.getElementById('os-vallink').href = link;
+    if (!has) { valSrc = null; var cur = V && V.current ? V.current[f] : null; host.innerHTML = '<div class="nohist" style="margin:12px">No ' + nm + ' history is stored for ' + DU.esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + nm + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
+    var trd = m.tranches.slice().sort(function (p, q) { return p.tranche_number - q.tranche_number; }).map(function (tr) { return tr.entry_date; }).join(',');
+    var url = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=10&field=' + f + (trd ? '&tr=' + trd : '');
+    var fr = host.querySelector('iframe');
+    if (!fr || valSrc !== url) { host.innerHTML = ''; fr = document.createElement('iframe'); fr.title = nm + ', the Master Dashboard valuation chart'; fr.className = 'osval'; fr.src = url; valSrc = url; host.appendChild(fr);
+      fr.addEventListener('load', function () { [100, 600, 1500, 3000].forEach(function (t) { setTimeout(fitVal, t); }); }); }
+    fitVal();
+  }
+  /* the embedded page is laid out at the panel's width; when it is taller than the panel it is scaled down to fit, never cut off */
+  function fitVal() {
+    var host = document.getElementById('os-val'), fr = host && host.querySelector('iframe'); if (!fr) return;
+    var W = host.clientWidth, H = host.clientHeight; fr.style.width = W + 'px'; fr.style.transform = 'none'; fr.style.height = H + 'px';
+    try { var d = fr.contentDocument; if (d && d.body) { var nh = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight); if (nh > H + 2) { var sc = H / nh; fr.style.width = Math.round(W / sc) + 'px'; fr.style.height = Math.round(nh) + 'px'; fr.style.transform = 'scale(' + sc.toFixed(4) + ')'; } } } catch (e) { /* another origin: kept at the panel's size */ }
+  }
 
   /* item 6's chart: the live peers picture (dashboard.js peersPicture, its full form), smaller: the same quarters, dots, rings, numbered axes and names; titles shortened to fit */
   function peersMini(host, ax, W, Hh) {

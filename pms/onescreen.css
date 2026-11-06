@@ -104,3 +104,9 @@
 #os .q3.os-est-grid { grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:repeat(2, minmax(0,1fr)); }
 /* the header wraps rather than clip a long industry or sector name (UI QC 6-Nov-2026, Volex) */
 #os .hdr { flex-wrap:wrap; row-gap:3px; white-space:normal; } #os .hdr .hsub { white-space:normal; } #os .hdr input { min-width:150px; }
+/* panel 6: Peers or Valuation (6-Nov-2026 15:42) */
+#os .pw .pv { display:none; min-width:0; min-height:0; position:relative; overflow:hidden; }
+#os .pw.val .pl, #os .pw.val .pr { display:none; }
+#os .pw.val .pv { display:block; }
+#os .pv iframe.osval { border:0; display:block; transform-origin:0 0; background:#fff; }
+#os #os-vallink { font-size:10.5px; color:#0969da; }
