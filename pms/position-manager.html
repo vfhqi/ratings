@@ -685,7 +685,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .pf-spark-key-strip .pf-key-pill { font-size: 10px; border-radius: 4px; }
 
 /* --- Endnotes (both pages): the explanations, kept out of the working area --- */
-.endnotes { margin: 28px 0 0; padding: 18px 22px 20px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); color: var(--fg2); }
+.endnotes { scroll-margin-top: calc(var(--appbar-h) + 72px); margin: 28px 0 0; padding: 18px 22px 20px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); color: var(--fg2); }
 .endnotes h2 { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--ink); margin: 0 0 12px; }
 .endnotes dl { columns: 3 420px; column-gap: 44px; margin: 0; }
 .endnotes .note { max-width: 78ch; break-inside: avoid; margin: 0 0 14px; }
@@ -804,7 +804,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
     </div>
     <!-- D-PMS-V4-154: the "How to use" banner, moved to the foot of the page as notes -->
     <section class="endnotes" id="notes-pms">
-      <h2>Notes on the Position manager<span class="endnotes-date">rules as of 6-Nov-2026</span></h2>
+      <h2>Notes on the Position manager <span class="endnotes-date">rules as of 6-Nov-2026</span></h2>
       <dl>
         <div class="note"><dt>Tranches</dt><dd>Each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, fill in the empty row at the foot of the stock (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer). Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split).</dd></div>
         <div class="note"><dt>Removing a tranche</dt><dd><b>Type 0</b> as its % at entry: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it beside the entry date). Typing a size back puts it back. The <b>×</b> at the row's end deletes a tranche entirely (for a mistaken entry).</dd></div>
