@@ -493,6 +493,8 @@ select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e
 .pf-spark-zero-line { stroke: var(--fg3); stroke-width: 1; opacity: 0.85; }
 .pf-spark-baseline { stroke: var(--border); stroke-width: 1; opacity: 0.7; }
 .pf-spark-axis-bg { fill: var(--bg2); opacity: 0.95; }
+.pms-toast { position: fixed; right: 24px; bottom: 24px; z-index: 1000; max-width: 460px; padding: 10px 14px; border-radius: 8px; background: #15233f; color: #fff; font-size: 13px; box-shadow: 0 10px 30px rgba(21,35,63,0.3); opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s, transform .2s; }
+.pms-toast.show { opacity: 1; transform: none; }
 
 /* ==========================================================================
    D-PMS-V4-154 (Richard, 6-Nov-2026 14:48): "materially improve the aesthetics; more elegant formatting, colours,
@@ -716,7 +718,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
     <button class="pms-tab" data-pane="pms" id="tabPms">Position manager</button>
   </nav>
   <div class="app-status">
-    <span id="lastUpdated" class="app-updated"></span>
+    <span id="lastUpdated" class="app-updated" title="When this page was opened in this browser. The data times are in the line below the bar."></span>
     <span id="statusBadge">loading…</span>
     <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
     <button class="btn btn-connect" id="btnConnect" title="Grant access to pms-data/ folder for auto-save">Connect to disk</button>
@@ -1835,6 +1837,7 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
   if (!ticker) return;
   var kind = (field === 'type' && TRANCHE_KIND_LABEL[rawValue]) ? rawValue : (pendingNewKind[invIdx] || kindFromHoldingStatus(ticker) || 'probing');
   if (field === 'type') { pendingNewKind[invIdx] = kind; render(); return; }   // choosing a type alone creates nothing
+  if (field === 'entry_date' && implausibleDate(rawValue)) { refuseDate(rawValue); return; }   // D-PMS-V4-155
   var value = rawValue;
   if (field === 'target_size_pct') {
     value = pctInputToDecimal(rawValue);
@@ -1888,6 +1891,7 @@ function setTrancheType(invIdx, key, kind) {
 function setExitDate(invIdx, key, value) {
   var t = getEdit(invIdx, key);
   if (!t || !value) return;
+  if (implausibleDate(value)) { refuseDate(value); return; }   // D-PMS-V4-155
   t.exited_on = value;
   saveEdits(); render();
 }
@@ -2168,8 +2172,32 @@ function relPerfCellHtml(v, days) {
 // ===========================================================================
 var TYPE_CHANGEOVER_KEY = 'pms_changeover_2026_11_06_exit_dates';
 var typeChangeoverInFlight = false;
+var DATE_FIX_2026_11_06 = { 't-f65a1f91-0002-11-04': 1, 't-e0ff8973-0002-11-04': 1 };   // D-PMS-V4-155
+async function runEntryDateCorrection() {
+  var hits = [];
+  Object.keys(EDITS || {}).forEach(function (slot) { trancheKeys(slot).forEach(function (k) {
+    var t = EDITS[slot][k];
+    if (t && DATE_FIX_2026_11_06[t.tranche_id] && t.entry_date === '0002-11-04') hits.push([slot, k]);
+  }); });
+  if (!hits.length) return false;
+  try { localStorage.setItem('pms_edits_pre_datefix_2026_11_06', JSON.stringify(EDITS)); } catch (e) {}
+  var done = [];
+  hits.forEach(function (x) {
+    var t = EDITS[x[0]][x[1]];
+    t.entry_date = '2026-11-04';
+    (t.stop_history || []).forEach(function (h) { if (h.set_on === '0002-11-04') h.set_on = '2026-11-04'; });
+    t.date_corrected = { from: '0002-11-04', to: '2026-11-04', ruled: 'Richard, 6-Nov-2026 15:40, "Q1 = Yes" (D-PMS-V4-155)' };
+    done.push((effectiveTicker((CONFIG.investments || [])[parseInt(x[0], 10)], x[0]) || ('slot ' + x[0])) + ' ' + x[1]);
+  });
+  console.log('[D-PMS-V4-155] entry date 0002-11-04 corrected to 2026-11-04: ' + done.join(', '));
+  seedEditFingerprints();
+  saveEditsToLocalStorage();
+  if (diskWriteEnabled) await writeStateToDisk();
+  return true;
+}
 async function runTrancheTypeChangeover() {
   if (typeChangeoverInFlight) return;
+  if (await runEntryDateCorrection()) render();   // D-PMS-V4-155
   if (!Object.keys(EDITS || {}).length) return;
   var need = function (slot, k) {
     var t = EDITS[slot] && EDITS[slot][k];
@@ -2204,7 +2232,21 @@ function getEdit(invIdx, slotType) {
   if (!EDITS[invIdx]) return null;
   return EDITS[invIdx][slotType] || null;
 }
+function implausibleDate(v) {   // D-PMS-V4-155
+  if (!v) return false;
+  var y = parseInt(String(v).slice(0, 4), 10);
+  return !(y >= 2000 && y <= 2100);
+}
+function refuseDate(v) {
+  var el = document.getElementById('pmsToast');
+  if (!el) { el = document.createElement('div'); el.id = 'pmsToast'; el.className = 'pms-toast'; document.body.appendChild(el); }
+  el.textContent = 'Not saved: ' + v + ' has the year ' + String(v).slice(0, 4) + '. Type the full year, e.g. 04/11/2026.';
+  el.classList.add('show');
+  clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove('show'); }, 7000);
+  render();
+}
 function setEditField(invIdx, slotType, field, value) {
+  if ((field === 'entry_date' || field === 'exited_on') && implausibleDate(value)) { refuseDate(value); return; }
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   if (!EDITS[invIdx][slotType]) EDITS[invIdx][slotType] = {};
   EDITS[invIdx][slotType][field] = value;
@@ -4366,7 +4408,7 @@ function render() {
   renderPortfolioSection();
   // D-PMS-94 FIX: re-apply hide-at-entry col tweak after portfolio re-render (rebuilds colgroup)
   applyHideAtEntry();
-  document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  document.getElementById('lastUpdated').textContent = 'Opened ' + new Date().toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
   // D-PMS-170: price freshness indicator
   (function() {
     var meta = (CHART_DATA && CHART_DATA._meta) || {};
