@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-05",
+ "current_week": "2026-11-06",
  "prior_week": "2026-09-04",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "D"
   },
   "D. Infrastructure": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "E. Utilities": {
@@ -32,7 +32,7 @@
    "prior": "B"
   },
   "H. Consumer discretionary": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "I. Transportation": {
@@ -74,15 +74,15 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "A.4. Household products": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "A.5. Food retail": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "A.6. Food production": {
@@ -90,7 +90,7 @@
    "prior": "D"
   },
   "A.7. General retail": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "B.11. Biotech - clinical stage": {
@@ -126,7 +126,7 @@
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "D.3. Infrastructure - telecom towers": {
@@ -186,7 +186,7 @@
    "prior": "F"
   },
   "H.11. Airlines and travel": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
@@ -226,7 +226,7 @@
    "prior": "F"
   },
   "H.9. Hotels, leisure and hospitality": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "I.1. Logistics": {
@@ -246,7 +246,7 @@
    "prior": "D"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "J.5. Software - VMS": {
@@ -254,7 +254,7 @@
    "prior": "F"
   },
   "J.7. Software - Computer games": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "J.8. Hardware": {
@@ -270,7 +270,7 @@
    "prior": "C"
   },
   "K.11. Information services": {
-   "current": "B",
+   "current": "A",
    "prior": "F"
   },
   "K.3. Testing and inspection services": {
@@ -282,7 +282,7 @@
    "prior": "B"
   },
   "K.9. Recruitment services": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "L.1. Content, TV and other media": {
@@ -294,7 +294,7 @@
    "prior": "C"
   },
   "M.10. Building materials - cement and aggregates": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
@@ -302,7 +302,7 @@
    "prior": "C"
   },
   "M.4. Chemicals - Base": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "M.6. Construction and infrastructure contractors": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "C",
+   "current": "B",
    "prior": "A"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
@@ -354,7 +354,7 @@
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
@@ -362,7 +362,7 @@
    "prior": "B"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
