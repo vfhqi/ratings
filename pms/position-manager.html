@@ -405,7 +405,49 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
 .pf-chart-card.has-tier1-overlays canvas { position: relative; z-index: 1; }
 .pf-chart-overlays { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; }
 
-/* D-PMS-133: Portfolio Charts page */
+/* D-PMS-V4-150 (6-Nov-2026): tranche types, removed tranches, UBS per tranche, the Portfolio overview's colour coding */
+.kind-pill { display: inline-block; padding: 1px 6px; border-radius: 9px; font-size: 10px; font-weight: 700; color: #fff; margin: 1px 4px 1px 0; white-space: nowrap; }
+.kind-pill.kind-core { background: #1d4ed8; }
+.kind-pill.kind-probing { background: #c2410c; }
+.kind-pill.kind-speculative { background: #7e22ce; }
+.kind-text { font-size: 10px; font-weight: 700; font-family: var(--font); }
+.kind-text.kind-core { color: #1d4ed8; }
+.kind-text.kind-probing { color: #c2410c; }
+.kind-text.kind-speculative { color: #7e22ce; }
+.hs-kinds { margin: 3px 0 2px; }
+.hs-ubs { font-size: 10.5px; color: var(--fg2); font-family: var(--mono); margin-bottom: 2px; }
+select.kind-select { width: 124px; font-size: 10.5px; font-weight: 700; padding: 1px 2px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); }
+select.kind-select.kind-core { color: #1d4ed8; border-left: 4px solid #1d4ed8; }
+select.kind-select.kind-probing { color: #c2410c; border-left: 4px solid #c2410c; }
+select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e22ce; }
+.tranche-num { font-size: 10px; color: var(--fg3); margin-top: 1px; }
+.pos-table tr.tr-exited td:not(.ticker-cell) { opacity: 0.45; background: repeating-linear-gradient(135deg, rgba(0,0,0,0.025) 0 6px, transparent 6px 12px); }
+.pos-table tr.tr-exited td:not(.ticker-cell):hover, .pos-table tr.tr-exited td:not(.ticker-cell):focus-within { opacity: 0.85; }
+.pos-table tr.tr-new td:not(.ticker-cell) { background: rgba(9,105,218,0.03); }
+.pos-table tr.tr-new select.kind-select, .pos-table tr.tr-new input.edit-input { opacity: 0.75; }
+.exit-note { font-size: 10px; color: var(--fg2); margin-top: 2px; white-space: nowrap; }
+.exit-note input.exit-date { width: 112px; font-size: 10px; padding: 0 2px; }
+.badge.b-exited { background: #e5e7eb; color: #374151; border: 1px solid #9ca3af; }
+.ubs-cell { white-space: nowrap; }
+.ubs-val { font-family: var(--mono); }
+.ubs-gap { color: #b45309; font-weight: 700; }
+.btn-align { font-size: 10px; padding: 0 5px; margin-left: 3px; border-radius: 4px; border: 1px solid #b45309; background: #fffbeb; color: #92400e; cursor: pointer; line-height: 16px; }
+.btn-align:hover { background: #fef3c7; }
+.pos-table tr.ubs-unmatched td { font-size: 11px; color: #92400e; background: #fffbeb; padding: 3px 10px; text-align: left; }
+/* Portfolio overview */
+.pf-h2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pf-legend { display: inline-flex; align-items: center; gap: 4px; margin-left: 12px; font-size: 10.5px; font-weight: 400; color: var(--fg2); }
+.pf-legend-sep { width: 10px; }
+.pf-legend-rel { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; }
+.pf-legend-sw { display: inline-block; width: 12px; height: 10px; border-radius: 2px; }
+.pf-table td.pf-ticker-cell { background-image: var(--kind-bar); background-size: 6px 100%; background-repeat: no-repeat; padding-left: 12px; }
+.pf-kinds { line-height: 1.1; margin-top: 1px; }
+.pf-table td.pf-rel { font-weight: 600; }
+.pf-table th { font-size: 9.5px; padding: 6px 6px; }
+.portfolio-section.pf-fullscreen .pf-spark-cell { padding: 1px 4px; }
+.info-only, .info-only * { color: var(--fg3) !important; font-style: italic; font-weight: 400 !important; }
+
+/* D-PMS-133: Portfolio Charts page (retired 6-Nov-2026, D-PMS-V4-150) */
 .pf-charts-toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 0; margin-bottom: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
 .pf-charts-label { font-size: 11px; color: var(--fg2); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin: 0 4px 0 8px; }
 .pf-density-btn.active, .pf-sort-btn.active, .pf-period-btn.active { background: var(--accent, #0969da); color: #fff; }
@@ -493,7 +535,6 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
   <!-- D-PMS-131: Tab navigation -->
   <nav class="pms-tabs" id="pmsTabs">
     <button class="pms-tab" data-pane="overview" id="tabOverview">Portfolio overview</button>
-    <button class="pms-tab" data-pane="charts" id="tabCharts">Portfolio charts</button>
     <button class="pms-tab" data-pane="pms" id="tabPms">Position manager</button>
     <span class="pms-tabs-info" id="pmsTabsInfo"></span>
   </nav>
@@ -506,75 +547,10 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
   <div class="tab-pane" id="pane-overview">
     <!-- D-PMS-73 to D-PMS-77: PORTFOLIO section (one row per live investment) -->
     <div class="portfolio-section pf-fullscreen" id="portfolioSection"></div>
-    <!-- D-PMS-136: Portfolio Report placeholder -->
-    <div class="pf-report-card" id="portfolioReport">
-      <h2>Portfolio report</h2>
-      <div class="pf-report-status">Briefing pending. Richard to deliver SOP brief. Report content will populate here once briefed.</div>
-    </div>
+  </div>
   </div>
 
-  <!-- PANE 2: Portfolio Charts (D-PMS-133 + D-PMS-142/143/144/145) -->
-  <div class="tab-pane" id="pane-charts">
-    <!-- Row 1: Layout controls -->
-    <div class="pf-charts-toolbar">
-      <span class="pf-charts-label">Grid:</span>
-      <button class="btn pf-density-btn" data-cols="4">4×</button>
-      <button class="btn pf-density-btn" data-cols="3">3×</button>
-      <button class="btn pf-density-btn" data-cols="2">2×</button>
-      <button class="btn pf-density-btn" data-cols="1">1×</button>
-      <span class="btn-group-spacer"></span>
-      <span class="pf-charts-label">Sort:</span>
-      <button class="btn pf-sort-btn" data-sort="ticker">Ticker</button>
-      <button class="btn pf-sort-btn" data-sort="lossRisk">Loss risk</button>
-      <button class="btn pf-sort-btn" data-sort="valueAum">% AUM</button>
-      <span class="btn-group-spacer"></span>
-      <span class="pf-charts-label">Period:</span>
-      <button class="btn pf-period-btn" data-period="1M">1M</button>
-      <button class="btn pf-period-btn" data-period="3M">3M</button>
-      <button class="btn pf-period-btn active" data-period="6M">6M</button>
-      <button class="btn pf-period-btn" data-period="12M">12M</button>
-      <button class="btn pf-period-btn" data-period="2Y">2Y</button>
-      <button class="btn pf-period-btn" data-period="3Y">3Y</button>
-      <button class="btn pf-period-btn" data-period="5Y">5Y</button>
-      <span class="btn-group-spacer"></span>
-      <span class="pf-charts-label">Scale:</span>
-      <button class="btn pf-scale-btn active" data-scale="lin">LIN</button>
-      <button class="btn pf-scale-btn" data-scale="log">LOG</button>
-      <span class="pf-charts-info" id="pfChartsInfo"></span>
-    </div>
-    <!-- Row 2: Layer toggles (global to all charts) -->
-    <div class="pf-charts-layers-toolbar" id="pfLayersToolbar">
-      <span class="pf-charts-label">Layers:</span>
-      <button class="btn pf-layer-btn" data-layer="ma5" style="color:#8b0000">MA5</button>
-      <button class="btn pf-layer-btn" data-layer="ma10" style="color:#e88a9a">MA10</button>
-      <button class="btn pf-layer-btn active" data-layer="ma20" style="color:#e74c3c">MA20</button>
-      <button class="btn pf-layer-btn active" data-layer="ma50" style="color:#ff8c00">MA50</button>
-      <button class="btn pf-layer-btn active" data-layer="ma100" style="color:#2ca02c">MA100</button>
-      <button class="btn pf-layer-btn active" data-layer="ma150" style="color:#1a5276">MA150</button>
-      <button class="btn pf-layer-btn active" data-layer="ma200" style="color:#4a3d9e">MA200</button>
-      <button class="btn pf-layer-btn active" data-layer="vol" style="color:#9a6700">Vol</button>
-      <span class="btn-group-spacer"></span>
-      <span class="pf-charts-label">PMS overlays:</span>
-      <button class="btn pf-overlay-btn active" data-overlay="stops">Stops</button>
-      <button class="btn pf-overlay-btn active" data-overlay="entries">Entries</button>
-      <button class="btn pf-overlay-btn active" data-overlay="risk">Risk zones</button>
-      <button class="btn pf-overlay-btn active" data-overlay="promo">Promotions</button>
-      <button class="btn pf-overlay-btn" data-overlay="breach" title="Tier 2: red gradient on recent bars when stop breached">Breach</button>
-      <button class="btn pf-overlay-btn" data-overlay="grace" title="Count of tranches with a confirmed exit (the stop-state overlay)">Stop state</button>
-      <button class="btn pf-overlay-btn" data-overlay="stopMaBold" title="Tier 2: bold the MA(s) used as active tranche stops">Stop MA bold</button>
-      <button class="btn pf-overlay-btn" data-overlay="filterBadges" title="Tier 3: PB / MM99 / UTR badges in top-left">MD filters</button>
-      <button class="btn pf-overlay-btn" data-overlay="thematic" title="Tier 3: composite thematic score badge top-right">Thematic</button>
-      <button class="btn pf-overlay-btn" data-overlay="w52" title="Tier 3: 52W hi/lo dashed lines">52W hi/lo</button>
-      <button class="btn pf-overlay-btn" data-overlay="cohort" title="Tier 4: faint sector cohort average line">Cohort</button>
-      <button class="btn pf-overlay-btn" data-overlay="trancheLossHeatmap" title="Tier 4: thermal heatmap from current price to deepest stop">Heatmap</button>
-      <button class="btn pf-overlay-btn" data-overlay="stageTint" title="Tier 4: faint background tint per MD stage classification">Stage tint</button>
-      <span class="btn-group-spacer"></span>
-      <button class="btn" id="btnOverlayPreset" title="Apply Tier-1 recommended preset (stops + entries + risk + promotions ON)">Recommended</button>
-      <button class="btn" id="btnOverlayAllOn">All on</button>
-      <button class="btn" id="btnOverlayAllOff">All off</button>
-    </div>
-    <div class="pf-charts-grid" id="pfChartsGrid"></div>
-  </div>
+  <!-- PANE 2 (Portfolio charts) removed 6-Nov-2026, D-PMS-V4-150 -->
 
   <!-- PANE 3: Position Manager (existing content) -->
   <div class="tab-pane" id="pane-pms">
@@ -583,11 +559,11 @@ body.active-tab-overview .sticky-top, body.active-tab-charts .sticky-top { displ
 
     <!-- Help banner -->
     <div class="help-banner">
-      <b>How to use:</b> 20 investment slots × 6 tranche rows (PB1, PB2, Core MM 1–4). Type <b>%AUM</b> as <kbd>3</kbd> for 3%. Pick a date and the MA for the stop-loss: any whole number of days from 5 to 250 (type it, e.g. <kbd>75D</kbd>, or pick 20D, 50D, 100D, 150D or 200D). <b>MA→stop buffer</b> defaults to 6% (the stop-loss is the MA × 0.94) and is editable per tranche. Derived columns auto-fill. <b>Drag</b> the ⋮⋮ handle to move tranches between slots — drop a PB onto an MM to promote. Cross-investment drag blocked.
-      <br><b>Early Innings Probing Bets:</b> up to 2 tranches, each sized to lose 0.5% of AUM at its stop-loss and capped at 3% of AUM (so up to 6% per holding); the size for a 0.5% loss is shown under the %AUM box. <b>Middle Innings Core Investments:</b> a tranche is 1.67% of AUM at cost; MA stop-losses are not used (sold by the six Sell Criteria), so their stop columns are greyed out and count toward no alert or total. A Probing Bet tranche promoted into a Core slot above 1.67% is offered a split.
-      <br><b>The 10-day stop-loss rule (Probing Bets only; Richard, 2-Nov-2026):</b> each tranche has two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days are left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA, or a promotion, restarts the count.
-      <br><b>Row colours by MA for stop-loss:</b> orange=20D, blue=50D, teal=100D, magenta=150D, slate=200D (other lengths uncoloured). Exit states override.
-      <b>Empty slots</b> can have a ticker typed in. <b>New MM tranches</b> warn if no PB exists for that investment (override permitted for backfill). <b>Connect to disk</b> for auto-save (auto-reconnects on reload).
+      <b>How to use (6-Nov-2026):</b> each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, fill in the empty row at the foot of the stock (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer). Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split). <b>To remove a tranche, type 0</b>: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it beside the entry date). Typing a size back puts it back. The <b>×</b> deletes a tranche entirely (for a mistaken entry).
+      <br><b>MA for the stop-loss</b>: any whole number of days from 5 to 250 (type it, e.g. <kbd>75D</kbd>, or pick 20D, 50D, 100D, 150D or 200D); <b>MA→stop buffer</b> defaults to 6% (the stop-loss is the MA × 0.94). Every tranche shows them, so all tranches look alike, but they <b>apply only to Probing Bet and Speculative Bet tranches</b> (the 10-day stop-loss rule); on a Core Investment tranche they are greyed out and count toward no alert or total, because Core Investment tranches are sold by the six Sell Criteria. Probing and Speculative Bet tranches are sized to lose 0.5% of AUM at the stop-loss, capped at 3% (the size is shown under the % box); a Core Investment tranche is 1.67% at cost.
+      <br><b>UBS % of AUM</b>: the shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its total row and under its name. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.
+      <br><b>The 10-day stop-loss rule (Probing and Speculative Bet tranches; Richard, 2-Nov-2026):</b> two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA or type, or a promotion, restarts the count.
+      <br><b>Row colours by MA for stop-loss:</b> orange=20D, blue=50D, teal=100D, magenta=150D, slate=200D (other lengths uncoloured). Exit states override. <b>Empty slots</b> can have a ticker typed in. <b>Connect to disk</b> for auto-save (auto-reconnects on reload).
     </div>
 
     <!-- D-PMS-201: data-integrity faults. Separate element so "Hide alerts" cannot hide them. -->
@@ -725,7 +701,7 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['180px', '34px', '140px', '74px', '140px', '82px', '70px', '70px', '70px', '80px', '70px', '95px', '70px', '70px', '70px', '80px', '80px', '90px', '80px', '85px', '204px', '34px'];  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
+var COL_WIDTHS = ['180px', '134px', '72px', '128px', '80px', '70px', '76px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '64px', '96px', '70px', '66px', '72px', '182px', '26px'];   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
 var CONFIG = null;
@@ -810,9 +786,10 @@ window.addEventListener('DOMContentLoaded', function() {
     tryAutoReconnect()
       .catch(function(e) { console.warn('Auto-reconnect failed', e); return false; })
       .then(function() { return runOneTimeMigration(); })
+      .then(function() { return runTrancheTypeChangeover(); })   // D-PMS-V4-150
       .catch(function(e) { console.error('Migration failed', e); });
   } else {
-    runOneTimeMigration();
+    Promise.resolve(runOneTimeMigration()).then(function() { return runTrancheTypeChangeover(); });
   }
 
   document.getElementById('btnConnect').addEventListener('click', connectToDisk);
@@ -1108,6 +1085,14 @@ async function mergeDiskStateIntoMemory() {
   // '2026-08-07T13:22', which would discard an edit made today and not yet written. That
   // single detail is the difference between a safe fix and one that loses live positions.
   var diskSavedDay = (diskMeta && diskMeta.saved_at) ? String(diskMeta.saved_at).slice(0, 10) : null;
+  // D-PMS-V4-150: a file written by an OLDER page after this page had written one: the older page does not know the new
+  // tranches, so their absence on disk is not a deletion. Keep them, and say so loudly.
+  var _v6At = null; try { _v6At = localStorage.getItem('pms_v6_written'); } catch (e) {}
+  var olderWriter = !!(_v6At && diskMeta && diskMeta.version !== 'v6-tranches');
+  if (olderWriter) {
+    flashError('An older copy of the Position Management System page (another tab or window) saved the file. Close every other Position Management System tab. New tranches and types from this browser were kept.');
+    console.warn('[pms] the disk file was last written by an older page (version ' + (diskMeta && diskMeta.version) + '); nothing missing from it is treated as deleted');
+  }
   var resurrected = [], suppressed = [];
   Object.keys(EDITS).forEach(function(invIdx) {
     if (!merged[invIdx]) merged[invIdx] = {};
@@ -1115,7 +1100,7 @@ async function mergeDiskStateIntoMemory() {
       var memEdit = EDITS[invIdx][slotType];
       var diskEdit = merged[invIdx][slotType];
       if (!diskEdit) {
-        var isTranche = TRADE_TYPES.indexOf(slotType) >= 0;
+        var isTranche = isTrancheKey(slotType, memEdit);   // D-PMS-V4-150: any tranche key, not only the six old ones
         var provablyOlder = false;
         if (isTranche) {
           if (memEdit && memEdit.last_edited_at && diskMeta && diskMeta.saved_at) {
@@ -1127,13 +1112,26 @@ async function mergeDiskStateIntoMemory() {
             provablyOlder = !!(diskSavedDay && memDay && memDay < diskSavedDay);
           }
         }
-        if (provablyOlder) {
+        if (provablyOlder && !olderWriter) {
           suppressed.push('slot ' + (parseInt(invIdx, 10) + 1) + ' ' + slotType
                           + ' (last edited ' + memDay + ', disk saved ' + diskSavedDay + ')');
           return;   // deliberate deletion on disk — honour it
         }
         if (isTranche) resurrected.push('slot ' + (parseInt(invIdx, 10) + 1) + ' ' + slotType);
         merged[invIdx][slotType] = memEdit;
+      } else if (isTrancheKey(slotType, memEdit) && isTrancheKey(slotType, diskEdit) && memEdit.tranche_id && diskEdit.tranche_id
+                 && memEdit.tranche_id !== diskEdit.tranche_id && !DEFAULT_STOP_MA[slotType]) {
+        // D-PMS-V4-150: two DIFFERENT tranches under one new key (T1, T2, ...), told apart by identity alone. The disk copy
+        // stays; the browser's copy is kept under a fresh key unless it is provably older than the disk file (then it was
+        // deleted and its key re-used, and the deletion is honoured), never silently dropped.
+        var _older = !!(memEdit.last_edited_at && diskMeta && diskMeta.saved_at && String(memEdit.last_edited_at) < String(diskMeta.saved_at));
+        if (_older) { suppressed.push('slot ' + (parseInt(invIdx, 10) + 1) + ' ' + slotType + ' (an older tranche under a re-used key)'); return; }
+        var _n = Math.max(+(merged[invIdx]._t_seq || 0), +((EDITS[invIdx] || {})._t_seq || 0));
+        Object.keys(merged[invIdx]).concat(Object.keys(EDITS[invIdx])).forEach(function(k) { var m = /^T(\d+)$/.exec(k); if (m) _n = Math.max(_n, +m[1]); });
+        merged[invIdx]['T' + (_n + 1)] = memEdit; merged[invIdx]._t_seq = _n + 1;
+        resurrected.push('slot ' + (parseInt(invIdx, 10) + 1) + ' ' + slotType + ' (kept as T' + (_n + 1) + ': a different tranche had the same key on disk)');
+      } else if (slotType === '_t_seq') {
+        merged[invIdx]._t_seq = Math.max(+(diskEdit || 0), +(memEdit || 0));   // the key high-water mark only ever rises
       } else {
         // Both present: the copy edited more recently wins (MERGE-RECENCY-2026-09-21: the exact edit instant, else the
         // edit day, else the creation or promotion stamp; before this only the creation/promotion stamps were compared,
@@ -1169,6 +1167,7 @@ async function mergeDiskStateIntoMemory() {
   // Write merged + cleaned result back to disk
   await writeStateToDisk();
   console.log('[pms] Merged disk + memory: disk had', diskCount, '· memory had', memoryCount, '· result has', countSlots(EDITS));
+  if (typeof runTrancheTypeChangeover === 'function') await runTrancheTypeChangeover();   // D-PMS-V4-150: fill types a disk copy lacks
 }
 
 function countSlots(edits) {
@@ -1185,7 +1184,7 @@ async function writeStateToDisk() {
   var payload = {
     _meta: {
       saved_at: new Date().toISOString(),
-      version: 'v5',
+      version: 'v6-tranches',   // D-PMS-V4-150: written by the page that knows unlimited tranches and types
       last_auto_backup_date: lastAutoBackupDate,
     },
     EDITS: EDITS,
@@ -1195,6 +1194,7 @@ async function writeStateToDisk() {
     var writable = await fileHandle.createWritable();
     await writable.write(JSON.stringify(payload, null, 2));
     await writable.close();
+    try { localStorage.setItem('pms_v6_written', payload._meta.saved_at); } catch (e) {}
     lastSavedAt = payload._meta.saved_at; lastSavedToDisk = true; renderSavedAt();  // D-PMS-193
     return true;
   } catch (e) {
@@ -1251,11 +1251,11 @@ async function pruneAutoBackups() {
 }
 
 function loadEditsFromLocalStorage() {
-  try { var raw = localStorage.getItem('pms_edits_v5') || localStorage.getItem('pms_edits_v4'); if (raw) EDITS = JSON.parse(raw); } catch(e) { EDITS = {}; }
+  try { var raw = localStorage.getItem('pms_edits_v6') || localStorage.getItem('pms_edits_v5') || localStorage.getItem('pms_edits_v4'); if (raw) EDITS = JSON.parse(raw); } catch(e) { EDITS = {}; }
 }
 function saveEditsToLocalStorage() {
   try {
-    localStorage.setItem('pms_edits_v5', JSON.stringify(EDITS));
+    localStorage.setItem('pms_edits_v6', JSON.stringify(EDITS));   // D-PMS-V4-150: own key, so an older page's saves cannot overwrite it
     // D-PMS-193: a browser-only save is still a save; record it so the header can say so,
     // and can distinguish it from a save that actually reached disk.
     var nowIso = new Date().toISOString();
@@ -1435,6 +1435,522 @@ function clearAllEdits() {
   EDITS = {}; saveEdits(); render();
 }
 
+// =====================================================================================================================
+// UNLIMITED-TRANCHES-2026-11-06 (Richard, 6-Nov-2026; decision D-PMS-V4-150 in projects/SA - Position Management System).
+// Richard's brief: "Enable unlimited number of tranches per investment"; for each tranche "a drop down for type (Probing
+// Bet, Core Investment, Speculative Bet), date entered, % at entry, MA for Stop Loss, MA to SL Buffer (default to 6% as
+// present), and rest of columns remain the same"; "allow me to type 0% of AUM and that will remove that tranche at that
+// date - keep the tranche greyed out and at end of list of tranches for the stock"; "for each tranche ... display a
+// figure for what the UBS % of AUM is" with a button that "aligns" the tranche capital with UBS; "I know that MA for SL
+// not relevant for exit criteria for Core Investments, but I want the a consistent visual framework for all tranches".
+// His rulings on the back-brief (12:33): Q1 = the tranche's own type decides its exit rule (a Probing Bet tranche
+// follows the 10-day stop-loss rule; a Core Investment tranche the six Sell Criteria; one stock may hold both); Q2 = a
+// Speculative Bet tranche follows the Probing Bet rules; Q3 = UBS per tranche as proposed (matched by date); Q4 = B,
+// "market relative" on the Portfolio overview means relative to STOXX Europe 600.
+//
+// THE DATA SHAPE IS UNCHANGED, ONLY WIDENED. EDITS[slot][key] still holds one tranche per key. The six old keys (PB1,
+// PB2, MM1..MM4) stay valid, so every record keyed on them (stop history, Richard's keeps in stop-overrides.json, the
+// promotion rulings, the Framework 14 ledger) keeps working. A new tranche gets the key T<n>. Any key that does not
+// start with "_" and holds an object is a tranche. New fields on a tranche:
+//   type             'core' | 'probing' | 'speculative'  (set on every tranche by the one-time change-over below)
+//   exited_on        'YYYY-MM-DD', the date the tranche was removed by typing 0% (or by aligning to a UBS sale)
+//   exited_size_pct  the % at entry it had before it was removed (kept for reference; target_size_pct is then 0)
+//   type_history     [{from, to, on}] each change of type
+// A tranche with target_size_pct 0 is not held, exactly as every script already reads it (size > 0 = held).
+// =====================================================================================================================
+var TRANCHE_KIND_LABEL = { core: 'Core Investment', probing: 'Probing Bet', speculative: 'Speculative Bet' };
+var TRANCHE_KIND_ORDER = ['core', 'probing', 'speculative'];
+var TRANCHE_KIND_COLOUR = { core: '#1d4ed8', probing: '#c2410c', speculative: '#7e22ce' };   // blue, orange, purple
+var KIND_DEFAULT_STOP = { core: '100D', probing: '50D', speculative: '50D' };
+var KIND_CAP_DECIMAL = { core: 0.04, probing: 0.03, speculative: 0.03 };   // a warning on entry only, never a block
+var NEW_ROW_KEY = '__new__';
+var CORE_INFO_TEXT = 'Information only: a Core Investment tranche is sold by the six Sell Criteria, not by its MA stop-loss; these levels count toward no alert or total';
+
+function isTrancheKey(k, v) {
+  return typeof k === 'string' && k.length > 0 && k.charAt(0) !== '_' && v != null && typeof v === 'object' && !Array.isArray(v);
+}
+function trancheKeys(invIdx) {
+  var se = EDITS[invIdx];
+  if (!se || typeof se !== 'object') return [];
+  return Object.keys(se).filter(function (k) { return isTrancheKey(k, se[k]); });
+}
+function kindFromHoldingStatus(ticker) {
+  var s = String((ticker && holdingStatus(ticker)) || '').trim().toLowerCase();
+  if (/^core/.test(s)) return 'core';
+  if (/speculative/.test(s)) return 'speculative';
+  if (/probing/.test(s)) return 'probing';
+  return null;
+}
+// The tranche's own type; before the change-over has run, the stock's classification (holding-status.json); unclassified
+// = Probing Bet, so its stop-losses are shown (the page's rule since 2-Nov-2026).
+function trancheKind(t, ticker) {
+  if (t && TRANCHE_KIND_LABEL[t.type]) return t.type;
+  return kindFromHoldingStatus(ticker) || 'probing';
+}
+function trancheIsCore(t, ticker) { return trancheKind(t, ticker) === 'core'; }
+// The MA in force when none is typed: the old key's default for a pre-6-Nov tranche (so no stop "changes" on the
+// change-over), else the type's default.
+function defaultStopFor(key, t, ticker) { return DEFAULT_STOP_MA[key] || KIND_DEFAULT_STOP[trancheKind(t, ticker)] || '50D'; }
+function stopMaFor(key, t, ticker) { return (t && t.stop_ma) || defaultStopFor(key, t, ticker); }
+function bufferFor(t) { return (t && t.buffer_pct != null) ? t.buffer_pct : BUFFER; }
+function trancheHeld(t) { return !!(t && t.entry_date && t.target_size_pct != null && t.target_size_pct > 0); }
+// A zero-size tranche left behind when its capital was promoted into another key (the promotion moved it; nothing was
+// sold). Hidden from the list; kept in the data.
+function isPromotionLeftover(invIdx, key) {
+  var se = EDITS[invIdx] || {}, t = se[key];
+  if (!t || t.exited_on || (t.target_size_pct || 0) > 0) return false;
+  return trancheKeys(invIdx).some(function (k) {
+    var o = se[k];
+    return k !== key && o && o.promoted_from === key && (!t.entry_date || o.entry_date === t.entry_date);
+  });
+}
+function isExited(t) {
+  if (!t) return false;
+  if (t.exited_on) return true;
+  return !!(t.entry_date && t.target_size_pct != null && t.target_size_pct === 0);
+}
+function hasAnyTrancheData(t) {
+  return !!(t && (t.entry_date || t.target_size_pct != null || t.stop_ma || t.type));
+}
+// Display order: tranches held or being entered, by entry date (then key); exited tranches greyed at the end, by exit date.
+function orderedTrancheKeys(invIdx) {
+  var se = EDITS[invIdx] || {};
+  var keys = trancheKeys(invIdx).filter(function (k) { return hasAnyTrancheData(se[k]) && !isPromotionLeftover(invIdx, k); });
+  var live = keys.filter(function (k) { return !isExited(se[k]); });
+  var gone = keys.filter(function (k) { return isExited(se[k]); });
+  function byDate(a, b) {
+    var da = se[a].entry_date || '9999', db = se[b].entry_date || '9999';
+    if (da !== db) return da < db ? -1 : 1;
+    return a < b ? -1 : (a > b ? 1 : 0);
+  }
+  if (sortByStopMa) {
+    var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+    live.sort(function (a, b) {
+      var ma = maRank(stopMaFor(a, se[a], ticker)) - maRank(stopMaFor(b, se[b], ticker));
+      return ma !== 0 ? ma : byDate(a, b);
+    });
+  } else live.sort(byDate);
+  gone.sort(function (a, b) {
+    var da = se[a].exited_on || se[a].entry_date || '', db = se[b].exited_on || se[b].entry_date || '';
+    return da < db ? -1 : (da > db ? 1 : byDate(a, b));
+  });
+  return live.concat(gone);
+}
+// Numbered as Framework 14 numbers them: the HELD tranches by entry date (then key), whatever the display order, so
+// "tranche 2" on the order sheet is "Tranche 2" here. A removed tranche has no number.
+function trancheNumber(invIdx, key) {
+  var se = EDITS[invIdx] || {};
+  var held = trancheKeys(invIdx).filter(function (k) { return trancheHeld(se[k]); }).sort(function (a, b) {
+    var da = se[a].entry_date, db = se[b].entry_date; return da !== db ? (da < db ? -1 : 1) : (a < b ? -1 : (a > b ? 1 : 0)); });
+  var i = held.indexOf(key); return i < 0 ? null : i + 1;
+}
+function trancheLabel(invIdx, key) {
+  var t = getEdit(invIdx, key), ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  var n = trancheNumber(invIdx, key);
+  return (n ? 'Tranche ' + n : (isExited(t) ? 'Removed tranche' : 'Tranche')) + ' (' + TRANCHE_KIND_LABEL[trancheKind(t, ticker)] + ')';
+}
+// Never reuses a key, even after a tranche is deleted: the slot keeps a high-water mark (_t_seq), so a stale copy of a
+// deleted tranche elsewhere can never meet a different tranche under its old key.
+function newTrancheKey(invIdx) {
+  if (!EDITS[invIdx]) EDITS[invIdx] = {};
+  var n = +(EDITS[invIdx]._t_seq || 0);
+  Object.keys(EDITS[invIdx]).forEach(function (k) { var m = /^T(\d+)$/.exec(k); if (m) n = Math.max(n, +m[1]); });
+  EDITS[invIdx]._t_seq = n + 1;
+  return 'T' + (n + 1);
+}
+function latestCloseDate(ticker) {
+  var s = ticker && CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  return (s && s.length) ? s[s.length - 1].d : todayISO();
+}
+// The one call every total, alert and row makes: the tester with this tranche's own MA, buffer and type.
+function runTranche(ticker, key, t) {
+  if (!trancheHeld(t)) return null;
+  return runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, trancheIsCore(t, ticker));
+}
+// The stock's live types, in a fixed order, for the colour marks on both pages.
+function stockKinds(invIdx) {
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx), seen = {};
+  trancheKeys(invIdx).forEach(function (k) { var t = EDITS[invIdx][k]; if (trancheHeld(t)) seen[trancheKind(t, ticker)] = true; });
+  return TRANCHE_KIND_ORDER.filter(function (k) { return seen[k]; });
+}
+function kindMarksHtml(kinds) {
+  return kinds.map(function (k) {
+    return '<span class="kind-pill kind-' + k + '" title="' + esc(TRANCHE_KIND_LABEL[k]) + '">' + esc(TRANCHE_KIND_LABEL[k]) + '</span>';
+  }).join('');
+}
+
+// ---- edits from the Position manager -------------------------------------------------------------------------------
+// A field typed into the empty row at the foot of a stock creates a new tranche (the type defaults to the stock's own
+// classification, the MA to the type's default, written onto the tranche so it can never drift).
+function addTrancheField(invIdx, field, rawValue, inputEl) {
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!ticker) return;
+  var kind = (field === 'type' && TRANCHE_KIND_LABEL[rawValue]) ? rawValue : (pendingNewKind[invIdx] || kindFromHoldingStatus(ticker) || 'probing');
+  if (field === 'type') { pendingNewKind[invIdx] = kind; render(); return; }   // choosing a type alone creates nothing
+  var value = rawValue;
+  if (field === 'target_size_pct') {
+    value = pctInputToDecimal(rawValue);
+    if (value == null || value <= 0) { if (inputEl) inputEl.value = ''; return; }
+    if (value > KIND_CAP_DECIMAL[kind] && !confirm((value * 100).toFixed(2) + '% is above the ' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '% usual for a ' + TRANCHE_KIND_LABEL[kind] + ' tranche. Continue?')) { if (inputEl) inputEl.value = ''; return; }
+  }
+  if (field === 'stop_ma') { value = stopNormaliseMa(rawValue); if (!value) { flashError('MA for the stop-loss must be a whole number of days from ' + STOP_MA_MIN_DAYS + ' to ' + STOP_MA_MAX_DAYS + ' (for example 75D).'); if (inputEl) inputEl.value = ''; return; } }
+  if (field === 'buffer_pct') { var n = parseFloat(rawValue); if (isNaN(n)) return; value = Math.max(0, Math.min(50, n)) / 100; }
+  if (field === 'entry_date' && !value) return;
+  if (!EDITS[invIdx]) EDITS[invIdx] = {};
+  var key = newTrancheKey(invIdx);
+  var t = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], _added_at: new Date().toISOString() };
+  t[field] = value;
+  EDITS[invIdx][key] = t;
+  delete pendingNewKind[invIdx];
+  saveEdits(); render();
+}
+var pendingNewKind = {};
+
+// Changing a tranche's type is Richard's ruling on the tranche (Position Entry and Exit Rules, section 7): from Probing
+// or Speculative to Core it is a promotion (stamped, the split above 1.67% offered); any other change restarts the
+// 10-day count on that day (a dated stop-history entry, which the rule and its Python twin both read as a reset).
+function setTrancheType(invIdx, key, kind) {
+  var t = getEdit(invIdx, key);
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!t || !TRANCHE_KIND_LABEL[kind]) return;
+  var from = trancheKind(t, ticker);
+  if (from === kind) { t.type = kind; saveEdits(); render(); return; }
+  var today = todayISO();
+  if (!t.stop_ma) t.stop_ma = stopMaFor(key, t, ticker);   // keep the MA in force; a type change is not an MA change
+  t.type = kind;
+  t.type_changed_on = today;
+  t.type_history = (Array.isArray(t.type_history) ? t.type_history : []).concat([{ from: from, to: kind, on: today }]);
+  if (kind === 'core') {
+    // a promotion; an earlier promotion's slot name is kept (it identifies the zero-size row that promotion left behind)
+    if (!t.promoted_from) t.promoted_from = TRANCHE_KIND_LABEL[from];
+    t.type_history[t.type_history.length - 1].previous_promoted_at = t.promoted_at || null;
+    t.promoted_at = today;
+  } else if (from === 'core') {   // only from Core: Probing <-> Speculative follow the same rule, so nothing restarts
+    // dated to the latest close the page judges on (not the calendar day), so the restart takes effect on the bars shown
+    // now: a Core Investment tranche was never under the 10-day stop-loss rule, so no old confirmation is carried over
+    if (!Array.isArray(t.stop_history)) t.stop_history = [];
+    var ma = stopMaFor(key, t, ticker), onDay = latestCloseDate(ticker);
+    if (t.entry_date && onDay < t.entry_date) onDay = t.entry_date;
+    t.stop_history.push({ stop_ma: ma, set_on: onDay, exact: true, via: 'type-change', previous: ma, explicit: true,
+      note: 'type changed from ' + TRANCHE_KIND_LABEL[from] + ' to ' + TRANCHE_KIND_LABEL[kind] + ' on ' + today + '; the 10-day count restarts from the close of ' + onDay });
+  }
+  saveEdits(); render();
+  if (kind === 'core' && t.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) openSplit(invIdx, key);
+}
+function setExitDate(invIdx, key, value) {
+  var t = getEdit(invIdx, key);
+  if (!t || !value) return;
+  t.exited_on = value;
+  saveEdits(); render();
+}
+// Typing 0% removes the tranche on the latest close date (editable beside it); typing a size into a removed tranche
+// puts it back.
+function applySize(invIdx, key, decimal, exitDate) {
+  var t = getEdit(invIdx, key);
+  if (!t) return;
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (decimal === 0) {
+    if ((t.target_size_pct || 0) > 0) t.exited_size_pct = t.target_size_pct;
+    t.target_size_pct = 0;
+    if (!t.exited_on) t.exited_on = exitDate || latestCloseDate(ticker);
+  } else {
+    t.target_size_pct = decimal;
+    if (decimal != null && decimal > 0 && (t.exited_on || t.exited_size_pct != null)) { delete t.exited_on; delete t.exited_size_pct; delete t.exited_on_exact; }
+  }
+  saveEdits(); render();
+}
+
+// ---- UBS per tranche ------------------------------------------------------------------------------------------------
+// POSITIONS.ubs (built by scripts/pms_book.py ubs_for_page, embedded by generate_position_data.py): per UBS holding its
+// shares on every UBS daily valuation, already split into dated lots. Two kinds of change are told apart there: a trade
+// on one stock, and a subscription or redemption into the fund, which moves every holding's shares by the same ratio on
+// the same day and is not a trade (it re-scales every lot; % of AUM does not move). Here the lots meet the tranches:
+//   * a UBS purchase is matched to the tranche whose entry date is nearest to it, from 1 trading day before to 3 after
+//     (the same day in every case in the history to 30-Oct); two tranches on one day share it in proportion to size;
+//   * shares held at UBS's first daily file (16-Jul-2026) go to the tranches dated on or before it, in proportion;
+//   * a UBS sale is matched to a removed tranche dated near it, else to the one held tranche whose shares it equals
+//     (within 5%); otherwise it is shown on its own line, as is any purchase no tranche matches.
+// Each tranche's UBS % of AUM = its shares / the stock's UBS shares x the stock's UBS weight, rolled from the UBS date
+// to the latest close (the stock's price move over the fund's, the same terms as % of AUM). So the stock's figure is
+// exactly the sum of its tranches' figures and its unmatched lines.
+var UBS_MATCH_BEFORE = 1, UBS_MATCH_AFTER = 3, UBS_SALE_TOLERANCE = 0.05;
+function ubsData() { return (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.ubs) || null; }
+function ubsHoldingFor(ticker) {
+  var u = ubsData(); if (!u || !ticker) return null;
+  var tk = holdingKey(ticker);
+  var hs = u.holdings || {};
+  for (var b in hs) { if (hs[b] && holdingKey(hs[b].ticker) === tk) return hs[b]; }
+  return null;
+}
+function _tradingDayGap(ticker, a, b) {
+  // trading days from date a to date b on the stock's own chart (b later = positive); calendar fallback
+  var s = CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  if (s && s.length) {
+    var ia = -1, ib = -1;
+    for (var i = 0; i < s.length; i++) { if (ia < 0 && s[i].d >= a) ia = i; if (ib < 0 && s[i].d >= b) ib = i; }
+    if (ia >= 0 && ib >= 0) return ib - ia;
+  }
+  return Math.round((Date.parse(b) - Date.parse(a)) / 86400000 * 5 / 7);
+}
+function ubsRollFactor(ticker) {
+  // from the UBS valuation date to the latest close: the stock's price move x currency move / the fund's move
+  var u = ubsData(), s = CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  if (!u || !s || !s.length) return 1;
+  var idx = -1;
+  for (var i = 0; i < s.length; i++) { if (s[i].d <= u.asof) idx = i; else break; }
+  if (idx < 0 || !s[idx].c) return 1;
+  var fb = POSITIONS.fund_basis || {};
+  var fund = (fb.rpl_now && u.rpl) ? fb.rpl_now / u.rpl : 1;
+  return (s[s.length - 1].c / s[idx].c) / fund;   // currency: today's rate is UBS's own rate (fund_basis), so its move is 1
+}
+// One stock: {asof, stockPct, byKey: {key: {pct, shares, status, date}}, unmatched: [{kind, date, shares, pct}]}
+function ubsStockView(invIdx, shownTicker) {
+  // shownTicker: the ticker the Position manager draws for this slot (it can differ from effectiveTicker on a universe
+  // slot carrying an override); the UBS figure must be the drawn stock's
+  var u = ubsData(), ticker = shownTicker || effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!u || !ticker) return null;
+  var h = ubsHoldingFor(ticker);
+  var se = EDITS[invIdx] || {};
+  var keys = trancheKeys(invIdx).filter(function (k) { return hasAnyTrancheData(se[k]) && !isPromotionLeftover(invIdx, k); });
+  var view = { asof: u.asof, stockPct: 0, byKey: {}, unmatched: [], held: !!h, sharesNow: h ? h.shares : 0 };
+  keys.forEach(function (k) { view.byKey[k] = { pct: 0, shares: 0, status: 'none', date: null }; });
+  if (!h) return view;
+  var roll = ubsRollFactor(ticker);
+  var pctPerShare = h.shares > 0 ? (h.weight * 100 * roll) / h.shares : 0;
+  view.stockPct = h.shares > 0 ? h.weight * 100 * roll : 0;
+  var dated = keys.filter(function (k) { return se[k].entry_date && String(se[k].entry_date) >= '2020-01-01'; });
+  // weights for sharing a lot between tranches: what each is worth NOW (size at entry x price move x currency move / fund
+  // move), which is proportional to its shares; a removed tranche by the size it had
+  var sizeOf = function (k) {
+    var e = se[k], sz = e.target_size_pct > 0 ? e.target_size_pct : (e.exited_size_pct || 0);
+    var f = currentFactor(ticker, e.entry_date);
+    return sz * (f || 1);
+  };
+  var aliveAt = function (k, d) { return !(se[k].exited_on && se[k].exited_on < d); };
+  var shares = {};
+  dated.forEach(function (k) { shares[k] = 0; });
+  // 1. the opening holding at UBS's first file
+  (h.lots || []).forEach(function (lot) {
+    if (lot.kind === 'open') {
+      var pre = dated.filter(function (k) { return se[k].entry_date <= lot.date && aliveAt(k, lot.date); });
+      var tot = pre.reduce(function (s, k) { return s + sizeOf(k); }, 0);
+      if (pre.length && tot > 0) pre.forEach(function (k) { shares[k] += lot.shares * sizeOf(k) / tot; });
+      else if (pre.length) pre.forEach(function (k) { shares[k] += lot.shares / pre.length; });
+      else view.unmatched.push({ kind: 'open', date: lot.date, shares: lot.shares });
+    }
+  });
+  // 2. purchases: nearest tranche in the window
+  (h.lots || []).forEach(function (lot) {
+    if (lot.kind !== 'buy') return;
+    var best = null, bestGap = 99;
+    dated.forEach(function (k) {
+      if (!aliveAt(k, lot.date)) return;
+      var g = _tradingDayGap(ticker, se[k].entry_date, lot.date);   // lot after entry = positive
+      if (g < -UBS_MATCH_BEFORE || g > UBS_MATCH_AFTER) return;
+      if (Math.abs(g) < bestGap) { bestGap = Math.abs(g); best = [k]; }
+      else if (Math.abs(g) === bestGap && best && se[best[0]].entry_date === se[k].entry_date) best.push(k);
+    });
+    if (!best) { view.unmatched.push({ kind: 'buy', date: lot.date, shares: lot.shares }); return; }
+    var tot = best.reduce(function (s, k) { return s + sizeOf(k); }, 0);
+    best.forEach(function (k) { shares[k] += tot > 0 ? lot.shares * sizeOf(k) / tot : lot.shares / best.length; });
+  });
+  // 3. sales
+  (h.lots || []).forEach(function (lot) {
+    if (lot.kind !== 'sale') return;
+    var left = lot.shares;
+    // a removed tranche dated near the sale first
+    dated.filter(function (k) { return isExited(se[k]) && se[k].exited_on; }).forEach(function (k) {
+      if (left <= 0 || shares[k] <= 0) return;
+      var g = _tradingDayGap(ticker, se[k].exited_on, lot.date);
+      if (g < -UBS_MATCH_BEFORE - 2 || g > UBS_MATCH_AFTER + 2) return;
+      var take = Math.min(shares[k], left);
+      shares[k] -= take; left -= take;
+      if (shares[k] <= lot.shares * 1e-6) { shares[k] = 0; view.byKey[k].status = 'sold'; view.byKey[k].date = lot.date; }
+    });
+    if (left > lot.shares * UBS_SALE_TOLERANCE) {
+      // else the one held tranche (entered before the sale) whose shares it equals
+      var cands = dated.filter(function (k) { return shares[k] > 0 && se[k].entry_date <= lot.date && Math.abs(shares[k] - left) <= UBS_SALE_TOLERANCE * shares[k]; });
+      if (cands.length === 1) { var k = cands[0]; shares[k] = 0; view.byKey[k].status = 'sold'; view.byKey[k].date = lot.date; left = 0; }
+      else {
+        var all = dated.filter(function (k) { return shares[k] > 0 && se[k].entry_date <= lot.date; });
+        var held = all.reduce(function (s, k) { return s + shares[k]; }, 0);
+        if (all.length && Math.abs(held - left) <= UBS_SALE_TOLERANCE * held) {   // the whole holding sold
+          all.forEach(function (k) { shares[k] = 0; view.byKey[k].status = 'sold'; view.byKey[k].date = lot.date; });
+          left = 0;
+        }
+      }
+    }
+    if (left > lot.shares * 1e-6) view.unmatched.push({ kind: 'sale', date: lot.date, shares: -left });
+  });
+  dated.forEach(function (k) {
+    var v = view.byKey[k];
+    v.shares = shares[k];
+    v.pct = shares[k] * pctPerShare;
+    if (v.status !== 'sold') v.status = shares[k] > 0 ? 'matched' : 'none';
+  });
+  view.unmatched.forEach(function (x) { x.pct = x.shares * pctPerShare; });
+  return view;
+}
+// "Align": set the tranche's % at entry so that its current % of AUM equals UBS's (keeping its date); a tranche whose
+// UBS shares were sold is removed at UBS's sale date.
+function alignTrancheToUbs(invIdx, key) {
+  var view = ubsStockView(invIdx), t = getEdit(invIdx, key);
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!view || !t || !view.byKey[key]) return;
+  var v = view.byKey[key];
+  if (v.status === 'none') { flashError('No UBS purchase is matched to this tranche, so there is nothing to align it to.'); return; }
+  if (v.status === 'sold' || v.pct <= 0) {
+    if (!confirm('UBS shows this tranche\'s shares sold on ' + fmtDate(v.date) + '. Remove ' + trancheLabel(invIdx, key) + ' (set it to 0%) at ' + fmtDate(v.date) + '?')) return;
+    applySize(invIdx, key, 0, v.date || null);
+    flashSuccess(ticker + ' ' + trancheLabel(invIdx, key) + ' removed to match UBS.');
+    return;
+  }
+  var target = entryPctForCurrent(ticker, t.entry_date, v.pct / 100);
+  if (target == null) { flashError('No price for ' + ticker + ' on ' + t.entry_date + ', so the size at entry cannot be worked back from UBS.'); return; }
+  var was = t.target_size_pct;
+  if (!confirm('Align ' + ticker + ' ' + trancheLabel(invIdx, key) + ' to UBS: % at entry ' + (was != null ? (was * 100).toFixed(2) + '%' : 'blank') + ' → '
+    + (target * 100).toFixed(2) + '%, so its current % of AUM becomes UBS\'s ' + v.pct.toFixed(2) + '%?')) return;
+  applySize(invIdx, key, Math.round(target * 1e6) / 1e6);
+  flashSuccess(ticker + ' ' + trancheLabel(invIdx, key) + ': % at entry ' + (was != null ? (was * 100).toFixed(2) + '%' : 'blank') + ' → ' + (target * 100).toFixed(2) + '%, so its current % of AUM matches UBS (' + v.pct.toFixed(2) + '%).');
+}
+// The % at entry whose current value (runTester's value_aum_pct: entry x price move x currency move / fund move) is
+// `current`. An impossible date is valued at entry size, as everywhere else.
+// price move x currency move / fund move since entry; null when the entry has no price
+function currentFactor(ticker, entryDate) {
+  if (!entryDate || String(entryDate) < '2020-01-01') return 1;
+  var series = CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  var idx = series ? findIndexByDate(ticker, entryDate) : -1;
+  if (idx < 0 || !series[idx].c) return null;
+  return (series[series.length - 1].c / series[idx].c) * pmsFundFactor(ticker, entryDate);
+}
+function entryPctForCurrent(ticker, entryDate, current) {
+  if (!entryDate || String(entryDate) < '2020-01-01') return current;
+  var series = CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  var idx = series ? findIndexByDate(ticker, entryDate) : -1;
+  if (idx < 0 || !series[idx].c) return null;
+  var factor = (series[series.length - 1].c / series[idx].c) * pmsFundFactor(ticker, entryDate);
+  return factor > 0 ? current / factor : null;
+}
+// A UBS purchase no tranche matches: add it as a tranche on UBS's date, sized to UBS's current %.
+function addTrancheFromUbs(invIdx, date, pct) {
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  var target = entryPctForCurrent(ticker, date, pct / 100);
+  if (target == null) { flashError('No price for ' + ticker + ' on ' + date + '.'); return; }
+  var kind = kindFromHoldingStatus(ticker) || 'probing';
+  if (!confirm('Add a ' + TRANCHE_KIND_LABEL[kind] + ' tranche to ' + ticker + ' dated ' + fmtDate(date) + ' at ' + (target * 100).toFixed(2)
+    + '% at entry (UBS: ' + pct.toFixed(2) + '% of AUM now)? You can change its type and MA afterwards.')) return;
+  if (!EDITS[invIdx]) EDITS[invIdx] = {};
+  var key = newTrancheKey(invIdx);
+  EDITS[invIdx][key] = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], entry_date: date, target_size_pct: Math.round(target * 1e6) / 1e6, _added_at: new Date().toISOString(), added_from_ubs: true };
+  saveEdits(); render();
+}
+var UBS_GAP_FLAG_PP = 0.3;   // the gap that is raised between the book and UBS (D-PMS-V4-146)
+function ubsCellHtml(invIdx, key, t, r, view) {
+  if (!view) return '<span class="val-muted" title="No UBS valuation is loaded">—</span>';
+  var v = view.byKey[key];
+  if (!v) return '<span class="val-muted">—</span>';
+  if (t && t.entry_date && String(t.entry_date) < '2020-01-01')
+    return '<span class="ubs-gap" title="The date entered is not a real date, so no UBS purchase can be matched to it. Correct the date.">check date</span>';
+  if (t && t.entry_date && t.entry_date > view.asof && v.status === 'none')
+    return '<span class="val-muted" title="Entered after the latest UBS valuation (' + esc(fmtDate(view.asof)) + '), so UBS cannot show it yet">after UBS file</span>';
+  var book = (r && r.ok && r.value_aum_pct != null) ? r.value_aum_pct * 100 : (trancheHeld(t) ? t.target_size_pct * 100 : 0);
+  var gap = v.pct - book;
+  var flag = Math.abs(gap) >= UBS_GAP_FLAG_PP;
+  var txt = v.status === 'sold' ? 'sold ' + fmtDateShort(v.date) : (v.pct ? v.pct.toFixed(1) + '%' : (v.status === 'none' ? 'none' : '0.0%'));
+  var title = v.status === 'sold' ? 'UBS sold the shares matched to this tranche on ' + fmtDate(v.date)
+    : v.status === 'none' ? 'No UBS purchase found from ' + UBS_MATCH_BEFORE + ' trading day before to ' + UBS_MATCH_AFTER + ' after this tranche\'s date'
+    : 'UBS shares matched to this tranche, valued at the latest close over the fund\'s value now (UBS file of ' + fmtDate(view.asof) + '). The PMS says ' + book.toFixed(2) + '%; the gap is ' + (gap >= 0 ? '+' : '') + gap.toFixed(2) + ' points.';
+  var showBtn = flag && ((v.status === 'matched' && v.pct > 0) || (v.status === 'sold' && trancheHeld(t)));
+  return '<span class="ubs-val' + (flag ? ' ubs-gap' : '') + '" title="' + esc(title) + '">' + esc(txt) + '</span>'
+    + (showBtn ? ' <button class="btn-align" onclick="alignTrancheToUbs(' + invIdx + ',\'' + key + '\')" title="Set this tranche to match UBS">Align</button>' : '');
+}
+function ubsUnmatchedRowsHtml(invIdx, view) {
+  if (!view || !view.unmatched.length) return '';
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx), out = '';
+  view.unmatched.forEach(function (x) {
+    var what = x.kind === 'sale' ? 'UBS sold ' + fmt(-x.shares, 0) + ' shares on ' + fmtDate(x.date) + ' (' + (-x.pct).toFixed(2) + '% of AUM at today\'s price); no PMS tranche matches this sale'
+      : x.kind === 'open' ? 'UBS already held ' + fmt(x.shares, 0) + ' shares at its first daily file (' + fmtDate(x.date) + '; ' + x.pct.toFixed(2) + '% of AUM now); no PMS tranche is dated on or before it'
+      : 'UBS bought ' + fmt(x.shares, 0) + ' shares on ' + fmtDate(x.date) + ' (' + x.pct.toFixed(2) + '% of AUM now); no PMS tranche is dated near it';
+    var btn = x.kind === 'buy' ? ' <button class="btn-align" onclick="addTrancheFromUbs(' + invIdx + ',\'' + x.date + '\',' + x.pct.toFixed(6) + ')">Add as tranche</button>' : '';
+    out += '<tr class="ubs-unmatched"><td colspan="' + TOTAL_COLS + '">In UBS, not in the PMS: ' + esc(what) + '.' + btn + '</td></tr>';
+  });
+  return out;
+}
+
+// ---- relative performance on the Portfolio overview (Q4 = B: against STOXX Europe 600) -------------------------------
+// POSITIONS.market_index: the STOXX Europe 600 closes (master-dashboard/cache/_caret_STOXX.json) embedded by
+// generate_position_data.py. Relative = (1 + the stock's return) / (1 + STOXX Europe 600's return) - 1 over the last 5
+// and the last 20 trading days of the stock's own chart, STOXX Europe 600 read on or before the same two dates.
+function marketCloseOn(d) {
+  var m = (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.market_index) || null;
+  if (!m || !m.closes || !m.closes.length) return null;
+  var v = null;
+  for (var i = 0; i < m.closes.length; i++) { if (m.closes[i][0] <= d) v = m.closes[i][1]; else break; }
+  return v;
+}
+function relPerf(ticker, days) {
+  var s = CHART_DATA && CHART_DATA.data && CHART_DATA.data[ticker];
+  if (!s || s.length <= days) return null;
+  var a = s[s.length - 1 - days], b = s[s.length - 1];
+  if (!a.c || !b.c) return null;
+  var ma = marketCloseOn(a.d), mb = marketCloseOn(b.d);
+  if (!ma || !mb) return null;
+  return (b.c / a.c) / (mb / ma) - 1;
+}
+// Shading: green ahead of the market, red behind, deeper as the gap grows; no colour inside a small band.
+var RELPERF_BANDS = { 5: { quiet: 0.01, full: 0.06 }, 20: { quiet: 0.02, full: 0.12 } };
+function relPerfCellHtml(v, days) {
+  if (v == null) return '<td class="pf-rel val-muted">—</td>';
+  var b = RELPERF_BANDS[days], a = Math.abs(v), alpha = 0;
+  if (a > b.quiet) alpha = Math.min(1, (a - b.quiet) / (b.full - b.quiet)) * 0.55 + 0.12;
+  var bg = alpha ? (v > 0 ? 'rgba(22,163,74,' + alpha.toFixed(2) + ')' : 'rgba(220,38,38,' + alpha.toFixed(2) + ')') : 'transparent';
+  var txt = (v > 0 ? '+' : v < 0 ? '(' : '') + Math.abs(v * 100).toFixed(1) + (v < 0 ? ')' : '') + '%';
+  return '<td class="pf-rel" style="background:' + bg + '" title="Last ' + days + ' trading days, relative to STOXX Europe 600">' + txt + '</td>';
+}
+
+// ===========================================================================
+// D-PMS-V4-150 (6-Nov-2026): ONE-TIME CHANGE-OVER. Runs in the page (never as a disk edit; see D-PMS-194 above), on every
+// load and after every disk merge, and only FILLS what is missing, so a second run is a no-op:
+//   a tranche already at 0% with an entry date that is not a promotion leftover gets an exit date: its last edit date,
+//   marked as an upper bound (exited_on_exact = false), since no record says when it was removed.
+// It deliberately does NOT write a type onto a tranche: a tranche with no type of its own keeps following its stock's
+// classification (pms-data/holding-status.json), so a later reclassification of the stock still reaches it, and an empty
+// or missing classification can never be frozen into the book (hostile review, 6-Nov-2026). A type is stored only when
+// Richard picks one in the drop-down, or on a tranche created in the page.
+// ===========================================================================
+var TYPE_CHANGEOVER_KEY = 'pms_changeover_2026_11_06_exit_dates';
+var typeChangeoverInFlight = false;
+async function runTrancheTypeChangeover() {
+  if (typeChangeoverInFlight) return;
+  if (!Object.keys(EDITS || {}).length) return;
+  var need = function (slot, k) {
+    var t = EDITS[slot] && EDITS[slot][k];
+    return !!(t && typeof t === 'object' && !t.exited_on && t.entry_date && t.target_size_pct === 0 && !isPromotionLeftover(slot, k));
+  };
+  var exits = [];
+  Object.keys(EDITS).forEach(function (slot) { trancheKeys(slot).forEach(function (k) { if (need(slot, k)) exits.push([slot, k]); }); });
+  if (!exits.length) return;
+  typeChangeoverInFlight = true;
+  try {
+    try { localStorage.setItem('pms_edits_pre_changeover_2026_11_06', JSON.stringify(EDITS)); } catch (e) {}
+    var done = [];
+    exits.forEach(function (x) {
+      if (!need(x[0], x[1])) return;   // re-checked at the moment of writing: the book may have changed meanwhile
+      var t = EDITS[x[0]][x[1]];
+      t.exited_on = String(t.last_edited || t.entry_date).slice(0, 10);
+      t.exited_on_exact = false;
+      done.push((effectiveTicker((CONFIG.investments || [])[parseInt(x[0], 10)], x[0]) || ('slot ' + x[0])) + ' ' + x[1] + ' ≤ ' + t.exited_on);
+    });
+    if (!done.length) return;
+    try { localStorage.setItem(TYPE_CHANGEOVER_KEY, new Date().toISOString() + ' exits=' + done.length); } catch (e) {}
+    console.log('[change-over 2026-11-06] exit dates (upper bounds) on tranches already at 0%: ' + done.join(', '));
+    seedEditFingerprints();          // the change-over is not a user edit
+    saveEditsToLocalStorage();
+    if (diskWriteEnabled) await writeStateToDisk();
+    render();
+  } finally { typeChangeoverInFlight = false; }
+}
+
 // === Edit helpers (slot-based) ===
 function getEdit(invIdx, slotType) {
   if (!EDITS[invIdx]) return null;
@@ -1505,11 +2021,11 @@ function ensureTrancheId(t, invIdx, slotType) {
                  + '-' + (t.entry_date || 'nodate');
   return t.tranche_id;
 }
-function resolvedStopMa(t, slotType) { return (t && t.stop_ma) ? t.stop_ma : (DEFAULT_STOP_MA[slotType] || null); }   // values are the fixed '20D'..'200D' strings of the stop selector, so plain equality is the right comparison
+function resolvedStopMa(t, slotType) { return (t && t.stop_ma) ? t.stop_ma : (DEFAULT_STOP_MA[slotType] || (t && KIND_DEFAULT_STOP[t.type]) || null); }   // values are the fixed '20D'..'200D' strings of the stop selector, so plain equality is the right comparison
 function forEachTranche(fn) {
   Object.keys(EDITS || {}).forEach(function(slot) {
     var se = EDITS[slot]; if (!se || typeof se !== 'object') return;
-    TRADE_TYPES.forEach(function(tt) { if (se[tt] && typeof se[tt] === 'object') fn(se[tt], slot, tt); });
+    Object.keys(se).forEach(function(tt) { if (isTrancheKey(tt, se[tt])) fn(se[tt], slot, tt); });   // D-PMS-V4-150: every tranche key
   });
 }
 var EDIT_STOP = {};   // tranche_id -> the RESOLVED stop average at the last baseline
@@ -1605,7 +2121,7 @@ function dedupeTrancheIds(edits) {
   var seen = {}, dropped = [];
   Object.keys(edits || {}).forEach(function(slot) {
     var se = edits[slot]; if (!se || typeof se !== 'object') return;
-    TRADE_TYPES.forEach(function(tt) {
+    Object.keys(se).filter(function(k) { return isTrancheKey(k, se[k]); }).forEach(function(tt) {
       var t = se[tt]; if (!t || typeof t !== 'object' || !t.tranche_id) return;
       var prev = seen[t.tranche_id];
       if (!prev) { seen[t.tranche_id] = { slot: slot, tt: tt, t: t }; return; }
@@ -1634,7 +2150,7 @@ function seedUnknownBaseline(t, slotType, prevEdited, today) {
     note: 'in force when this page first saw the tranche on ' + today + '; set on or before ' + (prevEdited || 'an unknown date') }];
   return true;
 }
-var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at'];
+var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type', 'exited_on'];   // D-PMS-V4-150: + type, exit date
 
 function trancheFingerprint(t) {
   if (!t || typeof t !== 'object') return null;
@@ -1852,10 +2368,10 @@ function clearTickerSlot(invIdx) {
   // Making a broken thing work is exactly when to re-ask what the working version can now
   // destroy. Matches the existing house pattern (Clear all, and the slot-cap prompt).
   var live = [];
-  TRADE_TYPES.forEach(function(slotType) {
+  trancheKeys(invIdx).forEach(function(slotType) {
     var e = EDITS[invIdx][slotType];
     if (e && (e.entry_date || e.target_size_pct != null)) {
-      live.push({ slot: slotType, pct: e.target_size_pct || 0 });
+      live.push({ slot: slotType, label: trancheLabel(invIdx, slotType), pct: e.target_size_pct || 0 });
     }
   });
   if (live.length) {
@@ -1864,13 +2380,13 @@ function clearTickerSlot(invIdx) {
     var msg = 'Remove ' + name + ' from slot ' + (invIdx + 1) + '?\n\n'
       + 'This deletes ' + live.length + ' tranche' + (live.length > 1 ? 's' : '')
       + ' totalling ' + (totalPct * 100).toFixed(1) + '% of AUM:\n'
-      + live.map(function(x) { return '  • ' + (TRADE_LABELS[x.slot] || x.slot) + '  ' + (x.pct * 100).toFixed(1) + '%'; }).join('\n')
+      + live.map(function(x) { return '  • ' + x.label + '  ' + (x.pct * 100).toFixed(1) + '%'; }).join('\n')
       + '\n\nThis cannot be undone from the page.';
     if (!confirm(msg)) return;
   }
 
   // Always drop every tranche — an emptied slot must never retain capital.
-  TRADE_TYPES.forEach(function(slotType) { delete EDITS[invIdx][slotType]; });
+  trancheKeys(invIdx).forEach(function(slotType) { delete EDITS[invIdx][slotType]; });
 
   if (hasUniverseStock) {
     // Underlying universe stock would otherwise reappear: mark the slot explicitly emptied.
@@ -2063,12 +2579,13 @@ function setBufferEdit(invIdx, slotType, inputEl) {
   setEditField(invIdx, slotType, 'buffer_pct', n / 100);
 }
 // V4 (Richard, 2-Nov-2026): "allow every MA to be used, not just the 20, 50, etc.": any whole number of days 5 to 250
+// V4 (Richard, 2-Nov-2026): "allow every MA to be used, not just the 20, 50, etc.": any whole number of days 5 to 250
 function setStopMaEdit(invIdx, slotType, inputEl) {
   var v = stopNormaliseMa(inputEl.value);
   if (!v) {
     flashError('MA for the stop-loss must be a whole number of days from ' + STOP_MA_MIN_DAYS + ' to ' + STOP_MA_MAX_DAYS + ' (for example 75D).');
     var prior = getEdit(invIdx, slotType);
-    inputEl.value = (prior && prior.stop_ma) || DEFAULT_STOP_MA[slotType] || '';
+    inputEl.value = stopMaFor(slotType, prior, effectiveTicker(CONFIG.investments[invIdx], invIdx)) || '';
     return;
   }
   setEditField(invIdx, slotType, 'stop_ma', v);
@@ -2090,34 +2607,29 @@ function probingSizeHint(ticker, entryDate, stopMa, bufVal) {
   return { size: Math.min(PB_TRANCHE_CAP, raw), capped: raw > PB_TRANCHE_CAP, raw: raw, dist: dist, basis: basis, price: price, stop_loss: sl };
 }
 // D-PMS-38: %AUM input wrapper with slot-cap warning + revert-on-cancel
+// D-PMS-38 / D-PMS-V4-150: % at entry. A warning above the usual size for the tranche's type (never a block); typing 0
+// removes the tranche on the latest close date (Richard, 6-Nov-2026: "allow me to type 0% of AUM and that will remove
+// that tranche at that date"); a size typed into a removed tranche puts it back.
 function setPctEdit(invIdx, slotType, inputEl) {
-  var raw = inputEl.value;
-  var decimal = pctInputToDecimal(raw);
-  if (decimal != null) {
-    var capDecimal = SLOT_CAP_DECIMAL[slotType];
-    var capPct = capDecimal * 100;
-    var enteredPct = decimal * 100;
-    if (decimal > capDecimal) {
-      var ok = confirm(enteredPct.toFixed(2) + '% exceeds the ' + slotType + ' cap of ' + capPct + '% — continue anyway?');
-      if (!ok) {
-        var priorEdit = getEdit(invIdx, slotType);
-        var priorPct = priorEdit && priorEdit.target_size_pct != null ? priorEdit.target_size_pct : null;
-        inputEl.value = decimalToPctInput(priorPct);
-        return;
-      }
-    }
-    // D-PMS-49: PB-required check for new MM tranches
-    if (decimal > 0 && !checkPbRequirementForMM(invIdx, slotType)) {
-      var priorEdit2 = getEdit(invIdx, slotType);
-      var priorPct2 = priorEdit2 && priorEdit2.target_size_pct != null ? priorEdit2.target_size_pct : null;
-      inputEl.value = decimalToPctInput(priorPct2);
+  var decimal = pctInputToDecimal(inputEl.value);
+  var t = getEdit(invIdx, slotType);
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (decimal != null && decimal < 0) decimal = 0;
+  if (decimal != null && decimal > 0) {
+    var kind = trancheKind(t, ticker), cap = KIND_CAP_DECIMAL[kind];
+    if (decimal > cap + 1e-9 && !confirm((decimal * 100).toFixed(2) + '% is above the ' + (cap * 100).toFixed(1) + '% usual for a ' + TRANCHE_KIND_LABEL[kind] + ' tranche. Continue?')) {
+      inputEl.value = decimalToPctInput(t ? t.target_size_pct : null);
       return;
     }
   }
-  setEditField(invIdx, slotType, 'target_size_pct', decimal);
+  if (decimal == null) { setEditField(invIdx, slotType, 'target_size_pct', null); return; }
+  applySize(invIdx, slotType, decimal);
 }
+// × deletes a tranche entirely (a mistaken entry). D-PMS-V4-150: a deleted new key (T<n>) is never handed out again.
 function clearEdit(invIdx, slotType) {
   if (EDITS[invIdx] && EDITS[invIdx][slotType]) {
+    var m = /^T(\d+)$/.exec(slotType);
+    if (m) EDITS[invIdx]._t_seq = Math.max(+(EDITS[invIdx]._t_seq || 0), +m[1]);
     delete EDITS[invIdx][slotType];
     if (!Object.keys(EDITS[invIdx]).length) delete EDITS[invIdx];
     saveEdits(); render();
@@ -2432,9 +2944,15 @@ function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, pr
 }
 // V4: for a Middle Innings Core Investment every stop-loss figure is withheld (null), so no alert, total, sort or chart line
 // can count it; price, value and paper P&L are kept. `core: true` tells the row to grey the stop columns out.
-function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType) {
+function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType, isCoreOverride) {
   var r = runTesterAll(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType);
-  if (r && r.ok && holdingIsCore(ticker)) {
+  // D-PMS-V4-150 ("Q1 = Concur"): the TRANCHE's type decides; the stock's classification only when no type is given
+  if (r && r.ok && (isCoreOverride === undefined ? holdingIsCore(ticker) : !!isCoreOverride)) {
+    // D-PMS-V4-150 (Richard, 6-Nov-2026: "I know that MA for SL not relevant for exit criteria for Core Investments, but I
+    // want the a consistent visual framework for all tranches"): the levels are kept for display as information only (r.info);
+    // every field the totals, alerts and the overview read stays empty, so nothing about a Core tranche's exit changes
+    r.info = { entry_ma: r.entry_ma, entry_stop: r.entry_stop, initial_stop_distance_pct: r.initial_stop_distance_pct,
+               current_ma: r.current_ma, current_stop: r.current_stop, stop_distance_pct: r.stop_distance_pct, loss_risk_aum: r.loss_risk_aum };
     r.core = true; r.entry_ma = null; r.entry_stop = null; r.initial_stop_distance_pct = null;
     r.current_ma = null; r.current_stop = null; r.stop_distance_pct = null; r.loss_risk_aum = null;
     r.entry_warn = null; r.breach = null;
@@ -2746,7 +3264,7 @@ async function runOneTimeMigration() {
     delete EDITS[o.slot][o.tranche];
     // an emptied universe slot must not silently show its underlying stock again
     var inv = (CONFIG.investments || [])[parseInt(o.slot, 10)];
-    var stillHasTranche = TRADE_TYPES.some(function(tt) { return EDITS[o.slot] && EDITS[o.slot][tt]; });
+    var stillHasTranche = trancheKeys(o.slot).length > 0;
     if (!stillHasTranche && inv && inv.ticker && !inv.is_placeholder
         && !EDITS[o.slot]._ticker_override) {
       EDITS[o.slot]._ticker_override = '';
@@ -2838,44 +3356,37 @@ function splitPlan(invIdx, slotType) {
   while (left > CORE_TRANCHE_SIZE + 1e-9) { parts.push(CORE_TRANCHE_SIZE); left -= CORE_TRANCHE_SIZE; }
   left = Math.round(left * 1e6) / 1e6;
   if (left >= 0.00005) parts.push(left); else parts[parts.length - 1] += left;
-  var free = ['MM1', 'MM2', 'MM3', 'MM4'].filter(function (t) { return t !== slotType && !hasEdit(invIdx, t); });
-  return { size: size, parts: parts, free: free, enough: free.length >= parts.length - 1, edit: e };
+  return { size: size, parts: parts, enough: true, edit: e };   // D-PMS-V4-150: no slot limit, so a split always fits
 }
 function openSplit(invIdx, slotType) {
   var plan = splitPlan(invIdx, slotType); if (!plan) return;
   var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx) || '';
   var f = function (x) { return (x * 100).toFixed(2) + '%'; };
-  var html = '<p><b>' + esc(ticker) + ' ' + esc(TRADE_LABELS[slotType] || slotType) + '</b> is ' + f(plan.size) + ' of AUM at cost. A Middle Innings Core Investment tranche is '
+  var html = '<p><b>' + esc(ticker) + ' ' + esc(trancheLabel(invIdx, slotType)) + '</b> is ' + f(plan.size) + ' of AUM at cost. A Middle Innings Core Investment tranche is '
     + f(CORE_TRANCHE_SIZE) + ', so you should split it into ' + plan.parts.length + ' tranches.</p>'
-    + '<p>Proposed split: ' + plan.parts.map(f).join(' + ') + '. Each keeps the original entry date (' + esc(fmtDate(plan.edit.entry_date)) + ') and MA ('
-    + esc(plan.edit.stop_ma || DEFAULT_STOP_MA[slotType]) + ').</p>';
-  if (plan.enough) {
-    var dest = [slotType].concat(plan.free.slice(0, plan.parts.length - 1));
-    html += '<p>Slots: ' + dest.map(function (t, i) { return esc(TRADE_LABELS[t] || t) + ' ' + f(plan.parts[i]); }).join(', ') + '.</p>';
-  } else {
-    html += '<p class="split-warn">There are not enough free Core slots for this investment: the split needs ' + (plan.parts.length - 1)
-      + ' more and ' + plan.free.length + ' ' + (plan.free.length === 1 ? 'is' : 'are') + ' free. Nothing has been split. Free a Core slot first, or keep the tranche as it is.</p>';
-  }
+    + '<p>Proposed split: ' + plan.parts.map(f).join(' + ') + '. Each keeps the original entry date (' + esc(fmtDate(plan.edit.entry_date)) + '), the MA ('
+    + esc(stopMaFor(slotType, plan.edit, ticker)) + ') and the stop history.</p>';
   document.getElementById('splitText').innerHTML = html;
   var btn = document.getElementById('splitNowBtn');
-  btn.style.display = plan.enough ? '' : 'none';
-  pendingSplit = plan.enough ? { invIdx: invIdx, slotType: slotType } : null;
+  btn.style.display = '';
+  pendingSplit = { invIdx: invIdx, slotType: slotType };
   document.getElementById('splitModal').classList.add('open');
 }
 function confirmSplit() {
   if (!pendingSplit) { cancelSplit(); return; }
   var invIdx = pendingSplit.invIdx, slotType = pendingSplit.slotType;
   var plan = splitPlan(invIdx, slotType);
-  if (!plan || !plan.enough) { cancelSplit(); flashError('Split not made: the tranche or the free Core slots changed.'); return; }
+  if (!plan) { cancelSplit(); flashError('Split not made: the tranche changed.'); return; }
   var orig = plan.edit, today = todayISO();
   var sourceId = ensureTrancheId(orig, invIdx, slotType);
   orig.target_size_pct = plan.parts[0];
   orig.split_on = today;
   for (var i = 1; i < plan.parts.length; i++) {
-    var part = { entry_date: orig.entry_date, target_size_pct: plan.parts[i], split_from: sourceId, split_on: today };
-    ['stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at'].forEach(function (k) { if (orig[k] != null) part[k] = orig[k]; });
+    var part = { entry_date: orig.entry_date, target_size_pct: plan.parts[i], split_from: sourceId, split_on: today, type: 'core' };
+    ['stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type_changed_on'].forEach(function (k) { if (orig[k] != null) part[k] = orig[k]; });
     if (Array.isArray(orig.stop_history)) part.stop_history = JSON.parse(JSON.stringify(orig.stop_history));   // the same resets apply
-    EDITS[invIdx][plan.free[i - 1]] = part;
+    if (Array.isArray(orig.type_history)) part.type_history = JSON.parse(JSON.stringify(orig.type_history));
+    EDITS[invIdx][newTrancheKey(invIdx)] = part;
   }
   pendingSplit = null;
   document.getElementById('splitModal').classList.remove('open');
@@ -3001,40 +3512,26 @@ function getUniverseName(ticker) {
 function gatherPortfolioRows() {
   var rows = [];
   CONFIG.investments.forEach(function(inv, invIdx) {
-    // D-PMS-191: route through effectiveTicker() — the single source of truth for
-    // "which stock is live in this slot". Previously this function carried its own copy
-    // of those rules, which is how the hidden-flag divergence arose in the first place.
+    // D-PMS-191: route through effectiveTicker() — the single source of truth for "which stock is live in this slot".
     var ticker = effectiveTicker(inv, invIdx);
-    // D-PMS-127: include empty slots as blank rows (matches PMS 16) — unless D-PMS-141 hides them
     if (!ticker) {
       if (hidePlaceholders) return;
-      rows.push({
-        invIdx: invIdx,
-        ticker: 'Slot ' + (invIdx + 1),
-        name: 'Empty slot ' + (invIdx + 1),
-        currency: '',
-        deployed: 0, trancheCount: 0, valueAum: 0,
-        atRisk: 0, weightedStopDistance: null,
-        paperPnl: 0, avgPriceMove: null,
-        breachCount: 0, tranches: [], _is_placeholder: true
-      });
+      rows.push({ invIdx: invIdx, ticker: 'Slot ' + (invIdx + 1), name: 'Empty slot ' + (invIdx + 1), currency: '',
+        deployed: 0, trancheCount: 0, valueAum: 0, atRisk: 0, weightedStopDistance: null, paperPnl: 0, avgPriceMove: null,
+        breachCount: 0, tranches: [], kinds: [], ubsPct: null, rel5: null, rel20: null, _is_placeholder: true });
       return;
     }
-    // collect all tranches with computed runTester output
     var trancheData = [];
     var deployed = 0, valueAum = 0, atRisk = 0, paperPnl = 0, breachCount = 0;
     var weightedStopDistanceNum = 0, weightedStopDistanceDen = 0;
     var priceMoveSum = 0, priceMoveCount = 0;
-    TRADE_TYPES.forEach(function(slotType) {
-      var edit = getEdit(invIdx, slotType);
-      if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
-      var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
-      var stopMa = edit.stop_ma || DEFAULT_STOP_MA[slotType];
-      // D-PMS-190: committed size is an entry input — count it whether or not current
-      // price data is present, so a momentarily-missing chart cannot drop a position from
-      // the deployed total. Price-derived metrics below still require a valid runTester.
+    trancheKeys(invIdx).forEach(function(key) {
+      var edit = getEdit(invIdx, key);
+      if (!trancheHeld(edit)) return;
+      var stopMa = stopMaFor(key, edit, ticker);
+      // D-PMS-190: committed size counts whether or not current price data is present
       deployed += edit.target_size_pct;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, stopMa, bufVal, edit.stop_history, edit.promoted_at, slotType);
+      var r = runTranche(ticker, key, edit);
       if (!r || !r.ok) return;
       valueAum += (r.value_aum_pct || 0);
       atRisk += (r.loss_risk_aum || 0);
@@ -3044,34 +3541,28 @@ function gatherPortfolioRows() {
         weightedStopDistanceNum += r.stop_distance_pct * edit.target_size_pct;
         weightedStopDistanceDen += edit.target_size_pct;
       }
-      if (r.paper_pnl_per_share != null) {
-        priceMoveSum += r.paper_pnl_per_share;
-        priceMoveCount += 1;
-      }
-      trancheData.push({slot: slotType, stop_ma: stopMa, stop_distance_pct: r.stop_distance_pct, loss_risk_aum: r.loss_risk_aum, value_aum_pct: r.value_aum_pct});
+      if (r.paper_pnl_per_share != null) { priceMoveSum += r.paper_pnl_per_share; priceMoveCount += 1; }
+      trancheData.push({slot: key, stop_ma: stopMa, stop_distance_pct: r.stop_distance_pct, loss_risk_aum: r.loss_risk_aum, value_aum_pct: r.value_aum_pct});
     });
+    var curr = inv.currency || (PMS_UNIVERSE && PMS_UNIVERSE.data && PMS_UNIVERSE.data[ticker] ? PMS_UNIVERSE.data[ticker].currency : '') || '';
     if (deployed === 0) {
-      // D-PMS-127: emit as placeholder-style row instead of skipping — unless D-PMS-141 hides them
       if (hidePlaceholders) return;
-      rows.push({
-        invIdx: invIdx, ticker: ticker, name: getUniverseName(ticker) || inv.name || ticker, currency: inv.currency || (getUniverseName(ticker) && PMS_UNIVERSE.data[ticker] ? PMS_UNIVERSE.data[ticker].currency : '') || '',  // D-PMS-176b
-        deployed: 0, trancheCount: 0, valueAum: 0,
-        atRisk: 0, weightedStopDistance: null,
-        paperPnl: 0, avgPriceMove: null,
-        breachCount: 0, tranches: [], _is_placeholder: true
-      });
+      rows.push({ invIdx: invIdx, ticker: ticker, name: getUniverseName(ticker) || inv.name || ticker, currency: curr,
+        deployed: 0, trancheCount: 0, valueAum: 0, atRisk: 0, weightedStopDistance: null, paperPnl: 0, avgPriceMove: null,
+        breachCount: 0, tranches: [], kinds: [], ubsPct: null, rel5: null, rel20: null, _is_placeholder: true });
       return;
     }
-    var weightedStopDistance = weightedStopDistanceDen > 0 ? weightedStopDistanceNum / weightedStopDistanceDen : null;
-    var avgPriceMove = priceMoveCount > 0 ? priceMoveSum / priceMoveCount : null;
+    var ubsView = ubsStockView(invIdx);
     rows.push({
-      invIdx: invIdx, ticker: ticker, name: getUniverseName(ticker) || inv.name || '', currency: inv.currency || (PMS_UNIVERSE && PMS_UNIVERSE.data && PMS_UNIVERSE.data[ticker] ? PMS_UNIVERSE.data[ticker].currency : '') || '',  // D-PMS-176b
+      invIdx: invIdx, ticker: ticker, name: getUniverseName(ticker) || inv.name || '', currency: curr,
       deployed: deployed, trancheCount: trancheData.length, valueAum: valueAum,
-      atRisk: atRisk, weightedStopDistance: weightedStopDistance, paperPnl: paperPnl,
-      avgPriceMove: avgPriceMove, breachCount: breachCount, tranches: trancheData
+      atRisk: atRisk, weightedStopDistance: weightedStopDistanceDen > 0 ? weightedStopDistanceNum / weightedStopDistanceDen : null,
+      paperPnl: paperPnl, avgPriceMove: priceMoveCount > 0 ? priceMoveSum / priceMoveCount : null, breachCount: breachCount,
+      tranches: trancheData, kinds: stockKinds(invIdx), kindSort: stockKinds(invIdx).join('+'),
+      ubsPct: ubsView ? ubsView.stockPct : null,
+      rel5: relPerf(ticker, 5), rel20: relPerf(ticker, 20)
     });
   });
-  // sort by ticker ascending
   rows.sort(function(a, b) { return a.ticker.localeCompare(b.ticker); });
   return rows;
 }
@@ -3196,7 +3687,7 @@ function renderSparkline(tranches, axisMin, axisMax, isFirstRow) {
 
   // Vertical layout — pills are 14px wide x 11px tall, sit centred on baseline.
   var labelRowH = 9;
-  var maxLabelLanes = 2;
+  var maxLabelLanes = Math.min(2, Object.keys(mergedClusters).length);   // D-PMS-V4-150: only the lanes this row needs (one screen)
   var labelBlockH = labelRowH * maxLabelLanes + 2;
   var pillW = 20;
   var pillH = 13;
@@ -3436,16 +3927,19 @@ function renderSparkline(tranches, axisMin, axisMax, isFirstRow) {
   return svg;
 }
 
+// D-PMS-V4-150 (Richard, 6-Nov-2026): "Ensure Portfolio Overview page fits onto one screen. Visually distinguish colour
+// code wise the stocks by type of investment and also how well a stock is performing over L5 and L20D on market relative
+// basis" ("Q4 = B": relative to STOXX Europe 600). Type: a coloured bar and label on the ticker cell (one per type held).
+// Performance: two shaded columns, green ahead of STOXX Europe 600 and red behind, deeper as the gap grows. The UBS % of
+// AUM sits beside the current % of AUM.
 function renderPortfolioSection() {
   var el = document.getElementById('portfolioSection');
   if (!el) return;
   var rows = gatherPortfolioRows();
-  // D-PMS-104: apply sort if pfSort.key set
   if (pfSort && pfSort.key) {
     var sortKey = pfSort.key, sortDir = pfSort.dir === 'desc' ? -1 : 1;
     rows.sort(function(a, b) {
-      // D-PMS-138: placeholders ALWAYS at bottom, regardless of sort
-      if (a._is_placeholder && !b._is_placeholder) return 1;
+      if (a._is_placeholder && !b._is_placeholder) return 1;   // D-PMS-138: placeholders always at the bottom
       if (!a._is_placeholder && b._is_placeholder) return -1;
       if (a._is_placeholder && b._is_placeholder) return 0;
       var av = a[sortKey], bv = b[sortKey];
@@ -3456,7 +3950,6 @@ function renderPortfolioSection() {
       return (av - bv) * sortDir;
     });
   } else {
-    // D-PMS-138: even with no sort, push placeholders to bottom (stable order otherwise)
     rows.sort(function(a, b) {
       if (a._is_placeholder && !b._is_placeholder) return 1;
       if (!a._is_placeholder && b._is_placeholder) return -1;
@@ -3464,29 +3957,24 @@ function renderPortfolioSection() {
     });
   }
   if (!rows.length) {
-    el.innerHTML = '<h2>Portfolio summary</h2><div class="pf-meta">No live positions yet — add tranche data below to populate this view.</div>';
+    el.innerHTML = '<h2>Portfolio summary</h2><div class="pf-meta">No live positions yet — add tranche data in the Position manager to populate this view.</div>';
     return;
   }
-  // Compute universal stop-distance axis across ALL tranches in portfolio
   var allStopDistances = [];
   rows.forEach(function(r) { r.tranches.forEach(function(t) { if (t.stop_distance_pct != null) allStopDistances.push(t.stop_distance_pct); }); });
-  var rawMin = Math.min.apply(null, allStopDistances);
-  var rawMax = Math.max.apply(null, allStopDistances);
-  // D-PMS-88: round axis OUTWARDS to nearest 5% step. (Floor for min, ceil for max; in decimal that's 0.05 step.)
-  var axisMin = Math.floor(rawMin / 0.05) * 0.05;
+  var rawMin = allStopDistances.length ? Math.min.apply(null, allStopDistances) : -0.1;
+  var rawMax = allStopDistances.length ? Math.max.apply(null, allStopDistances) : 0;
+  var axisMin = Math.floor(rawMin / 0.05) * 0.05;   // D-PMS-88: round outwards to 5% steps, always include 0%
   var axisMax = Math.ceil(rawMax / 0.05) * 0.05;
-  // Always include 0% in the range
   if (axisMin > 0) axisMin = 0;
   if (axisMax < 0) axisMax = 0;
-  // Safety: ensure non-zero range
   if (axisMax - axisMin < 0.05) axisMax = axisMin + 0.05;
-  // Totals row aggregates
-  var totDeployed = 0, totTranches = 0, totValueAum = 0, totAtRisk = 0, totPaperPnl = 0, totBreaches = 0;
+  var totDeployed = 0, totTranches = 0, totValueAum = 0, totAtRisk = 0, totPaperPnl = 0, totBreaches = 0, totUbs = 0;
   rows.forEach(function(r) {
     totDeployed += r.deployed; totTranches += r.trancheCount; totValueAum += r.valueAum;
-    totAtRisk += r.atRisk; totPaperPnl += r.paperPnl; totBreaches += r.breachCount;
+    totAtRisk += r.atRisk; totPaperPnl += r.paperPnl; totBreaches += r.breachCount; totUbs += (r.ubsPct || 0);
   });
-  // Build HTML — D-PMS-117 + D-PMS-141: key strip alongside H2 + placeholder toggle
+  var u = ubsData();
   var keyStrip = '<span class="pf-spark-key-strip">'
     + '<span class="pf-key-pill-row">'
       + '<span class="pf-key-pill" style="background:#d97706">20</span>'
@@ -3496,28 +3984,37 @@ function renderPortfolioSection() {
       + '<span class="pf-key-pill" style="background:#475569">200</span>'
       + '<span> = MA stop</span>'
     + '</span>'
-    + '<span><span class="pf-key-bps">(X)bps</span> = loss risk per tranche of capital</span>'
-    + '<span><span class="pf-key-aum">X.X%</span> = % of AUM per tranche of capital</span>'
+    + '<span><span class="pf-key-bps">(X)bps</span> = loss risk per tranche</span>'
+    + '<span><span class="pf-key-aum">X.X%</span> = % of AUM per tranche</span>'
     + '</span>';
-  var placeholderBtn = '<button class="btn pf-toggle-placeholders" id="btnTogglePlaceholders">'
-    + (hidePlaceholders ? 'Show placeholders' : 'Hide placeholders')
-    + '</button>';
-  var html = '<h2 style="display:flex;align-items:center;gap:8px"><span>Portfolio summary</span>' + placeholderBtn + '</h2>';
+  var legend = '<span class="pf-legend">'
+    + TRANCHE_KIND_ORDER.map(function (k) { return '<span class="kind-pill kind-' + k + '">' + esc(TRANCHE_KIND_LABEL[k]) + '</span>'; }).join('')
+    + '<span class="pf-legend-sep"></span>'
+    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(22,163,74,0.55)"></span>ahead of STOXX Europe 600</span>'
+    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(220,38,38,0.55)"></span>behind it</span>'
+    + '</span>';
+  var placeholderBtn = '<button class="btn pf-toggle-placeholders" id="btnTogglePlaceholders">' + (hidePlaceholders ? 'Show placeholders' : 'Hide placeholders') + '</button>';
+  var html = '<h2 class="pf-h2"><span>Portfolio summary</span>' + placeholderBtn + legend + '</h2>';
   function fmtMetaTick(v) { var n = Math.round(v * 100); if (n < 0) return '(' + Math.abs(n) + ')%'; if (n > 0) return '+' + n + '%'; return '0%'; }
-  html += '<div class="pf-meta">' + rows.length + ' live investment' + (rows.length === 1 ? '' : 's') + ' · ' + totTranches + ' tranche' + (totTranches === 1 ? '' : 's') + ' · sparkline axis ' + fmtMetaTick(axisMin) + ' to ' + fmtMetaTick(axisMax) + ' (universal across all rows; major gridlines every 5%, minor every 2.5%)</div>';
+  html += '<div class="pf-meta">' + rows.length + ' live investment' + (rows.length === 1 ? '' : 's') + ' · ' + totTranches + ' tranche' + (totTranches === 1 ? '' : 's')
+    + ' · sparkline axis ' + fmtMetaTick(axisMin) + ' to ' + fmtMetaTick(axisMax)
+    + (u ? ' · UBS valuation of ' + esc(fmtDate(u.asof)) : ' · no UBS valuation loaded') + '</div>';
   html += '<div class="portfolio-table-wrap"><table class="pf-table">';
   html += '<colgroup>'
-    + '<col style="width:90px">'   // ticker
-    + '<col style="width:160px">'  // name
-    + (hideAtEntry ? '' : '<col style="width:80px">')   // deployed %AUM
-    + '<col style="width:55px">'   // # tranches
-    + '<col style="width:80px">'   // current value %AUM
-    + '<col style="width:85px">'   // at-risk %AUM
-    + '<col style="width:95px">'   // wt avg stop dist
-    + '<col style="width:80px">'   // paper P&L AUM
-    + '<col style="width:95px">'   // avg price move
-    + '<col style="width:65px">'   // breach alerts
-    + '<col style="width:auto">'  // D-PMS-78: sparkline column auto-fills remaining space
+    + '<col style="width:118px">'  // ticker + type
+    + '<col style="width:120px">'  // name
+    + (hideAtEntry ? '' : '<col style="width:66px">')
+    + '<col style="width:58px">'   // # tranches
+    + '<col style="width:70px">'   // current %
+    + '<col style="width:66px">'   // UBS %
+    + '<col style="width:72px">'   // last 5 days
+    + '<col style="width:72px">'   // last 20 days
+    + '<col style="width:74px">'   // loss risk
+    + '<col style="width:84px">'   // weighted stop dist
+    + '<col style="width:70px">'   // P&L AUM
+    + '<col style="width:74px">'   // avg price move
+    + '<col style="width:52px">'   // breach
+    + '<col style="width:auto">'   // sparkline
     + '</colgroup>';
   function pfSortLabel(key) {
     if (pfSort.key !== key) return '';
@@ -3529,37 +4026,47 @@ function renderPortfolioSection() {
     + (hideAtEntry ? '' : '<th class="pf-sortable" data-sort-key="deployed">Entry % of AUM' + pfSortLabel('deployed') + '</th>')
     + '<th class="pf-sortable" data-sort-key="trancheCount"># Tranches' + pfSortLabel('trancheCount') + '</th>'
     + '<th class="pf-sortable" data-sort-key="valueAum">Current % of AUM' + pfSortLabel('valueAum') + '</th>'
+    + '<th class="pf-sortable" data-sort-key="ubsPct" title="UBS\'s own weight for the stock, rolled from the UBS valuation date to the latest close">UBS % of AUM' + pfSortLabel('ubsPct') + '</th>'
+    + '<th class="pf-sortable" data-sort-key="rel5" title="Last 5 trading days, relative to STOXX Europe 600">Last 5 days vs STOXX 600' + pfSortLabel('rel5') + '</th>'
+    + '<th class="pf-sortable" data-sort-key="rel20" title="Last 20 trading days, relative to STOXX Europe 600">Last 20 days vs STOXX 600' + pfSortLabel('rel20') + '</th>'
     + '<th class="pf-loss-risk-col pf-sortable" data-sort-key="atRisk">Loss risk' + pfSortLabel('atRisk') + '</th>'
     + '<th class="pf-sortable" data-sort-key="weightedStopDistance">Weighted stop-loss distance' + pfSortLabel('weightedStopDistance') + '</th>'
     + '<th class="pf-sortable" data-sort-key="paperPnl">P&L AUM' + pfSortLabel('paperPnl') + '</th>'
     + '<th class="pf-sortable" data-sort-key="avgPriceMove">Average price change' + pfSortLabel('avgPriceMove') + '</th>'
     + '<th class="pf-sortable" data-sort-key="breachCount">Breach alerts' + pfSortLabel('breachCount') + '</th>'
-    + '<th class="pf-spark-header"><div class="pf-spark-header-wrap"><span class="pf-spark-header-title">Investment visualisation per tranche</span>' + keyStrip + '</div></th>'
+    + '<th class="pf-spark-header"><div class="pf-spark-header-wrap"><span class="pf-spark-header-title">Stop-loss distance per tranche (Probing and Speculative Bets)</span>' + keyStrip + '</div></th>'
     + '</tr></thead><tbody>';
   rows.forEach(function(r, _pfRowIdx) {
     if (r._is_placeholder) {
-      // D-PMS-127: blank placeholder row
       html += '<tr class="pf-row-placeholder">'
         + '<td class="al"><span class="pf-ticker pf-placeholder-dim">' + esc(r.ticker) + '</span></td>'
         + '<td class="al pf-name pf-placeholder-dim">' + esc(r.name) + '</td>'
         + (hideAtEntry ? '' : '<td class="pf-placeholder-dim">—</td>')
-        + '<td class="pf-placeholder-dim">—</td>'
-        + '<td class="pf-placeholder-dim">—</td>'
+        + '<td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td>'
+        + '<td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td>'
         + '<td class="pf-loss-risk-col pf-placeholder-dim">—</td>'
-        + '<td class="pf-placeholder-dim">—</td>'
-        + '<td class="pf-placeholder-dim">—</td>'
-        + '<td class="pf-placeholder-dim">—</td>'
-        + '<td class="pf-placeholder-dim">—</td>'
+        + '<td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td><td class="pf-placeholder-dim">—</td>'
         + '<td class="al pf-spark-cell pf-placeholder-dim">—</td>'
         + '</tr>';
       return;
     }
+    var kindBar = r.kinds.length ? 'linear-gradient(to bottom,' + r.kinds.map(function (k, i) {
+      var a = (i / r.kinds.length * 100).toFixed(0), b = ((i + 1) / r.kinds.length * 100).toFixed(0);
+      return TRANCHE_KIND_COLOUR[k] + ' ' + a + '%,' + TRANCHE_KIND_COLOUR[k] + ' ' + b + '%';
+    }).join(',') + ')' : 'none';
+    var ubsGap = (r.ubsPct != null) ? r.ubsPct - r.valueAum * 100 : null;
+    var ubsTxt = r.ubsPct == null ? '<span class="val-muted">—</span>'
+      : '<span class="' + (Math.abs(ubsGap) >= UBS_GAP_FLAG_PP ? 'ubs-gap' : '') + '" title="UBS ' + r.ubsPct.toFixed(2) + '%; the PMS ' + (r.valueAum * 100).toFixed(2) + '%; gap ' + (ubsGap >= 0 ? '+' : '') + ubsGap.toFixed(2) + ' points">' + r.ubsPct.toFixed(1) + '%</span>';
     html += '<tr>'
-      + '<td class="al"><span class="pf-ticker">' + esc(r.ticker) + '</span> <span class="ccy-tag">' + esc(r.currency) + '</span></td>'
+      + '<td class="al pf-ticker-cell" style="--kind-bar:' + kindBar + '"><span class="pf-ticker">' + esc(r.ticker) + '</span> <span class="ccy-tag">' + esc(r.currency) + '</span>'
+      + '<div class="pf-kinds">' + r.kinds.map(function (k) { return '<span class="kind-text kind-' + k + '">' + esc(TRANCHE_KIND_LABEL[k]) + '</span>'; }).join(' · ') + '</div></td>'
       + '<td class="al pf-name">' + esc(r.name) + '</td>'
       + (hideAtEntry ? '' : '<td>' + pctNoSign1dp(r.deployed) + '</td>')
       + '<td>' + r.trancheCount + '</td>'
       + '<td>' + pctNoSign1dp(r.valueAum) + '</td>'
+      + '<td>' + ubsTxt + '</td>'
+      + relPerfCellHtml(r.rel5, 5)
+      + relPerfCellHtml(r.rel20, 20)
       + '<td class="pf-loss-risk-col ' + lossRiskCls(r.atRisk) + '">' + pctBp(r.atRisk) + '</td>'
       + '<td class="' + stopDistCls(r.weightedStopDistance) + '">' + pctSD(r.weightedStopDistance) + '</td>'
       + '<td>' + pctBp(r.paperPnl) + '</td>'
@@ -3568,7 +4075,6 @@ function renderPortfolioSection() {
       + '<td class="al pf-spark-cell">' + renderSparkline(r.tranches, axisMin, axisMax, _pfRowIdx === 0) + '</td>'
       + '</tr>';
   });
-  // Totals row
   var avgPriceMoveTot = (function() {
     var s = 0, n = 0;
     rows.forEach(function(r) { if (r.avgPriceMove != null) { s += r.avgPriceMove; n += 1; } });
@@ -3579,6 +4085,8 @@ function renderPortfolioSection() {
     + (hideAtEntry ? '' : '<td>' + pctNoSign1dp(totDeployed) + '</td>')
     + '<td>' + totTranches + '</td>'
     + '<td>' + pctNoSign1dp(totValueAum) + '</td>'
+    + '<td>' + (u ? totUbs.toFixed(1) + '%' : '—') + '</td>'
+    + '<td></td><td></td>'
     + '<td class="pf-loss-risk-col ' + lossRiskCls(totAtRisk) + '">' + pctBp(totAtRisk) + '</td>'
     + '<td></td>'
     + '<td>' + pctBp(totPaperPnl) + '</td>'
@@ -3589,6 +4097,7 @@ function renderPortfolioSection() {
   html += '</tbody></table></div>';
   el.innerHTML = html;
   if (typeof _wireTogglePlaceholders === 'function') _wireTogglePlaceholders();
+  if (typeof window.fitPortfolioToViewport === 'function') setTimeout(window.fitPortfolioToViewport, 0);
 }
 
 function render() {
@@ -3686,33 +4195,34 @@ function buildColgroup() {
 }
 
 function buildHeaderRow() {
-  // D-PMS-40 two-row group header. Top row = group label spanning multiple cols. Bottom row = simple column name.
-  // Hideable "at entry" cols carry .col-atentry class.
+  // D-PMS-40 two-row group header. D-PMS-V4-150 (6-Nov-2026): the tranche's own inputs first (type, date entered, % at
+  // entry, MA for stop-loss, MA→stop buffer), then the columns as before, plus UBS % of AUM.
   var groupRow = '<tr>'
-    + '<th class="group-head group-investment-info" colspan="4">Investment information</th>'  // D-PMS-124: ticker + drag + slot; D-PMS-191: + last edited
-    + '<th class="group-head group-atentry" colspan="6">At entry</th>'  // date, %aum, pivot, pivot MA, init stop, init stop dist
-    + '<th class="group-head group-current" colspan="7">Current</th>'  // stop MA, MA→stop buffer, price, MA, stop, stop dist, value AUM
-    + '<th class="group-head group-pnl" colspan="3">P&L</th>'  // paper, AUM, loss risk
-    + '<th class="group-head group-info" colspan="2">Information</th>'  // D-PMS-125: historical breach + clear button
+    + '<th class="group-head group-investment-info" colspan="3">Investment information</th>'
+    + '<th class="group-head group-tranche" colspan="4">Tranche</th>'
+    + '<th class="group-head group-atentry col-atentry" colspan="4">At entry</th>'
+    + '<th class="group-head group-current" colspan="6">Current</th>'
+    + '<th class="group-head group-pnl" colspan="3">P&L</th>'
+    + '<th class="group-head group-info" colspan="2">Information</th>'
     + '</tr>';
   var colRow = '<tr>'
     + '<th class="al">Ticker</th>'
-    + '<th class="al"></th>'  // drag handle
-    + '<th class="al">Slot</th>'
-    + '<th class="al" title="When this tranche was last edited. A &quot;&#8804;&quot; prefix means the date is an upper bound reconstructed from snapshot history, not an exact edit date. n.a. means no evidence survives.">Last edited</th>'  // D-PMS-191
-    + '<th class="al col-group-start">Date</th>'
-    + '<th>%AUM</th>'
-    + '<th class="col-atentry">Price</th>'
+    + '<th class="al">Type</th>'
+    + '<th class="al" title="When this tranche was last edited. A &quot;&#8804;&quot; prefix means the date is an upper bound reconstructed from snapshot history, not an exact edit date. n.a. means no evidence survives.">Last edited</th>'
+    + '<th class="al col-group-start">Date entered</th>'
+    + '<th>% at entry</th>'
+    + '<th class="col-key-bold">MA for stop-loss</th>'
+    + '<th>MA→stop buffer</th>'
+    + '<th class="col-atentry col-group-start">Price</th>'
     + '<th class="col-atentry">MA level</th>'
     + '<th class="col-atentry">Stop-loss level</th>'
     + '<th class="col-atentry">Stop-loss distance</th>'
-    + '<th class="col-group-start col-key-bold">MA for stop-loss</th>'
-    + '<th>MA→stop buffer</th>'
-    + '<th>Price</th>'
+    + '<th class="col-group-start">Price</th>'
     + '<th>MA level</th>'
     + '<th>Stop-loss level</th>'
     + '<th class="col-key-bold">Stop-loss distance</th>'
-    + '<th>% of AUM</th>'  // D-PMS-59 (renamed D-PMS-85)
+    + '<th>% of AUM</th>'
+    + '<th title="The shares UBS shows bought for this tranche, valued at the latest close over the fund\'s value now">UBS % of AUM</th>'
     + '<th class="col-group-start">Price move since entry</th>'
     + '<th>P&L AUM</th>'
     + '<th class="col-key-bold">Loss risk</th>'
@@ -3757,21 +4267,14 @@ function investmentSortMetrics(invIdx) {
   if (!ticker) return m;
   m.name = (getUniverseName(ticker) || inv.name || ticker || '').toUpperCase();
   var deployed = 0;
-  TRADE_TYPES.forEach(function(slotType) {
-    var edit = getEdit(invIdx, slotType);
-    if (!edit || !edit.entry_date || edit.target_size_pct == null) return;
+  trancheKeys(invIdx).forEach(function(key) {
+    var edit = getEdit(invIdx, key);
+    if (!trancheHeld(edit)) return;
     deployed += edit.target_size_pct;
-    var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at, slotType);
-    if (r && r.ok) {
-      m.aum += (r.value_aum_pct || 0);
-      m.risk += (r.loss_risk_aum || 0);
-    }
+    var r = runTranche(ticker, key, edit);
+    if (r && r.ok) { m.aum += (r.value_aum_pct || 0); m.risk += (r.loss_risk_aum || 0); }
   });
-  // Current value of the position is the honest measure of "how big is this holding".
-  // Fall back to committed entry size when price data has not loaded, so a momentarily
-  // missing chart cannot sort a real position to the bottom as if it were empty.
-  if (!m.aum) m.aum = deployed;
+  if (!m.aum) m.aum = deployed;   // a missing chart cannot sort a real position to the bottom
   return m;
 }
 
@@ -3851,164 +4354,117 @@ function renderTable() {
   var order = sortedInvestmentOrder();  // D-PMS-192: display-only ordering, never re-indexes EDITS
   order.forEach(function(invIdx, renderPos) {
     var inv = CONFIG.investments[invIdx];
-    // D-PMS-198 (07-Aug-26): an EXPLICITLY EMPTIED slot must render as empty here too.
-    // Without this clause, `inv.ticker` is still e.g. 'ENAV-IT' on a removed universe slot,
-    // so the Position Manager kept drawing Enav and Ryanair as live holdings with 18 enabled
-    // inputs each, while the KPIs, alerts and Portfolio overview (which all route through
-    // effectiveTicker) correctly treated them as gone. Richard could have typed a position
-    // into a slot he had removed. Caught by asserting on the rendered DOM, not by inspection.
     var edSlot = EDITS[invIdx] || {};
     var explicitlyEmptied = Object.prototype.hasOwnProperty.call(edSlot, '_ticker_override') && !edSlot._ticker_override;
-    var isPlaceholder = inv.is_placeholder || !inv.ticker || explicitlyEmptied;  // D-PMS-168; D-PMS-191 hidden flag retired
-    // D-PMS-68: pre-count how many EXTRA rows (warn-lines) this investment will emit,
-    // so the first row's ticker cell can use rowspan = 6 + extras to span them all.
-    // D-PMS-166: placeholder slots with a live _ticker_override are rendered as live
-    // investments and can emit warn-line rows — apply the same override-promotion
-    // logic here so countExtraRowsForInvestment uses the effective ticker/state.
-    var effectiveInvForRowspan = inv;
-    var effectivePlaceholderForRowspan = isPlaceholder;
-    if (isPlaceholder && EDITS[invIdx] && EDITS[invIdx]._ticker_override &&
-        CHART_DATA.data && CHART_DATA.data[EDITS[invIdx]._ticker_override]) {
-      effectiveInvForRowspan = { ticker: EDITS[invIdx]._ticker_override };
-      effectivePlaceholderForRowspan = false;
+    var isPlaceholder = inv.is_placeholder || !inv.ticker || explicitlyEmptied;  // D-PMS-168; D-PMS-198
+    var effInv = inv, effPlaceholder = isPlaceholder;
+    if (isPlaceholder && edSlot._ticker_override && CHART_DATA.data && CHART_DATA.data[edSlot._ticker_override]) {
+      effInv = { ticker: edSlot._ticker_override };
+      effPlaceholder = false;
     }
-    var extraRows = countExtraRowsForInvestment(effectiveInvForRowspan, invIdx, effectivePlaceholderForRowspan);
-    var totalRowspan = 6 + extraRows;
-    // D-PMS-70: per-investment trade-type render order (sorted vs default)
-    var typesForInv = sortedTradeTypesForInvestment(invIdx);
-    typesForInv.forEach(function(slotType, slotOrder) {
-      html += renderTrancheRow(inv, invIdx, slotType, slotOrder === 0, isPlaceholder, totalRowspan);
+    // D-PMS-V4-150: one row per tranche (held first by date, removed ones greyed at the end), then one empty row for a
+    // new tranche. An empty slot shows a single row with its ticker box.
+    var keys = effPlaceholder ? [] : orderedTrancheKeys(invIdx);
+    var rowKeys = effPlaceholder ? [NEW_ROW_KEY] : keys.concat([NEW_ROW_KEY]);
+    var extraRows = countExtraRowsForInvestment(effInv, invIdx, effPlaceholder);
+    var totalRowspan = rowKeys.length + extraRows;
+    var view = effPlaceholder ? null : ubsStockView(invIdx, effInv.ticker);
+    rowKeys.forEach(function(key, i) {
+      html += renderTrancheRow(inv, invIdx, key, i === 0, isPlaceholder, totalRowspan, view);
     });
-    var hasAny = TRADE_TYPES.some(function(st) { return hasEdit(invIdx, st); });
-    // D-PMS-191 THE TOTALS BUG. This line used the RAW `isPlaceholder`, but slots 10-20 are
-    // structurally placeholders that carry a live stock through `_ticker_override`.
-    // renderTrancheRow() promotes those to live; this guard never did, so every override
-    // slot silently lost its totals row — Volex, Hexatronic, Xvivo, SDiptech, Flutter,
-    // Hilton Food, Alfen and Arteche, i.e. most of the live book.
-    // `effectivePlaceholderForRowspan` is the already-promoted value computed above, so
-    // using it here keeps this guard in step with the rows it summarises by construction.
-    if (hasAny && !effectivePlaceholderForRowspan) html += renderInvTotalsRow(inv, invIdx);
-    // D-PMS-95: ~32px spacer row between investment blocks (skip after last)
-    if (renderPos < order.length - 1) {
-      html += '<tr class="inv-spacer"><td colspan="' + TOTAL_COLS + '"></td></tr>';
+    if (keys.length && !effPlaceholder) {
+      html += renderInvTotalsRow(inv, invIdx, view);
+      html += ubsUnmatchedRowsHtml(invIdx, view);
     }
+    if (renderPos < order.length - 1) html += '<tr class="inv-spacer"><td colspan="' + TOTAL_COLS + '"></td></tr>';   // D-PMS-95
   });
   html += '</tbody>';
   tbl.innerHTML = html;
 }
 
 // D-PMS-68: count warn-line rows that will be emitted for this investment (so the ticker rowspan covers them)
+// D-PMS-68: count warn-line rows that will be emitted for this investment (so the ticker rowspan covers them)
 function countExtraRowsForInvestment(inv, invIdx, isPlaceholder) {
   if (isPlaceholder) return 0;
-  // D-PMS-106: when alerts hidden, warn-line rows are not rendered so rowspan must exclude them
-  if (hideAlerts) return 0;
-  var ticker = inv.ticker;
-  var extras = 0;
-  TRADE_TYPES.forEach(function(slotType) {
-    var edit = getEdit(invIdx, slotType);
-    if (!edit) return;
-    var entryDate = edit.entry_date;
-    var pctAumDecimal = edit.target_size_pct;
-    var stopMa = (edit && edit.stop_ma) || DEFAULT_STOP_MA[slotType];
-    var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : BUFFER;
-    if (entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-      var r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit.stop_history, edit.promoted_at, slotType);
-      if (trancheWarnLine(r, stopMa)) extras++;
-    }
+  if (hideAlerts) return 0;   // D-PMS-106
+  var ticker = inv.ticker, extras = 0;
+  orderedTrancheKeys(invIdx).forEach(function(key) {
+    var edit = getEdit(invIdx, key);
+    if (!trancheHeld(edit)) return;
+    if (trancheWarnLine(runTranche(ticker, key, edit), stopMaFor(key, edit, ticker))) extras++;
   });
   return extras;
 }
 
-function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, totalRowspan) {
+function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, totalRowspan, ubsView) {
   var ticker = inv.ticker || '';
-  // D-PMS-50: placeholder slots can have a user-entered ticker override
-  // D-PMS-113 (09-May-26): track when universe-loaded so we can override name/currency/meta.
   var wasPlaceholderUniverse = false;
   if (isPlaceholder && EDITS[invIdx] && EDITS[invIdx]._ticker_override && CHART_DATA.data[EDITS[invIdx]._ticker_override]) {
-    ticker = EDITS[invIdx]._ticker_override;
-    isPlaceholder = false;  // treat as live for the row inputs/derived
+    ticker = EDITS[invIdx]._ticker_override;   // D-PMS-50 / D-PMS-113
+    isPlaceholder = false;
     wasPlaceholderUniverse = true;
   }
-  var label = TRADE_LABELS[slotType] || slotType;
-  var typeCls = PB_TYPES[slotType] ? 'tt-PB' : 'tt-MM';
-  var slotCapPct = SLOT_CAP_DECIMAL[slotType] * 100;
-  var edit = getEdit(invIdx, slotType);
+  var isNew = slotType === NEW_ROW_KEY;
+  var edit = isNew ? null : getEdit(invIdx, slotType);
+  var kind = isNew ? (pendingNewKind[invIdx] || kindFromHoldingStatus(ticker) || 'probing') : trancheKind(edit, ticker);
+  var exited = !isNew && isExited(edit);
   var entryDate = edit && edit.entry_date ? edit.entry_date : '';
   var pctAumDecimal = edit && edit.target_size_pct != null ? edit.target_size_pct : null;
-  var pctAumDisplay = decimalToPctInput(pctAumDecimal);
-  var stopMa = (edit && edit.stop_ma) || DEFAULT_STOP_MA[slotType];
-  // D-PMS-43 per-tranche buffer (default BUFFER, 6% from 2-Nov-2026)
-  var bufferDecimal = (edit && edit.buffer_pct != null) ? edit.buffer_pct : BUFFER;
+  var stopMa = isNew ? KIND_DEFAULT_STOP[kind] : stopMaFor(slotType, edit, ticker);
+  var bufferDecimal = bufferFor(edit);
   var r = null;
-  if (!isPlaceholder && entryDate && pctAumDecimal != null && pctAumDecimal > 0 && stopMa) {
-    r = runTester(ticker, pctAumDecimal, entryDate, stopMa, bufferDecimal, edit && edit.stop_history, edit && edit.promoted_at, slotType);
-  }
+  if (!isPlaceholder && !isNew && trancheHeld(edit)) r = runTranche(ticker, slotType, edit);
+  var isCore = !isPlaceholder && kind === 'core';   // a Core Investment tranche: MA stop-losses shown greyed, not used
   var rowKey = invIdx + ':' + slotType;
-  var hsNow = isPlaceholder ? null : holdingStatus(ticker);
-  var isCore = !isPlaceholder && holdingIsCore(ticker);   // V4: MA stop-losses not used for a Middle Innings Core Investment
-  var rowCls = 'tranche-row' + (isCore ? ' row-core' : '');
-  // D-PMS-42: MA-stop colour class (if not placeholder + has known stopMa)
-  if (!isPlaceholder && stopMa && !isCore) rowCls += ' ma-' + stopMa;
+  var rowCls = 'tranche-row kind-row-' + kind + (isCore ? ' row-core' : '');
+  if (!isPlaceholder && stopMa && !isCore && !exited && !isNew) rowCls += ' ma-' + stopMa;   // D-PMS-42
   if (isPlaceholder) rowCls += ' row-empty';
-  // D-PMS-158: fade rows with no capital deployed
-  if (!isPlaceholder && (edit == null || edit.target_size_pct == null || edit.target_size_pct === 0)) {
-    rowCls += ' tr-no-capital';
-  }
+  if (isNew && !isPlaceholder) rowCls += ' tr-new';
+  if (exited) rowCls += ' tr-exited';
   if (isFirstSlot) rowCls += ' inv-separator';
   if (r && r.ok) {
     if (r.entry_warn === 'BELOW_STOP' || r.entry_warn === 'BELOW_MA_ABOVE_STOP') rowCls += ' row-warn';
     if (r.breach && r.breach.grace_breach) rowCls += ' row-breach-immediate';   // exit confirmed
-    else if (r.breach && r.breach.triggered) rowCls += ' row-breach-grace';     // testing the MA, inside the 10-day stop-loss rule
+    else if (r.breach && r.breach.triggered) rowCls += ' row-breach-grace';     // testing the MA
   }
-  var hasE = hasEdit(invIdx, slotType);
-  var draggable = hasE && !isPlaceholder ? 'draggable="true"' : '';
-  var dragHandlers = hasE && !isPlaceholder
-    ? 'ondragstart="onDragStart(event,' + invIdx + ',\'' + slotType + '\')" '
-    + 'ondragover="onDragOver(event,' + invIdx + ',\'' + slotType + '\')" '
-    + 'ondrop="onDrop(event,' + invIdx + ',\'' + slotType + '\')" '
-    + 'ondragend="onDragEnd(event)" ondragleave="onDragLeave(event)"'
-    : 'ondragover="onDragOver(event,' + invIdx + ',\'' + slotType + '\')" '
-    + 'ondrop="onDrop(event,' + invIdx + ',\'' + slotType + '\')" '
-    + 'ondragleave="onDragLeave(event)"';
+  var dis = isPlaceholder ? ' disabled' : '';
+  var call = function (fn, extra) { return fn + '(' + invIdx + ',\'' + slotType + '\'' + (extra || '') + ')'; };
+  var onNew = function (field) { return 'addTrancheField(' + invIdx + ',\'' + field + '\',this.value,this)'; };
 
   var cells = '';
   if (isFirstSlot) {
     var savedOverride = (EDITS[invIdx] && EDITS[invIdx]._ticker_override) || '';
-    // D-PMS-113: universe-loaded placeholder — use universe metadata for title/secondary/meta.
     var uniMeta = (wasPlaceholderUniverse && window.PMS_UNIVERSE && PMS_UNIVERSE.data) ? PMS_UNIVERSE.data[ticker] : null;
     var displayName = uniMeta ? uniMeta.name : (inv.name || '');
     var displayCurrency = uniMeta ? uniMeta.currency : (inv.currency || '');
-    // D-PMS-162 fix: clearBtn must also appear when isPlaceholder was flipped to false by universe-load
-    // D-PMS-UX-12Jun26: split remove affordance — prominent removeInvBtn for universe stocks
-    // (shown below filter badges, always visible, clearly labelled);
-    // clearOverrideBtn = small inline × to clear a typed-ticker override input.
     var removeInvBtn = !isPlaceholder
-      ? '<div class="remove-inv-row"><button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Remove ' + esc(ticker) + ' from portfolio">× Remove</button></div>'
-      : '';
+      ? '<div class="remove-inv-row"><button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Remove ' + esc(ticker) + ' from portfolio">× Remove</button></div>' : '';
     var clearOverrideBtn = (isPlaceholder && savedOverride)
-      ? ' <button class="btn-icon btn-danger" onclick="clearTickerSlot(' + invIdx + ')" title="Clear ticker" style="padding:0 5px;font-size:13px;font-weight:700;line-height:1;vertical-align:middle;">×</button>'
-      : '';
+      ? ' <button class="btn-icon btn-danger" onclick="clearTickerSlot(' + invIdx + ')" title="Clear ticker" style="padding:0 5px;font-size:13px;font-weight:700;line-height:1;vertical-align:middle;">×</button>' : '';
     var tickerHtml = isPlaceholder
       ? '<input type="text" class="ticker-edit" placeholder="enter ticker" value="' + esc(savedOverride) + '" oninput="setPlaceholderTicker(' + invIdx + ', this.value)" style="width:110px;">' + clearOverrideBtn
       : '<span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>';
     var nameHtml = isPlaceholder ? '<span class="name">(empty slot)</span>' : '<span class="name">' + esc(displayName) + '</span>';
     var meta = '';
     if (!isPlaceholder && wasPlaceholderUniverse) {
-      // Universe-loaded ticker: pull last close px + date from CHART_DATA (no CURRENT_DATA entry).
-      var rows = CHART_DATA.data && CHART_DATA.data[ticker];
-      if (rows && rows.length) {
-        var last = rows[rows.length - 1];
-        if (last && last.c != null) {
-          meta = '<span class="meta">Px ' + fmt(last.c, 2) + ' · ' + (last.d || '') + '</span>';
-        }
-      }
+      var crow = CHART_DATA.data && CHART_DATA.data[ticker];
+      if (crow && crow.length) { var last = crow[crow.length - 1]; if (last && last.c != null) meta = '<span class="meta">Px ' + fmt(last.c, 2) + ' · ' + (last.d || '') + '</span>'; }
     } else if (!isPlaceholder && CURRENT_DATA) {
       var invData = CURRENT_DATA.investments.find(function(x) { return x.ticker === ticker; });
       if (invData && invData.price != null) {
-        // D-PMS-186: the page formats every price to 2dp, so a 2dp-sourced price
-        // is invisible on screen while being real in the arithmetic. Say so.
-        var _prec = (invData.precision === '2dp') ? ' · 2dp source' : '';
+        var _prec = (invData.precision === '2dp') ? ' · 2dp source' : '';   // D-PMS-186
         meta = '<span class="meta">' + (invData.fallback ? '⚠ fallback · ' : '') + 'Px ' + fmt(invData.price, 2) + _prec + ' · ' + (invData.last_close_date || '') + '</span>';
+      }
+    }
+    var statusHtml = '';
+    if (!isPlaceholder) {
+      var kinds = stockKinds(invIdx);
+      statusHtml = '<div class="hs-kinds">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</div>';
+      if (ubsView && (ubsView.held || trancheKeys(invIdx).some(function (k) { return trancheHeld(getEdit(invIdx, k)); }))) {
+        var stockBook = 0;
+        trancheKeys(invIdx).forEach(function (k) { var e = getEdit(invIdx, k); if (!trancheHeld(e)) return; var rr = runTranche(ticker, k, e); stockBook += (rr && rr.ok && rr.value_aum_pct != null) ? rr.value_aum_pct * 100 : e.target_size_pct * 100; });
+        var g = ubsView.stockPct - stockBook;
+        statusHtml += '<div class="hs-ubs' + (Math.abs(g) >= UBS_GAP_FLAG_PP ? ' ubs-gap' : '') + '" title="UBS valuation of ' + esc(fmtDate(ubsView.asof)) + ', rolled to the latest close">UBS ' + ubsView.stockPct.toFixed(1) + '% of AUM · PMS ' + stockBook.toFixed(1) + '%</div>';
       }
     }
     var mdBadges = '';
@@ -4024,36 +4480,30 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
         mdBadges += '<div class="md-badges"><span class="md-badge b-fail" title="No MD filter data">no MD data</span></div>';
       }
     }
-    var statusHtml = '';
-    if (!isPlaceholder) {
-      if (isCore) statusHtml = '<div class="hs-note hs-core" title="' + esc(CORE_NOT_USED_TEXT) + '">Middle Innings Core Investment: MA stop-losses not used (sold by the six Sell Criteria)</div>';
-      else if (hsNow) statusHtml = '<div class="hs-note hs-pb">' + esc(hsNow) + '</div>';
-      else statusHtml = '<div class="hs-note hs-unset" title="pms-data/holding-status.json has no entry for this holding, so it is treated as an Early Innings Probing Bet and its stop-losses are shown">Holding status not set: stop-losses shown</div>';
-    }
-    cells += '<td class="al ticker-cell" rowspan="' + (totalRowspan || 6) + '">' + nameHtml + tickerHtml + meta + statusHtml + mdBadges + removeInvBtn + '</td>';  // D-PMS-UX-12Jun26
+    cells += '<td class="al ticker-cell" rowspan="' + (totalRowspan || 1) + '">' + nameHtml + tickerHtml + meta + statusHtml + mdBadges + removeInvBtn + '</td>';
   }
-  cells += '<td class="al">' + (hasE && !isPlaceholder ? '<span class="drag-handle" title="Drag to reslot">⋮⋮</span>' : '') + '</td>';
-  cells += '<td class="al"><span class="' + typeCls + '">' + esc(label) + '</span> <span style="color:var(--fg3);font-size:10px;">cap ' + slotCapPct.toFixed(1) + '%</span></td>';
-  // D-PMS-191: last-edited stamp for this tranche
-  cells += '<td class="al">' + lastEditedHtml(edit) + '</td>';
-  // === At entry group ===
-  // D-PMS-64: promotion badge replaces date cell when tranche has promoted_from metadata
+  // --- Type (the drop-down) + the tranche's number
+  var opts = TRANCHE_KIND_ORDER.map(function (k) { return '<option value="' + k + '"' + (k === kind ? ' selected' : '') + '>' + esc(TRANCHE_KIND_LABEL[k]) + '</option>'; }).join('');
+  var num = (!isNew && !isPlaceholder) ? trancheNumber(invIdx, slotType) : null;
+  cells += '<td class="al type-cell"><select class="edit-input kind-select kind-' + kind + '"' + dis
+    + ' onchange="' + (isNew ? onNew('type') : 'setTrancheType(' + invIdx + ',\'' + slotType + '\',this.value)') + '">' + opts + '</select>'
+    + '<div class="tranche-num">' + (isNew ? (isPlaceholder ? '' : 'new tranche') : (num ? 'Tranche ' + num : '')) + '</div></td>';
+  cells += '<td class="al">' + (isNew ? '<span style="color:var(--fg3);font-size:11px;">&mdash;</span>' : lastEditedHtml(edit)) + '</td>';
+  // --- Date entered (+ promotion note; + exit date when removed)
+  var promo = '';
   if (edit && edit.promoted_from && edit.promoted_from !== slotType) {
-    // PROMO-DISPLAY-2026-09-18 (Richard): the ORIGINAL entry date stays in the cell; the promotion is a
-    // note beneath it. The data always kept the entry date; only the display had hidden it behind a badge.
-    cells += '<td class="al col-group-start"><input type="date" class="edit-input date" value="' + esc(entryDate) + '" '
-      + (isPlaceholder ? 'disabled' : '')
-      + ' onchange="setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)">'
-      + '<div class="promo-note" title="Promoted from ' + esc(edit.promoted_from) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date above is the original entry date; the stop average changed on promotion (see stop history).">&#8593; from ' + esc(edit.promoted_from) + ' ' + esc(fmtDateShort(edit.promoted_at))
-      + ((MM_TYPES[slotType] && !isPlaceholder && edit.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) ? ' <button class="btn-split" onclick="openSplit(' + invIdx + ',\'' + slotType + '\')" title="This promoted tranche is ' + (edit.target_size_pct * 100).toFixed(2) + '% of AUM at cost; a Middle Innings Core Investment tranche is 1.67%. Split it into Core Investment tranches.">Split</button>' : '')
-      + '</div></td>';
-  } else {
-    cells += '<td class="al col-group-start"><input type="date" class="edit-input date" value="' + esc(entryDate) + '" '
-      + (isPlaceholder ? 'disabled' : '')
-      + ' onchange="setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)"></td>';
+    // PROMO-DISPLAY-2026-09-18: the original entry date stays; the promotion is a note beneath it
+    promo = '<div class="promo-note" title="Promoted from ' + esc(edit.promoted_from) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date above is the original entry date.">&#8593; from ' + esc(edit.promoted_from) + ' ' + esc(fmtDateShort(edit.promoted_at))
+      + ((kind === 'core' && !exited && edit.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) ? ' <button class="btn-split" onclick="' + call('openSplit') + '" title="This tranche is ' + (edit.target_size_pct * 100).toFixed(2) + '% of AUM at cost; a Middle Innings Core Investment tranche is 1.67%. Split it.">Split</button>' : '')
+      + '</div>';
   }
+  var exitHtml = exited ? '<div class="exit-note">Removed <input type="date" class="edit-input date exit-date" value="' + esc(edit.exited_on || '') + '" onchange="setExitDate(' + invIdx + ',\'' + slotType + '\',this.value)" title="The date this tranche was removed (sold)">'
+    + (edit.exited_on_exact === false ? '<span title="Reconstructed: removed on or before this date">&#8804;</span>' : '') + '</div>' : '';
+  cells += '<td class="al col-group-start"><input type="date" class="edit-input date" value="' + esc(entryDate) + '"' + dis
+    + ' onchange="' + (isNew ? onNew('entry_date') : 'setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)') + '">' + promo + exitHtml + '</td>';
+  // --- % at entry (+ the size for a 0.5% loss, Probing and Speculative Bets)
   var sizeHint = '';
-  if (!isPlaceholder && !isCore && PB_TYPES[slotType] && stopMa) {
+  if (!isPlaceholder && !isCore && !exited && stopMa) {
     var sh = probingSizeHint(ticker, entryDate, stopMa, bufferDecimal);
     if (sh) {
       var shFull = sh.size != null
@@ -4062,76 +4512,72 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       sizeHint = '<div class="size-hint" title="' + esc(shFull) + '">0.5% loss: ' + (sh.size != null ? (sh.size * 100).toFixed(1) + '%' + (sh.capped ? ' (cap)' : '') : 'n.a.') + '</div>';
     }
   }
-  cells += '<td class="' + (sizeHint ? 'has-size-hint' : '') + '"><span class="input-with-suffix"><input type="number" step="any" min="0" class="edit-input pct" value="' + esc(pctAumDisplay) + '" placeholder="' + slotCapPct.toFixed(1) + '" '
-    + (isPlaceholder ? 'disabled' : '')
-    + ' onchange="setPctEdit(' + invIdx + ',\'' + slotType + '\',this)"><span class="input-suffix">%</span></span>' + sizeHint + '</td>';
-  // 4 derived "at entry" cells (col-atentry — hideable)
-  var notUsed = '<span class="not-used" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span>';
+  var wasNote = (exited && edit.exited_size_pct != null) ? '<div class="exit-note">was ' + (edit.exited_size_pct * 100).toFixed(1) + '%</div>' : '';
+  cells += '<td class="' + (sizeHint ? 'has-size-hint' : '') + '"><span class="input-with-suffix"><input type="number" step="any" min="0" class="edit-input pct" value="' + esc(decimalToPctInput(pctAumDecimal)) + '" placeholder="' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '"' + dis
+    + ' onchange="' + (isNew ? onNew('target_size_pct') : call('setPctEdit', ',this')) + '"><span class="input-suffix">%</span></span>' + sizeHint + wasNote + '</td>';
+  // --- MA for stop-loss + MA→stop buffer: every tranche has both and can set them (Richard, 6-Nov-2026: "a consistent visual
+  // framework for all tranches"); on a Core Investment tranche the cell is shaded and the levels are information only
+  var notUsedTitle = ' title="' + esc(CORE_INFO_TEXT) + '"';
+  cells += '<td class="col-key-bold' + (isCore ? ' cell-not-used' : '') + '"' + (isCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
+    + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '"></td>';
+  cells += '<td' + (isCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
+    + ' onchange="' + (isNew ? onNew('buffer_pct') : call('setBufferEdit', ',this')) + '"><span class="input-suffix">%</span></span></td>';
+  // --- 4 derived "at entry" cells (col-atentry, hideable)
+  var notUsed = '<span class="not-used"' + notUsedTitle + '>not used</span>';
+  var info = function (html) { return '<span class="info-only"' + notUsedTitle + '>' + html + '</span>'; };
+  var ri = (r && r.info) || {};
   if (r && r.ok && r.core) {
-    cells += '<td class="col-atentry">' + fmtPrice(r.entry_close) + '</td>';
-    cells += '<td class="col-atentry cell-not-used">' + notUsed + '</td><td class="col-atentry cell-not-used">' + notUsed + '</td><td class="col-atentry cell-not-used">' + notUsed + '</td>';
+    cells += '<td class="col-atentry col-group-start">' + fmtPrice(r.entry_close) + '</td>';
+    cells += '<td class="col-atentry cell-not-used">' + info(fmtPrice(ri.entry_ma)) + '</td><td class="col-atentry cell-not-used">' + info(fmtPrice(ri.entry_stop)) + '</td><td class="col-atentry cell-not-used">' + info(pctSD(ri.initial_stop_distance_pct)) + '</td>';
   } else if (r && r.ok) {
-    cells += '<td class="col-atentry">' + fmtPrice(r.entry_close) + '</td>';
+    cells += '<td class="col-atentry col-group-start">' + fmtPrice(r.entry_close) + '</td>';
     cells += '<td class="col-atentry">' + fmtPrice(r.entry_ma) + '</td>';
     cells += '<td class="col-atentry">' + fmtPrice(r.entry_stop) + '</td>';
     cells += '<td class="col-atentry">' + pctSD(r.initial_stop_distance_pct) + '</td>';
   } else {
-    cells += '<td class="col-atentry">—</td><td class="col-atentry">—</td><td class="col-atentry">—</td><td class="col-atentry">—</td>';
+    cells += '<td class="col-atentry col-group-start">—</td><td class="col-atentry">—</td><td class="col-atentry">—</td><td class="col-atentry">—</td>';
   }
-  // === Current group: MA for the stop-loss + MA→stop buffer + 4 derived ===
-  // V4 (Richard, 2-Nov-2026): any MA length from 5 to 250 days (quick picks 20D/50D/100D/150D/200D); greyed out and disabled for
-  // a Middle Innings Core Investment, where MA stop-losses are not used.
-  var stopDisabled = isPlaceholder || isCore;
-  cells += '<td class="col-group-start col-key-bold' + (isCore ? ' cell-not-used' : '') + '"' + (isCore ? ' title="' + esc(CORE_NOT_USED_TEXT) + '"' : '') + '><input type="text" class="edit-input ma" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '" '
-    + (stopDisabled ? 'disabled' : '')
-    + ' onchange="setStopMaEdit(' + invIdx + ',\'' + slotType + '\',this)"></td>';
-  // D-PMS-43 MA→stop buffer (per-tranche, default 6% from 2-Nov-2026)
-  var bufferDisplay = (bufferDecimal * 100).toFixed(1);  // D-PMS-65 1dp
-  cells += '<td' + (isCore ? ' class="cell-not-used" title="' + esc(CORE_NOT_USED_TEXT) + '"' : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc(bufferDisplay) + '" placeholder="6" '
-    + (stopDisabled ? 'disabled' : '')
-    + ' onchange="setBufferEdit(' + invIdx + ',\'' + slotType + '\',this)"><span class="input-suffix">%</span></span></td>';
-  // 5 derived "current" cells (price/MA/stop/stop-dist/value-AUM)
+  // --- 5 derived "current" cells + UBS % of AUM
   if (r && r.ok && r.core) {
-    cells += '<td>' + fmtPrice(r.current_price) + '</td>';
-    cells += '<td class="cell-not-used">' + notUsed + '</td><td class="cell-not-used">' + notUsed + '</td><td class="col-key-bold cell-not-used">' + notUsed + '</td>';
+    cells += '<td class="col-group-start">' + fmtPrice(r.current_price) + '</td>';
+    cells += '<td class="cell-not-used">' + info(fmtPrice(ri.current_ma)) + '</td><td class="cell-not-used">' + info(fmtPrice(ri.current_stop)) + '</td><td class="col-key-bold cell-not-used">' + info(pctSD(ri.stop_distance_pct)) + '</td>';
     cells += '<td>' + pctNoSign1dp(r.value_aum_pct) + '</td>';
   } else if (r && r.ok) {
-    cells += '<td>' + fmtPrice(r.current_price) + '</td>';
+    cells += '<td class="col-group-start">' + fmtPrice(r.current_price) + '</td>';
     cells += '<td>' + fmtPrice(r.current_ma) + '</td>';
     cells += '<td>' + fmtPrice(r.current_stop) + '</td>';
     cells += '<td class="col-key-bold ' + stopDistCls(r.stop_distance_pct) + '">' + pctSD(r.stop_distance_pct) + '</td>';
-    cells += '<td>' + pctNoSign1dp(r.value_aum_pct) + '</td>';  // D-PMS-59 + D-PMS-63 + D-PMS-100 1dp no-sign
+    cells += '<td>' + pctNoSign1dp(r.value_aum_pct) + '</td>';
   } else if (r && r.error) {
-    cells += '<td colspan="5" class="al"><span class="badge b-bad">' + esc(r.error) + '</span></td>';
+    cells += '<td colspan="5" class="al col-group-start"><span class="badge b-bad">' + esc(r.error) + '</span></td>';
   } else {
-    cells += '<td>—</td><td>—</td><td>—</td><td class="col-key-bold">—</td><td>—</td>';
+    cells += '<td class="col-group-start">—</td><td>—</td><td>—</td><td class="col-key-bold">—</td><td>—</td>';
   }
-  // === P&L group ===
+  cells += '<td class="ubs-cell">' + ((isNew || isPlaceholder) ? '' : ubsCellHtml(invIdx, slotType, edit, r, ubsView)) + '</td>';
+  // --- P&L group
   if (r && r.ok) {
     cells += '<td class="col-group-start">' + pct(r.paper_pnl_per_share, 0) + '</td>';
     cells += '<td>' + pctBp(r.paper_pnl_aum) + '</td>';
-    cells += r.core ? '<td class="col-key-bold cell-not-used">' + notUsed + '</td>' : '<td class="col-key-bold ' + lossRiskCls(r.loss_risk_aum) + '">' + pctBp(r.loss_risk_aum) + '</td>';
+    cells += r.core ? '<td class="col-key-bold cell-not-used">' + info(pctBp(ri.loss_risk_aum)) + '</td>' : '<td class="col-key-bold ' + lossRiskCls(r.loss_risk_aum) + '">' + pctBp(r.loss_risk_aum) + '</td>';
   } else {
     cells += '<td class="col-group-start">—</td><td>—</td><td class="col-key-bold">—</td>';
   }
-  // === Information group ===
-  if (r && r.ok && r.core) {
-    cells += '<td class="col-group-start"><span class="badge b-notused" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span></td>';
+  // --- Information group
+  if (exited) {
+    cells += '<td class="col-group-start"><span class="badge b-exited" title="Removed by typing 0% (or aligned to a UBS sale). Type a size to put it back.">REMOVED ' + esc(fmtDateShort(edit.exited_on || '')) + '</span></td>';
+  } else if (r && r.ok && r.core) {
+    cells += '<td class="col-group-start"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span></td>';
   } else if (r && r.ok) {
     cells += '<td class="col-group-start">' + breachBadge(r) + '</td>';
   } else {
     cells += '<td class="col-group-start">—</td>';
   }
-  cells += '<td>';
-  if (hasE) cells += '<button class="btn btn-icon btn-danger" onclick="clearEdit(' + invIdx + ',\'' + slotType + '\')" title="Clear">×</button>';
-  cells += '</td>';
-  var rowHtml = '<tr class="' + rowCls + '" data-row-key="' + rowKey + '" ' + draggable + ' ' + dragHandlers + '>' + cells + '</tr>';
-  // D-PMS-106: only emit warn-line rows when alerts visible (otherwise rowspan overshoots)
-  if (!hideAlerts) {
+  cells += '<td>' + ((!isNew && edit) ? '<button class="btn btn-icon btn-danger" onclick="' + call('clearEdit') + '" title="Delete this tranche entirely (typing 0% keeps it, greyed, as a record)">×</button>' : '') + '</td>';
+  var rowHtml = '<tr class="' + rowCls + '" data-row-key="' + rowKey + '">' + cells + '</tr>';
+  if (!hideAlerts && !isNew) {   // D-PMS-106
     var wl = trancheWarnLine(r, stopMa);
-    if (wl) rowHtml += '<tr class="warn-line"><td colspan="' + TOTAL_COLS + '">' + wl + '</td></tr>';
+    if (wl) rowHtml += '<tr class="warn-line"><td colspan="' + (TOTAL_COLS - 1) + '">' + wl + '</td></tr>';
   }
-  // D-PMS-64: promotion line removed — now rendered as a green badge in the Date cell instead
   return rowHtml;
 }
 
@@ -4148,64 +4594,52 @@ function trancheWarnLine(r, stopMa) {
   return '';
 }
 
-function renderInvTotalsRow(inv, invIdx) {
-  var sumDeployed = 0, sumPnl = 0, sumRisk = 0, sumValueAum = 0;
-  var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190: consistent ticker resolution
-  var coreTotals = !!(ticker && holdingIsCore(ticker));   // V4: no stop-loss risk for a Middle Innings Core Investment
-  TRADE_TYPES.forEach(function(slotType) {
-    var edit = getEdit(invIdx, slotType);
-    if (!edit || !edit.entry_date || edit.target_size_pct == null) return;
-    // D-PMS-190: committed size counts regardless of price-data availability, so this
-    // per-investment total agrees with the portfolio-summary totals when a chart is missing.
-    sumDeployed += edit.target_size_pct;
+function renderInvTotalsRow(inv, invIdx, view) {
+  var sumDeployed = 0, sumPnl = 0, sumRisk = 0, sumValueAum = 0, anyStopRule = false;
+  var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190
+  trancheKeys(invIdx).forEach(function(key) {
+    var edit = getEdit(invIdx, key);
+    if (!trancheHeld(edit)) return;
+    sumDeployed += edit.target_size_pct;   // D-PMS-190: counts regardless of price data
     if (!ticker) return;
-    var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
-    var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at, slotType);
-    if (r && r.ok) {
-      sumPnl += r.paper_pnl_aum || 0;
-      sumRisk += r.loss_risk_aum || 0;
-      sumValueAum += r.value_aum_pct || 0;
-    }
+    if (!trancheIsCore(edit, ticker)) anyStopRule = true;
+    var r = runTranche(ticker, key, edit);
+    if (r && r.ok) { sumPnl += r.paper_pnl_aum || 0; sumRisk += r.loss_risk_aum || 0; sumValueAum += r.value_aum_pct || 0; }
   });
-  // D-PMS-44 + D-PMS-59: align deployed under %AUM, sumValueAum under Value AUM, sumPnl under P&L AUM, sumRisk under Loss risk
-  // D-PMS-191: label from effectiveTicker, not inv.ticker. On an override slot inv.ticker is
-  // empty, so once the row above started rendering it would have read " total" with no name.
-  // Colspans re-derived for the 22-column table: 5 + 1 + 10 + 1 + 1 + 1 + 1 + 2 = 22.
-  // D-PMS-200 (07-Aug-26): the middle block MUST be individual cells, four of them carrying
-  // `col-atentry`, NOT a single colspan="10".
-  // A colspan cell cannot collapse when `body.hide-at-entry-cols .col-atentry {display:none}`
-  // hides the four at-entry columns. Measured in headless Chromium: with Hide at-entry on,
-  // the header and the tranche cells moved to x=1122 while this row's value stayed at
-  // x=1412 — every total sat 290px right of its own column heading.
-  // Latent before (7 totals rows rendered); restoring totals on the override slots took it
-  // to 14, i.e. every holding, which is what made it worth fixing rather than noting.
-  return '<tr class="inv-totals"><td class="al" colspan="5">' + esc(ticker || inv.ticker || ('Slot ' + (invIdx + 1))) + ' total</td>'
+  // 22 columns: label 4 (ticker, type, last edited, date) + % at entry + MA + buffer + 4 at entry (individual cells, so
+  // Hide at-entry collapses them, D-PMS-200) + 4 current + % of AUM + UBS + price move + P&L + loss risk + 2.
+  var ubsTot = '';
+  if (view) {
+    var g = view.stockPct - sumValueAum * 100;
+    ubsTot = '<span class="' + (Math.abs(g) >= UBS_GAP_FLAG_PP ? 'ubs-gap' : '') + '" title="UBS\'s own weight for ' + esc(ticker) + ', valuation of ' + esc(fmtDate(view.asof)) + ', rolled to the latest close">' + view.stockPct.toFixed(1) + '%</span>';
+  }
+  return '<tr class="inv-totals"><td class="al" colspan="3">' + esc(ticker || inv.ticker || ('Slot ' + (invIdx + 1))) + ' total</td>'
+    + '<td class="col-group-start"></td>'
     + '<td>' + pctNoSign1dp(sumDeployed) + '</td>'
-    + '<td class="col-atentry"></td><td class="col-atentry"></td><td class="col-atentry"></td><td class="col-atentry"></td>'
-    + '<td></td><td></td><td></td><td></td><td></td><td></td>'
-    + '<td>' + pctNoSign1dp(sumValueAum) + '</td>'  // D-PMS-59 + D-PMS-100 1dp Value AUM total
-    + '<td></td>'  // share p&l per-share (not summable)
+    + '<td></td><td></td>'
+    + '<td class="col-atentry col-group-start"></td><td class="col-atentry"></td><td class="col-atentry"></td><td class="col-atentry"></td>'
+    + '<td class="col-group-start"></td><td></td><td></td><td></td>'
+    + '<td>' + pctNoSign1dp(sumValueAum) + '</td>'
+    + '<td class="ubs-cell">' + ubsTot + '</td>'
+    + '<td class="col-group-start"></td>'
     + '<td>' + pctBp(sumPnl) + '</td>'
-    + (coreTotals ? '<td class="col-totals-emphasis cell-not-used"><span class="not-used" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span></td>'
-                  : '<td class="col-totals-emphasis ' + lossRiskCls(sumRisk) + '">' + pctBp(sumRisk) + '</td>')
-    + '<td colspan="2"></td></tr>';
+    + (anyStopRule ? '<td class="col-totals-emphasis ' + lossRiskCls(sumRisk) + '">' + pctBp(sumRisk) + '</td>'
+                   : '<td class="col-totals-emphasis cell-not-used"><span class="not-used" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span></td>')
+    + '<td colspan="2" class="col-group-start"></td></tr>';
 }
 
 function renderKpis() {
   var deployed = 0, pnl = 0, risk = 0, activeInvs = 0, activeTrades = 0, alertCount = 0;
   CONFIG.investments.forEach(function(inv, invIdx) {
-    var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190: include override slots, skip hidden
+    var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190
     if (!ticker) return;
     var hasAny = false;
-    TRADE_TYPES.forEach(function(slotType) {
-      var edit = getEdit(invIdx, slotType);
-      if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
-      // CURRENT-AUM-2026-11-04: deployed = what the tranches are worth NOW (Value AUM, the current % of AUM); a tranche the
-      // page cannot price counts at its entry size, so nothing drops out (D-PMS-190's intent kept).
+    trancheKeys(invIdx).forEach(function(key) {
+      var edit = getEdit(invIdx, key);
+      if (!trancheHeld(edit)) return;
       activeTrades += 1; hasAny = true;
-      var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at, slotType);
-      deployed += (r && r.ok && r.value_aum_pct != null) ? r.value_aum_pct : edit.target_size_pct;
+      var r = runTranche(ticker, key, edit);
+      deployed += (r && r.ok && r.value_aum_pct != null) ? r.value_aum_pct : edit.target_size_pct;   // CURRENT-AUM-2026-11-04
       if (!r || !r.ok) return;
       pnl += (r.paper_pnl_aum || 0);
       risk += (r.loss_risk_aum || 0);
@@ -4238,11 +4672,10 @@ function findStrandedTranches() {
   var stranded = [];
   (CONFIG.investments || []).forEach(function(inv, invIdx) {
     if (effectiveTicker(inv, invIdx)) return;   // has a stock: fine
-    TRADE_TYPES.forEach(function(slotType) {
-      var edit = getEdit(invIdx, slotType);
-      if (!edit) return;
-      if (edit.target_size_pct == null && !edit.entry_date) return;
-      stranded.push({ slot: invIdx + 1, type: slotType, pct: edit.target_size_pct || 0, date: edit.entry_date || '' });
+    trancheKeys(invIdx).forEach(function(key) {
+      var edit = getEdit(invIdx, key);
+      if (!edit || (edit.target_size_pct == null && !edit.entry_date)) return;
+      stranded.push({ slot: invIdx + 1, type: key, pct: edit.target_size_pct || 0, date: edit.entry_date || '' });
     });
   });
   return stranded;
@@ -4251,22 +4684,19 @@ function findStrandedTranches() {
 function renderAlerts() {
   var alerts = [];
   CONFIG.investments.forEach(function(inv, invIdx) {
-    var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190: alert on override slots too
+    var ticker = effectiveTicker(inv, invIdx);  // D-PMS-190
     if (!ticker) return;
-    TRADE_TYPES.forEach(function(slotType) {
-      var edit = getEdit(invIdx, slotType);
-      if (!edit || !edit.entry_date || edit.target_size_pct == null || edit.target_size_pct <= 0) return;
-      var bufVal = edit.buffer_pct != null ? edit.buffer_pct : BUFFER;
-      var r = runTester(ticker, edit.target_size_pct, edit.entry_date, edit.stop_ma || DEFAULT_STOP_MA[slotType], bufVal, edit.stop_history, edit.promoted_at, slotType);
+    trancheKeys(invIdx).forEach(function(key) {
+      var edit = getEdit(invIdx, key);
+      if (!trancheHeld(edit)) return;
+      var r = runTranche(ticker, key, edit);
       if (!r || !r.ok) return;
-      if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.grace_breach, tier: 'confirmed' });
-      else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, slot: slotType, breach: r.breach.triggered, tier: 'triggered' });
+      if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.grace_breach, tier: 'confirmed' });
+      else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.triggered, tier: 'triggered' });
     });
   });
   var el = document.getElementById('alertBanner');
-
-  // D-PMS-196 + D-PMS-201: stranded capital renders into its OWN banner, which "Hide alerts"
-  // does not touch. A data-integrity fault must not be dismissible as if it were a signal.
+  // D-PMS-196 + D-PMS-201: stranded capital renders into its OWN banner, which "Hide alerts" does not touch.
   var iel = document.getElementById('integrityBanner');
   var stranded = findStrandedTranches();
   if (iel) {
@@ -4274,29 +4704,23 @@ function renderAlerts() {
       iel.className = 'integrity-banner'; iel.innerHTML = '';
     } else {
       var strandedPct = stranded.reduce(function(s, x) { return s + (x.pct || 0); }, 0);
-      var sh = '<h2>&#9888; CAPITAL WITH NO STOCK ATTACHED &mdash; ' + stranded.length + ' tranche'
-        + (stranded.length > 1 ? 's' : '') + ', ' + (strandedPct * 100).toFixed(1) + '% of AUM</h2>';
+      var sh = '<h2>&#9888; CAPITAL WITH NO STOCK ATTACHED &mdash; ' + stranded.length + ' tranche' + (stranded.length > 1 ? 's' : '') + ', ' + (strandedPct * 100).toFixed(1) + '% of AUM</h2>';
       stranded.forEach(function(x) {
-        sh += '<div class="alert-item">'
-          + '<span class="alert-ticker">Slot ' + x.slot + '</span>'
-          + '<span>' + esc(TRADE_LABELS[x.type] || x.type) + '</span>'
+        sh += '<div class="alert-item"><span class="alert-ticker">Slot ' + x.slot + '</span><span>' + esc(x.type) + '</span>'
           + '<span class="alert-msg">' + (x.pct * 100).toFixed(1) + '% of AUM entered ' + esc(x.date || 'n.a.')
-          + ' &mdash; no stock in this slot, so it has no price, no stop and is excluded from every total. '
-          + 'Type a ticker into slot ' + x.slot + ' to restore it, or press &times; Remove to clear the capital.</span>'
-          + '<span class="alert-status b-bad">STRANDED</span>'
-          + '</div>';
+          + ' &mdash; no stock in this slot, so it has no price, no stop and is excluded from every total. Type a ticker into slot ' + x.slot + ' to restore it, or press &times; Remove to clear the capital.</span>'
+          + '<span class="alert-status b-bad">STRANDED</span></div>';
       });
       iel.innerHTML = sh; iel.className = 'integrity-banner visible';
     }
   }
-
   if (!alerts.length) { el.className = 'alert-banner'; el.innerHTML = ''; return; }
   var _nConf = alerts.filter(function(a) { return a.tier === 'confirmed'; }).length;
-  var html = '<h2>⚠ STOP-LOSSES (Early Innings Probing Bets) — ' + _nConf + ' exit' + (_nConf === 1 ? '' : 's') + ' confirmed, not yet sold; ' + (alerts.length - _nConf) + ' testing the MA</h2>';
+  var html = '<h2>⚠ STOP-LOSSES (Probing Bet and Speculative Bet tranches) — ' + _nConf + ' exit' + (_nConf === 1 ? '' : 's') + ' confirmed, not yet sold; ' + (alerts.length - _nConf) + ' testing the MA</h2>';
   alerts.forEach(function(a) {
     html += '<div class="alert-item">'
       + '<span class="alert-ticker">' + esc(a.ticker) + '</span>'
-      + '<span>' + esc(TRADE_LABELS[a.slot] || a.slot) + '</span>'
+      + '<span>' + esc(a.label) + '</span>'
       + '<span class="alert-msg">' + esc(a.breach.trigger) + ' ' + esc(fmtDate(a.breach.breach_date)) + '</span>'
       + '<span class="alert-status ' + (a.tier === 'confirmed' ? 'b-bad' : 'b-warn') + '">' + esc(a.tier === 'confirmed' ? 'SELL' : 'WATCH') + '</span>'
       + '</div>';
@@ -4422,6 +4846,7 @@ function breachBadge(r) {
 
 // === D-PMS-139.1: dynamically fit Portfolio summary to viewport ===
 (function() {
+  window.fitPortfolioToViewport = fitPortfolioToViewport;
   function fitPortfolioToViewport() {
     var section = document.querySelector('.portfolio-section.pf-fullscreen');
     if (!section) return;
@@ -4459,717 +4884,11 @@ function breachBadge(r) {
   });
 })();
 
-// === D-PMS-133/142/143/144/145: Portfolio Charts grid (enhanced) ===
-var pfChartsState = {
-  cols: 4,
-  sortKey: 'lossRisk',
-  sortDir: 'asc',
-  period: '6M',
-  scale: 'lin',
-  layers: {ma5: false, ma10: false, ma20: true, ma50: true, ma100: true, ma150: true, ma200: true, vol: true},
-  overlays: {stops: true, entries: true, risk: true, promo: true,
-             breach: false, grace: false, stopMaBold: false,
-             filterBadges: false, thematic: false, w52: false,
-             cohort: false, trancheLossHeatmap: false, stageTint: false},
-  rowWidth: {},  // {rowIdx: 2|3|4} — per-row override
-};
-try {
-  var saved = localStorage.getItem('pms_charts_state_v6');
-  if (saved) {
-    var s = JSON.parse(saved);
-    Object.assign(pfChartsState, s);
-    // Merge nested objects safely
-    if (s.layers) Object.assign(pfChartsState.layers, s.layers);
-    if (s.overlays) Object.assign(pfChartsState.overlays, s.overlays);
-    if (s.rowWidth) pfChartsState.rowWidth = s.rowWidth;
-  }
-} catch(e) {}
-function _saveChartsState() {
-  try { localStorage.setItem('pms_charts_state_v6', JSON.stringify(pfChartsState)); } catch(e) {}
-}
-
-function gatherChartsRows() {
-  if (typeof gatherPortfolioRows !== 'function') return [];
-  var rows = gatherPortfolioRows().filter(function(r) { return !r._is_placeholder; });
-  // D-PMS-144: enrich each row with raw edits for overlay rendering
-  rows.forEach(function(r) {
-    var allEdits = [];
-    var e = EDITS[r.invIdx] || {};
-    ['PB1', 'PB2', 'MM1', 'MM2', 'MM3', 'MM4'].forEach(function(slot) {
-      var ed = e[slot] || {};
-      if (ed.target_size_pct == null || !ed.entry_date) return;
-      allEdits.push({
-        slot: slot,
-        entry_date: ed.entry_date,
-        target_size_pct: ed.target_size_pct,
-        stop_ma: holdingIsCore(r.ticker) ? null : (ed.stop_ma || (slot.indexOf('PB') === 0 ? '50D' : '100D')),   // V4: no stop line for a Core Investment
-        buffer_pct: ed.buffer_pct != null ? ed.buffer_pct : BUFFER,
-        promoted_at: ed.promoted_at,
-        promoted_from: ed.promoted_from,
-      });
-    });
-    r._all_edits = allEdits;
-  });
-  return rows;
-}
-
-function renderChartsGrid() {
-  var el = document.getElementById('pfChartsGrid');
-  if (!el) return;
-  var rows = gatherChartsRows();
-  var sk = pfChartsState.sortKey;
-  var sd = pfChartsState.sortDir === 'desc' ? -1 : 1;
-  rows.sort(function(a, b) {
-    var av = a[sk], bv = b[sk];
-    if (av == null && bv == null) return 0;
-    if (av == null) return 1;
-    if (bv == null) return -1;
-    if (typeof av === 'string') return av.localeCompare(bv) * sd;
-    return (av - bv) * sd;
-  });
-  // D-PMS-145: row-aware layout (per-row width override)
-  el.className = 'pf-charts-rows-container';
-  var html = '';
-  if (rows.length === 0) {
-    html = '<div class="pf-charts-placeholder">No live positions to chart.</div>';
-  } else {
-    var rowIdx = 0;
-    var i = 0;
-    while (i < rows.length) {
-      var cols = pfChartsState.rowWidth[rowIdx] || pfChartsState.cols;
-      var rowChunk = rows.slice(i, i + cols);
-      html += '<div class="pf-charts-row" data-row-idx="' + rowIdx + '" style="display:grid;grid-template-columns:auto repeat(' + cols + ', 1fr);gap:12px;margin-bottom:12px">';
-      html += '<div class="pf-row-width-bar">'
-        + '<span title="Row width">↹</span>'
-        + '<button class="btn pf-row-width-btn' + (cols === 4 ? ' active' : '') + '" data-row="' + rowIdx + '" data-w="4">4</button>'
-        + '<button class="btn pf-row-width-btn' + (cols === 3 ? ' active' : '') + '" data-row="' + rowIdx + '" data-w="3">3</button>'
-        + '<button class="btn pf-row-width-btn' + (cols === 2 ? ' active' : '') + '" data-row="' + rowIdx + '" data-w="2">2</button>'
-        + '</div>';
-      rowChunk.forEach(function(r) {
-        var canvasId = 'pfChart_' + r.ticker.replace(/[^a-zA-Z0-9]/g, '_');
-        html += '<div class="pf-chart-card has-tier1-overlays" data-ticker="' + esc(r.ticker) + '">'
-          + '<div class="pf-chart-header">'
-          +   '<span class="pf-chart-ticker">' + esc(r.ticker) + '</span>'
-          +   '<span class="pf-chart-name">' + esc(r.name || '') + '</span>'
-          +   '<span class="pf-chart-loss-risk ' + lossRiskCls(r.atRisk) + '">' + pctBp(r.atRisk) + '</span>'
-          + '</div>'
-          + '<div class="pf-chart-canvas-wrap" style="position:relative">'
-          +   '<canvas id="' + canvasId + '"></canvas>'
-          + '</div>'
-          + '</div>';
-      });
-      html += '</div>';
-      i += cols;
-      rowIdx += 1;
-    }
-  }
-  el.innerHTML = html;
-  // Render each chart
-  rows.forEach(function(r) {
-    var canvasId = 'pfChart_' + r.ticker.replace(/[^a-zA-Z0-9]/g, '_');
-    var canvas = document.getElementById(canvasId);
-    if (!canvas) return;
-    drawChartIntoCanvas(r.ticker, canvas, r);
-  });
-  // Per-row width button delegation
-  el.querySelectorAll('.pf-row-width-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var rowIdx = parseInt(btn.getAttribute('data-row'), 10);
-      var w = parseInt(btn.getAttribute('data-w'), 10);
-      pfChartsState.rowWidth[rowIdx] = w;
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  // Info line
-  var info = document.getElementById('pfChartsInfo');
-  if (info) info.textContent = rows.length + ' live position' + (rows.length === 1 ? '' : 's') + ' · ' + pfChartsState.period + ' · ' + pfChartsState.scale.toUpperCase();
-}
-
-function drawChartIntoCanvas(ticker, canvas, rowMeta) {
-  // D-PMS-142: MD-parity chart rendering. Uses PMS_CHART_DATA bars (now with MAs per D-PMS-137).
-  // Renders candlesticks + volume + selected MAs based on pfChartsState.layers + LIN/LOG scale.
-  // Then D-PMS-144 overlays Tier 1 on top of the chart.
-  if (!canvas) return;
-  var bars = (PMS_CHART_DATA && PMS_CHART_DATA.data && PMS_CHART_DATA.data[ticker]) || null;
-  if (!bars || !bars.length) {
-    var wrap = canvas.parentElement;
-    if (wrap) wrap.innerHTML = '<div class="pf-chart-no-data">No chart data for ' + esc(ticker) + ' (run pipeline to refresh)</div>';
-    return;
-  }
-  var periodDays = { '1M': 22, '3M': 66, '6M': 130, '12M': 260, '2Y': 520, '3Y': 780, '5Y': 1300 }[pfChartsState.period] || 130;
-  var slice = bars.slice(-periodDays);
-  if (!slice.length) { return; }
-
-  var dpr = window.devicePixelRatio || 1;
-  var rect = canvas.getBoundingClientRect();
-  var w = rect.width || 300;
-  var h = rect.height || 180;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  var ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, w, h);
-
-  // Layout: 75% price area, 20% volume area, 5% gap (D-PMS-142)
-  var padL = 38, padR = 6, padT = 4, padB = 16;
-  var plotW = w - padL - padR;
-  var totalPlotH = h - padT - padB;
-  var volH = pfChartsState.layers.vol ? totalPlotH * 0.18 : 0;
-  var priceH = totalPlotH - volH - (volH > 0 ? 4 : 0);
-  var priceTop = padT;
-  var priceBot = padT + priceH;
-  var volTop = priceBot + 4;
-  var volBot = priceBot + 4 + volH;
-
-  // Compute price range including any active MAs (so MA lines don't clip)
-  var allValues = [];
-  slice.forEach(function(b) {
-    if (b.h != null) allValues.push(b.h);
-    if (b.l != null) allValues.push(b.l);
-    Object.keys(pfChartsState.layers).forEach(function(layer) {
-      if (!pfChartsState.layers[layer]) return;
-      if (b[layer] != null) allValues.push(b[layer]);
-    });
-  });
-  if (allValues.length === 0) return;
-  var minP = Math.min.apply(null, allValues);
-  var maxP = Math.max.apply(null, allValues);
-  var rangeP = maxP - minP || 1;
-  // Pad range by 2% top + bottom for visual breathing
-  var padR_pct = rangeP * 0.02;
-  minP -= padR_pct;
-  maxP += padR_pct;
-  rangeP = maxP - minP;
-
-  // Log-scale support
-  var scaleP = pfChartsState.scale;
-  function priceY(p) {
-    if (p == null) return null;
-    if (scaleP === 'log' && p > 0) {
-      var logMin = Math.log10(Math.max(minP, 0.0001));
-      var logMax = Math.log10(maxP);
-      var logRange = logMax - logMin || 1;
-      return priceTop + priceH * (1 - (Math.log10(p) - logMin) / logRange);
-    }
-    return priceTop + priceH * (1 - (p - minP) / rangeP);
-  }
-  function xFor(idx) {
-    return padL + (plotW * idx / (slice.length - 1));
-  }
-
-  // Grid + axis labels
-  ctx.strokeStyle = '#eaeef2';
-  ctx.lineWidth = 0.5;
-  ctx.fillStyle = '#656d76';
-  ctx.font = '9px ui-sans-serif, system-ui';
-  for (var i = 0; i <= 4; i++) {
-    var p = minP + (rangeP * (4 - i) / 4);
-    var y = priceTop + (priceH * i / 4);
-    var lbl = (p < 10 ? p.toFixed(2) : p < 100 ? p.toFixed(1) : p.toFixed(0));
-    ctx.fillText(lbl, 2, y + 3);
-    ctx.beginPath();
-    ctx.moveTo(padL, y);
-    ctx.lineTo(padL + plotW, y);
-    ctx.stroke();
-  }
-  // Axis frame
-  ctx.strokeStyle = '#d0d7de';
-  ctx.lineWidth = 0.5;
-  ctx.beginPath();
-  ctx.moveTo(padL, priceTop);
-  ctx.lineTo(padL, priceBot);
-  ctx.lineTo(padL + plotW, priceBot);
-  ctx.stroke();
-
-  // Candlesticks (D-PMS-142 — main MD-parity element)
-  var barW = Math.max(1.5, plotW / slice.length * 0.7);
-  slice.forEach(function(b, idx) {
-    if (b.o == null || b.c == null) return;
-    var x = xFor(idx);
-    var yO = priceY(b.o), yC = priceY(b.c);
-    var yH = priceY(b.h), yL = priceY(b.l);
-    var up = b.c >= b.o;
-    var col = up ? '#16a34a' : '#dc2626';
-    // Wick
-    ctx.strokeStyle = col;
-    ctx.lineWidth = 0.7;
-    ctx.beginPath();
-    ctx.moveTo(x, yH);
-    ctx.lineTo(x, yL);
-    ctx.stroke();
-    // Body
-    ctx.fillStyle = col;
-    var bodyTop = Math.min(yO, yC);
-    var bodyH = Math.max(1, Math.abs(yO - yC));
-    ctx.fillRect(x - barW / 2, bodyTop, barW, bodyH);
-  });
-
-  // MA lines (one per active MA layer)
-  var MA_COLORS = { ma5: '#8b0000', ma10: '#e88a9a', ma20: '#e74c3c', ma50: '#ff8c00', ma100: '#2ca02c', ma150: '#1a5276', ma200: '#4a3d9e' };
-  Object.keys(MA_COLORS).forEach(function(layer) {
-    if (!pfChartsState.layers[layer]) return;
-    ctx.strokeStyle = MA_COLORS[layer];
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    var started = false;
-    slice.forEach(function(b, idx) {
-      if (b[layer] == null) return;
-      var y = priceY(b[layer]);
-      if (y == null) return;
-      var x = xFor(idx);
-      if (!started) { ctx.moveTo(x, y); started = true; }
-      else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-  });
-
-  // Volume bars (D-PMS-142)
-  if (pfChartsState.layers.vol && volH > 0) {
-    var maxV = Math.max.apply(null, slice.map(function(b) { return b.v || 0; }));
-    if (maxV > 0) {
-      slice.forEach(function(b, idx) {
-        if (!b.v) return;
-        var vbH = volH * (b.v / maxV);
-        var x = xFor(idx);
-        var up = b.c >= b.o;
-        ctx.fillStyle = up ? 'rgba(22,163,74,0.55)' : 'rgba(220,38,38,0.55)';
-        ctx.fillRect(x - barW / 2, volBot - vbH, barW, vbH);
-      });
-    }
-    // Volume axis separator
-    ctx.strokeStyle = '#eaeef2';
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.moveTo(padL, volBot);
-    ctx.lineTo(padL + plotW, volBot);
-    ctx.stroke();
-  }
-
-  // Date ticks at bottom (3 evenly spaced)
-  ctx.fillStyle = '#656d76';
-  ctx.font = '9px ui-sans-serif, system-ui';
-  for (var ti = 0; ti < 3; ti++) {
-    var sIdx = Math.floor((slice.length - 1) * ti / 2);
-    var sd = slice[sIdx].d || '';
-    var sx = xFor(sIdx);
-    var ta = ti === 0 ? 'start' : (ti === 2 ? 'end' : 'middle');
-    ctx.textAlign = ta;
-    var dateLabel = sd.length >= 10 ? (sd.substring(2, 4) + '/' + sd.substring(5, 7) + '/' + sd.substring(8, 10).slice(0, 2)) : sd;
-    ctx.fillText(dateLabel, sx, h - 4);
-  }
-  ctx.textAlign = 'start';
-
-  // === D-PMS-144 Tier 1 overlays ===
-  if (!rowMeta) return;
-  var tranches = rowMeta.tranches || [];
-  var currentPrice = slice[slice.length - 1].c;
-  // MA-tint colour map (matches PMS row colours)
-  var MA_TINTS = { '20D': '#d97706', '50D': '#2563eb', '100D': '#0d9488', '150D': '#db2777', '200D': '#475569' };
-
-  // Overlay 4 (PROMOTIONS) — draw FIRST so subsequent overlays sit on top
-  if (pfChartsState.overlays.promo) {
-    tranches.forEach(function(t) {
-      if (!t.promoted_at || !t.promoted_from) return;
-      // Find bar at promoted_at
-      var pd = t.promoted_at;
-      var idx = -1;
-      for (var bi = 0; bi < slice.length; bi++) {
-        if (slice[bi].d >= pd) { idx = bi; break; }
-      }
-      if (idx < 0) return;
-      var sx = xFor(idx);
-      // Up arrow at bottom of price area
-      ctx.fillStyle = '#16a34a';
-      ctx.font = '11px ui-sans-serif, system-ui';
-      ctx.textAlign = 'center';
-      ctx.fillText('↑', sx, priceBot - 2);
-      ctx.textAlign = 'start';
-    });
-  }
-
-  // Overlay 3 (RISK ZONES) — shaded bands from current price down to each stop level
-  if (pfChartsState.overlays.risk && currentPrice != null) {
-    tranches.forEach(function(t) {
-      if (t.stop_distance_pct == null) return;
-      var stopPrice = currentPrice * (1 + t.stop_distance_pct);
-      var ma = t.stop_ma;
-      var col = MA_TINTS[ma] || '#666';
-      var yTop = priceY(currentPrice);
-      var yBot = priceY(stopPrice);
-      if (yTop == null || yBot == null) return;
-      // Make sure top < bot
-      if (yTop > yBot) { var tmp = yTop; yTop = yBot; yBot = tmp; }
-      // Convert hex to rgba alpha 0.08
-      ctx.fillStyle = col + '12';  // ~7% alpha
-      ctx.fillRect(padL, yTop, plotW, yBot - yTop);
-    });
-  }
-
-  // Overlay 1 (STOPS) — horizontal lines at each tranche's stop level
-  if (pfChartsState.overlays.stops && currentPrice != null) {
-    tranches.forEach(function(t) {
-      if (t.stop_distance_pct == null) return;
-      var stopPrice = currentPrice * (1 + t.stop_distance_pct);
-      var y = priceY(stopPrice);
-      if (y == null) return;
-      var ma = t.stop_ma;
-      var col = MA_TINTS[ma] || '#666';
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 1.2;
-      ctx.setLineDash([4, 3]);
-      ctx.beginPath();
-      ctx.moveTo(padL, y);
-      ctx.lineTo(padL + plotW, y);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      // Label right-edge: slot + ma
-      ctx.fillStyle = col;
-      ctx.font = '8.5px ui-sans-serif, system-ui';
-      ctx.textAlign = 'end';
-      var label = (t.slot || '') + ' ' + (ma || '');
-      ctx.fillText(label, padL + plotW - 2, y - 2);
-      ctx.textAlign = 'start';
-    });
-  }
-
-  // Overlay 2 (ENTRIES) — small coloured triangles at entry date/price for each tranche
-  if (pfChartsState.overlays.entries && rowMeta._all_edits) {
-    rowMeta._all_edits.forEach(function(e) {
-      if (!e.entry_date) return;
-      var idx = -1;
-      for (var bi = 0; bi < slice.length; bi++) {
-        if (slice[bi].d >= e.entry_date) { idx = bi; break; }
-      }
-      if (idx < 0) return;
-      var entryPrice = slice[idx].c;
-      var x = xFor(idx);
-      var y = priceY(entryPrice);
-      if (y == null) return;
-      var col = MA_TINTS[e.stop_ma] || '#666';
-      ctx.fillStyle = col;
-      ctx.beginPath();
-      ctx.moveTo(x, y - 5);
-      ctx.lineTo(x + 4, y);
-      ctx.lineTo(x - 4, y);
-      ctx.closePath();
-      ctx.fill();
-    });
-  }
-
-  // === D-PMS-146: Breach-state shading (Tier 2) ===
-  if (pfChartsState.overlays.breach && rowMeta.breachCount > 0) {
-    var nBreachBars = 5;
-    var breachStart = Math.max(0, slice.length - nBreachBars);
-    var gradient = ctx.createLinearGradient(xFor(breachStart), 0, xFor(slice.length - 1), 0);
-    gradient.addColorStop(0, 'rgba(220,38,38,0.0)');
-    gradient.addColorStop(1, 'rgba(220,38,38,0.18)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(xFor(breachStart), priceTop, xFor(slice.length - 1) - xFor(breachStart), priceH);
-  }
-
-  // === D-PMS-147: Grace clock badge (Tier 2) ===
-  // For now: show badge if rowMeta has grace data via tranches with grace_breach flag
-  if (pfChartsState.overlays.grace && rowMeta._all_edits) {
-    // Approximation: detect "in grace" via grace_breach=true but raw_breach also set
-    // True grace state would come from runTester output — for v6.2 just show a placeholder if breach is active
-    var graceCount = (rowMeta.breachCount || 0);
-    if (graceCount > 0) {
-      ctx.fillStyle = 'rgba(245,158,11,0.95)';
-      ctx.fillRect(padL + plotW - 64, priceTop + 4, 60, 14);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 9px ui-sans-serif, system-ui';
-      ctx.textAlign = 'center';
-      ctx.fillText('Exits ' + graceCount, padL + plotW - 34, priceTop + 14);
-      ctx.textAlign = 'start';
-    }
-  }
-
-  // === D-PMS-148: Stop-MA bold (Tier 2) ===
-  // Re-draw the MA line for each active-tranche stop_ma with thicker stroke
-  if (pfChartsState.overlays.stopMaBold && rowMeta._all_edits) {
-    var stopMas = {};
-    rowMeta._all_edits.forEach(function(e) { if (e.stop_ma) stopMas[e.stop_ma] = true; });
-    Object.keys(stopMas).forEach(function(ma) {
-      var layer = ma.replace('D', '');
-      var layerKey = 'ma' + layer;
-      if (!pfChartsState.layers[layerKey]) return;  // layer must be on
-      ctx.strokeStyle = MA_TINTS[ma] || '#666';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      var started = false;
-      slice.forEach(function(b, idx) {
-        if (b[layerKey] == null) return;
-        var y = priceY(b[layerKey]);
-        if (y == null) return;
-        var x = xFor(idx);
-        if (!started) { ctx.moveTo(x, y); started = true; }
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-    });
-  }
-
-  // === D-PMS-149: MD filter badges (Tier 3) ===
-  if (pfChartsState.overlays.filterBadges) {
-    var fr = (typeof PMS_FILTER_RESULTS !== 'undefined') && PMS_FILTER_RESULTS.data && PMS_FILTER_RESULTS.data[ticker];
-    if (fr) {
-      var bx = padL + 4, by = priceTop + 4;
-      var badges = [];
-      if (fr.basing_plateau && fr.basing_plateau.stage === 'Capital') badges.push({text: 'BP', col: '#16a34a'});
-      if (fr.probing_bet && fr.probing_bet.stage === 'Capital') badges.push({text: 'PB', col: '#16a34a'});
-      if (fr.mm99 && fr.mm99.stage) badges.push({text: 'MM99', col: fr.mm99.stage === 'Capital' ? '#16a34a' : '#f59e0b'});
-      if (fr.uptrend_retest && fr.uptrend_retest.stage === 'Capital') badges.push({text: 'UTR', col: '#16a34a'});
-      badges.forEach(function(bd, bi) {
-        ctx.fillStyle = bd.col;
-        var bw = ctx.measureText(bd.text).width + 6;
-        ctx.fillRect(bx, by, bw, 12);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 8.5px ui-sans-serif, system-ui';
-        ctx.fillText(bd.text, bx + 3, by + 9);
-        bx += bw + 3;
-      });
-    }
-  }
-
-  // === D-PMS-150: Thematic alignment marker (Tier 3) ===
-  if (pfChartsState.overlays.thematic) {
-    var fd = (typeof PMS_FACTOR_DATA !== 'undefined') && PMS_FACTOR_DATA.data && PMS_FACTOR_DATA.data[ticker];
-    if (fd && fd.composite_thematic_score != null) {
-      var s = fd.composite_thematic_score;
-      var col = s > 0.5 ? '#16a34a' : s < -0.5 ? '#dc2626' : '#656d76';
-      var sign = s >= 0 ? '+' : '';
-      var label = sign + s.toFixed(1) + ' ' + (s > 0.5 ? 'tailwind' : s < -0.5 ? 'headwind' : 'neutral');
-      ctx.font = '9px ui-sans-serif, system-ui';
-      var tw = ctx.measureText(label).width + 8;
-      ctx.fillStyle = col;
-      ctx.fillRect(padL + plotW - tw - 2, priceTop + 4, tw, 14);
-      ctx.fillStyle = '#fff';
-      ctx.fillText(label, padL + plotW - tw + 2, priceTop + 14);
-    }
-  }
-
-  // === D-PMS-151: 52W high/low lines (Tier 3) ===
-  if (pfChartsState.overlays.w52) {
-    // Compute 52W high/low from full bars (not just slice)
-    var w52Bars = bars.slice(-260);  // ~52 weeks of trading days
-    if (w52Bars.length >= 10) {
-      var hi = -Infinity, lo = Infinity;
-      w52Bars.forEach(function(b) {
-        if (b.h != null && b.h > hi) hi = b.h;
-        if (b.l != null && b.l < lo) lo = b.l;
-      });
-      if (hi > -Infinity && lo < Infinity) {
-        var yHi = priceY(hi), yLo = priceY(lo);
-        if (yHi != null) {
-          ctx.strokeStyle = 'rgba(22,163,74,0.5)';
-          ctx.lineWidth = 1;
-          ctx.setLineDash([6, 4]);
-          ctx.beginPath();
-          ctx.moveTo(padL, yHi);
-          ctx.lineTo(padL + plotW, yHi);
-          ctx.stroke();
-          ctx.fillStyle = 'rgba(22,163,74,0.85)';
-          ctx.font = '8.5px ui-sans-serif, system-ui';
-          ctx.fillText('52W H', padL + 2, yHi - 2);
-        }
-        if (yLo != null) {
-          ctx.strokeStyle = 'rgba(220,38,38,0.5)';
-          ctx.beginPath();
-          ctx.moveTo(padL, yLo);
-          ctx.lineTo(padL + plotW, yLo);
-          ctx.stroke();
-          ctx.fillStyle = 'rgba(220,38,38,0.85)';
-          ctx.fillText('52W L', padL + 2, yLo + 9);
-        }
-        ctx.setLineDash([]);
-      }
-    }
-  }
-
-  // === D-PMS-152: Cohort comparison line (Tier 4) ===
-  // Placeholder for now — needs sector cohort data which factor pipeline does not yet aggregate.
-  // When that data is available, draw normalised mean of cohort tickers' close prices.
-  if (pfChartsState.overlays.cohort) {
-    // Draw a faint annotation indicating "cohort data not yet available"
-    ctx.fillStyle = 'rgba(101,109,118,0.5)';
-    ctx.font = 'italic 8px ui-sans-serif, system-ui';
-    ctx.fillText('(cohort: TBD)', padL + 4, priceBot - 2);
-  }
-
-  // === D-PMS-153: Tranche-loss heatmap (Tier 4) ===
-  if (pfChartsState.overlays.trancheLossHeatmap && currentPrice != null && rowMeta._all_edits && rowMeta._all_edits.length > 0) {
-    // Find deepest stop (most negative stop_distance_pct from any active tranche on this row)
-    var deepestStopPct = 0;
-    rowMeta.tranches.forEach(function(t) {
-      if (t.stop_distance_pct != null && t.stop_distance_pct < deepestStopPct) deepestStopPct = t.stop_distance_pct;
-    });
-    if (deepestStopPct < 0) {
-      var deepStopPrice = currentPrice * (1 + deepestStopPct);
-      var yTop = priceY(currentPrice);
-      var yBot = priceY(deepStopPrice);
-      if (yTop != null && yBot != null && yBot > yTop) {
-        // Gradient from cool blue (top, near current price) to hot red (bottom, near deepest stop)
-        var grad = ctx.createLinearGradient(0, yTop, 0, yBot);
-        grad.addColorStop(0, 'rgba(37,99,235,0.05)');
-        grad.addColorStop(0.5, 'rgba(245,158,11,0.10)');
-        grad.addColorStop(1, 'rgba(220,38,38,0.20)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(padL, yTop, plotW, yBot - yTop);
-      }
-    }
-  }
-
-  // === D-PMS-154: Stage tint (Tier 4) ===
-  if (pfChartsState.overlays.stageTint) {
-    var fr2 = (typeof PMS_FILTER_RESULTS !== 'undefined') && PMS_FILTER_RESULTS.data && PMS_FILTER_RESULTS.data[ticker];
-    var stage = null;
-    if (fr2) {
-      // Infer stage from filters: VCP stage_2 = Stage 2; MM99 Late/Early = uptrend; s3 stage = Stage 3; etc.
-      if (fr2.vcp && fr2.vcp.stage_2_uptrend) stage = 'stage2';
-      // s3/s4 are stubbed in MD; check anyway
-      if (fr2.s3_topping && fr2.s3_topping.stage) stage = 'stage3';
-      if (fr2.s4_declining && fr2.s4_declining.stage) stage = 'stage4';
-    }
-    if (stage) {
-      var stageCols = { stage2: 'rgba(22,163,74,0.04)', stage3: 'rgba(245,158,11,0.06)', stage4: 'rgba(220,38,38,0.07)' };
-      ctx.fillStyle = stageCols[stage];
-      ctx.fillRect(padL, priceTop, plotW, priceH);
-    }
-  }
-}
-
-// Wire up charts toolbar buttons (extended for v6.1)
-function wireChartsToolbar() {
-  // Layer toggles (D-PMS-143)
-  document.querySelectorAll('.pf-layer-btn').forEach(function(btn) {
-    if (pfChartsState.layers[btn.getAttribute('data-layer')]) btn.classList.add('active');
-    else btn.classList.remove('active');
-    btn.addEventListener('click', function() {
-      var l = btn.getAttribute('data-layer');
-      pfChartsState.layers[l] = !pfChartsState.layers[l];
-      btn.classList.toggle('active', pfChartsState.layers[l]);
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  // Scale toggle
-  document.querySelectorAll('.pf-scale-btn').forEach(function(btn) {
-    if (btn.getAttribute('data-scale') === pfChartsState.scale) btn.classList.add('active');
-    else btn.classList.remove('active');
-    btn.addEventListener('click', function() {
-      pfChartsState.scale = btn.getAttribute('data-scale');
-      document.querySelectorAll('.pf-scale-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  // Overlay toggles (D-PMS-144)
-  document.querySelectorAll('.pf-overlay-btn').forEach(function(btn) {
-    if (pfChartsState.overlays[btn.getAttribute('data-overlay')]) btn.classList.add('active');
-    else btn.classList.remove('active');
-    btn.addEventListener('click', function() {
-      var o = btn.getAttribute('data-overlay');
-      pfChartsState.overlays[o] = !pfChartsState.overlays[o];
-      btn.classList.toggle('active', pfChartsState.overlays[o]);
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  // Overlay presets
-  var recBtn = document.getElementById('btnOverlayPreset');
-  if (recBtn) recBtn.addEventListener('click', function() {
-    pfChartsState.overlays = {stops: true, entries: true, risk: true, promo: true,
-      breach: false, grace: false, stopMaBold: false,
-      filterBadges: false, thematic: false, w52: false,
-      cohort: false, trancheLossHeatmap: false, stageTint: false};
-    _saveChartsState();
-    document.querySelectorAll('.pf-overlay-btn').forEach(function(b) {
-      b.classList.toggle('active', !!pfChartsState.overlays[b.getAttribute('data-overlay')]);
-    });
-    renderChartsGrid();
-  });
-  var allOnBtn = document.getElementById('btnOverlayAllOn');
-  if (allOnBtn) allOnBtn.addEventListener('click', function() {
-    Object.keys(pfChartsState.overlays).forEach(function(k) { pfChartsState.overlays[k] = true; });
-    _saveChartsState();
-    document.querySelectorAll('.pf-overlay-btn').forEach(function(b) { b.classList.add('active'); });
-    renderChartsGrid();
-  });
-  var allOffBtn = document.getElementById('btnOverlayAllOff');
-  if (allOffBtn) allOffBtn.addEventListener('click', function() {
-    Object.keys(pfChartsState.overlays).forEach(function(k) { pfChartsState.overlays[k] = false; });
-    _saveChartsState();
-    document.querySelectorAll('.pf-overlay-btn').forEach(function(b) { b.classList.remove('active'); });
-    renderChartsGrid();
-  });
-
-  document.querySelectorAll('.pf-density-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      pfChartsState.cols = parseInt(btn.getAttribute('data-cols'), 10);
-      document.querySelectorAll('.pf-density-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  document.querySelectorAll('.pf-sort-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var k = btn.getAttribute('data-sort');
-      if (pfChartsState.sortKey === k) {
-        pfChartsState.sortDir = pfChartsState.sortDir === 'asc' ? 'desc' : 'asc';
-      } else {
-        pfChartsState.sortKey = k;
-        pfChartsState.sortDir = (k === 'ticker') ? 'asc' : 'asc';  // lossRisk asc = most-negative first
-      }
-      document.querySelectorAll('.pf-sort-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  document.querySelectorAll('.pf-period-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      pfChartsState.period = btn.getAttribute('data-period');
-      document.querySelectorAll('.pf-period-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      _saveChartsState();
-      renderChartsGrid();
-    });
-  });
-  // Apply saved state to button visuals
-  document.querySelectorAll('.pf-density-btn').forEach(function(b) {
-    if (parseInt(b.getAttribute('data-cols'), 10) === pfChartsState.cols) b.classList.add('active');
-  });
-  document.querySelectorAll('.pf-sort-btn').forEach(function(b) {
-    if (b.getAttribute('data-sort') === pfChartsState.sortKey) b.classList.add('active');
-  });
-  document.querySelectorAll('.pf-period-btn').forEach(function(b) {
-    if (b.getAttribute('data-period') === pfChartsState.period) b.classList.add('active');
-    else b.classList.remove('active');
-  });
-}
-
-// Initial render: hook into the tab-activate flow
-(function() {
-  function chartsInit() {
-    wireChartsToolbar();
-    // Render now if visible, else render on tab switch
-    if (document.getElementById('pane-charts') && document.getElementById('pane-charts').classList.contains('active')) {
-      renderChartsGrid();
-    }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', chartsInit);
-  } else {
-    chartsInit();
-  }
-})();
+// Portfolio charts grid removed 6-Nov-2026 (D-PMS-V4-150); the last version is in snapshots/2026-11-06-1222-pre-unlimited-tranches/.
 
 // === D-PMS-131: Tab nav + hash routing ===
 (function() {
-  var PANES = ['overview', 'charts', 'pms'];
+  var PANES = ['overview', 'pms'];   // D-PMS-V4-150: Portfolio charts removed
   function activateTab(name) {
     if (!name || PANES.indexOf(name) === -1) name = 'overview';
     PANES.forEach(function(p) {
@@ -5189,9 +4908,6 @@ function wireChartsToolbar() {
     // After tab switch, re-fit Portfolio summary to viewport (it may have hidden cells)
     if (name === 'overview' && typeof fitPortfolioToViewport === 'function') {
       setTimeout(fitPortfolioToViewport, 80);
-    }
-    if (name === 'charts' && typeof renderChartsGrid === 'function') {
-      setTimeout(renderChartsGrid, 80);
     }
   }
   function getInitialTab() {
