@@ -29,7 +29,7 @@
   /* ================= a small time chart: the live page's stack(), cut down to one pane for a sub-panel ================= */
   function mini(host, o) {
     Array.prototype.slice.call(host.children).forEach(function (c) { if (!c.classList.contains('ov6')) host.removeChild(c); });
-    var sz = sizeOf(host), W = Math.max(160, sz.w), Hh = Math.max(90, sz.h);
+    var sz = sizeOf(host), W = Math.max(100, sz.w), Hh = Math.max(90, sz.h);
     var L = o.L == null ? 34 : o.L, R = o.R == null ? 40 : o.R, T = o.T == null ? 8 : o.T, B = 26, ph = Hh - T - B;
     var d0 = o.d0, d1 = o.d1, span = (D(d1) - D(d0)) || 1, x = function (s) { return L + (D(s) - D(d0)) / span * (W - L - R); };
     var svg = el('svg', { width: W, height: Hh, viewBox: '0 0 ' + W + ' ' + Hh, style: 'display:block;font-family:Segoe UI,system-ui,sans-serif' }, host);
@@ -52,7 +52,7 @@
     var holesDone = {};
     o.series.forEach(function (s) { if (!s.holes) return; var sp0 = s.pts; for (var i = 1; i < sp0.length; i++) { var a = sp0[i - 1], b = sp0[i]; if (!hole(s, a, b) || b.d < d0 || holesDone[a.d + b.d]) continue; holesDone[a.d + b.d] = 1;
       var xa = Math.max(L, x(a.d) + 3), xb = Math.min(W - R, x(b.d) - 3); if (xb <= xa) continue; el('rect', { x: xa, y: T, width: xb - xa, height: ph, fill: 'url(#h' + cid + ')' }, svg);
-      if (xb - xa > 44) txt(svg, (xa + xb) / 2, T + ph / 2, 'no daily', { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink3, halo: true }), txt(svg, (xa + xb) / 2, T + ph / 2 + 10, 'readings stored', { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink3, halo: true }); } });
+      if (xb - xa > 130) txt(svg, (xa + xb) / 2, T + ph / 2, 'no daily', { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink3, halo: true }), txt(svg, (xa + xb) / 2, T + ph / 2 + 10, 'readings stored', { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink3, halo: true }); } });
     /* keep the last reading before the window's first day, so each line enters from the left edge (clipped there) */
     var inWin = function (pts) { var out = [], prev = null; pts.forEach(function (q) { if (q.d < d0) prev = q; else if (q.d <= d1) out.push(q); }); return prev ? [prev].concat(out) : out; };
     /* labels (counts, percentages) written only where they do not crowd: from the latest backwards, at least minGap pixels apart */
@@ -116,7 +116,13 @@
   function tbRow(swv, lab, cs, fmt) { return '<span>' + swv + '</span><span class="lab">' + lab + '</span>' + cs.map(function (c) { var k = c[0] == null ? 'flat' : trKind(c[0], c[1]); var v = c[0] == null ? 'n/a' : fmt ? fmt(c[0]) : (function (x) { var r = Math.round(x * 1000) / 10; return r > 0 ? '+' + r.toFixed(1) : r < 0 ? '(' + Math.abs(r).toFixed(1) + ')' : '0.0'; })(c[0]); return '<span class="n ' + k + '">' + v + '</span>'; }).join(''); }
   function sw(yi, col) { return '<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + col + '" stroke-width="' + (FYW[yi] || 2) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
 
-  var m = null, X = null, chartRows = null, MECHD = {}, OPTS = {}, st = { vol: 'L3M', est: 'L6M', nub: 'L3M', px: 'm3', py: 'eps3' };
+  var m = null, X = null, chartRows = null, MECHD = {}, OPTS = {}, st = { vol: 'L3M', est: 'L6M', nub: 'L3M', px: 'm3', py: 'eps3', pv: 'chart', rsz: '12M', estL: 'cols' };
+  /* the settings chosen are kept in this browser and used for the next stock opened (Richard, 6-Nov-2026 15:13: "Remember the historical settings
+     (e.g. what timeframe) when I load a new stock"): every panel's window, item 1's zoom, scale and MAs shown, RS's zoom, the peers chart or table */
+  var KEY = 'pmsOneScreenSettings';
+  function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (typeof o[k] === 'string') st[k] = o[k];
+    if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
+  function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200'].forEach(function (k) { o.mas[k] = !!chartVis[k]; }); localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
   var WIN = { L1M: 30, L3M: 91, L6M: 182 };
   /* the sell-side series: the stored month-ends (re-marked as month-ends), then every stored daily reading (ss2.daily, ss.years_daily:
      scripts/pms_dashboard_extract.py 1.9, D-PMS-V4-152). A file without daily rows shows its month-ends only, with no gaps hatched. */
@@ -142,8 +148,10 @@
   var started = false;
   function visible() { return document.body.classList.contains('os-on'); }
   window.ONESCREEN = {
+    /* the estimates panel's layout: 'cols' three side by side (live), 'rows' three stacked, 'grid' 2x2 with Buys, Holds and Sells (mockups of 6-Nov-2026 15:13) */
+    setEstLayout: function (l) { st.estL = l; if (started && visible()) drawEst(); },
     /* called by holding.html once the stock's file is loaded; draws only while the one-screen view is showing */
-    start: function (model, opts) { m = model; OPTS = opts || {}; MECHD = {}; ((OPTS.mech && OPTS.mech.dates) || []).forEach(function (q) { MECHD[q.date] = q.why; }); X = buildX(m); header(); started = true; if (visible()) drawAll(); },
+    start: function (model, opts) { restore(); m = model; OPTS = opts || {}; MECHD = {}; ((OPTS.mech && OPTS.mech.dates) || []).forEach(function (q) { MECHD[q.date] = q.why; }); X = buildX(m); header(); started = true; if (visible()) drawAll(); },
     show: function () { if (started) drawAll(); }
   };
   var lw = window.innerWidth, lh = window.innerHeight, tmr;
@@ -152,12 +160,10 @@
 
   /* ================= 1. SP and MAs: the live chart, drawn to the panel's size ================= */
   function drawSP() {
+    save();
     var z = document.getElementById('os-zooms'), s = document.getElementById('os-scales');
     buttons(z, ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return [k, k]; }), chartZoom, function (k) { chartZoom = k; drawSP(); });
     buttons(s, [['lin', 'LIN'], ['log', 'LOG']], chartScaleMode, function (k) { chartScaleMode = k; drawSP(); });
-    /* item 3 (RS) keeps the shared zoom with item 1 (Richard, 29-Oct, Q6), so its own buttons are the same buttons */
-    var g3 = document.getElementById('os-tg3'); g3.innerHTML = '<span class="lb">zoom, shared with item 1</span>' + ['3M', '6M', '12M', '2Y'].map(function (k) { return '<button class="' + (k === chartZoom ? 'on' : '') + '" data-k="' + k + '">' + k + '</button>'; }).join('');
-    g3.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartZoom = b.dataset.k; drawSP(); };
     /* the Layers buttons, on item 1's title line (Richard, 6-Nov 14:02): the same MAs and colours as the live Layers row, written once as "MAs" then each period; click to show or hide */
     var MAS = [['ma5', '5D', '#8b0000'], ['ma10', '10D', '#e88a9a'], ['ma20', '20D', '#e74c3c'], ['ma50', '50D', '#ff8c00'], ['ma100', '100D', '#2ca02c'], ['ma150', '150D', '#1a5276'], ['ma200', '200D (absolute)', '#4a3d9e']];
     ['obv', 'vol', 'vol50', 'vol20'].forEach(function (k) { chartVis[k] = false; });
@@ -168,7 +174,7 @@
     var host = document.getElementById('os-chart-container'), hh = host.parentNode.getBoundingClientRect().height;
     loadChartData(m.t, function (rows) {
       chartRows = rows;
-      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: DASH.overlayFor(m, true), pad: { t: 26, r: 46, b: 30, l: 6 }, priceTicks: 14 });
+      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: DASH.overlayFor(m, true), pad: { t: 26, r: 82, b: 30, l: 6 }, priceTicks: 14, malX: 40 });
       drawRS();
       drawEst();
     });
@@ -176,8 +182,12 @@
 
   /* ================= 3. RS: the live pane (dashboard.js drawRS), at the panel's size, with its end labels kept ================= */
   function drawRS() {
+    /* its own zoom, not linked to item 1's (Richard, 6-Nov-2026 15:13: "When I change the timeframe for the SP chart, do not link that change to the RS chart") */
+    buttons(document.getElementById('os-tg3'), [['3M', '3M'], ['6M', '6M'], ['12M', '12M'], ['2Y', '2Y']], st.rsz, function (k) { st.rsz = k; drawRS(); });
+    save();
     var host = document.getElementById('os-rsc'); host.innerHTML = '';
-    var lay = (window.PMS_CHART_LAYOUT || {})['os-canvas']; if (!lay) return;
+    if (!chartRows || !chartRows.length) return;
+    var lay = { dates: getChartSlice(chartRows.filter(function (r) { return r.d <= m.asof; }), st.rsz).map(function (r) { return r.d; }) }; if (!lay.dates.length) return;
     var sz = sizeOf(host), W = sz.w, Hh = sz.h, pad = { l: 26, r: 24 }, n = lay.dates.length, bw = (W - pad.l - pad.r) / n;
     var xi = function (i) { return pad.l + i * bw + bw / 2; };
     var pts = m.rs.filter(function (q) { return q.k === 'fr' || q.k === 'me' || q.k === 'o'; });
@@ -216,6 +226,7 @@
 
   /* ================= 2. Volume: the live four panes (dashboard.js drawVolume), each in its own square-ish sub-panel ================= */
   function drawVol() {
+    save();
     buttons(document.getElementById('os-tg2'), [['L1M', 'L1M'], ['L3M', 'L3M']], st.vol, function (k) { st.vol = k; drawVol(); });
     var host = document.getElementById('os-vol4'); host.innerHTML = '';
     var V = m.H.volume, from = addDays(m.asof, -WIN[st.vol]), rows = V.filter(function (q) { return q.d > from && q.d <= m.asof; }), n = rows.length;
@@ -290,12 +301,13 @@
   /* ================= 4. SS estimate upgrades: EPS and revenue by named FY (item 4 today), PT with the analyst ratings behind it (item 5 today) ================= */
   function drawEst() {
     if (!m) return;
+    save();
     buttons(document.getElementById('os-tg4'), [['L6M', 'L6M'], ['L3M', 'L3M'], ['L1M', 'L1M']], st.est, function (k) { st.est = k; drawEst(); });
-    var host = document.getElementById('os-est3'); host.innerHTML = '';
+    var host = document.getElementById('os-est3'); host.innerHTML = ''; host.className = 'q3 ' + st.estL; var GRID = st.estL === 'grid';
     var days = WIN[st.est], d0 = addDays(m.asof, -days), d1 = addDays(m.asof, 3), band = st.est === 'L1M' ? 0.005 : 0.01, Yr = m.H.ss.years, labs = Yr.labels, names = Yr.names;
     var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? L_.v / b.v - 1 : null; };
     var chg = function (pts) { return chgD(pts, days); };
-    document.getElementById('os-p4say').textContent = names.map(function (n_, i) { return n_.replace('FY20', 'FY') + ' ' + ['solid', 'dashed', 'dotted'][i]; }).join(', ') + '; line colours: the change over ' + st.est;
+    document.getElementById('os-p4say').textContent = names.map(function (n_, i) { return n_.replace('FY20', 'FY') + ' ' + ['solid', 'dashed', 'dotted'][i]; }).join(', ');
     var tr = m.tranches.map(function (t) { return { d: t.entry_date, color: C.entry }; });
     var L0 = 36;
     [['eps', 'EPS'], ['sales', 'Revenue (sales)']].forEach(function (kk) {
@@ -321,17 +333,27 @@
     var fPts = function (v) { return v > 0 ? '+' + v + ' pts' : v < 0 ? '(' + (-v) + ' pts)' : '0 pts'; };
     var RAT = { kind: 'stacked', axis: 'right', gap: 45, holes: true, pts: rp, label: 'analyst ratings', unit: '%',
       layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.26)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.20)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.26)', ink: '#cf222e', tip: '#ffaba8' }] };
-    var hP = subCell(host), hpP = cardH(hP, '<div class="t1"><b>Average PT against SP</b> <span class="hh">&middot; analyst ratings behind:</span> <span style="color:#1a7f37">Buys ' + bNow.b + '%</span> &middot; <span style="color:#57606a">Other ' + bNow.o + '%</span> &middot; <span style="color:#cf222e">Sells ' + bNow.s + '%</span></div>', L0, true);
-    mini(hP, { d0: d0, d1: d1, L: L0, R: 34, T: 4, headPx: hpP, rightTicks: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 8), yDomain2: [0, 100], markers: tr,
-      series: [RAT, { pts: px, se: function (v) { return 'SP ' + fmtN(v); }, color: '#57606a', w: 1.1, label: 'SP', fmt: fmtN }, { pts: tpp, se: function (v) { return 'PT ' + fmtN(v); }, color: TRC[pk], w: 2.6, label: 'average PT', fmt: fmtN, dotAt: function (q) { return q.d === tpp[tpp.length - 1].d; }, dotR: 3 }] });
+    var ratLine = '<span style="color:#1a7f37">Buys ' + bNow.b + '%</span> &middot; <span style="color:#57606a">' + (GRID ? 'Holds ' : 'Other ') + bNow.o + '%</span> &middot; <span style="color:#cf222e">Sells ' + bNow.s + '%</span>';
+    var hP = subCell(host), hpP = cardH(hP, '<div class="t1"><b>Average PT against SP</b>' + (GRID ? '' : ' <span class="hh">&middot; analyst ratings behind:</span> ' + ratLine) + '</div>', L0, true);
+    var ptSeries = [{ pts: px, se: function (v) { return 'SP ' + fmtN(v); }, color: '#57606a', w: 1.1, label: 'SP', fmt: fmtN }, { pts: tpp, se: function (v) { return 'PT ' + fmtN(v); }, color: TRC[pk], w: 2.6, label: 'average PT', fmt: fmtN, dotAt: function (q) { return q.d === tpp[tpp.length - 1].d; }, dotR: 3 }];
+    mini(hP, { d0: d0, d1: d1, L: L0, R: 34, T: 4, headPx: hpP, rightTicks: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 8), yDomain2: [0, 100], markers: tr, series: GRID ? ptSeries : [RAT].concat(ptSeries) });
+    if (GRID) {
+      /* layout 2 (Richard, 6-Nov 15:13: "4 sub-panels, 2x2, with Buys/Holds/Sells added as a new panel"): the analyst ratings in their own panel, the
+         same stacked area as item 5 on the full page (Buys = Buy + Overweight, Holds = Hold, Sells = Sell + Underweight, % of analysts) */
+      var RAT2 = { kind: 'stacked', gap: 45, holes: true, pts: rp, label: 'analyst ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
+        layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Holds', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] };
+      var hR = subCell(host), hpR = cardH(hR, '<div class="t1"><b>Analyst ratings: Buys, Holds and Sells</b> <span class="hh">&middot; % of analysts (' + bNow.n + ' now)</span></div>', L0, true);
+      mini(hR, { d0: d0, d1: d1, L: L0, R: 66, T: 4, headPx: hpR, yDomain: [0, 100], yTicks: [0, 25, 50, 75, 100], yFmt: function (v) { return v + '%'; }, markers: tr, series: [RAT2] });
+    }
   }
 
   /* ================= 5. SS upgrade breadth: the live Net Upgrade Breadth charts (item 6 today), daily where the daily store has the counts ================= */
   function drawNub() {
+    save();
     buttons(document.getElementById('os-tg5'), [['L1M', 'L1M'], ['L3M', 'L3M']], st.nub, function (k) { st.nub = k; drawNub(); });
     var host = document.getElementById('os-nub4'); host.innerHTML = '';
     var d0 = addDays(m.asof, -WIN[st.nub]), d1 = addDays(m.asof, 3), NC = X.nubc;
-    document.getElementById('os-p5say').textContent = 'FY' + (m.H.ss2.fy || '') + ', 100-day counts; month-ends, then each day the daily store holds';
+    document.getElementById('os-p5say').textContent = 'FY' + (m.H.ss2.fy || '') + ', 100-day counts';
     var GR = { k: 'up', label: 'raising', color: 'rgba(26,127,55,0.38)', ink: '#116329', num: '#0f6b2c', tip: '#7ee2a8' }, NCH = { k: 'nc', label: 'no change', color: 'rgba(139,148,158,0.28)', ink: '#424a53', num: '#57606a', tip: '#d0d7de' }, RD = { k: 'dn', label: 'cutting', color: 'rgba(207,34,46,0.38)', ink: '#a40e26', num: '#c4101f', tip: '#ffaba8' };
     [['eps', 'EPS'], ['sales', 'Revenue (sales)'], ['tp', 'PT'], ['buys', 'Buys, Other and Sells']].forEach(function (kk) {
       var k = kk[0], buys = k === 'buys';
@@ -351,14 +373,15 @@
 
   /* ================= 6. Peers: the live chart and table, smaller ================= */
   function drawPeers() {
+    save();
     /* chart or table, one at a time (Richard, 6-Nov 14:02: "add a toggle between CHART and TABLE and only display either/or in the panel") */
     var pv = st.pv || 'chart';
     buttons(document.getElementById('os-peerv'), [['chart', 'Chart'], ['table', 'Table']], pv, function (k) { st.pv = k; drawPeers(); });
     document.getElementById('os-pw').className = 'pw ' + pv;
     document.getElementById('os-peerx').style.display = document.getElementById('os-peery').style.display = pv === 'chart' ? '' : 'none';
     if (pv === 'table') { var tb = document.getElementById('os-pc-tbl'); tb.innerHTML = DASH.peersTable(m); fitTable(tb); return; }
-    buttons(document.getElementById('os-peerx'), [['m1', '1M'], ['m3', '3M'], ['m6', '6M']], st.px, function (k) { st.px = k; drawPeers(); }, 'across: Stock RS change');
-    buttons(document.getElementById('os-peery'), [['eps3', 'EPS'], ['sales3', 'revenue']], st.py, function (k) { st.py = k; drawPeers(); }, 'up: 3M revisions');
+    buttons(document.getElementById('os-peerx'), [['m1', '1M'], ['m3', '3M'], ['m6', '6M']], st.px, function (k) { st.px = k; drawPeers(); }, 'Stock RS change');
+    buttons(document.getElementById('os-peery'), [['eps3', 'EPS'], ['sales3', 'revenue']], st.py, function (k) { st.py = k; drawPeers(); }, '3M revisions');
     var host = document.getElementById('os-pc-plot'), sz = sizeOf(host);
     peersMini(host, { x: st.px, y: st.py }, sz.w, sz.h);
   }
@@ -404,7 +427,7 @@
   }
   var KEY6 = '<span style="color:#1a7f37">&#9679;</span><span style="color:#9a6700">&#9679;</span><span style="color:#cf222e">&#9679;</span> dot colour: its quarter &middot; darker: cohort peer, paler: sector peer &middot; size: market value &middot; <span style="color:#8250df">&#9711;</span> this holding, <span style="color:#0969da">&#9711;</span> another holding of ours';
   /* the peers table sized to its panel, so it never needs a scroll bar (Richard, 6-Nov 14:14): the font and row padding step down until it fits */
-  function fitTable(tb) { var t = tb.querySelector('table'); if (!t) return; var steps = [[12, 5], [11.5, 4], [11, 3.5], [10.5, 3], [10, 2.5], [9.5, 2], [9, 1.5]];
+  function fitTable(tb) { var t = tb.querySelector('table'); if (!t) return; var steps = [[12, 5], [11.5, 4], [11, 3.5], [10.5, 3], [10, 2.5], [9.5, 2], [9, 1.5], [8.5, 1], [8, 0.5]];
     for (var i = 0; i < steps.length; i++) { t.style.setProperty('font-size', steps[i][0] + 'px', 'important'); Array.prototype.forEach.call(t.querySelectorAll('th'), function (c) { c.style.setProperty('font-size', (steps[i][0] - 1.5) + 'px', 'important'); c.style.setProperty('padding-top', '2px', 'important'); c.style.setProperty('padding-bottom', '3px', 'important'); }); Array.prototype.forEach.call(t.querySelectorAll('td'), function (c) { c.style.setProperty('padding-top', steps[i][1] + 'px', 'important'); c.style.setProperty('padding-bottom', steps[i][1] + 'px', 'important'); });
       if (tb.scrollHeight <= tb.clientHeight + 1) break; } }
 

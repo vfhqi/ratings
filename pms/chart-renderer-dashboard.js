@@ -1,6 +1,6 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-06T15:00:27 from master-dashboard/index.html (md5 dc7fcb6ed47a48fe3f166ac11ef5a231),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 19. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-06T15:18:03 from master-dashboard/index.html (md5 ddfcd2ca24fa02295207eff47b1d1864),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 21. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
@@ -470,7 +470,7 @@ function drawMasterChart(ticker,_sspo){
     rs.forEach(function(q){(an!=null&&q.y<=an?ab:be).push(q)});
     be.sort(function(a,b){return a.y-b.y});la=an!=null?an:-1e9;be.forEach(function(q){if(q.y<la+gap)q.y=la+gap;la=q.y});
     ab.sort(function(a,b){return b.y-a.y});la=an!=null?an:1e9;ab.forEach(function(q){if(q.y>la-gap)q.y=la-gap;la=q.y});
-    ctx.textAlign='left';_mal.forEach(function(q){ctx.font=q.f||'bold 12px monospace';ctx.fillStyle=q.c;ctx.fillText(q.t,W-pad.r+(pad.r>=200?56:6),q.y+4)});_mal.length=0} /* wide: the values in their own column, right of the price scale */
+    ctx.textAlign='left';_mal.forEach(function(q){ctx.font=q.f||'bold 12px monospace';ctx.fillStyle=q.c;ctx.fillText(q.t,W-pad.r+(pad.r>=200?56:((_sspo&&_sspo.malX)||6)),q.y+4)});_mal.length=0} /* PMS-DASH 20 (6-Nov-2026): the caller may give the MA values their own column (malX), clear of the price scale */ /* wide: the values in their own column, right of the price scale */
   if(_pov){var _idx={},_labs=[];for(j=0;j<chart.length;j++)_idx[chart[j].d]=j;
     ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip(); /* PMS-DASH 14 */
     (_pov.lines||[]).forEach(function(L){ctx.strokeStyle=L.color||'#cf222e';ctx.lineWidth=L.width||1.6;ctx.setLineDash(L.dash||[4,3]);ctx.beginPath();var st=false,lastV=null;
@@ -495,7 +495,7 @@ function drawMasterChart(ticker,_sspo){
       ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1.2;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,pad.t+plotH);ctx.stroke();ctx.setLineDash([]);
       if(M.label){ctx.font='11px sans-serif';ctx.textAlign='left';var rw=(M.row!=null?M.row:mi)%3,top_=pad.t>=40,ly=top_?pad.t-5-rw*12:pad.t+12+rw*13;
         if(top_){ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1;ctx.setLineDash([2,2]);ctx.beginPath();ctx.moveTo(xx,ly+2);ctx.lineTo(xx,pad.t);ctx.stroke();ctx.setLineDash([])}
-        ctx.fillStyle='#ffffff';var tw=ctx.measureText(M.label).width;ctx.fillRect(xx+2,ly-10,tw+4,13);ctx.fillStyle=M.color||'#8250df';ctx.fillText(M.label,xx+4,ly)}});
+        ctx.fillStyle='#ffffff';var tw=ctx.measureText(M.label).width,lx_=(xx+4+tw>W-2)?xx-4-tw:xx+4;ctx.fillRect(lx_-2,ly-10,tw+4,13);ctx.fillStyle=M.color||'#8250df';ctx.fillText(M.label,lx_,ly)} /* PMS-DASH 21 (6-Nov-2026): a tranche date near the right edge is written left of its line, never cut off */});
   }
   window.PMS_CHART_LAYOUT=window.PMS_CHART_LAYOUT||{};window.PMS_CHART_LAYOUT[_cid]={W:W,H:H,pad:pad,n:n,barW:barW,dates:chart.map(function(r){return r.d})}; /* PMS-DASH 8 */
   // Current price label (bold, RHS)

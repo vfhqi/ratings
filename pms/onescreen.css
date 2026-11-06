@@ -49,7 +49,7 @@
   #os .ov6 .tb .n.up { color:#1a7f37; } .ov6 .tb .n.dn { color:#cf222e; } .ov6 .tb .n.flat { color:#6e7781; }
   #os .ov6 .tb .h { text-align:right; color:#8b949e; font-size:9px; }
   #os .ov6 .tb .lab { font-weight:600; color:#1f2328; white-space:nowrap; }
-  #os .ov6 .t1 { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #os .ov6 .t1 { white-space:normal; }
   /* item 1 */
   #os .ctl1 { display:flex; align-items:center; gap:6px; flex-wrap:nowrap; padding:1px 4px 0; font-size:10.5px; color:#656d76; }
   #os .ctl1 .chart-width-btn { font-size:10px; padding:0 5px; line-height:16px; }
@@ -97,3 +97,8 @@
 .vtog { display:inline-flex; border:1px solid #d0d7de; border-radius:6px; overflow:hidden; flex:0 0 auto; }
 .vtog button { font:inherit; font-size:11.5px; padding:2px 9px; border:0; background:#fff; color:#57606a; cursor:pointer; }
 .vtog button.on { background:#1f2328; color:#fff; }
+/* smaller screens: wrap onto a second line rather than clip (UI QC 6-Nov-2026: nothing cut off at 1490x905, 1536x730, 1366x657) */
+@media (max-width:1760px) { #os .pnl > .ph { flex-wrap:wrap; row-gap:2px; } #os .rskey1 { flex-wrap:wrap; row-gap:1px; white-space:normal; } }
+@media (max-width:1500px) { #os .hdr { flex-wrap:wrap; row-gap:3px; white-space:normal; } #os .hdr .hsub { white-space:normal; } }
+#os .q3.rows { grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(3, minmax(0,1fr)); }
+#os .q3.grid { grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:repeat(2, minmax(0,1fr)); }
