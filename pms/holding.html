@@ -229,6 +229,9 @@
     Array.prototype.forEach.call(document.querySelectorAll('.zshared'), function (g) { g.innerHTML = z.innerHTML; g.onclick = z.onclick; });
     s.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartScaleMode = b.dataset.s; drawChart(); };
     document.getElementById('legend').innerHTML = chartLegendHTML();
+    /* 6-Nov-2026 (Richard, Ricky login: "Remove the OBV, Vol 50D, Vol 200D, Vol lines from the charts and also for the current per-stock dashboard charts; they are not needed"):
+       the volume and OBV layers are off (above) and their buttons are taken out of item 1's Layers row; the chart renderer is rebuilt from the Master Dashboard each night, so the change sits here */
+    ['obv', 'vol', 'vol50', 'vol20'].forEach(function (k) { var e = document.getElementById('legend-' + k); if (e) e.parentNode.removeChild(e); chartVis[k] = false; });
     window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; drawChart(); };
     chartTicker = m.t;
     loadChartData(m.t, function (rows) {
