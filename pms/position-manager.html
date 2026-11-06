@@ -493,51 +493,275 @@ select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e
 .pf-spark-zero-line { stroke: var(--fg3); stroke-width: 1; opacity: 0.85; }
 .pf-spark-baseline { stroke: var(--border); stroke-width: 1; opacity: 0.7; }
 .pf-spark-axis-bg { fill: var(--bg2); opacity: 0.95; }
+
+/* ==========================================================================
+   D-PMS-V4-154 (Richard, 6-Nov-2026 14:48): "materially improve the aesthetics; more elegant formatting, colours,
+   visuals, fonts ... use the full width of the page ... move all the boilerplate type text to the bottom as endnotes".
+   A design layer laid over the rules above (same selectors, later wins), so every earlier rule still reads as written.
+   Palette: ink #15233f, paper #f4f6f9, surface #ffffff, rule #dde2ea, muted #5a6478, faint #8d96a7.
+   Type: Segoe UI Variable (Windows 11) with tabular figures; no monospace; headings in sentence case.
+   ========================================================================== */
+:root {
+  --ink: #15233f; --ink2: #24365c; --paper: #f4f6f9; --surface: #ffffff; --rule: #dde2ea; --rule2: #eceff4;
+  --bg: #ffffff; --bg2: #f8f9fb; --bg3: #f1f3f7;
+  --fg: #1b2333; --fg2: #5a6478; --fg3: #8d96a7;
+  --green: #1d7348; --green-bg: rgba(29,115,72,0.09);
+  --amber: #9a5b06; --amber-bg: rgba(154,91,6,0.09);
+  --red: #b42330; --red-bg: rgba(180,35,48,0.08);
+  --blue: #2a4f9e; --blue-bg: rgba(42,79,158,0.08);
+  --purple: #6f3fae; --purple-bg: rgba(111,63,174,0.08);
+  --border: #dde2ea;
+  --k-core: #2a4f9e; --k-probing: #c4581a; --k-spec: #7a3fb0;
+  --font: 'Segoe UI Variable Text', 'Segoe UI Variable', 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', 'Inter', system-ui, sans-serif;
+  --mono: 'Segoe UI Variable Text', 'Segoe UI Variable', 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+  --appbar-h: 52px;
+  --radius: 10px;
+}
+html { background: var(--paper); }
+body { background: var(--paper); color: var(--fg); font-family: var(--font); font-size: 13px; line-height: 1.45;
+  font-variant-numeric: tabular-nums lining-nums; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button, input, select { font-variant-numeric: tabular-nums; }
+.container { max-width: none; margin: 0; padding: 0 24px 48px; }
+
+/* --- App bar: the one bold element. Ink band, brand left, page tabs, status right. --- */
+.app-bar { position: sticky; top: 0; z-index: 60; height: var(--appbar-h); display: flex; align-items: stretch; gap: 28px;
+  padding: 0 24px; background: var(--ink); color: #e9edf5; box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+.app-brand { display: flex; align-items: baseline; gap: 10px; align-self: center; white-space: nowrap; }
+.app-brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: 0.2px; color: #fff; }
+.app-brand-sub { font-size: 12.5px; color: #a9b4c9; font-weight: 400; }
+.app-bar .pms-tabs { display: flex; align-items: stretch; gap: 4px; margin: 0; padding: 0; border: none; }
+.app-bar .pms-tab { position: relative; display: flex; align-items: center; margin: 0; padding: 0 14px; background: transparent; border: none;
+  border-radius: 0; color: #b9c3d6; font-family: var(--font); font-size: 13.5px; font-weight: 500; cursor: pointer; }
+.app-bar .pms-tab:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.app-bar .pms-tab.active { background: transparent; color: #fff; font-weight: 600; border: none; }
+.app-bar .pms-tab.active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: #f2b84b; }
+.app-bar .pms-tab:focus-visible { outline: 2px solid #f2b84b; outline-offset: -4px; }
+.app-status { margin-left: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.app-updated { font-size: 12px; color: #a9b4c9; margin-right: 4px; }
+.app-bar #statusBadge, .app-bar #diskStatus { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #d5dcea; border: 1px solid rgba(255,255,255,0.12); font-weight: 500; }
+.app-bar #statusBadge.ok { background: rgba(84,190,132,0.16); color: #bdebd0; border-color: rgba(84,190,132,0.35); }
+.app-bar #diskStatus.ok { background: rgba(84,190,132,0.16); color: #bdebd0; border-color: rgba(84,190,132,0.35); }
+.app-bar #diskStatus.warn { background: rgba(242,184,75,0.16); color: #f6d48f; border-color: rgba(242,184,75,0.4); }
+.app-bar #diskStatus.fail { background: rgba(230,90,100,0.18); color: #f5b7bd; border-color: rgba(230,90,100,0.4); }
+.app-bar .btn-connect { background: #f2b84b; color: var(--ink); border: 1px solid #f2b84b; font-weight: 600; }
+.app-bar .btn-connect:hover { background: #f6c96c; color: var(--ink); border-color: #f6c96c; }
+.app-bar .btn-connect:disabled { opacity: 0.5; cursor: default; }
+
+/* --- Freshness line under the app bar (both pages) --- */
+#priceFreshness { display: flex; gap: 4px 22px; flex-wrap: wrap; align-items: center; width: 100%; margin: 0; padding: 8px 0 0; border: none; font-size: 12px; color: var(--fg2); }
+#priceFreshness .pf-label { color: var(--fg3); }
+#priceFreshness .pf-value { font-weight: 500; color: var(--fg); }
+#priceFreshness .pf-stale { color: var(--red) !important; background: var(--red-bg); font-weight: 600 !important; border-radius: 5px; padding: 1px 7px; animation: none; }
+
+/* --- Toolbar (sticky under the app bar) --- */
+.sticky-top { position: sticky; top: var(--appbar-h); z-index: 50; background: var(--paper); padding-top: 10px; }
+body.active-tab-overview .sticky-top { display: block; }
+body.active-tab-overview .pms-only { display: none !important; }
+body.active-tab-pms .overview-only { display: none !important; }
+.sticky-top .header.toolbar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 8px 12px; margin: 0;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(21,35,63,0.04); }
+body.scrolled-past-header .sticky-top .header.toolbar { border-radius: var(--radius) var(--radius) 0 0; }
+.tb-group { display: inline-flex; align-items: center; gap: 6px; }
+.tb-label { font-size: 12px; color: var(--fg3); margin-right: 2px; }
+.tb-seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; background: var(--surface); }
+.tb-seg .btn { border: none; border-radius: 0; border-right: 1px solid var(--rule); background: transparent; }
+.tb-seg .btn:last-child { border-right: none; }
+.tb-seg .btn.btn-primary { background: var(--ink); color: #fff; }
+.tb-spacer { flex: 1 1 auto; }
+.btn { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 7px; padding: 5px 11px; font-size: 12.5px; font-weight: 500; font-family: var(--font); line-height: 1.3; cursor: pointer; }
+.btn:hover { background: var(--bg3); color: var(--fg); border-color: #c9d0db; }
+.btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn-primary:hover { background: var(--ink2); color: #fff; border-color: var(--ink2); }
+.btn-success { background: var(--green-bg); color: var(--green); border-color: rgba(29,115,72,0.3); }
+.btn-danger { background: var(--surface); color: var(--red); border-color: rgba(180,35,48,0.35); }
+.btn-danger:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--blue); }
+.btn-ghost:hover { background: var(--blue-bg); border-color: transparent; color: var(--blue); }
+.sticky-header-table-wrap { background: var(--surface); border: 1px solid var(--rule); border-top: none; border-radius: 0 0 var(--radius) var(--radius); box-shadow: 0 6px 12px -8px rgba(21,35,63,0.18); }
+
+/* --- Messages --- */
+#errorBox.visible, #successBox.visible { border-radius: var(--radius); font-weight: 500; }
+
+/* --- KPI strip --- */
+.portfolio-summary { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 14px 0; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.kpi-card { background: transparent; border: none; border-right: 1px solid var(--rule2); border-radius: 0; padding: 12px 18px 13px; text-align: left; }
+.kpi-card:last-child { border-right: none; }
+.kpi-label { font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--fg2); margin-bottom: 2px; }
+.kpi-value { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.2px; }
+
+/* --- Alerts --- */
+.alert-banner, .integrity-banner { background: #fdf4f4; border: 1px solid #efcdd0; border-left: 4px solid var(--red); border-radius: var(--radius); padding: 12px 16px; margin: 14px 0; }
+.alert-banner h2, .integrity-banner h2 { font-size: 13.5px; font-weight: 600; color: var(--red); margin-bottom: 6px; }
+.alert-item { font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid #f2dcde; }
+.alert-ticker { font-family: var(--font); font-weight: 700; min-width: 86px; font-size: 12.5px; letter-spacing: 0.2px; }
+.alert-status { font-size: 10.5px; font-weight: 700; letter-spacing: 0.3px; }
+
+/* --- Shared table look --- */
+.table-wrap, .portfolio-table-wrap { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(21,35,63,0.04); }
+.pos-table th, .sticky-header-table th, .pf-table th { background: var(--bg2); color: var(--fg2); font-family: var(--font); font-size: 11.5px; font-weight: 600;
+  text-transform: none; letter-spacing: 0; line-height: 1.25; padding: 8px 8px; border-bottom: 1px solid var(--rule); }
+.pos-table td { font-size: 12.5px; border-bottom: 1px solid var(--rule2); color: var(--fg); }
+.pf-table td { font-size: 12.5px; border-bottom: 1px solid var(--rule2); color: var(--fg); }
+.pos-table th.group-head, .sticky-header-table th.group-head { font-size: 12px; font-weight: 600; text-transform: none; letter-spacing: 0.1px; padding: 7px 8px;
+  background: var(--surface); color: var(--fg); border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule2); }
+.pos-table th.group-atentry, .sticky-header-table th.group-atentry { color: var(--amber); box-shadow: inset 0 -2px 0 rgba(154,91,6,0.55); }
+.pos-table th.group-current, .sticky-header-table th.group-current { color: var(--blue); box-shadow: inset 0 -2px 0 rgba(42,79,158,0.6); }
+.pos-table th.group-pnl, .sticky-header-table th.group-pnl { color: var(--green); box-shadow: inset 0 -2px 0 rgba(29,115,72,0.55); }
+.pos-table th.group-info, .sticky-header-table th.group-info { color: var(--fg2); box-shadow: inset 0 -2px 0 rgba(90,100,120,0.4); }
+.pos-table th.group-tranche, .sticky-header-table th.group-tranche { color: var(--ink); box-shadow: inset 0 -2px 0 rgba(21,35,63,0.55); }
+.pos-table th.group-investment-info, .sticky-header-table th.group-investment-info { color: var(--fg2); box-shadow: inset 0 -2px 0 rgba(90,100,120,0.3); }
+.pos-table tbody td.col-key-bold { background: rgba(42,79,158,0.045); font-weight: 600; }
+.pos-table thead tr:nth-child(2) th.col-key-bold, .sticky-header-table thead tr:nth-child(2) th.col-key-bold { background: rgba(42,79,158,0.09); color: var(--ink); font-weight: 700; }
+.pos-table tbody td.col-group-start, .pos-table thead tr:nth-child(2) th.col-group-start, .sticky-header-table thead tr:nth-child(2) th.col-group-start { border-left: 1px solid var(--rule); }
+.pos-table tr.inv-separator td { border-top: 1px solid var(--rule); }
+.pos-table tr.inv-spacer td { height: 14px; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.pos-table tr.inv-totals td { background: #f5f7fb; font-weight: 600; border-bottom: 1px solid var(--rule); }
+.pos-table tr.inv-totals td.col-totals-emphasis { background: rgba(42,79,158,0.10); }
+
+/* Ticker cell */
+.ticker-cell { background: var(--surface); border-right: 1px solid var(--rule); padding: 10px 12px; }
+.ticker-cell .name { font-family: var(--font-display); font-size: 14.5px; font-weight: 600; letter-spacing: -0.1px; color: var(--ink); margin-bottom: 2px; }
+.ticker-cell .tk-primary { font-family: var(--font); font-size: 11.5px; font-weight: 600; color: var(--fg2); letter-spacing: 0.3px; }
+.ticker-cell .meta { font-size: 11px; color: var(--fg3); }
+.md-badge { font-size: 10px; font-weight: 600; letter-spacing: 0; padding: 1px 6px; border-radius: 4px; }
+.hs-ubs { font-family: var(--font); font-size: 11.5px; }
+.btn-remove-inv { font-size: 11.5px; font-weight: 500; border-radius: 6px; padding: 2px 9px; }
+.dup-slot-note { display: block; margin-top: 6px; font-size: 11px; font-weight: 400; color: var(--amber); line-height: 1.35; white-space: normal; }
+
+/* Inputs */
+.edit-input { border: 1px solid #d3d9e3; border-radius: 6px; padding: 3px 6px; font-family: var(--font); font-size: 12.5px; background: var(--surface); }
+.edit-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,79,158,0.14); background: var(--surface); }
+input.edit-input.ma { width: 50px; padding: 3px 4px; }
+.edit-input.pct { width: 46px; padding: 3px 5px; }
+.pos-table td:last-child:has(> .btn-icon.btn-danger) { padding: 0 2px; text-align: center; overflow: visible; }
+.size-hint { white-space: normal; font-size: 9.5px; line-height: 1.25; }
+input.ticker-edit { font-family: var(--font); font-size: 12.5px; border: 1px solid #d3d9e3; border-radius: 6px; padding: 3px 7px; margin-top: 4px; background: var(--surface); color: var(--fg); }
+input.ticker-edit:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,79,158,0.14); }
+.row-empty .ticker-cell .name { font-family: var(--font); font-size: 13px; font-weight: 500; font-style: italic; color: var(--fg3); }
+select.kind-select { font-family: var(--font); font-size: 11px; font-weight: 600; padding: 2px 2px 2px 4px; border-radius: 6px; width: 118px; max-width: 100%; }
+select.kind-select.kind-core { color: var(--k-core); border-left: 4px solid var(--k-core); }
+select.kind-select.kind-probing { color: var(--k-probing); border-left: 4px solid var(--k-probing); }
+select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px solid var(--k-spec); }
+.tranche-num { font-size: 10.5px; }
+.exit-note { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; white-space: normal; line-height: 1.4; }
+.exit-note input.exit-date { width: 102px; font-size: 11px; padding: 1px 4px; }
+.input-suffix { font-family: var(--font); }
+.badge { text-transform: none; font-size: 10.5px; font-weight: 600; letter-spacing: 0.2px; border-radius: 5px; padding: 2px 7px; }
+.btn-align { font-family: var(--font); font-size: 10.5px; font-weight: 600; border-radius: 5px; padding: 0 6px; }
+
+/* Type colours (refined, same hues) */
+.kind-pill { font-family: var(--font); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+.kind-pill.kind-core { background: var(--k-core); }
+.kind-pill.kind-probing { background: var(--k-probing); }
+.kind-pill.kind-speculative { background: var(--k-spec); }
+.kind-text { font-size: 11px; font-weight: 600; }
+.kind-text.kind-core { color: var(--k-core); }
+.kind-text.kind-probing { color: var(--k-probing); }
+.kind-text.kind-speculative { color: var(--k-spec); }
+
+/* --- Portfolio overview --- */
+.portfolio-section { margin: 12px 0 0; }
+.portfolio-section.pf-fullscreen { height: auto; }
+.portfolio-section.pf-fullscreen .portfolio-table-wrap { flex: 0 1 auto; }
+.portfolio-section h2.pf-h2 { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--ink); margin: 2px 0 2px; gap: 10px; }
+.portfolio-section .pf-meta { font-size: 12px; color: var(--fg2); margin: 0 0 8px; }
+.pf-legend { font-size: 12px; gap: 6px; margin-left: 8px; color: var(--fg2); }
+.pf-legend-sw { width: 14px; height: 10px; border-radius: 3px; }
+.pf-toggle-placeholders { font-size: 11.5px; padding: 3px 9px; }
+.pf-table th { font-size: 11.5px; padding: 7px 7px; }
+.pf-table th.pf-sortable:hover { background: var(--bg3); color: var(--ink); }
+.pf-table td { padding: 1px 7px; }
+.pf-ticker { font-family: var(--font); font-weight: 700; letter-spacing: 0.2px; color: var(--ink); }
+.pf-table td.pf-ticker-cell { white-space: nowrap; }
+.pf-name { color: var(--fg); font-size: 12.5px; }
+.pf-table td.pf-ticker-cell { background-size: 4px 100%; padding-left: 14px; }
+.pf-table td.pf-rel { font-weight: 600; }
+.pf-table tr.pf-totals td { background: #f5f7fb; border-top: 1px solid var(--rule); font-weight: 700; }
+.pf-table tbody tr:not(.pf-totals):hover td { background-color: rgba(42,79,158,0.035); }
+.pf-table tbody tr:not(.pf-totals):hover td.pf-rel { filter: brightness(0.98); }
+.pf-spark-key-strip { font-size: 11px; font-style: normal; color: var(--fg2); }
+.pf-spark-key-strip .pf-key-pill { font-size: 10px; border-radius: 4px; }
+
+/* --- Endnotes (both pages): the explanations, kept out of the working area --- */
+.endnotes { margin: 28px 0 0; padding: 18px 22px 20px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); color: var(--fg2); }
+.endnotes h2 { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--ink); margin: 0 0 12px; }
+.endnotes dl { columns: 3 420px; column-gap: 44px; margin: 0; }
+.endnotes .note { max-width: 78ch; break-inside: avoid; margin: 0 0 14px; }
+.endnotes dt { font-weight: 600; color: var(--fg); font-size: 13px; margin-bottom: 3px; }
+.endnotes dd { margin: 0; font-size: 12.5px; line-height: 1.6; }
+.endnotes dd b { color: var(--fg); font-weight: 600; }
+.endnotes kbd { background: var(--bg3); border: 1px solid var(--rule); border-radius: 4px; padding: 0 5px; font-family: var(--font); font-size: 11.5px; }
+.endnotes .note-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin: 0 3px 0 1px; }
+.endnotes-date { font-weight: 400; color: var(--fg3); font-size: 12px; margin-left: 8px; }
+
+/* --- Modals --- */
+.modal { border-radius: 12px; border-color: var(--rule); box-shadow: 0 24px 60px rgba(21,35,63,0.25); }
+.modal h2 { font-family: var(--font-display); font-weight: 600; color: var(--ink); }
+.modal select, .modal input { font-family: var(--font); background: var(--surface); border-radius: 7px; }
+
+@media (max-width: 1400px) { .app-brand-sub { display: none; } .app-bar { gap: 16px; } }
+@media (max-width: 1500px) { .tb-label { display: none; } .sticky-top .header.toolbar { gap: 10px; } }
+@media (max-width: 1100px) { .portfolio-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); } .kpi-card:nth-child(3) { border-right: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
+<header class="app-bar" id="appBar">
+  <div class="app-brand"><span class="app-brand-name">Viewforth</span><span class="app-brand-sub">Position Management System</span></div>
+  <!-- D-PMS-131: Tab navigation (D-PMS-V4-154: moved into the app bar) -->
+  <nav class="pms-tabs" id="pmsTabs">
+    <button class="pms-tab" data-pane="overview" id="tabOverview">Portfolio overview</button>
+    <button class="pms-tab" data-pane="pms" id="tabPms">Position manager</button>
+  </nav>
+  <div class="app-status">
+    <span id="lastUpdated" class="app-updated"></span>
+    <span id="statusBadge">loading…</span>
+    <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
+    <button class="btn btn-connect" id="btnConnect" title="Grant access to pms-data/ folder for auto-save">Connect to disk</button>
+  </div>
+</header>
 <div class="container">
 
-  <!-- Sticky top zone: header bar + column header row -->
+  <div id="priceFreshness"><span class="pf-item"><span class="pf-label">Price data:</span><span class="pf-value" id="pfPriceVal">loading…</span></span><span class="pf-item"><span class="pf-label">Universe:</span><span class="pf-value" id="pfUniverseVal">—</span></span><span class="pf-item"><span class="pf-label">Your data last saved:</span><span class="pf-value" id="pfSavedVal">—</span></span></div>
+
+  <!-- Sticky zone under the app bar: the toolbar, then (Position manager, once scrolled) the column headings -->
   <div class="sticky-top">
-    <div class="header">
-      <div style="flex:0 0 100%;">
-        <h1 style="margin:0 0 4px 0;">Portfolio overview <span id="lastUpdated">— Viewforth</span></h1>
-        <div id="priceFreshness"><span class="pf-item"><span class="pf-label">Price data:</span><span class="pf-value" id="pfPriceVal">loading…</span></span><span class="pf-item"><span class="pf-label">Universe:</span><span class="pf-value" id="pfUniverseVal">—</span></span><span class="pf-item"><span class="pf-label">Your data last saved:</span><span class="pf-value" id="pfSavedVal">—</span></span></div>
-      </div>
-      <div class="header-controls">
-        <span id="statusBadge">loading…</span>
-        <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
-        <button class="btn btn-success" id="btnConnect" title="Grant access to pms-data/ folder for auto-save">Connect to disk</button>
-        <span class="btn-group-spacer"></span>
-        <button class="btn btn-primary" id="btnSaveLibrary" title="Save a labelled snapshot to library/">Save to library</button>
+    <div class="header toolbar">
+      <div class="tb-group"><span class="tb-label">Saved copies</span>
+        <button class="btn" id="btnSaveLibrary" title="Save a labelled snapshot to library/">Save to library</button>
         <button class="btn" id="btnImport" title="Import state from a library file">Import</button>
         <button class="btn" id="btnRestoreBackup" title="Restore state from a daily auto-backup file (last 30 days)">Restore</button>
-        <span class="btn-group-spacer"></span>
-        <button class="btn" id="btnHideAtEntry" title="Hide or show the &quot;at entry&quot; columns">Hide at-entry</button>
-        <button class="btn" id="btnHideAlerts" title="Hide or show alert banner and warn-line rows">Hide alerts</button>
-        <button class="btn" id="btnSparkCollapse" title="D-PMS-115: collapse same-MA tranches in the sparkline into summed pills">Sparkline expanded</button>
-        <button class="btn" id="btnSortByStopMa" title="Sort Core MM tranches within each investment by stop MA (ascending). PB1/PB2 stay fixed.">Sort by stop MA</button>
-        <span class="btn-group-spacer"></span>
-        <button class="btn" id="btnSort-slot" onclick="setPosSort('slot')">Blanks to bottom</button>
-        <button class="btn" id="btnSort-name" onclick="setPosSort('name')">Sort: name</button>
-        <button class="btn" id="btnSort-aum" onclick="setPosSort('aum')">Sort: % of AUM (current)</button>
-        <button class="btn" id="btnSort-risk" onclick="setPosSort('risk')">Sort: loss risk</button>
-        <span class="btn-group-spacer"></span>
-        <button class="btn btn-danger" id="btnClearAll" title="Clear all tranche edits">Clear all</button>
       </div>
+      <div class="tb-group"><span class="tb-label">Show</span>
+        <button class="btn" id="btnHideAtEntry" title="Hide or show the &quot;at entry&quot; columns">Hide at-entry</button>
+        <button class="btn pms-only" id="btnHideAlerts" title="Hide or show alert banner and warn-line rows">Hide alerts</button>
+        <button class="btn overview-only" id="btnSparkCollapse" title="D-PMS-115: collapse same-MA tranches in the sparkline into summed pills">Sparkline expanded</button>
+      </div>
+      <div class="tb-group pms-only"><span class="tb-label">Order stocks</span>
+        <span class="tb-seg">
+          <button class="btn" id="btnSort-slot" onclick="setPosSort('slot')">Blanks to bottom</button>
+          <button class="btn" id="btnSort-name" onclick="setPosSort('name')">Name</button>
+          <button class="btn" id="btnSort-aum" onclick="setPosSort('aum')">% of AUM</button>
+          <button class="btn" id="btnSort-risk" onclick="setPosSort('risk')">Loss risk</button>
+        </span>
+      </div>
+      <div class="tb-group pms-only"><span class="tb-label">Order tranches</span>
+        <span class="tb-seg">
+          <button class="btn" id="btnTrancheByDate" title="Each stock's held tranches by date entered (removed ones last)">By date</button>
+          <button class="btn" id="btnSortByStopMa" title="Each stock's held tranches by their MA for the stop-loss, shortest first (removed ones last)">By stop MA</button>
+        </span>
+      </div>
+      <span class="tb-spacer"></span>
+      <button class="btn btn-ghost" id="btnNotes" onclick="scrollToNotes()" title="The explanations for this page, at the bottom">Notes</button>
+      <button class="btn btn-danger pms-only" id="btnClearAll" title="Clear all tranche edits">Clear all</button>
     </div>
     <div class="sticky-header-table-wrap" id="stickyHeaderWrap">
       <table class="sticky-header-table pos-table" id="stickyHeaderTable"></table>
     </div>
   </div>
-
-  <!-- D-PMS-131: Tab navigation -->
-  <nav class="pms-tabs" id="pmsTabs">
-    <button class="pms-tab" data-pane="overview" id="tabOverview">Portfolio overview</button>
-    <button class="pms-tab" data-pane="pms" id="tabPms">Position manager</button>
-    <span class="pms-tabs-info" id="pmsTabsInfo"></span>
-  </nav>
+  <span class="pms-tabs-info" id="pmsTabsInfo" hidden></span>
 
   <div id="errorBox"></div>
   <div id="successBox"></div>
@@ -547,7 +771,18 @@ select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e
   <div class="tab-pane" id="pane-overview">
     <!-- D-PMS-73 to D-PMS-77: PORTFOLIO section (one row per live investment) -->
     <div class="portfolio-section pf-fullscreen" id="portfolioSection"></div>
-  </div>
+    <section class="endnotes" id="notes-overview">
+      <h2>Notes on the Portfolio overview</h2>
+      <dl>
+        <div class="note"><dt>Type of investment</dt><dd>The bar at the left of each ticker shows the types of its held tranches: <span class="note-swatch" style="background:var(--k-core)"></span>Core Investment, <span class="note-swatch" style="background:var(--k-probing)"></span>Probing Bet, <span class="note-swatch" style="background:var(--k-spec)"></span>Speculative Bet. A stock holding two types shows both colours, split. Each tranche's own type decides its exit rule.</dd></div>
+        <div class="note"><dt>Last 5 days and Last 20 days vs STOXX 600</dt><dd>The stock's price change over the last 5 (or 20) trading days relative to STOXX Europe 600: (1 + the stock's change) ÷ (1 + the index's change) − 1. <b>Green</b> is ahead of the index, <b>red</b> behind it. The shade deepens as the gap grows: no shade within 1 point over 5 days or 2 points over 20 days, full shade at 6 and 12 points.</dd></div>
+        <div class="note"><dt>UBS % of AUM</dt><dd>UBS's own weight for the stock, from the latest UBS valuation (its date is above the table), rolled to the latest close. It shows in amber when it differs from the current % of AUM by 0.3 points or more; the Position manager shows the gap per tranche, with an <b>Align</b> button.</dd></div>
+        <div class="note"><dt>Loss risk and weighted stop-loss distance</dt><dd><b>Loss risk</b> is the loss, in basis points of AUM, if every Probing Bet and Speculative Bet tranche of the stock reached its stop-loss. Core Investment tranches count nothing here, because they are sold by the six Sell Criteria, not a stop-loss. <b>Weighted stop-loss distance</b> is the distance from the current price to the stop-loss, weighted by each of those tranches' % at entry.</dd></div>
+        <div class="note"><dt>Stop-loss distance per tranche</dt><dd>One pill per Probing Bet or Speculative Bet tranche, placed at its distance from the stop-loss on the axis shown above the table. The pill's number and colour give its MA for the stop-loss (20, 50, 100, 150 or 200 days); the red figure is the tranche's loss risk and the dark figure its % of AUM. <b>Sparkline expanded</b> (in the toolbar) switches between one pill per tranche and one pill per MA.</dd></div>
+        <div class="note"><dt>Average price change, P&amp;L AUM and breach alerts</dt><dd><b>Average price change</b> is the simple average of the held tranches' price moves since entry. <b>P&amp;L AUM</b> is their paper profit or loss in basis points of AUM. <b>Breach alerts</b> counts the tranches whose exit is confirmed and not yet sold.</dd></div>
+        <div class="note"><dt>Sorting and placeholders</dt><dd>Click a column heading to sort by it; click again to reverse. Empty slots (placeholders) always sort last, and <b>Show placeholders</b> lists them.</dd></div>
+      </dl>
+    </section>
   </div>
 
   <!-- PANE 2 (Portfolio charts) removed 6-Nov-2026, D-PMS-V4-150 -->
@@ -556,15 +791,6 @@ select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e
   <div class="tab-pane" id="pane-pms">
     <!-- KPI cards -->
     <div class="portfolio-summary" id="portfolioSummary"></div>
-
-    <!-- Help banner -->
-    <div class="help-banner">
-      <b>How to use (6-Nov-2026):</b> each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, fill in the empty row at the foot of the stock (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer). Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split). <b>To remove a tranche, type 0</b>: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it beside the entry date). Typing a size back puts it back. The <b>×</b> deletes a tranche entirely (for a mistaken entry).
-      <br><b>MA for the stop-loss</b>: any whole number of days from 5 to 250 (type it, e.g. <kbd>75D</kbd>, or pick 20D, 50D, 100D, 150D or 200D); <b>MA→stop buffer</b> defaults to 6% (the stop-loss is the MA × 0.94). Every tranche shows them, so all tranches look alike, but they <b>apply only to Probing Bet and Speculative Bet tranches</b> (the 10-day stop-loss rule); on a Core Investment tranche they are greyed out and count toward no alert or total, because Core Investment tranches are sold by the six Sell Criteria. Probing and Speculative Bet tranches are sized to lose 0.5% of AUM at the stop-loss, capped at 3% (the size is shown under the % box); a Core Investment tranche is 1.67% at cost.
-      <br><b>UBS % of AUM</b>: the shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its total row and under its name. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.
-      <br><b>The 10-day stop-loss rule (Probing and Speculative Bet tranches; Richard, 2-Nov-2026):</b> two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA or type, or a promotion, restarts the count.
-      <br><b>Row colours by MA for stop-loss:</b> orange=20D, blue=50D, teal=100D, magenta=150D, slate=200D (other lengths uncoloured). Exit states override. <b>Empty slots</b> can have a ticker typed in. <b>Connect to disk</b> for auto-save (auto-reconnects on reload).
-    </div>
 
     <!-- D-PMS-201: data-integrity faults. Separate element so "Hide alerts" cannot hide them. -->
     <div class="integrity-banner" id="integrityBanner"></div>
@@ -576,6 +802,20 @@ select.kind-select.kind-speculative { color: #7e22ce; border-left: 4px solid #7e
     <div class="table-wrap">
       <table class="pos-table" id="posTable"></table>
     </div>
+    <!-- D-PMS-V4-154: the "How to use" banner, moved to the foot of the page as notes -->
+    <section class="endnotes" id="notes-pms">
+      <h2>Notes on the Position manager<span class="endnotes-date">rules as of 6-Nov-2026</span></h2>
+      <dl>
+        <div class="note"><dt>Tranches</dt><dd>Each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, fill in the empty row at the foot of the stock (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer). Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split).</dd></div>
+        <div class="note"><dt>Removing a tranche</dt><dd><b>Type 0</b> as its % at entry: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it beside the entry date). Typing a size back puts it back. The <b>×</b> at the row's end deletes a tranche entirely (for a mistaken entry).</dd></div>
+        <div class="note"><dt>MA for the stop-loss and MA→stop buffer</dt><dd>Any whole number of days from 5 to 250 (type it, e.g. <kbd>75D</kbd>, or pick 20D, 50D, 100D, 150D or 200D); the <b>MA→stop buffer</b> defaults to 6% (the stop-loss is the MA × 0.94). Every tranche shows them, so all tranches look alike, but they <b>apply only to Probing Bet and Speculative Bet tranches</b> (the 10-day stop-loss rule). On a Core Investment tranche they are greyed out and count toward no alert or total, because Core Investment tranches are sold by the six Sell Criteria.</dd></div>
+        <div class="note"><dt>Sizing</dt><dd>Probing Bet and Speculative Bet tranches are sized to lose 0.5% of AUM at the stop-loss, capped at 3% (the size is shown under the % box). A Core Investment tranche is 1.67% at cost.</dd></div>
+        <div class="note"><dt>UBS % of AUM</dt><dd>The shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its total row and under its name. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.</dd></div>
+        <div class="note"><dt>The 10-day stop-loss rule (Probing and Speculative Bet tranches; Richard, 2-Nov-2026)</dt><dd>Two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA or type, or a promotion, restarts the count.</dd></div>
+        <div class="note"><dt>Row colours by MA for the stop-loss</dt><dd><span class="note-swatch" style="background:#d97706"></span>20D, <span class="note-swatch" style="background:#2563eb"></span>50D, <span class="note-swatch" style="background:#0d9488"></span>100D, <span class="note-swatch" style="background:#db2777"></span>150D, <span class="note-swatch" style="background:#475569"></span>200D; other lengths are uncoloured. Exit states override them.</dd></div>
+        <div class="note"><dt>Slots, ordering and saving</dt><dd><b>Empty slots</b> can have a ticker typed in. <b>Order stocks</b> and <b>Order tranches</b> change the display only, never the data. <b>Connect to disk</b> (top right) saves automatically to pms-data/ and reconnects on reload; until then edits live in this browser only.</dd></div>
+      </dl>
+    </section>
   </div>
 
 </div>
@@ -701,7 +941,7 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['180px', '134px', '72px', '128px', '80px', '70px', '76px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '64px', '96px', '70px', '66px', '72px', '182px', '26px'];   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
+var COL_WIDTHS = ['180px', '134px', '72px', '128px', '80px', '70px', '76px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '64px', '96px', '70px', '66px', '72px', '200px', '26px'];   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
 var CONFIG = null;
@@ -817,6 +1057,13 @@ window.addEventListener('DOMContentLoaded', function() {
   }
   // hook into render cycle — wire after each render
   document.getElementById('portfolioSection').addEventListener('click', function(e) {
+    if (e.target.closest && e.target.closest('#btnTogglePlaceholders')) {   // D-PMS-V4-154
+      hidePlaceholders = !hidePlaceholders;
+      try { localStorage.setItem('pms_hide_placeholders_v6', hidePlaceholders ? '1' : '0'); } catch(e2) {}
+      renderPortfolioSection();
+      if (typeof fitPortfolioToViewport === 'function') setTimeout(fitPortfolioToViewport, 50);
+      return;
+    }
     var th = e.target.closest && e.target.closest('.pf-sortable');
     if (!th) return;
     var key = th.getAttribute('data-sort-key');
@@ -829,7 +1076,8 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     renderPortfolioSection();
   });
-  document.getElementById('btnSortByStopMa').addEventListener('click', toggleSortByStopMa);
+  document.getElementById('btnSortByStopMa').addEventListener('click', function() { setTrancheOrder(true); });
+  document.getElementById('btnTrancheByDate').addEventListener('click', function() { setTrancheOrder(false); });
   document.getElementById('btnRestoreBackup').addEventListener('click', restoreFromBackup);
   // Restore hide-at-entry state from localStorage (D-PMS-39)
   try { hideAtEntry = localStorage.getItem('pms_hide_at_entry_v5c') === '1'; } catch(e) {}
@@ -896,9 +1144,9 @@ function updateStickyHeaderVisibility() {
   var rect = thead.getBoundingClientRect();
   var headerBarH = 0;
   var headerEl = document.querySelector('.sticky-top .header');
-  if (headerEl) headerBarH = headerEl.getBoundingClientRect().height;
-  // Show sticky duplicate when thead's bottom edge has moved above the page header bar's bottom
-  var shouldShow = rect.bottom < headerBarH + 4;  // +4px fudge for borders
+  if (headerEl) headerBarH = headerEl.getBoundingClientRect().bottom;   // D-PMS-V4-154: the toolbar sits under the app bar
+  // Show sticky duplicate when thead's bottom edge has moved above the toolbar's bottom
+  var shouldShow = document.body.classList.contains('active-tab-pms') && rect.height > 0 && rect.bottom < headerBarH + 4;
   document.body.classList.toggle('scrolled-past-header', shouldShow);
 }
 
@@ -1460,7 +1708,7 @@ function clearAllEdits() {
 // =====================================================================================================================
 var TRANCHE_KIND_LABEL = { core: 'Core Investment', probing: 'Probing Bet', speculative: 'Speculative Bet' };
 var TRANCHE_KIND_ORDER = ['core', 'probing', 'speculative'];
-var TRANCHE_KIND_COLOUR = { core: '#1d4ed8', probing: '#c2410c', speculative: '#7e22ce' };   // blue, orange, purple
+var TRANCHE_KIND_COLOUR = { core: '#2a4f9e', probing: '#c4581a', speculative: '#7a3fb0' };   // D-PMS-V4-154: refined   // blue, orange, purple
 var KIND_DEFAULT_STOP = { core: '100D', probing: '50D', speculative: '50D' };
 var KIND_CAP_DECIMAL = { core: 0.04, probing: 0.03, speculative: 0.03 };   // a warning on entry only, never a block
 var NEW_ROW_KEY = '__new__';
@@ -1902,8 +2150,8 @@ var RELPERF_BANDS = { 5: { quiet: 0.01, full: 0.06 }, 20: { quiet: 0.02, full: 0
 function relPerfCellHtml(v, days) {
   if (v == null) return '<td class="pf-rel val-muted">—</td>';
   var b = RELPERF_BANDS[days], a = Math.abs(v), alpha = 0;
-  if (a > b.quiet) alpha = Math.min(1, (a - b.quiet) / (b.full - b.quiet)) * 0.55 + 0.12;
-  var bg = alpha ? (v > 0 ? 'rgba(22,163,74,' + alpha.toFixed(2) + ')' : 'rgba(220,38,38,' + alpha.toFixed(2) + ')') : 'transparent';
+  if (a > b.quiet) alpha = Math.min(1, (a - b.quiet) / (b.full - b.quiet)) * 0.42 + 0.10;
+  var bg = alpha ? (v > 0 ? 'rgba(29,135,84,' + alpha.toFixed(2) + ')' : 'rgba(196,44,56,' + alpha.toFixed(2) + ')') : 'transparent';
   var txt = (v > 0 ? '+' : v < 0 ? '(' : '') + Math.abs(v * 100).toFixed(1) + (v < 0 ? ')' : '') + '%';
   return '<td class="pf-rel" style="background:' + bg + '" title="Last ' + days + ' trading days, relative to STOXX Europe 600">' + txt + '</td>';
 }
@@ -3424,13 +3672,14 @@ function toggleHideAtEntry() {
   hideAtEntry = !hideAtEntry;
   try { localStorage.setItem('pms_hide_at_entry_v5c', hideAtEntry ? '1' : '0'); } catch(e) {}
   applyHideAtEntry();
+  render();                  // D-PMS-V4-154: rebuild the column widths of the Position manager too
   renderPortfolioSection();  // D-PMS-94d: re-render to show/hide Entry col conditionally
 }
 function applyHideAtEntry() {
   var btn = document.getElementById('btnHideAtEntry');
   if (btn) btn.textContent = hideAtEntry ? 'Show at-entry' : 'Hide at-entry';
   document.body.classList.toggle('hide-at-entry-cols', hideAtEntry);
-  var newColspan = hideAtEntry ? 2 : 6;
+  var newColspan = 4;   // D-PMS-V4-154: was 6 (two columns too many)
   document.querySelectorAll('th.group-atentry').forEach(function(th) {
     th.setAttribute('colspan', newColspan);
   });
@@ -3457,11 +3706,16 @@ function toggleSortByStopMa() {
   applySortByStopMaButtonLabel();
   render();
 }
-function applySortByStopMaButtonLabel() {
-  var btn = document.getElementById('btnSortByStopMa');
-  if (!btn) return;
-  btn.textContent = sortByStopMa ? 'Manual order' : 'Sort by stop MA';
-  btn.classList.toggle('btn-primary', sortByStopMa);
+function applySortByStopMaButtonLabel() {   // D-PMS-V4-154: "By date" | "By stop MA", the current one highlighted
+  var btn = document.getElementById('btnSortByStopMa'), byDate = document.getElementById('btnTrancheByDate');
+  if (btn) btn.classList.toggle('btn-primary', sortByStopMa);
+  if (byDate) byDate.classList.toggle('btn-primary', !sortByStopMa);
+}
+function setTrancheOrder(byMa) { if (!!byMa !== sortByStopMa) toggleSortByStopMa(); }
+function scrollToNotes() {
+  var id = document.body.classList.contains('active-tab-pms') ? 'notes-pms' : 'notes-overview';
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // D-PMS-115: toggle sparkline collapsed/expanded mode
@@ -3514,6 +3768,7 @@ function gatherPortfolioRows() {
   CONFIG.investments.forEach(function(inv, invIdx) {
     // D-PMS-191: route through effectiveTicker() — the single source of truth for "which stock is live in this slot".
     var ticker = effectiveTicker(inv, invIdx);
+    if (ticker && isDuplicateEmptySlot(invIdx)) ticker = null;   // D-PMS-V4-154
     if (!ticker) {
       if (hidePlaceholders) return;
       rows.push({ invIdx: invIdx, ticker: 'Slot ' + (invIdx + 1), name: 'Empty slot ' + (invIdx + 1), currency: '',
@@ -3990,8 +4245,8 @@ function renderPortfolioSection() {
   var legend = '<span class="pf-legend">'
     + TRANCHE_KIND_ORDER.map(function (k) { return '<span class="kind-pill kind-' + k + '">' + esc(TRANCHE_KIND_LABEL[k]) + '</span>'; }).join('')
     + '<span class="pf-legend-sep"></span>'
-    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(22,163,74,0.55)"></span>ahead of STOXX Europe 600</span>'
-    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(220,38,38,0.55)"></span>behind it</span>'
+    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(29,135,84,0.42)"></span>ahead of STOXX Europe 600</span>'
+    + '<span class="pf-legend-rel"><span class="pf-legend-sw" style="background:rgba(196,44,56,0.42)"></span>behind it</span>'
     + '</span>';
   var placeholderBtn = '<button class="btn pf-toggle-placeholders" id="btnTogglePlaceholders">' + (hidePlaceholders ? 'Show placeholders' : 'Hide placeholders') + '</button>';
   var html = '<h2 class="pf-h2"><span>Portfolio summary</span>' + placeholderBtn + legend + '</h2>';
@@ -4001,7 +4256,7 @@ function renderPortfolioSection() {
     + (u ? ' · UBS valuation of ' + esc(fmtDate(u.asof)) : ' · no UBS valuation loaded') + '</div>';
   html += '<div class="portfolio-table-wrap"><table class="pf-table">';
   html += '<colgroup>'
-    + '<col style="width:118px">'  // ticker + type
+    + '<col style="width:140px">'  // ticker + type (D-PMS-V4-154: 118 wrapped the currency)
     + '<col style="width:120px">'  // name
     + (hideAtEntry ? '' : '<col style="width:66px">')
     + '<col style="width:58px">'   // # tranches
@@ -4111,7 +4366,7 @@ function render() {
   renderPortfolioSection();
   // D-PMS-94 FIX: re-apply hide-at-entry col tweak after portfolio re-render (rebuilds colgroup)
   applyHideAtEntry();
-  document.getElementById('lastUpdated').textContent = '— Updated ' + new Date().toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleString('en-GB', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
   // D-PMS-170: price freshness indicator
   (function() {
     var meta = (CHART_DATA && CHART_DATA._meta) || {};
@@ -4190,8 +4445,11 @@ function render() {
   })();
 }
 
+function shownColWidths() {   // D-PMS-V4-154: columns 8-11 are "At entry"
+  return COL_WIDTHS.filter(function(w, i) { return !(hideAtEntry && i >= 7 && i <= 10); });
+}
 function buildColgroup() {
-  return '<colgroup>' + COL_WIDTHS.map(function(w) { return '<col style="width:' + w + ';">'; }).join('') + '</colgroup>';
+  return '<colgroup>' + shownColWidths().map(function(w) { return '<col style="width:' + w + ';">'; }).join('') + '</colgroup>';
 }
 
 function buildHeaderRow() {
@@ -4240,10 +4498,10 @@ function renderStickyHeaderTable() {
   if (t) {
     var ghostTbody = '<tbody style="visibility:hidden;height:0">'
       + '<tr style="height:0;line-height:0">'
-      + COL_WIDTHS.map(function() { return '<td style="padding:0;border:0;height:0;line-height:0;font-size:0"></td>'; }).join('')
+      + shownColWidths().map(function() { return '<td style="padding:0;border:0;height:0;line-height:0;font-size:0"></td>'; }).join('')
       + '</tr></tbody>';
     t.innerHTML = buildColgroup() + buildHeaderRow() + ghostTbody;
-    t.style.width = COL_WIDTHS.reduce(function(s, w) { return s + parseInt(w, 10); }, 0) + 'px';
+    t.style.width = '100%';   // D-PMS-V4-154: same as the main table (same wrapper width, same colgroup), which now fills the page
   }
 }
 
@@ -4263,6 +4521,7 @@ var posSortDir = 1;         // 1 = default direction for the mode, -1 = reversed
 function investmentSortMetrics(invIdx) {
   var inv = CONFIG.investments[invIdx];
   var ticker = effectiveTicker(inv, invIdx);
+  if (isDuplicateEmptySlot(invIdx)) ticker = null;   // D-PMS-V4-154
   var m = { blank: !ticker, name: '', aum: 0, risk: 0 };
   if (!ticker) return m;
   m.name = (getUniverseName(ticker) || inv.name || ticker || '').toUpperCase();
@@ -4282,7 +4541,7 @@ function investmentSortMetrics(invIdx) {
 // are empty, so it must not run the full metric pass — that fired runTester across the whole
 // book on every keystroke, for an answer it never used.
 function isBlankSlot(invIdx) {
-  return !effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  return !effectiveTicker(CONFIG.investments[invIdx], invIdx) || isDuplicateEmptySlot(invIdx);   // D-PMS-V4-154
 }
 
 function sortedInvestmentOrder() {
@@ -4333,9 +4592,9 @@ function restorePosSort() {
 function renderSortButtons() {
   var defs = [
     ['slot', 'Blanks to bottom', 'Restore slot order (1-20) with every empty slot pushed to the bottom'],
-    ['name', 'Sort: name', 'Rank by company name'],
-    ['aum', 'Sort: % of AUM (current)', 'Rank by current position size as a % of AUM, largest first. Click again to reverse.'],
-    ['risk', 'Sort: loss risk', 'Rank by total loss risk if every stop triggered, worst first. Click again to reverse.']
+    ['name', 'Name', 'Rank by company name'],
+    ['aum', '% of AUM', 'Rank by current position size as a % of AUM, largest first. Click again to reverse.'],
+    ['risk', 'Loss risk', 'Rank by total loss risk if every stop triggered, worst first. Click again to reverse.']
   ];
   defs.forEach(function(d) {
     var el = document.getElementById('btnSort-' + d[0]);
@@ -4347,6 +4606,16 @@ function renderSortButtons() {
   });
 }
 
+function isDuplicateEmptySlot(invIdx) {   // D-PMS-V4-154
+  var ed = EDITS[invIdx] || {}, ov = ed._ticker_override;
+  if (!ov) return false;
+  if (trancheKeys(invIdx).some(function (k) { return hasAnyTrancheData(ed[k]); })) return false;
+  return CONFIG.investments.some(function (inv, j) {
+    if (j === invIdx || effectiveTicker(inv, j) !== ov) return false;
+    var ej = EDITS[j] || {};
+    return trancheKeys(j).some(function (k) { return hasAnyTrancheData(ej[k]); });
+  });
+}
 function renderTable() {
   var tbl = document.getElementById('posTable');
   if (!CONFIG || !CONFIG.investments) { tbl.innerHTML = ''; return; }
@@ -4356,9 +4625,10 @@ function renderTable() {
     var inv = CONFIG.investments[invIdx];
     var edSlot = EDITS[invIdx] || {};
     var explicitlyEmptied = Object.prototype.hasOwnProperty.call(edSlot, '_ticker_override') && !edSlot._ticker_override;
-    var isPlaceholder = inv.is_placeholder || !inv.ticker || explicitlyEmptied;  // D-PMS-168; D-PMS-198
+    var dupEmpty = isDuplicateEmptySlot(invIdx);   // D-PMS-V4-154
+    var isPlaceholder = inv.is_placeholder || !inv.ticker || explicitlyEmptied || dupEmpty;  // D-PMS-168; D-PMS-198
     var effInv = inv, effPlaceholder = isPlaceholder;
-    if (isPlaceholder && edSlot._ticker_override && CHART_DATA.data && CHART_DATA.data[edSlot._ticker_override]) {
+    if (isPlaceholder && !dupEmpty && edSlot._ticker_override && CHART_DATA.data && CHART_DATA.data[edSlot._ticker_override]) {
       effInv = { ticker: edSlot._ticker_override };
       effPlaceholder = false;
     }
@@ -4399,7 +4669,7 @@ function countExtraRowsForInvestment(inv, invIdx, isPlaceholder) {
 function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, totalRowspan, ubsView) {
   var ticker = inv.ticker || '';
   var wasPlaceholderUniverse = false;
-  if (isPlaceholder && EDITS[invIdx] && EDITS[invIdx]._ticker_override && CHART_DATA.data[EDITS[invIdx]._ticker_override]) {
+  if (isPlaceholder && !isDuplicateEmptySlot(invIdx) && EDITS[invIdx] && EDITS[invIdx]._ticker_override && CHART_DATA.data[EDITS[invIdx]._ticker_override]) {
     ticker = EDITS[invIdx]._ticker_override;   // D-PMS-50 / D-PMS-113
     isPlaceholder = false;
     wasPlaceholderUniverse = true;
@@ -4445,6 +4715,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       ? '<input type="text" class="ticker-edit" placeholder="enter ticker" value="' + esc(savedOverride) + '" oninput="setPlaceholderTicker(' + invIdx + ', this.value)" style="width:110px;">' + clearOverrideBtn
       : '<span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>';
     var nameHtml = isPlaceholder ? '<span class="name">(empty slot)</span>' : '<span class="name">' + esc(displayName) + '</span>';
+    if (isPlaceholder && isDuplicateEmptySlot(invIdx)) nameHtml += '<span class="dup-slot-note">' + esc(savedOverride) + ' is typed here but held in another row; this slot holds no tranche. Clear it with ×.</span>';
     var meta = '';
     if (!isPlaceholder && wasPlaceholderUniverse) {
       var crow = CHART_DATA.data && CHART_DATA.data[ticker];
@@ -4649,11 +4920,11 @@ function renderKpis() {
   });
   var el = document.getElementById('portfolioSummary');
   el.innerHTML = kpiCard('Deployed (current % of AUM)', pct(deployed), deployed > 0.8 ? 'val-warn' : deployed > 0 ? 'val-pos' : 'val-muted')
-    + kpiCard('At-Risk Loss', pctBp(risk), risk < -0.005 ? 'val-neg' : 'val-warn')
+    + kpiCard('At-risk loss', pctBp(risk), risk < -0.005 ? 'val-neg' : 'val-warn')
     + kpiCard('Paper P&L', pctBp(pnl), pnl > 0 ? 'val-pos' : pnl < 0 ? 'val-neg' : '')
-    + kpiCard('Active Investments', activeInvs + ' / ' + CONFIG.investments.length, '')
-    + kpiCard('Active Tranches', activeTrades, '')
-    + kpiCard('Breach Alerts', alertCount, alertCount > 0 ? 'val-neg' : 'val-pos');
+    + kpiCard('Active investments', activeInvs + ' / ' + CONFIG.investments.length, '')
+    + kpiCard('Active tranches', activeTrades, '')
+    + kpiCard('Breach alerts', alertCount, alertCount > 0 ? 'val-neg' : 'val-pos');
 }
 
 function kpiCard(label, value, cls) {
