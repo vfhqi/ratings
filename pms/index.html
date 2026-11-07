@@ -721,7 +721,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
     <span id="lastUpdated" class="app-updated" title="When this page was opened in this browser. The data times are in the line below the bar."></span>
     <span id="statusBadge">loading…</span>
     <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
-    <button class="btn btn-connect" id="btnConnect" title="Grant access to pms-data/ folder for auto-save">Connect to disk</button>
+    <button class="btn btn-connect" id="btnConnect" title="Grant access to the pms-data folder for auto-save. If it was connected before, this only asks Chrome to allow it again.">Connect to disk</button>
   </div>
 </header>
 <div class="container">
@@ -815,7 +815,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
         <div class="note"><dt>UBS % of AUM</dt><dd>The shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its total row and under its name. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.</dd></div>
         <div class="note"><dt>The 10-day stop-loss rule (Probing and Speculative Bet tranches; Richard, 2-Nov-2026)</dt><dd>Two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA or type, or a promotion, restarts the count.</dd></div>
         <div class="note"><dt>Row colours by MA for the stop-loss</dt><dd><span class="note-swatch" style="background:#d97706"></span>20D, <span class="note-swatch" style="background:#2563eb"></span>50D, <span class="note-swatch" style="background:#0d9488"></span>100D, <span class="note-swatch" style="background:#db2777"></span>150D, <span class="note-swatch" style="background:#475569"></span>200D; other lengths are uncoloured. Exit states override them.</dd></div>
-        <div class="note"><dt>Slots, ordering and saving</dt><dd><b>Empty slots</b> can have a ticker typed in. <b>Order stocks</b> and <b>Order tranches</b> change the display only, never the data. <b>Connect to disk</b> (top right) saves automatically to pms-data/ and reconnects on reload; until then edits live in this browser only.</dd></div>
+        <div class="note"><dt>Slots, ordering and saving</dt><dd><b>Empty slots</b> can have a ticker typed in. <b>Order stocks</b> and <b>Order tranches</b> change the display only, never the data. <b>Connect to disk</b> (top right) saves automatically to pms-data/ and reconnects on reload. After a browser or computer restart, the first click or key press on the page asks Chrome for permission (no folder to choose); pick <b>Allow on every visit</b> once and later visits reconnect with no click. Until connected, edits live in this browser only.</dd></div>
       </dl>
     </section>
   </div>
@@ -970,6 +970,10 @@ var sortByStopMa = false;
 var pmsDataDirHandle = null;  // FileSystemDirectoryHandle for pms-data/
 var diskWriteEnabled = false;
 var diskAvailable = ('showDirectoryPicker' in window);
+// D-PMS-V4-158 (7-Nov-2026): reconnect to disk without the folder picker.
+var savedDirHandle = null;          // the folder remembered from the last connect (IndexedDB)
+var reconnectInFlight = false;      // one permission request at a time
+var gestureReconnectArmed = false;  // the next click or key press on the page asks Chrome for permission
 var lastAutoBackupDate = null;  // YYYY-MM-DD string of last auto-backup
 // D-PMS-193 (07-Aug-26): when this data was last saved, surfaced in the header.
 // Tracked separately from the price-data clock, which answers a different question.
@@ -1164,6 +1168,9 @@ function updateDiskStatus() {
   } else if (diskWriteEnabled) {
     el.textContent = 'disk: ✓ pms-data/';
     el.className = 'ok';
+  } else if (gestureReconnectArmed) {
+    el.textContent = 'disk: click anywhere to reconnect';   // D-PMS-V4-158
+    el.className = 'warn';
   } else {
     el.textContent = 'disk: not connected';
     el.className = 'warn';
@@ -1213,6 +1220,7 @@ async function tryAutoReconnect() {
   if (!diskAvailable) return false;
   var savedHandle = await loadHandleFromIDB();
   if (!savedHandle) return false;
+  savedDirHandle = savedHandle;     // D-PMS-V4-158
   // Check if we still have permission (or can request silently)
   try {
     var perm = await savedHandle.queryPermission({ mode: 'readwrite' });
@@ -1229,7 +1237,10 @@ async function tryAutoReconnect() {
       render();
       return true;
     }
-    // Permission needs re-prompt — defer to manual Connect button (don't surprise user with dialog on load)
+    // Permission needs re-prompt. D-PMS-V4-158: Chrome only asks after a click or key press, so the next one
+    // on the page asks (no dialog on load). Chrome then offers "Allow on every visit"; once chosen, later
+    // loads reconnect silently through the 'granted' branch above.
+    if (perm === 'prompt') armGestureReconnect();
     return false;
   } catch (e) {
     console.warn('Auto-reconnect failed', e);
@@ -1237,12 +1248,58 @@ async function tryAutoReconnect() {
   }
 }
 
-async function connectToDisk() {
-  if (!diskAvailable) { flashError('Browser does not support File System Access API.'); return; }
+// D-PMS-V4-158: the next click or key press anywhere on the page asks Chrome for permission on the
+// remembered folder (capture phase, so it runs before any other handler and cannot be stopped by one).
+function armGestureReconnect() {
+  if (gestureReconnectArmed || !savedDirHandle || diskWriteEnabled) return;
+  gestureReconnectArmed = true;
+  document.addEventListener('click', onReconnectGesture, true);
+  document.addEventListener('keydown', onReconnectGesture, true);
+  updateDiskStatus();
+  try { renderSavedAt(); } catch (e) {}
+}
+function disarmGestureReconnect() {
+  gestureReconnectArmed = false;
+  document.removeEventListener('click', onReconnectGesture, true);
+  document.removeEventListener('keydown', onReconnectGesture, true);
+}
+function onReconnectGesture(ev) {
+  // The Connect to disk button does its own reconnect; handling it here too would let a fast Allow
+  // (no prompt once "Allow on every visit" is chosen) connect first and the button then open the picker.
+  if (ev && ev.target && ev.target.closest && ev.target.closest('#btnConnect')) return;
+  if (diskWriteEnabled || reconnectInFlight || !savedDirHandle) { disarmGestureReconnect(); return; }
+  disarmGestureReconnect();
+  reconnectWithSavedHandle().then(function(r) {
+    if (r === 'no-gesture') armGestureReconnect();   // e.g. Escape: Chrome gave no permission to ask; wait for the next one
+    updateDiskStatus();
+    try { renderSavedAt(); } catch (e) {}
+  });
+}
+// Ask Chrome for permission on the remembered folder; it must run inside a click or key press.
+// Returns 'connected', 'refused', 'no-gesture' or 'failed'.
+async function reconnectWithSavedHandle() {
+  if (!savedDirHandle || reconnectInFlight) return 'failed';
+  reconnectInFlight = true;
   try {
-    var dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', id: 'pms-data', startIn: 'documents' });
+    var perm = await savedDirHandle.requestPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') return 'refused';
+    await finishConnect(savedDirHandle, 'Reconnected to pms-data/. ');
+    return 'connected';
+  } catch (e) {
+    if (e && e.name === 'SecurityError') return 'no-gesture';
+    console.warn('reconnectWithSavedHandle failed', e);
+    flashError('Could not reconnect to disk: ' + e.message);
+    return 'failed';
+  } finally {
+    reconnectInFlight = false;
+  }
+}
+// The steps after a folder is granted, shared by the picker and the reconnect (unchanged from D-PMS-47/48).
+async function finishConnect(dirHandle, msgPrefix) {
     pmsDataDirHandle = dirHandle;
     diskWriteEnabled = true;
+    savedDirHandle = dirHandle;          // D-PMS-V4-158
+    disarmGestureReconnect();            // D-PMS-V4-158
 
     // Persist the handle for next reload (D-PMS-47)
     await saveHandleToIDB(dirHandle);
@@ -1259,7 +1316,28 @@ async function connectToDisk() {
     updateDiskStatus();
     render();
     await maybeWriteAutoBackup();
-    flashSuccess('Connected. ' + Object.keys(EDITS).length + ' investment(s) loaded. Auto-save active.');
+    flashSuccess(msgPrefix + Object.keys(EDITS).length + ' investment(s) loaded. Auto-save active.');
+}
+
+async function connectToDisk() {
+  if (!diskAvailable) { flashError('Browser does not support File System Access API.'); return; }
+  // D-PMS-V4-158: a remembered folder needs only Chrome's Allow, not the folder picker.
+  if (!diskWriteEnabled && savedDirHandle) {
+    if (reconnectInFlight) return;      // the page-wide click handler already asked
+    disarmGestureReconnect();
+    var r = await reconnectWithSavedHandle();
+    if (r === 'connected') return;
+    if (r === 'refused') {
+      savedDirHandle = null;            // the next press opens the folder picker instead
+      flashError('Not connected. Press "Connect to disk" again to choose the pms-data folder.');
+      updateDiskStatus();
+      try { renderSavedAt(); } catch (e) {}
+      return;
+    }
+  }
+  try {
+    var dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', id: 'pms-data', startIn: 'documents' });
+    await finishConnect(dirHandle, 'Connected. ');
   } catch (e) {
     if (e.name === 'AbortError') return;
     console.error('connectToDisk error', e);
@@ -1451,6 +1529,7 @@ async function writeStateToDisk() {
     console.error('writeStateToDisk error', e);
     flashError('Disk write failed: ' + e.message + '. Falling back to localStorage.');
     diskWriteEnabled = false;
+    if (savedDirHandle) armGestureReconnect();   // D-PMS-V4-158: e.g. Chrome withdrew the permission
     updateDiskStatus();
     return false;
   }
@@ -1536,7 +1615,9 @@ function renderSavedAt() {
     el.className = 'pf-value';
   } else {
     el.innerHTML = '<span class="pf-stale">&#9888; ' + esc(shown)
-      + ' &mdash; THIS BROWSER ONLY, not saved to disk. Press &ldquo;Connect to disk&rdquo;.</span>';
+      + ' &mdash; THIS BROWSER ONLY, not saved to disk. '
+      + (gestureReconnectArmed ? 'Click anywhere on the page to reconnect.' : 'Press &ldquo;Connect to disk&rdquo;.')   // D-PMS-V4-158
+      + '</span>';
     el.className = 'pf-value';
   }
 }
