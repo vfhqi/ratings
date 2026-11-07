@@ -110,3 +110,7 @@
 #os .pw.val .pv { display:block; }
 #os .pv iframe.osval { border:0; display:block; transform-origin:0 0; background:#fff; }
 #os #os-vallink { font-size:10.5px; color:#0969da; }
+/* r9b (7-Nov-2026): a multiple with no history for this stock: its button greyed out, with a tooltip saying so */
+#os .tg button:disabled { opacity:0.45; cursor:not-allowed; background:#f6f8fa; color:#8c959f; }
+/* r9b (7-Nov-2026): the peers table's shading note is left to the full page here; the panel needs the height (no scroll bar, Richard 6-Nov 14:14) */
+#os .pr .pkey .mut { display:none; }

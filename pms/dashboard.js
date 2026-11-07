@@ -724,10 +724,10 @@
       var k = -1; for (var j = 0; j < F.n; j++) { if (F.ds[j] >= D(tr.entry_date)) { k = j; break; } }
       if (k < 0 || F.ds[0] > D(tr.entry_date)) return;
       el('line', { x1: F.xi(k), x2: F.xi(k), y1: labelY == null ? top : labelY + 3, y2: bot, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1.1 }, svg);
-      if (labelY != null) { var lab = 'tranche ' + tr.tranche_number + ' bought, ' + fmtD(tr.entry_date), x0 = F.xi(k) + 3, wl = lab.length * 5.7, row = 0;
+      if (labelY != null) { var lab = 'tranche ' + tr.tranche_number + ' bought, ' + fmtD(tr.entry_date), x0 = F.xi(k) + 3, wl = lab.length * 6.0, row = 0;
+        if (x0 + wl > F.W - F.pad.r + 50) x0 = F.W - F.pad.r + 50 - wl;   /* 7-Nov-2026: clamped before the overlap test, not after */
         while (row < 2 && (rowsUsed[row] || []).some(function (o) { return x0 < o[1] + 6 && x0 + wl > o[0] - 6; })) row++;
         (rowsUsed[row] = rowsUsed[row] || []).push([x0, x0 + wl]);
-        if (x0 + wl > F.W - F.pad.r + 50) x0 = F.W - F.pad.r + 50 - wl;
         txt(svg, x0, labelY - row * 12, lab, { fill: C.entry, 'font-size': 10.5, halo: true }); }
     });
   }
@@ -1239,10 +1239,17 @@
     var d = function (r, k) { var a = r.rs.now, b = r.rs[k]; return (a == null || b == null) ? null : a - b; };
     var cc = function (v, big) { return v == null || v === 0 ? '' : (v > 0 ? 'pos' : 'neg') + (Math.abs(v) >= big ? ' lg' : ''); };
     var na = '<span class="mut">n/a</span>';
-    var dc = function (v) { return '<td class="num ' + cc(v, 10) + '">' + (v == null ? na : intS(v)) + '</td>'; };
-    var rv = function (v) { return '<td class="num ' + cc(v, 5) + '">' + (v == null ? na : pctI(v)) + '</td>'; };
+    /* 7-Nov-2026 (Richard: "Heatmap colour code the cells, elegantly, to communicate positive/negative", for this table in both views,
+       D-PMS-V4-157): each figure's cell is tinted green above zero and red below, deeper as the figure grows, up to a fixed level per
+       measure so a small figure never looks large because its column happens to be quiet (Stock RS change: 30 points; EPS revisions
+       15%; revenue revisions 8%; Net Upgrade Breadth 60%; Stock RS itself is tinted around 50, the middle of its 0 to 99 scale, to 45
+       points away). Zero and n/a stay white. Replaces the 28-Oct coloured figures on plain cells (the figures keep their colours). */
+    var heat = function (v, cap) { if (v == null || v === 0 || !isFinite(v)) return ''; var t = Math.min(1, Math.abs(v) / cap), a = (0.05 + 0.27 * Math.pow(t, 0.8)).toFixed(3);
+      return ' style="background:' + (v > 0 ? 'rgba(26,127,55,' : 'rgba(207,34,46,') + a + ');box-shadow:inset 0 0 0 1.5px #fff"'; };
+    var dc = function (v) { return '<td class="num ' + cc(v, 10) + '"' + heat(v, 30) + '>' + (v == null ? na : intS(v)) + '</td>'; };
+    var rv = function (v, cap) { return '<td class="num ' + cc(v, 5) + '"' + heat(v, cap) + '>' + (v == null ? na : pctI(v)) + '</td>'; };
     var nm = function (r) { return '<span class="pn">' + esc(r.name) + '</span>' + (r.held && r.t !== m.t ? '<span class="chip held" title="a holding of ours">held</span>' : ''); };
-    var row = function (r, self) { return '<tr class="' + (self ? 'self' : '') + '"><td title="' + esc(r.name) + '">' + nm(r) + '</td><td class="num rs">' + (r.rs.now == null ? na : r.rs.now) + '</td>' + dc(d(r, 'm1')) + dc(d(r, 'm3')) + dc(d(r, 'm6')) + rv(r.eps3) + rv(r.sales3) + '<td class="num ' + cc(r.nubs, 0.25) + '">' + (r.nubs == null ? na : pctS(r.nubs)) + '</td></tr>'; };
+    var row = function (r, self) { return '<tr class="' + (self ? 'self' : '') + '"><td title="' + esc(r.name) + '">' + nm(r) + '</td><td class="num rs"' + (r.rs.now == null ? '' : heat(r.rs.now - 50, 45)) + '>' + (r.rs.now == null ? na : r.rs.now) + '</td>' + dc(d(r, 'm1')) + dc(d(r, 'm3')) + dc(d(r, 'm6')) + rv(r.eps3, 15) + rv(r.sales3, 8) + '<td class="num ' + cc(r.nubs, 0.25) + '"' + heat(r.nubs, 0.6) + '>' + (r.nubs == null ? na : pctS(r.nubs)) + '</td></tr>'; };
     var byRS = function (a) { return a.slice().sort(function (x, y) { return (y.rs.now == null ? -1 : y.rs.now) - (x.rs.now == null ? -1 : x.rs.now) || String(x.name).localeCompare(String(y.name)); }); };
     var inCoh = {}; P.cohort.forEach(function (r) { inCoh[r.t] = 1; });
     var sec = P.sector.filter(function (r) { return !inCoh[r.t] && r.t !== m.t; });
@@ -1251,7 +1258,7 @@
     h += row(P.self, true);
     h += '<tr class="grp2"><td colspan="8"><b>Cohort peers</b> <span class="mut">' + P.cohort.length + ' of ' + P.cohort_total + ' (the largest by market value), strongest Stock RS first</span></td></tr>' + (P.cohort.length ? byRS(P.cohort).map(function (r) { return row(r); }).join('') : '<tr><td colspan="8" class="mut">No named cohort peers.</td></tr>');
     h += '<tr class="grp2"><td colspan="8"><b>Sector peers not in the cohort</b> <span class="mut">' + sec.length + ' (of the ' + P.sector.length + ' largest by market value of ' + P.sector_total + '), strongest Stock RS first</span></td></tr>' + (sec.length ? byRS(sec).map(function (r) { return row(r); }).join('') : '<tr><td colspan="8" class="mut">Every sector peer listed is also in the cohort.</td></tr>');
-    return h + '</tbody></table><div class="pkey">' + esc(m.name) + ' ranks <b>' + rank + ' of ' + all.length + '</b> by Stock RS among the companies listed.</div>';
+    return h + '</tbody></table><div class="pkey">' + esc(m.name) + ' ranks <b>' + rank + ' of ' + all.length + '</b> by Stock RS among the companies listed. <span class="mut">Shading: green above zero, red below, deeper when larger; Stock RS around 50.</span></div>';
   }
 
   /* ------------------------------------------------------------------ ratings, context, judgement, placeholders, Experiment */

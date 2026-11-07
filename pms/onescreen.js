@@ -155,7 +155,11 @@
     setEstLayout: function (l) { st.estL = l; if (started && visible()) drawEst(); },
     /* called by holding.html once the stock's file is loaded; draws only while the one-screen view is showing */
     start: function (model, opts) { restore(); m = model; OPTS = opts || {}; MECHD = {}; ((OPTS.mech && OPTS.mech.dates) || []).forEach(function (q) { MECHD[q.date] = q.why; }); X = buildX(m); header(); started = true; if (visible()) drawAll(); },
-    show: function () { if (started) drawAll(); }
+    show: function () { if (started) drawAll(); },
+    /* the RS panel's zoom, read and set by the full page's item 3 (7-Nov-2026: its own timeframe on both views, one remembered choice) */
+    rsz: function (v) { if (v) { st.rsz = v; save(); } else if (!started) restore(); return st.rsz; },
+    /* the full page's item 1 saves its zoom, scale and layers here too (7-Nov-2026), so one setting serves both views */
+    saveNow: function () { if (started) save(); }
   };
   var lw = window.innerWidth, lh = window.innerHeight, tmr;
   window.addEventListener('resize', function () { clearTimeout(tmr); tmr = setTimeout(function () { if (!started || !visible()) return; if (Math.abs(window.innerWidth - lw) < 2 && Math.abs(window.innerHeight - lh) < 2) return; lw = window.innerWidth; lh = window.innerHeight; drawAll(); }, 200); });
@@ -385,7 +389,7 @@
        sector" as you have it now and "valuation" charts, and in the valuation charts panel, have a toggle between P/E and EV/Sales") */
     var p6 = st.p6 === 'val' ? 'val' : 'peers', pv = st.pv || 'chart', show = function (id, on) { document.getElementById(id).style.display = on ? '' : 'none'; };
     buttons(document.getElementById('os-p6v'), [['peers', 'Peers'], ['val', 'Valuation']], p6, function (k) { st.p6 = k; drawPeers(); });
-    show('os-peerv', p6 === 'peers'); show('os-valf', p6 === 'val'); show('os-vallink', p6 === 'val');
+    show('os-peerv', p6 === 'peers'); show('os-valf', p6 === 'val'); show('os-vallink', false);   /* the Master Dashboard link removed (Richard, 7-Nov-2026: "Remove bits in red") */
     if (p6 === 'val') { show('os-peerx', false); show('os-peery', false); drawVal(); return; }
     document.getElementById('os-p6t').textContent = '6. Peers: cohort and sector';
     buttons(document.getElementById('os-peerv'), [['chart', 'Chart'], ['table', 'Table']], pv, function (k) { st.pv = k; drawPeers(); });
@@ -401,27 +405,55 @@
 
   /* the valuation charts: the Master Dashboard's own valuation page, embedded as the full page's items 7 and 8 embed it (Richard, 27-Oct: "The
      valuation charts should be the one from the master dashboard"), 10 years, tranche purchases marked; fitted to the panel */
-  var valSrc = null;
+  var valSrc = null, valTitle = '';
+  function hasF(V, f) { return !!(V && (V[f] || []).some(function (v) { return v != null; })); }
   function drawVal() {
-    var f = st.vf === 'evs' ? 'evs' : 'pe', nm = f === 'pe' ? '24M fwd P/E' : '24M fwd EV/Sales', MB = window.PMS_MASTER_BASE || 'https://vfhqi.github.io/master/';
+    /* r9b (7-Nov-2026, main login): a stock with only one multiple shows the one it has, its title says which is missing, and the other
+       button is greyed out with a tooltip; the remembered choice is kept for the next stock (UI QC 6-Nov-2026: Volex has no EV/Sales history,
+       and the remembered EV/Sales gave a dead-end message) */
+    var V = m.H.valuation, NM = { pe: '24M fwd P/E', evs: '24M fwd EV/Sales' }, SH = { pe: 'P/E', evs: 'EV/Sales' };
+    var want = st.vf === 'evs' ? 'evs' : 'pe', alt = want === 'pe' ? 'evs' : 'pe', f = (hasF(V, want) || !hasF(V, alt)) ? want : alt, nm = NM[f];
+    var gone = f === 'pe' ? 'evs' : 'pe', missing = hasF(V, f) && !hasF(V, gone) ? gone : null;
     buttons(document.getElementById('os-valf'), [['pe', 'P/E'], ['evs', 'EV/Sales']], f, function (k) { st.vf = k; save(); drawVal(); });
-    document.getElementById('os-p6t').textContent = '6. Valuation: ' + nm + ', last 10 years';
+    if (missing) { var mb = document.querySelector('#os-valf button[data-k="' + missing + '"]'); if (mb) { mb.disabled = true; mb.title = 'No ' + NM[missing] + ' history is stored for ' + m.name; } }
+    valTitle = '6. Valuation: ' + nm + (f !== want ? ' only' : '') + ', 10 years';   /* "only": the other multiple has no history (its button says so) */
+    valTitleSet('');
     document.getElementById('os-pw').className = 'pw val';
-    var host = document.getElementById('os-val'), V = m.H.valuation, has = !!(V && (V[f] || []).some(function (v) { return v != null; }));
-    var link = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&win=10&field=' + f; document.getElementById('os-vallink').href = link;
-    if (!has) { valSrc = null; var cur = V && V.current ? V.current[f] : null; host.innerHTML = '<div class="nohist" style="margin:12px">No ' + nm + ' history is stored for ' + DU.esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + nm + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
+    var host = document.getElementById('os-val');
+    if (!hasF(V, f)) { valSrc = null; var cur = V && V.current ? V.current[f] : null; host.innerHTML = '<div class="nohist" style="margin:12px">No ' + nm + ' history is stored for ' + DU.esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + nm + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
     var trd = m.tranches.slice().sort(function (p, q) { return p.tranche_number - q.tranche_number; }).map(function (tr) { return tr.entry_date; }).join(',');
+    var MB = window.PMS_MASTER_BASE || 'https://vfhqi.github.io/master/';
     var url = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=10&field=' + f + (trd ? '&tr=' + trd : '');
     var fr = host.querySelector('iframe');
     if (!fr || valSrc !== url) { host.innerHTML = ''; fr = document.createElement('iframe'); fr.title = nm + ', the Master Dashboard valuation chart'; fr.className = 'osval'; fr.src = url; valSrc = url; host.appendChild(fr);
-      fr.addEventListener('load', function () { [100, 600, 1500, 3000].forEach(function (t) { setTimeout(fitVal, t); }); }); }
+      fr.addEventListener('load', function () { [50, 400, 1200, 2500, 5000].forEach(function (t) { setTimeout(fitVal, t); }); }); }
     fitVal();
   }
-  /* the embedded page is laid out at the panel's width; when it is taller than the panel it is scaled down to fit, never cut off */
+  /* r9b (7-Nov-2026, Richard: "Remove bits in red", "Expand chart to fill space at bottom", "Change Size of text etc. so it is readable"):
+     the Master Dashboard's own valuation chart (one source of truth, never redrawn here) is shown alone, at full size, filling the panel.
+     The embedded page is the panel's exact size and is never shrunk; a style put into it hides everything but the chart (its header,
+     control rows, legend, notes and source line) and gives the chart the panel's height; the page then redraws itself at that size, so its
+     text is at the Master Dashboard's own size. Its current multiple is carried into the panel title. (r8 shrank the whole page to about
+     0.44, text about 5px.) */
+  /* the title carries the chart's current multiple when the title line has room; never pushes the buttons off the panel (UI QC 7-Nov-2026) */
+  function valTitleSet(cv) { var e = document.getElementById('os-p6t'), ph = e.parentNode; e.textContent = valTitle + (cv ? ', now ' + cv : ''); if (cv && ph.scrollWidth > ph.clientWidth + 1) e.textContent = valTitle; }
   function fitVal() {
     var host = document.getElementById('os-val'), fr = host && host.querySelector('iframe'); if (!fr) return;
-    var W = host.clientWidth, H = host.clientHeight; fr.style.width = W + 'px'; fr.style.transform = 'none'; fr.style.height = H + 'px';
-    try { var d = fr.contentDocument; if (d && d.body) { var nh = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight); if (nh > H + 2) { var sc = H / nh; fr.style.width = Math.round(W / sc) + 'px'; fr.style.height = Math.round(nh) + 'px'; fr.style.transform = 'scale(' + sc.toFixed(4) + ')'; } } } catch (e) { /* another origin: kept at the panel's size */ }
+    var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
+    fr.style.transform = 'none'; fr.style.width = W + 'px'; fr.style.height = H + 'px';
+    try {
+      var d = fr.contentDocument; if (!d || !d.head || !d.getElementById('chartbox')) return;
+      var css = d.getElementById('os-crop'); if (!css) { css = d.createElement('style'); css.id = 'os-crop'; d.head.appendChild(css); }
+      var t = 'html,body{margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important}' +
+        '.wrap{margin:0!important;padding:0!important;max-width:none!important}' +
+        'header,#controls,#legend,#note,#foot{display:none!important}' +
+        '.card{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:none!important}' +
+        '#chartbox canvas{height:' + H + 'px!important}';
+      if (css.textContent !== t) css.textContent = t;
+      fr.contentWindow.dispatchEvent(new Event('resize'));   /* the page redraws itself on resize (valuation.html: "if (REC) draw()") */
+      var c = d.getElementById('cur'), cv = c && c.firstChild && c.firstChild.nodeType === 3 ? c.firstChild.textContent.trim() : '';
+      valTitleSet(cv && cv !== '–' ? cv : '');
+    } catch (e) { /* another origin (a local test): the page is shown at the panel's size as it comes */ }
   }
 
   /* item 6's chart: the live peers picture (dashboard.js peersPicture, its full form), smaller: the same quarters, dots, rings, numbered axes and names; titles shortened to fit */
@@ -470,6 +502,8 @@
   /* the peers table sized to its panel, so it never needs a scroll bar (Richard, 6-Nov 14:14): the font and row padding step down until it fits */
   function fitTable(tb) { var t = tb.querySelector('table'); if (!t) return; var steps = [[12, 5], [11.5, 4], [11, 3.5], [10.5, 3], [10, 2.5], [9.5, 2], [9, 1.5], [8.5, 1], [8, 0.5]];
     for (var i = 0; i < steps.length; i++) { t.style.setProperty('font-size', steps[i][0] + 'px', 'important'); Array.prototype.forEach.call(t.querySelectorAll('th'), function (c) { c.style.setProperty('font-size', (steps[i][0] - 1.5) + 'px', 'important'); c.style.setProperty('padding-top', '2px', 'important'); c.style.setProperty('padding-bottom', '3px', 'important'); }); Array.prototype.forEach.call(t.querySelectorAll('td'), function (c) { c.style.setProperty('padding-top', steps[i][1] + 'px', 'important'); c.style.setProperty('padding-bottom', steps[i][1] + 'px', 'important'); });
-      if (tb.scrollHeight <= tb.clientHeight + 1) break; } }
+      if (tb.scrollHeight <= tb.clientHeight + 1) break; }
+    /* r9b (7-Nov-2026): still too tall at the smallest step (a short window, e.g. 1366x657): the line under the table goes before any scroll bar appears */
+    var pk = tb.querySelector('.pkey'); if (pk) pk.style.display = tb.scrollHeight > tb.clientHeight + 1 ? 'none' : ''; }
 
 })();
