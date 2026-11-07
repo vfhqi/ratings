@@ -426,7 +426,11 @@
     var url = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=10&field=' + f + (trd ? '&tr=' + trd : '');
     var fr = host.querySelector('iframe');
     if (!fr || valSrc !== url) { host.innerHTML = ''; fr = document.createElement('iframe'); fr.title = nm + ', the Master Dashboard valuation chart'; fr.className = 'osval'; fr.src = url; valSrc = url; host.appendChild(fr);
-      fr.addEventListener('load', function () { [50, 400, 1200, 2500, 5000].forEach(function (t) { setTimeout(fitVal, t); }); }); }
+      fr.addEventListener('load', function () { fr._loaded = true; [50, 400, 1200, 2500, 5000].forEach(function (t) { setTimeout(function () { fitVal(true); }, t); }); });
+      /* r9b live QC (7-Nov-2026): on Richard's connection the Master page took 32 s to load fully, and until its load event the panel showed the
+         whole page uncropped; so the crop is applied as soon as the page's chart box exists, and the load event then redraws it at full size */
+      var tries = 0, iv = setInterval(function () { tries++; var d = null; try { d = fr.contentDocument; } catch (e) { /* another origin */ }
+        if ((d && d.getElementById('chartbox') && fitVal()) || fr._loaded || tries > 600 || !fr.isConnected) clearInterval(iv); }, 100); }
     fitVal();
   }
   /* r9b (7-Nov-2026, Richard: "Remove bits in red", "Expand chart to fill space at bottom", "Change Size of text etc. so it is readable"):
@@ -437,23 +441,24 @@
      0.44, text about 5px.) */
   /* the title carries the chart's current multiple when the title line has room; never pushes the buttons off the panel (UI QC 7-Nov-2026) */
   function valTitleSet(cv) { var e = document.getElementById('os-p6t'), ph = e.parentNode; e.textContent = valTitle + (cv ? ', now ' + cv : ''); if (cv && ph.scrollWidth > ph.clientWidth + 1) e.textContent = valTitle; }
-  function fitVal() {
-    var host = document.getElementById('os-val'), fr = host && host.querySelector('iframe'); if (!fr) return;
-    var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
+  function fitVal(redraw) {
+    var host = document.getElementById('os-val'), fr = host && host.querySelector('iframe'); if (!fr) return false;
+    var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return false;
     fr.style.transform = 'none'; fr.style.width = W + 'px'; fr.style.height = H + 'px';
     try {
-      var d = fr.contentDocument; if (!d || !d.head || !d.getElementById('chartbox')) return;
-      var css = d.getElementById('os-crop'); if (!css) { css = d.createElement('style'); css.id = 'os-crop'; d.head.appendChild(css); }
+      var d = fr.contentDocument; if (!d || !d.head || !d.getElementById('chartbox')) return false;
+      var css = d.getElementById('os-crop'), fresh = !css; if (!css) { css = d.createElement('style'); css.id = 'os-crop'; d.head.appendChild(css); }
       var t = 'html,body{margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important}' +
         '.wrap{margin:0!important;padding:0!important;max-width:none!important}' +
         'header,#controls,#legend,#note,#foot{display:none!important}' +
         '.card{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:none!important}' +
         '#chartbox canvas{height:' + H + 'px!important}';
-      if (css.textContent !== t) css.textContent = t;
-      fr.contentWindow.dispatchEvent(new Event('resize'));   /* the page redraws itself on resize (valuation.html: "if (REC) draw()") */
+      if (css.textContent !== t) { css.textContent = t; fresh = true; }
+      if (fresh || redraw !== false) fr.contentWindow.dispatchEvent(new Event('resize'));   /* the page redraws itself on resize (valuation.html: "if (REC) draw()") */
       var c = d.getElementById('cur'), cv = c && c.firstChild && c.firstChild.nodeType === 3 ? c.firstChild.textContent.trim() : '';
       valTitleSet(cv && cv !== '–' ? cv : '');
-    } catch (e) { /* another origin (a local test): the page is shown at the panel's size as it comes */ }
+      return true;
+    } catch (e) { /* another origin (a local test): the page is shown at the panel's size as it comes */ return false; }
   }
 
   /* item 6's chart: the live peers picture (dashboard.js peersPicture, its full form), smaller: the same quarters, dots, rings, numbered axes and names; titles shortened to fit */

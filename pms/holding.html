@@ -219,8 +219,19 @@
     if (!f) return;
     if (!IDX) { f.style.display = 'none'; return; }
     document.getElementById('find-list').innerHTML = IDX.stocks.map(function (s) { return '<option value="' + esc(s.n + ' (' + s.t + ')') + '">' + (s.h ? 'held' : '') + '</option>'; }).join('');
-    var go = function () { var v = f.value || '', mm = /\(([^()]+)\)\s*$/.exec(v), t = mm ? mm[1] : v.trim().toUpperCase(); if (IDX.stocks.some(function (s) { return s.t === t; })) location.href = links.holding(t); };
-    f.addEventListener('change', go); f.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+    /* 7-Nov-2026 (UI QC, the find box tested as a person uses it): typing a name such as "adidas" and pressing Enter did nothing, because only a
+       picked suggestion ("adidas (ADS-DE)") or an exact ticker was accepted. On Enter, an exact name, or the one stock whose name or ticker starts
+       with what was typed, now opens; when several start with it, the box is outlined in red and says so, and nothing opens. Picking a
+       suggestion works as before. */
+    var go = function (loose) { var v = (f.value || '').trim(), mm = /\(([^()]+)\)\s*$/.exec(v), t = mm ? mm[1] : v.toUpperCase();
+      if (IDX.stocks.some(function (s) { return s.t === t; })) { location.href = links.holding(t); return; }
+      if (!loose || !v) return;
+      var lv = v.toLowerCase(), ex = IDX.stocks.filter(function (s) { return String(s.n).toLowerCase() === lv; });
+      var pre = ex.length ? ex : IDX.stocks.filter(function (s) { return String(s.n).toLowerCase().indexOf(lv) === 0 || String(s.t).toLowerCase().indexOf(lv) === 0; });
+      if (pre.length === 1) { location.href = links.holding(pre[0].t); return; }
+      f.style.outline = '2px solid #cf222e'; f.title = pre.length ? pre.length + ' stocks start with "' + v + '": pick one from the list' : 'No stock in the universe matches "' + v + '"'; };
+    f.addEventListener('change', function () { go(false); }); f.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(true); });
+    f.addEventListener('input', function () { f.style.outline = ''; f.title = ''; });   /* the red outline goes as soon as the text is changed */
   }
 
   function start(Hd) {
