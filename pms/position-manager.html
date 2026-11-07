@@ -707,58 +707,155 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 @media (max-width: 1500px) { .tb-label { display: none; } .sticky-top .header.toolbar { gap: 10px; } }
 @media (max-width: 1100px) { .portfolio-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); } .kpi-card:nth-child(3) { border-right: none; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+/* ===== D-PMS-V4-159 (7-Nov-2026): compact rows, the controls in the app bar, aligned headings ===== */
+:root { --appbar-h: 75px; --row-h: 30px; }
+.app-bar { height: var(--appbar-h); flex-direction: column; align-items: stretch; gap: 0 !important; padding: 0 20px; }
+.app-row1 { display: flex; align-items: stretch; gap: 20px; height: 48px; min-width: 0; }
+.app-row1 .app-brand { align-self: center; }
+.bar-controls { display: flex; align-items: center; gap: 8px; margin-left: 6px; min-width: 0; }
+.bar-menu { position: relative; }
+.bar-menu > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.06); color: #dfe5f0; font-size: 12.5px; font-weight: 500; white-space: nowrap; user-select: none; }
+.bar-menu > summary::-webkit-details-marker { display: none; }
+.bar-menu > summary::after { content: '\25BE'; font-size: 10px; color: #a9b4c9; }
+.bar-menu > summary:hover, .bar-menu[open] > summary { background: rgba(255,255,255,0.13); color: #fff; }
+.bar-menu > summary:focus-visible { outline: 2px solid #f2b84b; outline-offset: 1px; }
+.bar-menu > summary b { color: #fff; font-weight: 600; }
+.bar-menu-list { position: absolute; top: calc(100% + 6px); left: 0; z-index: 90; min-width: 190px; display: flex; flex-direction: column; gap: 1px; padding: 6px;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; box-shadow: 0 14px 34px rgba(21,35,63,0.24); }
+.bar-menu-list .btn { text-align: left; border: none; background: transparent; padding: 6px 10px; border-radius: 6px; color: var(--fg); white-space: nowrap; }
+.bar-menu-list .btn:hover { background: var(--bg3); }
+.bar-menu-list .btn.btn-primary { background: var(--ink); color: #fff; }
+.bar-menu-list .btn.btn-danger { color: var(--red); }
+.bar-menu-list .menu-sep { height: 1px; background: var(--rule2); margin: 4px 2px; }
+.bar-seg { display: inline-flex; align-items: stretch; height: 30px; border: 1px solid rgba(255,255,255,0.16); border-radius: 7px; overflow: hidden; }
+.bar-seg .bar-label { display: flex; align-items: center; font-size: 12px; color: #a9b4c9; padding: 0 9px 0 11px; white-space: nowrap; }
+.bar-seg .btn { border: none; border-left: 1px solid rgba(255,255,255,0.12); border-radius: 0; background: transparent; color: #cfd7e6; padding: 0 11px; font-size: 12.5px; line-height: 1; }
+.bar-seg .btn:hover { background: rgba(255,255,255,0.10); color: #fff; }
+.bar-seg .btn.btn-primary { background: rgba(255,255,255,0.18); color: #fff; font-weight: 600; }
+.bar-seg .btn:focus-visible { outline: 2px solid #f2b84b; outline-offset: -2px; }
+.bar-link { background: transparent; border: none; color: #b9c3d6; font-size: 12.5px; padding: 0 6px; height: 30px; cursor: pointer; font-family: var(--font); }
+.bar-link:hover { color: #fff; text-decoration: underline; }
+.bar-link:focus-visible { outline: 2px solid #f2b84b; outline-offset: 1px; }
+.app-row1 .app-status { margin-left: auto; }
+#priceFreshness.app-row2 { display: flex; align-items: center; gap: 0 18px; flex-wrap: nowrap; width: auto; height: 27px; box-sizing: border-box; margin: 0; padding: 0;
+  border-top: 1px solid rgba(255,255,255,0.09); font-size: 11.5px; color: #a9b4c9; white-space: nowrap; overflow: hidden; }
+#priceFreshness.app-row2 .pf-item { display: flex; gap: 5px; align-items: center; min-width: 0; }
+#priceFreshness.app-row2 .pf-label { color: #8f9bb2; }
+#priceFreshness.app-row2 .pf-value { color: #e2e7f1; font-weight: 500; }
+#priceFreshness.app-row2 .pf-stale { color: #ffd5d9 !important; background: rgba(230,90,100,0.30); border-radius: 4px; padding: 0 6px; font-weight: 600 !important; }
+#priceFreshness.app-row2 .pf-value span[style] { color: #a9b4c9 !important; }
+.app-status2 { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.app-bar #statusBadge, .app-bar #diskStatus { font-size: 11px; padding: 1px 8px; line-height: 17px; }
+.sticky-top { padding-top: 0; }
+@media (max-width: 1500px) { .bar-seg .bar-label { display: none; } .bar-controls { gap: 6px; } .app-row1 { gap: 14px; } }
+@media (max-width: 1400px) { .app-row1 { gap: 10px; } .bar-menu > summary { padding: 0 8px; } }
+
+/* rows of one height */
+.pos-table tbody tr.tranche-row > td:not(.ticker-cell) { height: var(--row-h); padding-top: 0; padding-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pos-table tbody tr.tranche-row .edit-input { height: 24px; box-sizing: border-box; padding-top: 1px; padding-bottom: 1px; vertical-align: middle; }
+.pos-table tbody tr.tranche-row td.type-cell { padding-left: 4px; padding-right: 6px; }
+.pos-table tbody tr.tranche-row select.kind-select { width: 128px; height: 24px; box-sizing: border-box; vertical-align: middle; }
+.tranche-no { display: inline-block; width: 15px; margin-right: 4px; text-align: right; font-family: var(--font); font-size: 11px; color: var(--fg3); vertical-align: middle; }
+.promo-icon { margin-left: 4px; font-family: var(--font); font-size: 12px; font-weight: 700; color: var(--green); cursor: help; vertical-align: middle; }
+.size-hint-inline { margin-left: 6px; font-family: var(--font); font-size: 10.5px; color: var(--blue); vertical-align: middle; }
+.was-inline { margin-left: 6px; font-family: var(--font); font-size: 10.5px; color: var(--fg2); vertical-align: middle; }
+.pct-cell .btn-split { margin-left: 6px; vertical-align: middle; font-size: 10px; padding: 1px 5px; }
+.exit-inline { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; }
+.pos-table tbody tr.tranche-row .exit-inline input.exit-date { width: 104px; height: 22px; font-size: 11px; padding: 0 3px; }
+.exit-le { font-family: var(--font); font-size: 11px; color: var(--fg2); }
+.pos-table td.ticker-cell { padding: 3px 10px; vertical-align: top; white-space: nowrap; overflow: hidden; }
+.ticker-cell .tk-line1 { display: block; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 17px; }
+.ticker-cell .tk-line2 { display: block; overflow: hidden; text-overflow: ellipsis; font-family: var(--font); font-size: 11px; font-weight: 500; color: var(--fg3); line-height: 15px; }
+.ticker-cell .tk-line2 .tk-primary { font-size: 11px; }
+.ticker-cell .tk-line3 { display: block; overflow: hidden; line-height: 17px; }
+.ticker-cell .kind-pill { font-size: 10px; padding: 0 7px; line-height: 15px; margin: 0 3px 0 0; vertical-align: middle; }
+.ticker-cell input.ticker-edit { margin-top: 0; height: 24px; box-sizing: border-box; }
+.dup-slot-icon { color: var(--amber); cursor: help; margin-left: 4px; }
+/* the stock's name cell takes its most serious tranche's colour */
+.pos-table td.ticker-cell.tk-sev-breach-immediate { background: #f8e1e3; box-shadow: inset 4px 0 0 var(--red); }
+.pos-table td.ticker-cell.tk-sev-breach-grace { background: #fbeff0; box-shadow: inset 4px 0 0 rgba(180,35,48,0.55); }
+.pos-table td.ticker-cell.tk-sev-warn { background: #faf3e6; box-shadow: inset 4px 0 0 rgba(154,103,0,0.6); }
+/* an exit state beats the bought-below-the-MA amber on the same row */
+.tranche-row.row-warn.row-breach-grace { background: rgba(207,34,46,0.05) !important; }
+.tranche-row.row-warn.row-breach-immediate { background: rgba(207,34,46,0.10) !important; }
+/* the total row */
+.pos-table tr.inv-totals td { height: 26px; padding-top: 0; padding-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pos-table tr.inv-totals td.tot-label { padding-left: 8px; }
+.tot-word { font-weight: 600; color: var(--fg2); margin-right: 10px; vertical-align: middle; }
+.btn-addtr { font-family: var(--font); font-size: 11px; font-weight: 600; color: var(--blue); background: var(--surface); border: 1px solid rgba(42,79,158,0.35); border-radius: 5px; padding: 1px 8px; cursor: pointer; vertical-align: middle; line-height: 16px; }
+.btn-addtr:hover { background: var(--blue-bg); border-color: var(--blue); }
+.pos-table tr.inv-totals .btn-remove-inv { margin-left: 8px; font-size: 11px; padding: 1px 8px; line-height: 16px; vertical-align: middle; }
+.pos-table tr.inv-totals td.tot-rel, .pos-table tr.inv-totals td.tot-badges { font-weight: 400; }
+.rel-tag { font-family: var(--font); font-size: 10px; font-weight: 600; margin-right: 4px; color: var(--fg2); }
+.rel-tag.rel-pos { color: var(--green); }
+.rel-tag.rel-neg { color: var(--red); }
+.tot-badges .md-badge { margin-right: 3px; font-size: 9px; padding: 0 4px; vertical-align: middle; }
+.tot-badges .md-badge:last-child { margin-right: 0; }
+.pos-table tr.inv-totals td.tot-badges { padding-left: 6px; padding-right: 4px; }
+.pos-table tr.inv-totals td.tot-rel { padding-left: 6px; padding-right: 4px; }
+.pos-table tbody tr.tranche-row td.pct-cell { text-align: left; }
+.pos-table thead th.th-pct { text-align: left; }
+/* other rows, compact */
+.pos-table tr.inv-spacer td { height: 8px; }
+.pos-table tr.warn-line td { height: 20px; padding-top: 0 !important; padding-bottom: 0 !important; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; line-height: 20px; }
+.pos-table tr.ubs-unmatched td { height: 22px; padding-top: 0; padding-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
 <header class="app-bar" id="appBar">
+  <div class="app-row1">
   <div class="app-brand"><span class="app-brand-name">Viewforth</span><span class="app-brand-sub">Position Management System</span></div>
   <!-- D-PMS-131: Tab navigation (D-PMS-V4-154: moved into the app bar) -->
   <nav class="pms-tabs" id="pmsTabs">
     <button class="pms-tab" data-pane="overview" id="tabOverview">Portfolio overview</button>
     <button class="pms-tab" data-pane="pms" id="tabPms">Position manager</button>
   </nav>
-  <div class="app-status">
-    <span id="lastUpdated" class="app-updated" title="When this page was opened in this browser. The data times are in the line below the bar."></span>
-    <span id="statusBadge">loading…</span>
-    <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
-    <button class="btn btn-connect" id="btnConnect" title="Grant access to the pms-data folder for auto-save. If it was connected before, this only asks Chrome to allow it again.">Connect to disk</button>
-  </div>
-</header>
-<div class="container">
-
-  <div id="priceFreshness"><span class="pf-item"><span class="pf-label">Price data:</span><span class="pf-value" id="pfPriceVal">loading…</span></span><span class="pf-item"><span class="pf-label">Universe:</span><span class="pf-value" id="pfUniverseVal">—</span></span><span class="pf-item"><span class="pf-label">Your data last saved:</span><span class="pf-value" id="pfSavedVal">—</span></span></div>
-
-  <!-- Sticky zone under the app bar: the toolbar, then (Position manager, once scrolled) the column headings -->
-  <div class="sticky-top">
-    <div class="header toolbar">
-      <div class="tb-group"><span class="tb-label">Saved copies</span>
-        <button class="btn" id="btnSaveLibrary" title="Save a labelled snapshot to library/">Save to library</button>
-        <button class="btn" id="btnImport" title="Import state from a library file">Import</button>
-        <button class="btn" id="btnRestoreBackup" title="Restore state from a daily auto-backup file (last 30 days)">Restore</button>
+  <!-- D-PMS-V4-159 (7-Nov-2026): the toolbar moved into the app bar, as menus, so the table starts higher -->
+  <div class="bar-controls">
+    <details class="bar-menu pms-only" id="menuOrderStocks"><summary title="Order stocks: changes the display only, never the data">Order stocks: <b id="orderStocksNow">Blanks to bottom</b></summary>
+      <div class="bar-menu-list">
+        <button class="btn" id="btnSort-slot" onclick="setPosSort('slot')">Blanks to bottom</button>
+        <button class="btn" id="btnSort-name" onclick="setPosSort('name')">Name</button>
+        <button class="btn" id="btnSort-aum" onclick="setPosSort('aum')">% of AUM</button>
+        <button class="btn" id="btnSort-risk" onclick="setPosSort('risk')">Loss risk</button>
+        <button class="btn" id="btnSort-l1w" onclick="setPosSort('l1w')">SP Trend L1W</button>
+        <button class="btn" id="btnSort-l2w" onclick="setPosSort('l2w')">SP Trend L2W</button>
+        <button class="btn" id="btnSort-kind" onclick="setPosSort('kind')">Core/Probing</button>
       </div>
-      <div class="tb-group"><span class="tb-label">Show</span>
+    </details>
+    <span class="bar-seg pms-only"><span class="bar-label">Order tranches</span><button class="btn" id="btnTrancheByDate" title="Each stock's held tranches by date entered (removed ones last)">By date</button><button class="btn" id="btnSortByStopMa" title="Each stock's held tranches by their MA for the stop-loss, shortest first (removed ones last)">By stop MA</button></span>
+    <details class="bar-menu" id="menuShow"><summary>Show</summary>
+      <div class="bar-menu-list">
         <button class="btn" id="btnHideAtEntry" title="Hide or show the &quot;at entry&quot; columns">Hide at-entry</button>
         <button class="btn pms-only" id="btnHideAlerts" title="Hide or show alert banner and warn-line rows">Hide alerts</button>
         <button class="btn overview-only" id="btnSparkCollapse" title="D-PMS-115: collapse same-MA tranches in the sparkline into summed pills">Sparkline expanded</button>
       </div>
-      <div class="tb-group pms-only"><span class="tb-label">Order stocks</span>
-        <span class="tb-seg">
-          <button class="btn" id="btnSort-slot" onclick="setPosSort('slot')">Blanks to bottom</button>
-          <button class="btn" id="btnSort-name" onclick="setPosSort('name')">Name</button>
-          <button class="btn" id="btnSort-aum" onclick="setPosSort('aum')">% of AUM</button>
-          <button class="btn" id="btnSort-risk" onclick="setPosSort('risk')">Loss risk</button>
-        </span>
+    </details>
+    <details class="bar-menu" id="menuSaved"><summary>Saved copies</summary>
+      <div class="bar-menu-list">
+        <button class="btn" id="btnSaveLibrary" title="Save a labelled snapshot to library/">Save to library</button>
+        <button class="btn" id="btnImport" title="Import state from a library file">Import</button>
+        <button class="btn" id="btnRestoreBackup" title="Restore state from a daily auto-backup file (last 30 days)">Restore</button>
+        <span class="menu-sep pms-only"></span>
+        <button class="btn btn-danger pms-only" id="btnClearAll" title="Clear all tranche edits">Clear all</button>
       </div>
-      <div class="tb-group pms-only"><span class="tb-label">Order tranches</span>
-        <span class="tb-seg">
-          <button class="btn" id="btnTrancheByDate" title="Each stock's held tranches by date entered (removed ones last)">By date</button>
-          <button class="btn" id="btnSortByStopMa" title="Each stock's held tranches by their MA for the stop-loss, shortest first (removed ones last)">By stop MA</button>
-        </span>
-      </div>
-      <span class="tb-spacer"></span>
-      <button class="btn btn-ghost" id="btnNotes" onclick="scrollToNotes()" title="The explanations for this page, at the bottom">Notes</button>
-      <button class="btn btn-danger pms-only" id="btnClearAll" title="Clear all tranche edits">Clear all</button>
-    </div>
+    </details>
+    <button class="bar-link" id="btnNotes" onclick="scrollToNotes()" title="The explanations for this page, at the bottom">Notes</button>
+  </div>
+  <div class="app-status">
+    <span id="diskStatus" title="Disk persistence status">disk: not connected</span>
+    <button class="btn btn-connect" id="btnConnect" title="Grant access to the pms-data folder for auto-save. If it was connected before, this only asks Chrome to allow it again.">Connect to disk</button>
+  </div>
+  </div>
+  <div class="app-row2" id="priceFreshness"><span class="pf-item"><span class="pf-label">Price data:</span><span class="pf-value" id="pfPriceVal">loading…</span></span><span class="pf-item"><span class="pf-label">Universe:</span><span class="pf-value" id="pfUniverseVal">—</span></span><span class="pf-item"><span class="pf-label">Your data last saved:</span><span class="pf-value" id="pfSavedVal">—</span></span>
+    <span class="app-status2"><span id="lastUpdated" class="app-updated" title="When this page was opened in this browser. The data times are on the left of this line."></span><span id="statusBadge">loading…</span></span>
+  </div>
+</header>
+<div class="container">
+
+  <!-- Sticky zone under the app bar: (Position manager, once scrolled) the column headings -->
+  <div class="sticky-top">
     <div class="sticky-header-table-wrap" id="stickyHeaderWrap">
       <table class="sticky-header-table pos-table" id="stickyHeaderTable"></table>
     </div>
@@ -808,14 +905,14 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
     <section class="endnotes" id="notes-pms">
       <h2>Notes on the Position manager <span class="endnotes-date">rules as of 6-Nov-2026</span></h2>
       <dl>
-        <div class="note"><dt>Tranches</dt><dd>Each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, fill in the empty row at the foot of the stock (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer). Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split).</dd></div>
-        <div class="note"><dt>Removing a tranche</dt><dd><b>Type 0</b> as its % at entry: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it beside the entry date). Typing a size back puts it back. The <b>×</b> at the row's end deletes a tranche entirely (for a mistaken entry).</dd></div>
+        <div class="note"><dt>Tranches</dt><dd>Each stock lists its tranches, held ones first by date, then any removed ones, greyed. To <b>add a tranche</b>, press <b>+ Add tranche</b> in the stock's Total row and fill in the row that opens (type, date entered, % at entry, MA for the stop-loss, MA→stop buffer); the first field typed creates the tranche. Type <b>%</b> as <kbd>3</kbd> for 3%. <b>Type</b>: Core Investment, Probing Bet or Speculative Bet, per tranche; changing it is a ruling on the tranche (Probing or Speculative to Core is a promotion; a tranche above 1.67% is offered a split).</dd></div>
+        <div class="note"><dt>Removing a tranche</dt><dd><b>Type 0</b> as its % at entry: it is kept, greyed, at the end of the stock's list, with its removal date (the latest close; change it in the Stop state column). Typing a size back puts it back. The <b>×</b> at the row's end deletes a tranche entirely (for a mistaken entry).</dd></div>
         <div class="note"><dt>MA for the stop-loss and MA→stop buffer</dt><dd>Any whole number of days from 5 to 250 (type it, e.g. <kbd>75D</kbd>, or pick 20D, 50D, 100D, 150D or 200D); the <b>MA→stop buffer</b> defaults to 6% (the stop-loss is the MA × 0.94). Every tranche shows them, so all tranches look alike, but they <b>apply only to Probing Bet and Speculative Bet tranches</b> (the 10-day stop-loss rule). On a Core Investment tranche they are greyed out and count toward no alert or total, because Core Investment tranches are sold by the six Sell Criteria.</dd></div>
-        <div class="note"><dt>Sizing</dt><dd>Probing Bet and Speculative Bet tranches are sized to lose 0.5% of AUM at the stop-loss, capped at 3% (the size is shown under the % box). A Core Investment tranche is 1.67% at cost.</dd></div>
-        <div class="note"><dt>UBS % of AUM</dt><dd>The shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its total row and under its name. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.</dd></div>
+        <div class="note"><dt>Sizing</dt><dd>Probing Bet and Speculative Bet tranches are sized to lose 0.5% of AUM at the stop-loss, capped at 3% (the size is shown beside the % box as "0.5% loss: …"; hover for the cap and the prices behind it). A Core Investment tranche is 1.67% at cost.</dd></div>
+        <div class="note"><dt>UBS % of AUM</dt><dd>The shares UBS shows bought for each tranche (matched by date, from 1 trading day before to 3 after), valued at the latest close over the fund's value now; the stock's own UBS figure is in its Total row. A gap of 0.3 points or more shows in amber with an <b>Align</b> button, which sets the tranche's % at entry so its current % of AUM equals UBS's (or removes it at UBS's sale date if UBS sold those shares). A UBS purchase or sale that matches no tranche is listed under the stock, with <b>Add as tranche</b> for a purchase.</dd></div>
         <div class="note"><dt>The 10-day stop-loss rule (Probing and Speculative Bet tranches; Richard, 2-Nov-2026)</dt><dd>Two levels, the MA and the stop-loss (the MA less 6%). The test starts on the first close at or below the MA (day 1 of up to 10 trading days). The <b>exit is confirmed</b> on the first close where any of these holds: <b>(1)</b> the close is at or below the stop-loss, any day including day 1; <b>(2)</b> from day 2, the average volume of the days after day 1 reaches 0.75x the 50-day average (index-rebalance and expiry days left out of this test only); <b>(3)</b> three consecutive lower closes, all at or below the MA; <b>(4)</b> three consecutive closes at or below the MA, each in the bottom half of its day's range; <b>(5)</b> the 10th consecutive close at or below the MA. A close back above the MA ends the test. A confirmed exit sells at the next Tuesday session and stays confirmed until sold or kept. A dated change of a tranche's MA or type, or a promotion, restarts the count.</dd></div>
-        <div class="note"><dt>Row colours by MA for the stop-loss</dt><dd><span class="note-swatch" style="background:#d97706"></span>20D, <span class="note-swatch" style="background:#2563eb"></span>50D, <span class="note-swatch" style="background:#0d9488"></span>100D, <span class="note-swatch" style="background:#db2777"></span>150D, <span class="note-swatch" style="background:#475569"></span>200D; other lengths are uncoloured. Exit states override them.</dd></div>
-        <div class="note"><dt>Slots, ordering and saving</dt><dd><b>Empty slots</b> can have a ticker typed in. <b>Order stocks</b> and <b>Order tranches</b> change the display only, never the data. <b>Connect to disk</b> (top right) saves automatically to pms-data/ and reconnects on reload. After a browser or computer restart, the first click or key press on the page asks Chrome for permission (no folder to choose); pick <b>Allow on every visit</b> once and later visits reconnect with no click. Until connected, edits live in this browser only.</dd></div>
+        <div class="note"><dt>Row colours by MA for the stop-loss</dt><dd><span class="note-swatch" style="background:#d97706"></span>20D, <span class="note-swatch" style="background:#2563eb"></span>50D, <span class="note-swatch" style="background:#0d9488"></span>100D, <span class="note-swatch" style="background:#db2777"></span>150D, <span class="note-swatch" style="background:#475569"></span>200D; other lengths are uncoloured. Exit states override them, and the stock's name cell takes the colour of its most serious tranche: exit confirmed (red), testing the MA (light red), bought below the MA (amber).</dd></div>
+        <div class="note"><dt>Slots, ordering and saving</dt><dd><b>Empty slots</b> can have a ticker typed in. <b>Order stocks</b> and <b>Order tranches</b> (in the dark bar at the top) change the display only, never the data. <b>SP Trend L1W</b> and <b>SP Trend L2W</b> rank the stocks by their share price over the last 5 or 10 trading days relative to STOXX Europe 600, best first (the same figures are in each Total row); <b>Core/Probing</b> puts Probing Bets (with any Speculative Bets) first, then stocks holding both types, then Core Investments. Choose an order again to reverse it. <b>Connect to disk</b> (top right) saves automatically to pms-data/ and reconnects on reload. After a browser or computer restart, the first click or key press on the page asks Chrome for permission (no folder to choose); pick <b>Allow on every visit</b> once and later visits reconnect with no click. Until connected, edits live in this browser only.</dd></div>
       </dl>
     </section>
   </div>
@@ -943,7 +1040,7 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['180px', '134px', '72px', '128px', '80px', '70px', '76px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '62px', '64px', '96px', '70px', '66px', '72px', '200px', '26px'];   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
+var COL_WIDTHS = ['176px', '158px', '70px', '140px', '172px', '78px', '80px', '58px', '58px', '58px', '58px', '72px', '72px', '72px', '80px', '64px', '104px', '88px', '70px', '74px', '210px', '28px'];   // D-PMS-V4-159: one-line rows; the surplus width is spread over every column   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
 var CONFIG = null;
@@ -1110,7 +1207,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // D-PMS-61: scroll listener — show sticky duplicate header when user scrolls past the main table's thead
   window.addEventListener('scroll', updateStickyHeaderVisibility, { passive: true });
-  window.addEventListener('resize', updateStickyHeaderVisibility, { passive: true });
+  window.addEventListener('resize', function () { stickyResizePending = true; updateStickyHeaderVisibility(); }, { passive: true });
 
   // D-PMS-206 (07-Aug-26): KEEP THE STICKY HEADER IN STEP WITH HORIZONTAL SCROLL.
   // The duplicate header lives in its own `overflow:hidden` wrapper, so it never moved when
@@ -1141,6 +1238,7 @@ window.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateStickyHeaderVisibility, 0);
 });
 
+var stickyResizePending = false;   // D-PMS-V4-159: re-measure the floating heading after a window resize
 function updateStickyHeaderVisibility() {
   var tableWrap = document.querySelector('.table-wrap');
   if (!tableWrap) return;
@@ -1149,11 +1247,13 @@ function updateStickyHeaderVisibility() {
   // Bottom of thead — once we scroll past this, show the duplicate
   var rect = thead.getBoundingClientRect();
   var headerBarH = 0;
-  var headerEl = document.querySelector('.sticky-top .header');
-  if (headerEl) headerBarH = headerEl.getBoundingClientRect().bottom;   // D-PMS-V4-154: the toolbar sits under the app bar
+  var headerEl = document.getElementById('appBar');   // D-PMS-V4-159: the toolbar is now inside the app bar
+  if (headerEl) headerBarH = headerEl.getBoundingClientRect().bottom;
   // Show sticky duplicate when thead's bottom edge has moved above the toolbar's bottom
   var shouldShow = document.body.classList.contains('active-tab-pms') && rect.height > 0 && rect.bottom < headerBarH + 4;
+  var wasShown = document.body.classList.contains('scrolled-past-header');
   document.body.classList.toggle('scrolled-past-header', shouldShow);
+  if (shouldShow && (!wasShown || stickyResizePending)) { stickyResizePending = false; syncStickyHeaderWidths(); }   // D-PMS-V4-159
 }
 
 // === Persistence: File System Access API + IndexedDB handle persistence + localStorage fallback ===
@@ -1934,6 +2034,7 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
   t[field] = value;
   EDITS[invIdx][key] = t;
   delete pendingNewKind[invIdx];
+  delete showNewRow[invIdx];   // D-PMS-V4-159: the new tranche now has its own row
   saveEdits(); render();
 }
 var pendingNewKind = {};
@@ -2205,7 +2306,7 @@ function ubsUnmatchedRowsHtml(invIdx, view) {
       : x.kind === 'open' ? 'UBS already held ' + fmt(x.shares, 0) + ' shares at its first daily file (' + fmtDate(x.date) + '; ' + x.pct.toFixed(2) + '% of AUM now); no PMS tranche is dated on or before it'
       : 'UBS bought ' + fmt(x.shares, 0) + ' shares on ' + fmtDate(x.date) + ' (' + x.pct.toFixed(2) + '% of AUM now); no PMS tranche is dated near it';
     var btn = x.kind === 'buy' ? ' <button class="btn-align" onclick="addTrancheFromUbs(' + invIdx + ',\'' + x.date + '\',' + x.pct.toFixed(6) + ')">Add as tranche</button>' : '';
-    out += '<tr class="ubs-unmatched"><td colspan="' + TOTAL_COLS + '">In UBS, not in the PMS: ' + esc(what) + '.' + btn + '</td></tr>';
+    out += '<tr class="ubs-unmatched"><td colspan="' + shownColCount() + '">In UBS, not in the PMS: ' + esc(what) + '.' + btn + '</td></tr>';
   });
   return out;
 }
@@ -4571,6 +4672,8 @@ function render() {
 function shownColWidths() {   // D-PMS-V4-154: columns 8-11 are "At entry"
   return COL_WIDTHS.filter(function(w, i) { return !(hideAtEntry && i >= 7 && i <= 10); });
 }
+function shownColCount() { return shownColWidths().length; }   // D-PMS-V4-159: a full-width row must span only the columns on show;
+// spanning all 22 with the four at-entry columns hidden created four empty columns that took the page's spare width
 function buildColgroup() {
   return '<colgroup>' + shownColWidths().map(function(w) { return '<col style="width:' + w + ';">'; }).join('') + '</colgroup>';
 }
@@ -4591,7 +4694,7 @@ function buildHeaderRow() {
     + '<th class="al">Type</th>'
     + '<th class="al" title="When this tranche was last edited. A &quot;&#8804;&quot; prefix means the date is an upper bound reconstructed from snapshot history, not an exact edit date. n.a. means no evidence survives.">Last edited</th>'
     + '<th class="al col-group-start">Date entered</th>'
-    + '<th>% at entry</th>'
+    + '<th class="th-pct">% at entry</th>'
     + '<th class="col-key-bold">MA for stop-loss</th>'
     + '<th>MA→stop buffer</th>'
     + '<th class="col-atentry col-group-start">Price</th>'
@@ -4625,7 +4728,21 @@ function renderStickyHeaderTable() {
       + '</tr></tbody>';
     t.innerHTML = buildColgroup() + buildHeaderRow() + ghostTbody;
     t.style.width = '100%';   // D-PMS-V4-154: same as the main table (same wrapper width, same colgroup), which now fills the page
+    syncStickyHeaderWidths(); // D-PMS-V4-159
   }
+}
+// D-PMS-V4-159 (7-Nov-2026): the floating heading takes the main table's measured column widths, so its labels can never
+// drift off their columns (they did whenever the main table's spare width went to different columns from the heading's).
+function syncStickyHeaderWidths() {
+  var t = document.getElementById('stickyHeaderTable'), main = document.getElementById('posTable');
+  if (!t || !main) return;
+  var ths = Array.prototype.filter.call(main.querySelectorAll('thead tr:nth-child(2) th'), function (th) { return th.offsetParent !== null; });
+  var tw = main.getBoundingClientRect().width;
+  if (!ths.length || !tw) return;   // the Position manager is not on screen; showing the heading re-syncs
+  var cols = t.querySelectorAll('colgroup col');
+  if (cols.length !== ths.length) return;
+  ths.forEach(function (th, i) { cols[i].style.width = th.getBoundingClientRect().width + 'px'; });
+  t.style.width = tw + 'px';
 }
 
 // === D-PMS-192 (07-Aug-26): Position Manager sort ===
@@ -4645,8 +4762,12 @@ function investmentSortMetrics(invIdx) {
   var inv = CONFIG.investments[invIdx];
   var ticker = effectiveTicker(inv, invIdx);
   if (isDuplicateEmptySlot(invIdx)) ticker = null;   // D-PMS-V4-154
-  var m = { blank: !ticker, name: '', aum: 0, risk: 0 };
+  var m = { blank: !ticker, name: '', aum: 0, risk: 0, l1w: null, l2w: null, kindRank: 3 };
   if (!ticker) return m;
+  // D-PMS-V4-159: share price relative to STOXX Europe 600 over the last 5 and 10 trading days; and the stock's types
+  m.l1w = relPerf(ticker, 5); m.l2w = relPerf(ticker, 10);
+  var ks = stockKinds(invIdx);
+  m.kindRank = !ks.length ? 3 : (ks.indexOf('core') < 0 ? 0 : (ks.length > 1 ? 1 : 2));   // Probing or Speculative only, then both, then Core
   m.name = (getUniverseName(ticker) || inv.name || ticker || '').toUpperCase();
   var deployed = 0;
   trancheKeys(invIdx).forEach(function(key) {
@@ -4688,6 +4809,14 @@ function sortedInvestmentOrder() {
     if (posSortMode === 'name') c = A.name < B.name ? -1 : (A.name > B.name ? 1 : 0);
     else if (posSortMode === 'aum') c = B.aum - A.aum;      // default: largest holding first
     else if (posSortMode === 'risk') c = A.risk - B.risk;   // loss risk is negative: worst first
+    else if (posSortMode === 'l1w' || posSortMode === 'l2w') {   // D-PMS-V4-159: best first; a stock with no reading last either way
+      var av = A[posSortMode], bv = B[posSortMode];
+      if (av == null && bv == null) c = 0;
+      else if (av == null) return 1;
+      else if (bv == null) return -1;
+      else c = bv - av;
+    }
+    else if (posSortMode === 'kind') c = A.kindRank - B.kindRank;   // D-PMS-V4-159: Probing first
     else c = a - b;
     if (c === 0) return a - b;                              // stable tie-break on slot
     return c * posSortDir;
@@ -4717,7 +4846,10 @@ function renderSortButtons() {
     ['slot', 'Blanks to bottom', 'Restore slot order (1-20) with every empty slot pushed to the bottom'],
     ['name', 'Name', 'Rank by company name'],
     ['aum', '% of AUM', 'Rank by current position size as a % of AUM, largest first. Click again to reverse.'],
-    ['risk', 'Loss risk', 'Rank by total loss risk if every stop triggered, worst first. Click again to reverse.']
+    ['risk', 'Loss risk', 'Rank by total loss risk if every stop triggered, worst first. Click again to reverse.'],
+    ['l1w', 'SP Trend L1W', 'Rank by share price over the last week (5 trading days) relative to STOXX Europe 600, best first. Click again to reverse.'],
+    ['l2w', 'SP Trend L2W', 'Rank by share price over the last two weeks (10 trading days) relative to STOXX Europe 600, best first. Click again to reverse.'],
+    ['kind', 'Core/Probing', 'Probing Bets first (Speculative Bets with them), then stocks holding both types, then Core Investments. Click again to reverse.']
   ];
   defs.forEach(function(d) {
     var el = document.getElementById('btnSort-' + d[0]);
@@ -4726,6 +4858,7 @@ function renderSortButtons() {
     el.className = 'btn' + (on ? ' btn-primary' : '');
     el.title = d[2];
     el.textContent = d[1] + (on && d[0] !== 'slot' ? (posSortDir === 1 ? ' ▼' : ' ▲') : '');
+    if (on) { var now = document.getElementById('orderStocksNow'); if (now) now.textContent = el.textContent; }   // D-PMS-V4-159
   });
 }
 
@@ -4758,18 +4891,21 @@ function renderTable() {
     // D-PMS-V4-150: one row per tranche (held first by date, removed ones greyed at the end), then one empty row for a
     // new tranche. An empty slot shows a single row with its ticker box.
     var keys = effPlaceholder ? [] : orderedTrancheKeys(invIdx);
-    var rowKeys = effPlaceholder ? [NEW_ROW_KEY] : keys.concat([NEW_ROW_KEY]);
+    // D-PMS-V4-159: the empty row for a new tranche opens from "+ Add tranche" in the stock's total row (or by itself when
+    // the stock has no tranche yet); the total row is part of the stock's block, so the name cell spans it too
+    var showNew = !effPlaceholder && (!!showNewRow[invIdx] || keys.length === 0);
+    var rowKeys = effPlaceholder ? [NEW_ROW_KEY] : keys.concat(showNew ? [NEW_ROW_KEY] : []);
     var extraRows = countExtraRowsForInvestment(effInv, invIdx, effPlaceholder);
-    var totalRowspan = rowKeys.length + extraRows;
+    var totalRowspan = rowKeys.length + extraRows + (effPlaceholder ? 0 : 1);
     var view = effPlaceholder ? null : ubsStockView(invIdx, effInv.ticker);
     rowKeys.forEach(function(key, i) {
       html += renderTrancheRow(inv, invIdx, key, i === 0, isPlaceholder, totalRowspan, view);
     });
-    if (keys.length && !effPlaceholder) {
+    if (!effPlaceholder) {   // D-PMS-V4-159: every stock has its total row (it holds + Add tranche and Remove)
       html += renderInvTotalsRow(inv, invIdx, view);
       html += ubsUnmatchedRowsHtml(invIdx, view);
     }
-    if (renderPos < order.length - 1) html += '<tr class="inv-spacer"><td colspan="' + TOTAL_COLS + '"></td></tr>';   // D-PMS-95
+    if (renderPos < order.length - 1) html += '<tr class="inv-spacer"><td colspan="' + shownColCount() + '"></td></tr>';   // D-PMS-95
   });
   html += '</tbody>';
   tbl.innerHTML = html;
@@ -4830,71 +4966,54 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
     var uniMeta = (wasPlaceholderUniverse && window.PMS_UNIVERSE && PMS_UNIVERSE.data) ? PMS_UNIVERSE.data[ticker] : null;
     var displayName = uniMeta ? uniMeta.name : (inv.name || '');
     var displayCurrency = uniMeta ? uniMeta.currency : (inv.currency || '');
-    var removeInvBtn = !isPlaceholder
-      ? '<div class="remove-inv-row"><button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Remove ' + esc(ticker) + ' from portfolio">× Remove</button></div>' : '';
     var clearOverrideBtn = (isPlaceholder && savedOverride)
       ? ' <button class="btn-icon btn-danger" onclick="clearTickerSlot(' + invIdx + ')" title="Clear ticker" style="padding:0 5px;font-size:13px;font-weight:700;line-height:1;vertical-align:middle;">×</button>' : '';
-    var tickerHtml = isPlaceholder
-      ? '<input type="text" class="ticker-edit" placeholder="enter ticker" value="' + esc(savedOverride) + '" oninput="setPlaceholderTicker(' + invIdx + ', this.value)" style="width:110px;">' + clearOverrideBtn
-      : '<span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>';
-    var nameHtml = isPlaceholder ? '<span class="name">(empty slot)</span>' : '<span class="name">' + esc(displayName) + '</span>';
-    if (isPlaceholder && isDuplicateEmptySlot(invIdx)) nameHtml += '<span class="dup-slot-note">' + esc(savedOverride) + ' is typed here but held in another row; this slot holds no tranche. Clear it with ×.</span>';
-    var meta = '';
-    if (!isPlaceholder && wasPlaceholderUniverse) {
-      var crow = CHART_DATA.data && CHART_DATA.data[ticker];
-      if (crow && crow.length) { var last = crow[crow.length - 1]; if (last && last.c != null) meta = '<span class="meta">Px ' + fmt(last.c, 2) + ' · ' + (last.d || '') + '</span>'; }
-    } else if (!isPlaceholder && CURRENT_DATA) {
-      var invData = CURRENT_DATA.investments.find(function(x) { return x.ticker === ticker; });
-      if (invData && invData.price != null) {
-        var _prec = (invData.precision === '2dp') ? ' · 2dp source' : '';   // D-PMS-186
-        meta = '<span class="meta">' + (invData.fallback ? '⚠ fallback · ' : '') + 'Px ' + fmt(invData.price, 2) + _prec + ' · ' + (invData.last_close_date || '') + '</span>';
+    // D-PMS-V4-159 (7-Nov-2026): three short lines (name; ticker, currency and price; type), so a stock with one tranche
+    // needs only its tranche row and its total row. The UBS and PMS sizes are in the total row; the Master Dashboard
+    // badges, + Add tranche and Remove moved there too.
+    var tickerCellHtml;
+    if (isPlaceholder) {
+      var dupNote = isDuplicateEmptySlot(invIdx) ? ' <span class="dup-slot-icon" title="' + esc(savedOverride + ' is typed here but held in another row; this slot holds no tranche. Clear it with ×.') + '">&#9888;</span>' : '';
+      tickerCellHtml = '<input type="text" class="ticker-edit" placeholder="empty slot: enter ticker" value="' + esc(savedOverride) + '" oninput="setPlaceholderTicker(' + invIdx + ', this.value)" style="width:136px;">' + clearOverrideBtn + dupNote;
+    } else {
+      var pxTxt = '', pxTitle = '';
+      if (wasPlaceholderUniverse) {
+        var crow = CHART_DATA.data && CHART_DATA.data[ticker];
+        if (crow && crow.length) { var last = crow[crow.length - 1]; if (last && last.c != null) { pxTxt = 'Px ' + fmt(last.c, 2); pxTitle = 'Last close ' + (last.d || ''); } }
+      } else if (CURRENT_DATA) {
+        var invData = CURRENT_DATA.investments.find(function(x) { return x.ticker === ticker; });
+        if (invData && invData.price != null) {
+          pxTxt = (invData.fallback ? '&#9888; ' : '') + 'Px ' + fmt(invData.price, 2);
+          pxTitle = 'Last close ' + (invData.last_close_date || '') + (invData.fallback ? ' (fallback price source)' : '') + ((invData.precision === '2dp') ? '; 2dp source' : '');   // D-PMS-186
+        }
       }
-    }
-    var statusHtml = '';
-    if (!isPlaceholder) {
       var kinds = stockKinds(invIdx);
-      statusHtml = '<div class="hs-kinds">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</div>';
-      if (ubsView && (ubsView.held || trancheKeys(invIdx).some(function (k) { return trancheHeld(getEdit(invIdx, k)); }))) {
-        var stockBook = 0;
-        trancheKeys(invIdx).forEach(function (k) { var e = getEdit(invIdx, k); if (!trancheHeld(e)) return; var rr = runTranche(ticker, k, e); stockBook += (rr && rr.ok && rr.value_aum_pct != null) ? rr.value_aum_pct * 100 : e.target_size_pct * 100; });
-        var g = ubsView.stockPct - stockBook;
-        statusHtml += '<div class="hs-ubs' + (Math.abs(g) >= UBS_GAP_FLAG_PP ? ' ubs-gap' : '') + '" title="UBS valuation of ' + esc(fmtDate(ubsView.asof)) + ', rolled to the latest close">UBS ' + ubsView.stockPct.toFixed(1) + '% of AUM · PMS ' + stockBook.toFixed(1) + '%</div>';
-      }
+      tickerCellHtml = '<span class="tk-line1" title="' + esc(displayName) + '">' + esc(displayName) + '</span>'
+        + '<span class="tk-line2"><span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>'
+        + (pxTxt ? '<span class="tk-px" title="' + esc(pxTitle) + '"> · ' + pxTxt + '</span>' : '') + '</span>'
+        + '<span class="tk-line3">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</span>';
     }
-    var mdBadges = '';
-    if (!isPlaceholder) {
-      var fr = (FILTER_RESULTS.data || {})[ticker];
-      if (fr && fr.available) {
-        mdBadges += '<div class="md-badges">';
-        mdBadges += '<span class="md-badge b-' + fr.pb_pass + '" title="PB stage: ' + esc(fr.pb_stage || 'None') + '">Speculative or probing bet ' + (fr.pb_pass === 'pass' ? '✓' : fr.pb_pass === 'partial' ? '◑' : '✗') + '</span>';
-        mdBadges += '<span class="md-badge b-' + fr.mm99_pass + '" title="MM99 stage: ' + esc(fr.mm99_stage || 'None') + ' · score ' + (fr.mm99_score || 0) + '/11">MM99 ' + (fr.mm99_pass === 'pass' ? '✓' : fr.mm99_pass === 'partial' ? '◑' : '✗') + ' (' + (fr.mm99_score || 0) + ')</span>';
-        mdBadges += '<span class="md-badge b-' + fr.utr_pass + '" title="UTR stage: ' + esc(fr.utr_stage || 'null') + '">Uptrend retest ' + (fr.utr_pass === 'pass' ? '✓' : fr.utr_pass === 'partial' ? '◑' : '✗') + '</span>';
-        mdBadges += '</div>';
-      } else if (fr && !fr.available) {
-        mdBadges += '<div class="md-badges"><span class="md-badge b-fail" title="No MD filter data">no MD data</span></div>';
-      }
-    }
-    cells += '<td class="al ticker-cell" rowspan="' + (totalRowspan || 1) + '">' + nameHtml + tickerHtml + meta + statusHtml + mdBadges + removeInvBtn + '</td>';
+    var sev = isPlaceholder ? '' : stockSeverity(invIdx, ticker);
+    cells += '<td class="al ticker-cell' + (sev ? ' tk-sev-' + sev : '') + '" rowspan="' + (totalRowspan || 1) + '">' + tickerCellHtml + '</td>';
   }
   // --- Type (the drop-down) + the tranche's number
   var opts = TRANCHE_KIND_ORDER.map(function (k) { return '<option value="' + k + '"' + (k === kind ? ' selected' : '') + '>' + esc(TRANCHE_KIND_LABEL[k]) + '</option>'; }).join('');
   var num = (!isNew && !isPlaceholder) ? trancheNumber(invIdx, slotType) : null;
-  cells += '<td class="al type-cell"><select class="edit-input kind-select kind-' + kind + '"' + dis
-    + ' onchange="' + (isNew ? onNew('type') : 'setTrancheType(' + invIdx + ',\'' + slotType + '\',this.value)') + '">' + opts + '</select>'
-    + '<div class="tranche-num">' + (isNew ? (isPlaceholder ? '' : 'new tranche') : (num ? 'Tranche ' + num : '')) + '</div></td>';
+  // D-PMS-V4-159: the tranche's number before the drop-down, on the same line ("+" on the row for a new tranche)
+  cells += '<td class="al type-cell"><span class="tranche-no" title="' + (isNew ? (isPlaceholder ? '' : 'New tranche') : (num ? 'Tranche ' + num : '')) + '">' + (isNew ? (isPlaceholder ? '' : '+') : (num || '')) + '</span><select class="edit-input kind-select kind-' + kind + '"' + dis
+    + ' title="' + (isNew ? (isPlaceholder ? '' : 'New tranche: its type') : (num ? 'Tranche ' + num : '')) + '"'
+    + ' onchange="' + (isNew ? onNew('type') : 'setTrancheType(' + invIdx + ',\'' + slotType + '\',this.value)') + '">' + opts + '</select></td>';
   cells += '<td class="al">' + (isNew ? '<span style="color:var(--fg3);font-size:11px;">&mdash;</span>' : lastEditedHtml(edit)) + '</td>';
   // --- Date entered (+ promotion note; + exit date when removed)
-  var promo = '';
+  var promo = '', splitBtn = '';
   if (edit && edit.promoted_from && edit.promoted_from !== slotType) {
-    // PROMO-DISPLAY-2026-09-18: the original entry date stays; the promotion is a note beneath it
-    promo = '<div class="promo-note" title="Promoted from ' + esc(edit.promoted_from) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date above is the original entry date.">&#8593; from ' + esc(edit.promoted_from) + ' ' + esc(fmtDateShort(edit.promoted_at))
-      + ((kind === 'core' && !exited && edit.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) ? ' <button class="btn-split" onclick="' + call('openSplit') + '" title="This tranche is ' + (edit.target_size_pct * 100).toFixed(2) + '% of AUM at cost; a Middle Innings Core Investment tranche is 1.67%. Split it.">Split</button>' : '')
-      + '</div>';
+    // D-PMS-V4-159: the promotion is an arrow beside the date (its details on hover); the Split button sits beside the size
+    promo = '<span class="promo-icon" title="Promoted from ' + esc(edit.promoted_from) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date shown is the original entry date.">&#8593;</span>';
+    if (kind === 'core' && !exited && edit.target_size_pct > CORE_TRANCHE_SIZE + 1e-9)
+      splitBtn = '<button class="btn-split" onclick="' + call('openSplit') + '" title="This tranche is ' + (edit.target_size_pct * 100).toFixed(2) + '% of AUM at cost; a Middle Innings Core Investment tranche is 1.67%. Split it.">Split</button>';
   }
-  var exitHtml = exited ? '<div class="exit-note">Removed <input type="date" class="edit-input date exit-date" value="' + esc(edit.exited_on || '') + '" onchange="setExitDate(' + invIdx + ',\'' + slotType + '\',this.value)" title="The date this tranche was removed (sold)">'
-    + (edit.exited_on_exact === false ? '<span title="Reconstructed: removed on or before this date">&#8804;</span>' : '') + '</div>' : '';
   cells += '<td class="al col-group-start"><input type="date" class="edit-input date" value="' + esc(entryDate) + '"' + dis
-    + ' onchange="' + (isNew ? onNew('entry_date') : 'setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)') + '">' + promo + exitHtml + '</td>';
+    + ' onchange="' + (isNew ? onNew('entry_date') : 'setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)') + '">' + promo + '</td>';
   // --- % at entry (+ the size for a 0.5% loss, Probing and Speculative Bets)
   var sizeHint = '';
   if (!isPlaceholder && !isCore && !exited && stopMa) {
@@ -4903,12 +5022,12 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       var shFull = sh.size != null
         ? 'Size for a 0.5% loss at the stop-loss: ' + (sh.size * 100).toFixed(1) + '% (capped at 3%). From ' + sh.basis + ' ' + fmt(sh.price, 2) + ' and the stop-loss that day ' + fmt(sh.stop_loss, 2) + ' (' + (sh.dist * 100).toFixed(1) + '% below)' + (sh.capped ? '; uncapped it would be ' + (sh.raw * 100).toFixed(1) + '%' : '') + '.'
         : 'Size for a 0.5% loss at the stop-loss: not available (' + sh.why + ', from ' + sh.basis + ').';
-      sizeHint = '<div class="size-hint" title="' + esc(shFull) + '">0.5% loss: ' + (sh.size != null ? (sh.size * 100).toFixed(1) + '%' + (sh.capped ? ' (cap)' : '') : 'n.a.') + '</div>';
+      sizeHint = '<span class="size-hint-inline" title="' + esc(shFull) + '">0.5% loss: ' + (sh.size != null ? (sh.size * 100).toFixed(1) + '%' : 'n.a.') + '</span>';   // D-PMS-V4-159: on the same line; the cap is in the hover text
     }
   }
-  var wasNote = (exited && edit.exited_size_pct != null) ? '<div class="exit-note">was ' + (edit.exited_size_pct * 100).toFixed(1) + '%</div>' : '';
-  cells += '<td class="' + (sizeHint ? 'has-size-hint' : '') + '"><span class="input-with-suffix"><input type="number" step="any" min="0" class="edit-input pct" value="' + esc(decimalToPctInput(pctAumDecimal)) + '" placeholder="' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '"' + dis
-    + ' onchange="' + (isNew ? onNew('target_size_pct') : call('setPctEdit', ',this')) + '"><span class="input-suffix">%</span></span>' + sizeHint + wasNote + '</td>';
+  var wasNote = (exited && edit.exited_size_pct != null) ? '<span class="was-inline">was ' + (edit.exited_size_pct * 100).toFixed(1) + '%</span>' : '';
+  cells += '<td class="pct-cell"><span class="input-with-suffix"><input type="number" step="any" min="0" class="edit-input pct" value="' + esc(decimalToPctInput(pctAumDecimal)) + '" placeholder="' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '"' + dis
+    + ' onchange="' + (isNew ? onNew('target_size_pct') : call('setPctEdit', ',this')) + '"><span class="input-suffix">%</span></span>' + sizeHint + splitBtn + wasNote + '</td>';
   // --- MA for stop-loss + MA→stop buffer: every tranche has both and can set them (Richard, 6-Nov-2026: "a consistent visual
   // framework for all tranches"); on a Core Investment tranche the cell is shaded and the levels are information only
   var notUsedTitle = ' title="' + esc(CORE_INFO_TEXT) + '"';
@@ -4958,7 +5077,10 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   }
   // --- Information group
   if (exited) {
-    cells += '<td class="col-group-start"><span class="badge b-exited" title="Removed by typing 0% (or aligned to a UBS sale). Type a size to put it back.">REMOVED ' + esc(fmtDateShort(edit.exited_on || '')) + '</span></td>';
+    // D-PMS-V4-159: the removal date is edited here, on the same line, instead of under the entry date
+    cells += '<td class="col-group-start"><span class="exit-inline"><span class="badge b-exited" title="Removed by typing 0% (or aligned to a UBS sale). Type a size to put it back.">REMOVED</span>'
+      + '<input type="date" class="edit-input date exit-date" value="' + esc(edit.exited_on || '') + '" onchange="setExitDate(' + invIdx + ',\'' + slotType + '\',this.value)" title="The date this tranche was removed (sold)">'
+      + (edit.exited_on_exact === false ? '<span class="exit-le" title="Reconstructed: removed on or before this date">&#8804;</span>' : '') + '</span></td>';
   } else if (r && r.ok && r.core) {
     cells += '<td class="col-group-start"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span></td>';
   } else if (r && r.ok) {
@@ -4970,7 +5092,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var rowHtml = '<tr class="' + rowCls + '" data-row-key="' + rowKey + '">' + cells + '</tr>';
   if (!hideAlerts && !isNew) {   // D-PMS-106
     var wl = trancheWarnLine(r, stopMa);
-    if (wl) rowHtml += '<tr class="warn-line"><td colspan="' + (TOTAL_COLS - 1) + '">' + wl + '</td></tr>';
+    if (wl) rowHtml += '<tr class="warn-line"><td colspan="' + (shownColCount() - 1) + '">' + wl + '</td></tr>';
   }
   return rowHtml;
 }
@@ -5007,12 +5129,21 @@ function renderInvTotalsRow(inv, invIdx, view) {
     var g = view.stockPct - sumValueAum * 100;
     ubsTot = '<span class="' + (Math.abs(g) >= UBS_GAP_FLAG_PP ? 'ubs-gap' : '') + '" title="UBS\'s own weight for ' + esc(ticker) + ', valuation of ' + esc(fmtDate(view.asof)) + ', rolled to the latest close">' + view.stockPct.toFixed(1) + '%</span>';
   }
-  return '<tr class="inv-totals"><td class="al" colspan="3">' + esc(ticker || inv.ticker || ('Slot ' + (invIdx + 1))) + ' total</td>'
-    + '<td class="col-group-start"></td>'
+  // D-PMS-V4-159 (7-Nov-2026): the name cell spans this row, so the row starts at Type. One cell per column wherever a
+  // figure sits (each under its own heading); merged cells only over columns that are empty here, and never over the
+  // four at-entry columns, which "Show" hides one by one.
+  var addOpen = !!showNewRow[invIdx];
+  var label = '<span class="tot-word">Total</span>'
+    + '<button class="btn-addtr" onclick="showNewTrancheRow(' + invIdx + ')" title="' + (addOpen ? 'Close the row for a new tranche' : 'Open a row to enter a new tranche for this stock') + '">' + (addOpen ? 'Cancel new tranche' : '+ Add tranche') + '</button>'
+    + (ticker ? '<button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Remove ' + esc(ticker) + ' from portfolio">× Remove</button>' : '');
+  var relHtml = ticker ? relTagHtml(relPerf(ticker, 5), 'L1W', 'the last week (5 trading days)') + relTagHtml(relPerf(ticker, 10), 'L2W', 'the last two weeks (10 trading days)') : '';
+  var md = ticker ? mdBadgesHtml(ticker) : '';
+  return '<tr class="inv-totals">'
+    + '<td class="al tot-label" colspan="3">' + label + '</td>'
     + '<td>' + pctNoSign1dp(sumDeployed) + '</td>'
-    + '<td></td><td></td>'
+    + '<td class="al tot-rel" colspan="2">' + relHtml + '</td>'
     + '<td class="col-atentry col-group-start"></td><td class="col-atentry"></td><td class="col-atentry"></td><td class="col-atentry"></td>'
-    + '<td class="col-group-start"></td><td></td><td></td><td></td>'
+    + '<td class="al tot-badges col-group-start" colspan="4"' + (md ? ' title="Master Dashboard filters for this stock"' : '') + '>' + md + '</td>'
     + '<td>' + pctNoSign1dp(sumValueAum) + '</td>'
     + '<td class="ubs-cell">' + ubsTot + '</td>'
     + '<td class="col-group-start"></td>'
@@ -5021,6 +5152,54 @@ function renderInvTotalsRow(inv, invIdx, view) {
                    : '<td class="col-totals-emphasis cell-not-used"><span class="not-used" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span></td>')
     + '<td colspan="2" class="col-group-start"></td></tr>';
 }
+// D-PMS-V4-159: the stock's share price relative to STOXX Europe 600 (the Portfolio overview's measure), green ahead, red behind
+function relTagHtml(v, label, span) {
+  if (v == null) return '<span class="rel-tag val-muted" title="No reading for ' + span + '">' + label + ' —</span>';
+  var txt = (v > 0 ? '+' : v < 0 ? '(' : '') + Math.abs(v * 100).toFixed(1) + (v < 0 ? ')' : '') + '%';
+  return '<span class="rel-tag ' + (v > 0.0005 ? 'rel-pos' : v < -0.0005 ? 'rel-neg' : '') + '" title="Share price over ' + span + ', relative to STOXX Europe 600">' + label + ' ' + txt + '</span>';
+}
+// The Master Dashboard filter badges (moved from under the stock's name, D-PMS-V4-159; wording unchanged)
+function mdBadgesHtml(ticker) {
+  var fr = (FILTER_RESULTS.data || {})[ticker];
+  if (fr && fr.available) {
+    return '<span class="md-badge b-' + fr.pb_pass + '" title="PB stage: ' + esc(fr.pb_stage || 'None') + '">Speculative or probing bet ' + (fr.pb_pass === 'pass' ? '✓' : fr.pb_pass === 'partial' ? '◑' : '✗') + '</span>'
+      + '<span class="md-badge b-' + fr.mm99_pass + '" title="MM99 stage: ' + esc(fr.mm99_stage || 'None') + ' · score ' + (fr.mm99_score || 0) + '/11">MM99 ' + (fr.mm99_pass === 'pass' ? '✓' : fr.mm99_pass === 'partial' ? '◑' : '✗') + ' (' + (fr.mm99_score || 0) + ')</span>'
+      + '<span class="md-badge b-' + fr.utr_pass + '" title="UTR stage: ' + esc(fr.utr_stage || 'null') + '">Uptrend retest ' + (fr.utr_pass === 'pass' ? '✓' : fr.utr_pass === 'partial' ? '◑' : '✗') + '</span>';
+  }
+  if (fr && !fr.available) return '<span class="md-badge b-fail" title="No MD filter data">no MD data</span>';
+  return '';
+}
+// D-PMS-V4-159: the stock's name cell takes the colour of its most serious tranche (exit confirmed, then testing, then
+// bought below the MA), the same colours as the tranche rows
+function stockSeverity(invIdx, ticker) {
+  var rank = { 'breach-immediate': 3, 'breach-grace': 2, 'warn': 1 }, best = '';
+  trancheKeys(invIdx).forEach(function (k) {
+    var e = getEdit(invIdx, k);
+    if (!trancheHeld(e) || trancheIsCore(e, ticker)) return;
+    var r = runTranche(ticker, k, e);
+    if (!r || !r.ok || r.core) return;
+    var sv = (r.breach && r.breach.grace_breach) ? 'breach-immediate' : (r.breach && r.breach.triggered) ? 'breach-grace'
+      : (r.entry_warn === 'BELOW_STOP' || r.entry_warn === 'BELOW_MA_ABOVE_STOP') ? 'warn' : '';
+    if (sv && (!best || rank[sv] > rank[best])) best = sv;
+  });
+  return best;
+}
+// D-PMS-V4-159: "+ Add tranche" opens (and "Cancel new tranche" closes) the row for a new tranche
+var showNewRow = {};
+function showNewTrancheRow(invIdx) {
+  showNewRow[invIdx] = !showNewRow[invIdx];
+  render();
+  if (showNewRow[invIdx]) { var el = document.querySelector('tr[data-row-key="' + invIdx + ':' + NEW_ROW_KEY + '"] input.date'); if (el) el.focus(); }
+}
+// D-PMS-V4-159: close the app-bar menus on a choice, a click elsewhere or Escape
+document.addEventListener('click', function (e) {
+  document.querySelectorAll('details.bar-menu[open]').forEach(function (d) {
+    if (!d.contains(e.target) || (e.target.closest && e.target.closest('.bar-menu-list button'))) d.removeAttribute('open');
+  });
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') document.querySelectorAll('details.bar-menu[open]').forEach(function (d) { d.removeAttribute('open'); });
+});
 
 function renderKpis() {
   var deployed = 0, pnl = 0, risk = 0, activeInvs = 0, activeTrades = 0, alertCount = 0;
