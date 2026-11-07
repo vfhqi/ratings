@@ -123,7 +123,7 @@
               if (seg.length === 1) { var cx0 = x(seg[0].d); el('rect', { x: cx0 - 7, y: yy(top[0]), width: 14, height: Math.max(0, yy(base[0]) - yy(top[0])), fill: Ly.color }, g); }
               else { var dpa = ''; seg.forEach(function (q, i) { dpa += (i ? 'L' : 'M') + x(q.d).toFixed(1) + ',' + yy(top[i]).toFixed(1); }); for (var bi = seg.length - 1; bi >= 0; bi--) dpa += 'L' + x(seg[bi].d).toFixed(1) + ',' + yy(base[bi]).toFixed(1); el('path', { d: dpa + 'Z', fill: Ly.color, stroke: 'none' }, g); }
               /* 28-Oct-2026 (Richard: "Colour code the numbers ... that indicate the counts for raising/no change/cutting"): each count in its band's own colour (Ly.num) */
-              if (s.numbers) seg.forEach(function (q, i) { var v = q[Ly.k] || 0; if (!v) return; var ya = yy(base[i]), yb = yy(top[i]); if (ya - yb < 10) return; txt(g, Math.max(L + 5, Math.min(W - R - 5, x(q.d))), (ya + yb) / 2 + 4, String(v), { 'text-anchor': 'middle', 'font-size': Ly.num ? 10.5 : 9.5, 'font-weight': 700, fill: Ly.num || Ly.ink || C.ink, halo: true }); });
+              if (s.numbers) seg.forEach(function (q, i) { var v = q[Ly.k] || 0; if (!v || q.lab === false) return; var ya = yy(base[i]), yb = yy(top[i]); if (ya - yb < 10) return; txt(g, Math.max(L + 5, Math.min(W - R - 5, x(q.d))), (ya + yb) / 2 + 4, String(v), { 'text-anchor': 'middle', 'font-size': Ly.num ? 10.5 : 9.5, 'font-weight': 700, fill: Ly.num || Ly.ink || C.ink, halo: true }); });
               base = top;
             });
           });
@@ -342,7 +342,28 @@
   /* ------------------------------------------------------------------ the model: the data file turned into what the panels draw */
   var CRIT_WORDS = { C1: 'Industry RS below 30', C2: 'The relative 200D MA falling over the month', C3: 'Sector RS below 50 and Stock RS below 70', C4: 'SS Sales or SS PT Net Upgrade Breadth below zero AND Stock RS below 50', C5: 'Relative price more than 25% below its 52-week high', C6: 'A tranche 30% below its highest close since purchase, with Stock RS below 70' };
   /* 28-Oct-2026: a universe file (scripts/pms_dashboard_universe.py, extract --compact) writes daily and volume as columns and rows */
-  function expandCols(Hd) { ['daily', 'volume'].forEach(function (k) { var x = Hd[k]; if (x && !Array.isArray(x) && x.cols && x.rows) Hd[k] = x.rows.map(function (r) { var o = {}; x.cols.forEach(function (c, i) { o[c] = r[i]; }); return o; }); }); }
+  function expandCols(Hd) { ['daily', 'volume'].forEach(function (k) { var x = Hd[k]; if (x && !Array.isArray(x) && x.cols && x.rows) Hd[k] = x.rows.map(function (r) { var o = {}; x.cols.forEach(function (c, i) { o[c] = r[i]; }); return o; }); });
+    /* 7-Nov-2026 (D-PMS-V4-157; Richard: "Every SS Upgrade breadth chart and the underlying ... need to have daily data for last few months"):
+       the extract (1.10) writes the daily sell-side series of a universe file as columns and rows too (ss2.daily, ss.years_daily), and
+       ss2.daily.tp_mean carries the Average PT on the back-filled weekdays the live daily file lacks: they join the PT line here, in the
+       page only (the files the APM PMS Q&A SOP reads are unchanged), and only where the live daily PT line is itself joined */
+    var cx = function (x) { return (x && !Array.isArray(x) && x.cols && x.rows) ? x.rows.map(function (r) { var o = {}; x.cols.forEach(function (c, i) { o[c] = r[i]; }); return o; }) : x; };
+    var D2 = (Hd.ss2 || {}).daily, YD = (Hd.ss || {}).years_daily, k2, y2;
+    if (D2) for (k2 in D2) D2[k2] = cx(D2[k2]);
+    if (YD) for (k2 in YD) for (y2 in YD[k2]) YD[k2][y2] = cx(YD[k2][y2]);
+    var tp = ((Hd.ss || {}).metrics || {}).tp, tm = D2 && D2.tp_mean;
+    if (tp && tp.join && tm && tm.length) { var have = {}; (tp.daily || []).forEach(function (q) { have[q.d] = 1; });
+      tp.daily = (tp.daily || []).concat(tm.filter(function (q) { return !have[q.d]; })).sort(function (p, q) { return p.d < q.d ? -1 : p.d > q.d ? 1 : 0; }); } }
+  /* 7-Nov-2026 (D-PMS-V4-157): the full page's sell-side charts show every stored weekday for recent months, as the one-screen view does:
+     the stored month-ends before the first daily reading, then the daily readings. A daily reading carries lab = true (its numbers and dot
+     are drawn) only when it is the last reading of its month or the latest one, so a twelve-month chart is not crowded with numbers */
+  function dayMerge(monthly, daily) {
+    var dl = (daily || []).filter(function (q) { var w = new Date(q.d + 'T00:00:00Z').getUTCDay(); return w > 0 && w < 6; });
+    if (!dl.length) return (monthly || []).slice();
+    var f = dl[0].d;
+    return (monthly || []).filter(function (q) { return q.d < f; }).concat(dl.map(function (q, i) { var o = {}; for (var k in q) o[k] = q[k]; o.src = 'daily';
+      o.lab = i === dl.length - 1 || dl[i + 1].d.slice(0, 7) !== q.d.slice(0, 7); return o; }));
+  }
   /* 30-Oct-2026 (D-PMS-V4-124; Richard 16:32: the holdings page said "no signal" and "Yes" to an add for Arteche while the APM
      PMS Q&A SOP note said "Arteche will very probably sell in full at the Tue 3-Nov session"): the LOOK-AHEAD, one function for both
      pages. For each Sell Criterion not giving a sell signal at its last reading, it asks whether today's daily reading is already past
@@ -1380,7 +1401,8 @@
     var d0 = dataStart(all, m.asof, 730), f0 = firstDate(all) || d0, fromTxt = monYY(f0 > d0 ? f0 : d0);
     ['eps', 'sales', 'ebitda'].forEach(function (k) {
       var X = Yr && Yr[k], ser = [], vals = [], nCnt = [], stale = [];
-      labs.forEach(function (y, yi) { var pts = ((X || {})[y] || []).filter(function (q) { return q.v != null && q.d >= d0; }); if (!pts.length) return; pts.forEach(function (q) { vals.push(q.v); }); var last = pts[pts.length - 1];
+      labs.forEach(function (y, yi) { var pts = dayMerge((X || {})[y], ((SS.years_daily || {})[k] || {})[y]).filter(function (q) { return q.v != null && q.d >= d0; }); if (!pts.length) return;
+        if (pts[pts.length - 1].src === 'daily') pts[pts.length - 1].src = 'latest';   /* D-PMS-V4-157: the line's end dot */ pts.forEach(function (q) { vals.push(q.v); }); var last = pts[pts.length - 1];
         var nn = (((Yr || {}).n || {})[k] || {})[y]; if (nn && nn.n != null) { if (nn.d === last.d) nCnt.push(names[yi] + ' ' + nn.n); else if (nn.n === 0 && nn.d > last.d) stale.push(names[yi]); }
         var c1 = chgOver(pts, 30), c3 = chgOver(pts, 91), c6 = chgOver(pts, 182), lk = trKind(c3, 0.01);
         /* 29-Oct-2026 16:19 (D-PMS-V4-119; Richard 16:03: the colour coding "not clear"): one colour per year for the whole line, from
@@ -1405,7 +1427,8 @@
     host.innerHTML = '';
     var S2 = m.H.ss2 || {}, d1 = m.asof, sc = S2.tp_scale || 1, tp0 = ((m.H.ss.metrics || {}).tp || {});
     var d0 = dataStart([S2.ratings, tp0.monthly, tp0.daily, tp0.daily_unjoined], m.asof, 730);
-    var rp = (S2.ratings || []).filter(function (q) { return q.d >= d0; }).map(function (q) { var n = q.buys + q.other + q.sells; return n ? { d: q.d, b: Math.round(q.buys / n * 100), o: Math.round(q.other / n * 100), s: Math.round(q.sells / n * 100), n: n } : null; }).filter(Boolean);
+    var rd0 = ((S2.daily || {}).ratings || [])[0];   /* D-PMS-V4-157: the month-ends, then every weekday stored */
+    var rp = dayMerge(S2.ratings, (S2.daily || {}).ratings).filter(function (q) { return q.d >= d0; }).map(function (q) { var n = q.buys + q.other + q.sells; return n ? { d: q.d, b: Math.round(q.buys / n * 100), o: Math.round(q.other / n * 100), s: Math.round(q.sells / n * 100), n: n } : null; }).filter(Boolean);
     rp.forEach(function (q) { var t = q.b + q.o + q.s; if (t !== 100) q.o += 100 - t; });
     var tp = ((m.H.ss.metrics || {}).tp || {}), tpp = (tp.monthly || []).concat(tp.daily || [], tp.daily_unjoined || []).filter(function (q) { return q.v != null && q.d >= d0; }).sort(function (a, b) { return a.d < b.d ? -1 : 1; }).map(function (q) { return { d: q.d, v: q.v * sc }; });
     var seen = {}; tpp = tpp.filter(function (q) { if (seen[q.d]) return false; seen[q.d] = 1; return true; });
@@ -1418,7 +1441,7 @@
     var chipsR = '<div class="chips">' + (rp.length ? '<span class="chipline"><b>% Buys</b>' + [['1M', b1], ['3M', b3], ['6M', b6]].map(function (a) { return '<span class="cg ' + ck(a[1], 1) + '">' + a[0] + ' ' + (a[1] == null ? 'n/a' : pts_(a[1])) + '</span>'; }).join('') + '</span>' : '') +
       (tpp.length ? '<span class="chipline">' + swatch(0, TRC[pk]) + '<b>average PT</b>' + chip('1M', pt1) + chip('3M', pt3, null, 0.01) + chip('6M', pt6) + '</span>' : '') +
       (px.length ? '<span class="chipline"><svg width="26" height="10"><line x1="1" x2="25" y1="5" y2="5" stroke="#8b949e" stroke-width="1.4"/></svg><b>SP</b>' + chip('1M', sp1) + chip('3M', sp3) + chip('6M', sp6) + '</span>' : '') + '</div>';
-    if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (month-ends, then the latest day); 3-month trend in % Buys: ' + (bk === 'up' ? 'rising' : bk === 'dn' ? 'falling' : 'flat (within 3 points)'), h: 240, labelEdge: true, yDomain: [0, 100], yTicks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], yFmt: function (v) { return v + '%'; },
+    if (rp.length) panels.push({ title: 'Analyst ratings, % of analysts (' + (rd0 ? 'month-ends, then every weekday from ' + fmtD(rd0.d) : 'month-ends, then the latest day') + '); 3-month trend in % Buys: ' + (bk === 'up' ? 'rising' : bk === 'dn' ? 'falling' : 'flat (within 3 points)'), h: 240, labelEdge: true, yDomain: [0, 100], yTicks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], yFmt: function (v) { return v + '%'; },
       series: [{ kind: 'stacked', gap: 45, pts: rp, label: 'ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
         layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] }] });
     if (tpp.length || px.length) { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1, lt = tpp[tpp.length - 1], lp = px[px.length - 1];
@@ -1442,9 +1465,10 @@
     var GR = { k: 'up', label: 'raising', color: 'rgba(26,127,55,0.38)', ink: '#116329', num: '#0f6b2c', tip: '#7ee2a8' }, NC_ = { k: 'nc', label: 'no change', color: 'rgba(139,148,158,0.28)', ink: '#424a53', num: '#57606a', tip: '#d0d7de' }, RD = { k: 'dn', label: 'cutting', color: 'rgba(207,34,46,0.38)', ink: '#a40e26', num: '#c4101f', tip: '#ffaba8' };
     NUBK.forEach(function (kk) {
       /* a month with no analyst counted has no breadth: it is left as a gap, never drawn as zero */
-      var k = kk[0], arr = (NC[k] || []).filter(function (q) { return q.d >= d0 && q.d <= d1 && (k === 'buys' ? (q.buys + q.other + q.sells) > 0 : q.n > 0); });
+      /* D-PMS-V4-157: the stored month-ends, then every weekday stored (ss2.daily; the ratings for Buys) */
+      var k = kk[0], D2_ = S2.daily || {}, arr = dayMerge(NC[k], k === 'buys' ? D2_.ratings : D2_[k]).filter(function (q) { return q.d >= d0 && q.d <= d1 && (k === 'buys' ? (q.buys + q.other + q.sells) > 0 : q.n > 0); });
       var buys = k === 'buys';
-      var pts = arr.map(function (q) { if (buys) { var n = q.buys + q.other + q.sells; return { d: q.d, up: q.buys, nc: q.other, dn: q.sells, n: n, v: n ? q.buys / n : null, fy: null, src: 'monthly' }; } return { d: q.d, up: q.up, dn: q.dn, nc: Math.max(0, q.n - q.up - q.dn), n: q.n, v: q.n ? (q.up - q.dn) / q.n : null, fy: q.fy, src: q.src }; });
+      var pts = arr.map(function (q) { if (buys) { var n = q.buys + q.other + q.sells; return { d: q.d, up: q.buys, nc: q.other, dn: q.sells, n: n, v: n ? q.buys / n : null, fy: null, src: q.src || 'monthly', lab: q.lab }; } return { d: q.d, up: q.up, dn: q.dn, nc: Math.max(0, q.n - q.up - q.dn), n: q.n, v: q.n ? (q.up - q.dn) / q.n : null, fy: q.fy, src: q.src, lab: q.lab }; });
       var last = pts[pts.length - 1];
       var fys = pts.map(function (q) { return q.fy; }).filter(Boolean), fyNow = fys.length ? fys[fys.length - 1] : null;
       var head = kk[1] + (buys ? ': Buys, Other and Sells (counts) with % Buys' : ': Net Upgrade Breadth' + (fyNow ? ', FY' + fyNow : '') + ', 100-day count');
@@ -1456,7 +1480,7 @@
       for (var i = 1; i < pts.length; i++) if (pts[i].fy && pts[i - 1].fy && pts[i].fy !== pts[i - 1].fy) markers.push({ d: pts[i].d, label: 'FY' + pts[i].fy + ' from here', color: C.ink3 });
       var layers = buys ? [{ k: 'up', label: 'Buys', color: GR.color, ink: GR.ink, tip: GR.tip }, { k: 'nc', label: 'Other', color: NC_.color, ink: NC_.ink, tip: NC_.tip }, { k: 'dn', label: 'Sells', color: RD.color, ink: RD.ink, tip: RD.tip }] : [GR, NC_, RD];
       var lf = function (v) { return buys ? Math.round(v * 100) + '%' : pctS(v); };
-      var line = { pts: pts.map(function (q) { return { d: q.d, v: q.v }; }), color: BLINE, w: 2, axis: 'right', gap: 45, label: buys ? '% Buys' : 'Net Upgrade Breadth', fmt: lf, dotAt: function () { return true; }, dotR: 2.6, ptLabel: function (q) { return lf(q.v); } };
+      var line = { pts: pts.map(function (q) { return { d: q.d, v: q.v, lab: q.lab }; }), color: BLINE, w: 2, axis: 'right', gap: 45, label: buys ? '% Buys' : 'Net Upgrade Breadth', fmt: lf, dotAt: function (q) { return q.lab !== false; }, dotR: 2.6, ptLabel: function (q) { return q.lab === false ? '' : lf(q.v); } };
       var zero = { kind: 'hline', axis: 'right', v: 0, color: '#000000', w: 1.4 };
       stack(h2, { d0: d0, d1: addDays(d1, 12), monthEnd: true, axis: 'my', width: W, left: 56, right: 56, markers: markers, panels: [{ h: 280, yDomain: [0, mx * 1.08], yTicks: niceTicks(0, mx, 3).filter(function (v) { return v === Math.round(v); }), yFmt: function (v) { return String(v); },
         yDomain2: buys ? [0, 1.14] : [-1.08, 1.2], yTicks2: buys ? [0, 0.5, 1] : [-1, 0, 1], yFmt2: function (v) { return buys ? Math.round(v * 100) + '%' : pctS(v); },
