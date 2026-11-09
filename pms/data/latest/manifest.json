@@ -1,47 +1,45 @@
 {
- "asof": "2026-11-06",
+ "asof": "2026-11-09",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 329830,
+   "bytes": 322857,
    "warnings": [
-    "check level30: tranche 1 line ends at 285.81, the reader says 212.3702",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 321045,
+   "bytes": 311498,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 331663,
+   "bytes": 331574,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 345959,
+   "bytes": 345878,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 352653,
+   "bytes": 352581,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 349655,
+   "bytes": 342689,
    "warnings": [
-    "check level30: tranche 1 line ends at 171.7747, the reader says 132.2959",
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
@@ -50,14 +48,14 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 255843,
+   "bytes": 255980,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 347294,
+   "bytes": 347224,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -67,56 +65,56 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 336336,
+   "bytes": 336247,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 339332,
+   "bytes": 339438,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 343130,
+   "bytes": 343079,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 343225,
+   "bytes": 343228,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 335529,
+   "bytes": 335469,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 356020,
+   "bytes": 356006,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 347311,
+   "bytes": 347304,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 326494,
+   "bytes": 326429,
    "warnings": [
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
    ]
@@ -124,13 +122,11 @@
  },
  "failed": [],
  "warnings": [
-  "AZA-SE: check level30: tranche 1 line ends at 285.81, the reader says 212.3702",
   "AZA-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
   "BYLOT-GR: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
   "CARL.B-DK: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
   "CVSG-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
   "FEVR-GB: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
-  "HTWS-GB: check level30: tranche 1 line ends at 171.7747, the reader says 132.2959",
   "HTWS-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
@@ -149,5 +145,5 @@
   "ALFEN-NL: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md",
   "ART-ES: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-07-the-session-run-on-saturday-on-the-6-nov-close.md"
  ],
- "seconds": 106.9
+ "seconds": 70.7
 }
