@@ -1,5 +1,5 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-10T14:12:03 from master-dashboard/index.html (md5 738d97d3a409b31cf707dfbf96ff5c7e),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-10T14:40:09 from master-dashboard/index.html (md5 738d97d3a409b31cf707dfbf96ff5c7e),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 21. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
@@ -353,7 +353,7 @@ function drawMasterChart(ticker,_sspo){
     ctx.beginPath();ctx.moveTo(pad.l,ptY);ctx.lineTo(W-pad.r,ptY);ctx.stroke();
     var ptLabel=ptVal>=1000?Math.round(ptVal).toString():(ptVal<10?ptVal.toFixed(2):ptVal<100?ptVal.toFixed(1):Math.round(ptVal).toString());
     ctx.fillStyle=textCol;ctx.font="13px monospace";ctx.textAlign="left";
-    ctx.fillText(ptLabel,W-pad.r+6,ptY+4);
+    if(!(_sspo&&_sspo.malOver))ctx.fillText(ptLabel,W-pad.r+6,ptY+4); /* PMS-DASH 22: with opts.malOver the scale is written by _drawMal, around the values */
   }
 
   // PHASE-4B 2026-05-04: tiered x-axis gridlines + labels.
@@ -470,7 +470,12 @@ function drawMasterChart(ticker,_sspo){
     rs.forEach(function(q){(an!=null&&q.y<=an?ab:be).push(q)});
     be.sort(function(a,b){return a.y-b.y});la=an!=null?an:-1e9;be.forEach(function(q){if(q.y<la+gap)q.y=la+gap;la=q.y});
     ab.sort(function(a,b){return b.y-a.y});la=an!=null?an:1e9;ab.forEach(function(q){if(q.y>la-gap)q.y=la-gap;la=q.y});
-    ctx.textAlign='left';_mal.forEach(function(q){ctx.font=q.f||'bold 12px monospace';ctx.fillStyle=q.c;ctx.fillText(q.t,W-pad.r+(pad.r>=200?56:((_sspo&&_sspo.malX)||6)),q.y+4)});_mal.length=0} /* PMS-DASH 20 (6-Nov-2026): the caller may give the MA values their own column (malX), clear of the price scale */ /* wide: the values in their own column, right of the price scale */
+    /* PMS-DASH 22 (10-Nov-2026, Richard 14:25: "dont waste the white space in the images; the annotations need to sit above the underlying
+       y-axis labels, and make the chart area larger as a result"): with opts.malOver the values are written in the price scale's own column,
+       and a price-scale number they would touch is left out, so the margin is only as wide as the scale */
+    if(_sspo&&_sspo.malOver){ctx.font='13px monospace';ctx.fillStyle=textCol;ctx.textAlign='left';(priceTickList||[]).forEach(function(v){var y=priceY(v);if(y<pad.t-1||y>pad.t+plotH+1)return;
+      for(var i=0;i<_mal.length;i++){if(Math.abs(_mal[i].y-y)<13)return}ctx.fillText(v>=1000?Math.round(v).toString():(v<10?v.toFixed(2):v<100?v.toFixed(1):Math.round(v).toString()),W-pad.r+6,y+4)})}
+    ctx.textAlign='left';_mal.forEach(function(q){ctx.font=q.f||'bold 12px monospace';ctx.fillStyle=q.c;ctx.fillText(q.t,W-pad.r+(_sspo&&_sspo.malOver?6:pad.r>=200?56:((_sspo&&_sspo.malX)||6)),q.y+4)});_mal.length=0} /* PMS-DASH 20 (6-Nov-2026): the caller may give the MA values their own column (malX), clear of the price scale */ /* wide: the values in their own column, right of the price scale */
   if(_pov){var _idx={},_labs=[];for(j=0;j<chart.length;j++)_idx[chart[j].d]=j;
     ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip(); /* PMS-DASH 14 */
     (_pov.lines||[]).forEach(function(L){ctx.strokeStyle=L.color||'#cf222e';ctx.lineWidth=L.width||1.6;ctx.setLineDash(L.dash||[4,3]);ctx.beginPath();var st=false,lastV=null;

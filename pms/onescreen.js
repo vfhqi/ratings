@@ -181,7 +181,7 @@
     var host = document.getElementById('os-chart-container'), hh = host.parentNode.getBoundingClientRect().height;
     loadChartData(m.t, function (rows) {
       chartRows = rows;
-      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: DASH.overlayFor(m, true), pad: { t: 26, r: 82, b: 30, l: 6 }, priceTicks: 14, malX: 40 });
+      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: DASH.overlayFor(m, true), pad: { t: 26, r: 56, b: 30, l: 6 }, priceTicks: 14, malOver: true }) /* PMS-DASH 22 (Richard, 10-Nov-2026 14:25): the values sit in the price scale's column; the margin was 82 with malX 40 */;
       drawRS();
       drawEst();
     });

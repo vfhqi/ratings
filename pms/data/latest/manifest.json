@@ -8,7 +8,7 @@
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 311680,
+   "bytes": 311659,
    "warnings": []
   },
   "CARL.B-DK": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 343106,
+   "bytes": 343099,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -76,7 +76,7 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 356277,
+   "bytes": 356273,
    "warnings": []
   },
   "ALFEN-NL": {
@@ -99,5 +99,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 125.7
+ "seconds": 102.4
 }

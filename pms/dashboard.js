@@ -955,11 +955,28 @@
     tdGrid(svg, F, top1, h1);
     T1.forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y1(v), y2: y1(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y1(v) + 4, String(Math.round(v)), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
     tdPath(svg, F, rel, y1, C.ink, 1.5);
-    tdPath(svg, F, rma, y1, '#5a32a3', 3);
+    /* 10-Nov-2026 14:34 (Richard: "for the relative 200D MA panel, display the slope of the line now and at each "period" signified by a grey/white
+       background change. Just stick a subtle, elegant (X.X)% or +X.X% above the 200D MA line ... Also, colour code the segments of the 200D rel MA
+       line to represent a healthy or unhealthy slop of the 200D MA"). The slope is the sell test's own reading (the relative 200D MA's change over
+       the month, the bars below); healthy (green) above 0, unhealthy (red) at or below 0, the sell rule's line. One label per week band (the shading),
+       read at the band's last session, so a Friday where there is one; the last label is today's. A label that would touch its neighbour is dropped,
+       today's never. */
+    var rmCol = function (v) { return v == null ? '#5a32a3' : v <= 0 ? C.red : C.industry; };
+    (function () { var seg = null, col = null, flush = function () { if (seg && seg.length > 1) el('path', { d: seg.join(''), fill: 'none', stroke: col, 'stroke-width': 3, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg); };
+      for (var i = 0; i < n; i++) { if (rma[i] == null) { flush(); seg = null; continue; } var c = rmCol(slo[i]), pt = xi(i).toFixed(1) + ',' + y1(rma[i]).toFixed(1);
+        if (!seg) { seg = ['M' + pt]; col = c; } else if (c !== col) { seg.push('L' + pt); flush(); seg = ['M' + pt]; col = c; } else seg.push('L' + pt); }
+      flush(); })();
+    var fpS = function (v) { var a = Math.abs(v).toFixed(1); return v > 0 ? '+' + a + '%' : v < 0 ? '(' + a + '%)' : '0.0%'; };
+    (function () { var bands = [], ws = 0; for (var i = 1; i <= n; i++) if (i === n || F.mon(i)) { bands.push([ws, i - 1]); ws = i; }
+      var labs = []; bands.forEach(function (b) { var k = -1; for (var j = b[1]; j >= b[0]; j--) if (slo[j] != null && rma[j] != null) { k = j; break; } if (k < 0) return;
+        var cx = (F.edge(b[0]) + F.edge(b[1] + 1)) / 2, mid = Math.round((b[0] + b[1]) / 2), ym = rma[mid] != null ? rma[mid] : rma[k];
+        labs.push({ x: Math.min(cx, W - pad.r - 16), y: Math.max(top1 + 9, y1(ym) - 7), v: slo[k] }); });
+      var keep = [], lastX = 1e9; for (var q = labs.length - 1; q >= 0; q--) { if (lastX - labs[q].x >= 36) { keep.push(labs[q]); lastX = labs[q].x; } }
+      keep.forEach(function (L) { txt(svg, L.x, L.y, fpS(L.v), { 'text-anchor': 'middle', 'font-size': 9.5, fill: rmCol(L.v), opacity: 0.85, halo: true }); }); })();
     el('line', { x1: pad.l, x2: W - pad.r, y1: top1 + h1, y2: top1 + h1, stroke: C.border }, svg);
     var lastI = -1; for (var k = n - 1; k >= 0; k--) if (rel[k] != null) { lastI = k; break; }
     var ends = [];
-    if (lastI >= 0) { ends.push({ y: y1(rel[lastI]) + 4, t: 'relative price ' + rel[lastI].toFixed(0), c: C.ink }); if (rma[lastI] != null) ends.push({ y: y1(rma[lastI]) + 4, t: 'relative 200D MA ' + rma[lastI].toFixed(0), c: '#5a32a3' }); }
+    if (lastI >= 0) { ends.push({ y: y1(rel[lastI]) + 4, t: 'relative price ' + rel[lastI].toFixed(0), c: C.ink }); if (rma[lastI] != null) ends.push({ y: y1(rma[lastI]) + 4, t: 'relative 200D MA ' + rma[lastI].toFixed(0), c: rmCol(slo[lastI]) }); }
     if (F.wide) tdEnds(svg, F, ends, top1, h1);
     tdTranches(svg, F, m, top1, top1 + h1, 22);
     /* pane 2: the sell test */
