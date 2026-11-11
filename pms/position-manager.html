@@ -1000,7 +1000,7 @@ var STOP_LOWER_CLOSES = 3;           // (B)
 var STOP_WEAK_CLOSES = 3;            // (C)
 var STOP_VOL_AVG_DAYS = 50;
 var STOP_LEGACY_CONFIRM_CLOSES = 3;  // version 1 (11-Sep-2026), computed beside the verdict as a comparison read only
-var STOP_EVENTS_ACTIVE = ['SL', 'W_VOL', 'B', 'C', 'D'];   // stop_rule.EVENTS_ACTIVE: the five exit events; a ruling may narrow this set
+var STOP_EVENTS_ACTIVE = ['SL', 'B', 'C', 'D'];   // 11-Nov-2026: the volume test removed (Richard: "Remove that volume rule. It is erroneous."; D-PMS-V4-163); was   // stop_rule.EVENTS_ACTIVE: the five exit events; a ruling may narrow this set
 var STOP_MA_MIN_DAYS = 5;            // any MA length from 5 ...
 var STOP_MA_MAX_DAYS = 250;          // ... to 250 days (Richard, 2-Nov-2026)
 // MECHANICAL-VOLUME-DAYS-BEGIN (written by scripts/pms_mechanical_volume_days.py; do not edit by hand)
@@ -2377,9 +2377,80 @@ async function runEntryDateCorrection() {
   if (diskWriteEnabled) await writeStateToDisk();
   return true;
 }
+// D-PMS-V4-165 (11-Nov-2026, Ricky login): ONE-TIME CORRECTION of every tranche to UBS's 10-Nov-2026 file, and the classes
+// Richard ruled on 11-Nov-2026 (verbatim: projects/SA - Position Management System/RICHARD-VERBATIM-2026-11-11-classifications-
+// core-200d-rule-and-entry-tests.md). Keyed by tranche_id. A tranche is changed only if its size at entry is still the
+// size measured on 11-Nov (size_before), so an edit made since is never overwritten (it is listed in the console instead).
+// Each tranche changed carries fix_2026_11_11 (what it was, what it is, why), so the change is visible and never re-run.
+// Class changes follow setTrancheType: a change from Core restarts the stop-loss count (a 'type-change' entry, dated to the
+// latest close); a change of line is an 'edit' entry on the same date; a promotion to Core is a 'promotion' entry.
+var FIX_2026_11_11 = {"t-c0e0425d-2026-06-26": {"size": 0.019828, "size_before": 0.02, "size_why": "scaled to UBS's holding of 1.87% at 10-Nov (the system had 1.88%)", "type": "speculative", "bet_stage": "S1", "stop_ma": "20D"}, "t-dd7e0192-2026-06-22": {"size": 0.019199, "size_before": 0.019, "size_why": "scaled to UBS's holding of 4.66% at 10-Nov (the system had 4.61%)"}, "t-a31e2d2d-2026-08-07": {"size": 0.00869, "size_before": 0.0086, "size_why": "scaled to UBS's holding of 4.66% at 10-Nov (the system had 4.61%)"}, "t-7659a7ca-2026-08-19": {"size": 0.012328, "size_before": 0.012199999999999999, "size_why": "scaled to UBS's holding of 4.66% at 10-Nov (the system had 4.61%)"}, "t-988cc5fe-2026-07-22": {"size": 0.01022, "size_before": 0.01, "size_why": "scaled to UBS's holding of 2.79% at 10-Nov (the system had 2.73%)", "type": "speculative", "bet_stage": "S1", "stop_ma": "50D"}, "t-cfe76055-2026-08-04": {"size": 0.01533, "size_before": 0.015, "size_why": "scaled to UBS's holding of 2.79% at 10-Nov (the system had 2.73%)", "type": "speculative", "bet_stage": "S1", "stop_ma": "50D"}, "t-ec4bcc44-2026-06-08": {"size": 0.019125, "size_before": 0.02, "size_why": "scaled to UBS's holding of 2.36% at 10-Nov (the system had 2.47%)", "type": "speculative", "bet_stage": "S1", "stop_ma": "50D"}, "t-f83091dc-2026-06-30": {"size": 0.021438, "size_before": 0.021, "size_why": "scaled to UBS's holding of 7.63% at 10-Nov (the system had 7.48%)"}, "t-e6158fad-2026-06-22": {"size": 0.020417, "size_before": 0.02, "size_why": "scaled to UBS's holding of 7.63% at 10-Nov (the system had 7.48%)"}, "t-d61ad7a3-2026-08-19": {"size": 0.010923, "size_before": 0.010700000000000001, "size_why": "scaled to UBS's holding of 7.63% at 10-Nov (the system had 7.48%)"}, "t-e0ff8973-0002-11-04": {"size": 0.015925, "size_before": 0.015600000000000001, "size_why": "scaled to UBS's holding of 7.63% at 10-Nov (the system had 7.48%)"}, "t-47ba13d7-2026-06-30": {"size": 0.021083, "size_before": 0.020499999999999997, "size_why": "scaled to UBS's holding of 3.77% at 10-Nov (the system had 3.66%)"}, "t-c3e36b77-2026-06-22": {"size": 0.020568, "size_before": 0.02, "size_why": "scaled to UBS's holding of 3.77% at 10-Nov (the system had 3.66%)"}, "t-9a845e7c-2026-07-17": {"size": 0.014418, "size_before": 0.014419, "size_why": "matched to UBS's 17-Jul purchase", "type": "speculative", "bet_stage": "S3", "stop_ma": "20D"}, "t-22d3fdbe-2026-06-22": {"size": 0.010715, "size_before": 0.03, "size_why": "UBS's holding today less the 17-Jul tranche: what is left of the pre-17-Jul holding after UBS's 4-Nov sale of 794 shares", "type": "speculative", "bet_stage": "S3", "stop_ma": "20D"}, "t-c426f270-2026-08-19": {"size": 0.021582, "size_before": 0.02, "size_why": "scaled to UBS's holding of 4.00% at 10-Nov (the system had 3.71%)", "stop_ma": "50D"}, "t-61434c85-2026-11-04": {"size": 0.017265, "size_before": 0.016, "size_why": "scaled to UBS's holding of 4.00% at 10-Nov (the system had 3.71%)"}, "t-afc6d430-2026-06-30": {"size": 0.012135, "size_before": 0.012, "size_why": "scaled to UBS's holding of 4.72% at 10-Nov (the system had 4.67%)"}, "t-ea8b39ef-2026-07-22": {"size": 0.026898, "size_before": 0.026600000000000002, "size_why": "scaled to UBS's holding of 4.72% at 10-Nov (the system had 4.67%)"}, "t-b9fe9152-2026-08-07": {"size": 0.004348, "size_before": 0.0043, "size_why": "scaled to UBS's holding of 4.72% at 10-Nov (the system had 4.67%)"}, "t-43c224b4-2026-08-12": {"size": 0.006674, "size_before": 0.0066, "size_why": "scaled to UBS's holding of 4.72% at 10-Nov (the system had 4.67%)"}, "t-e3ee0e98-2026-07-17": {"size": 0.009937, "size_before": 0.01, "size_why": "scaled to UBS's holding at its first daily file (16-Jul), 5.26% now"}, "t-4311606f-2026-07-06": {"size": 0.010434, "size_before": 0.0105, "size_why": "scaled to UBS's holding at its first daily file (16-Jul), 5.26% now"}, "t-0baf0bf1-2026-06-08": {"size": 0.02981, "size_before": 0.03, "size_why": "scaled to UBS's holding at its first daily file (16-Jul), 5.26% now"}, "t-740cc9a6-2026-10-30": {"exit": "2026-10-30", "size": 0, "size_before": 0.01, "size_why": "UBS shows no purchase on or near 30-Oct; its one purchase since July is on 4-Nov, about 0.60% now, matched to the 4-Nov tranche"}, "t-76605e28-2026-11-04": {"size": 0.006124, "size_before": 0.01, "size_why": "matched to UBS's 4-Nov purchase, about 0.60% now"}, "t-32447264-2026-08-12": {"size": 0.024727, "size_before": 0.025, "size_why": "scaled to UBS's holding of 2.52% at 10-Nov (the system had 2.54%)", "type": "speculative", "bet_stage": "S1", "stop_ma": "20D"}, "t-c28c9358-2026-07-06": {"size": 0.020295, "size_before": 0.02, "size_why": "scaled to UBS's holding of 4.86% at 10-Nov (the system had 4.79%)", "type": "core"}, "t-df0b2475-2026-07-01": {"size": 0.013192, "size_before": 0.013000000000000001, "size_why": "scaled to UBS's holding of 4.86% at 10-Nov (the system had 4.79%)", "type": "core"}, "t-0aab6156-2026-06-29": {"size": 0.017809, "size_before": 0.02, "size_why": "scaled to UBS's holding of 2.76% at 10-Nov (the system had 3.10%)"}, "t-2bf2bb7a-2026-08-05": {"size": 0.01959, "size_before": 0.022000000000000002, "size_why": "scaled to UBS's holding of 2.76% at 10-Nov (the system had 3.10%)"}, "t-537490d4-2026-06-26": {"size": 0.019926, "size_before": 0.02, "size_why": "scaled to UBS's holding of 3.62% at 10-Nov (the system had 3.63%)"}, "t-6b9a8189-2026-08-19": {"size": 0.012753, "size_before": 0.0128, "size_why": "scaled to UBS's holding of 3.62% at 10-Nov (the system had 3.63%)"}, "t-403f5eda-2026-10-29": {"size": 0.009963, "size_before": 0.01, "size_why": "scaled to UBS's holding of 3.62% at 10-Nov (the system had 3.63%)"}};
+var FIX_2026_11_11_RULED = 'Richard, 11-Nov-2026 (APM PMS alignment window, Ricky login): objective 1 "Update % of AUM for each live stock to match UBS data"; classes: Hilton Food promoted ("Q5 A"), D\'Ieteren S1 Speculative Bet 20D ("Dieteren = A"), IMCD tranche 1 to the 50D ("IMCD = A"), Xvivo "Set to S3 Speculative Bets in the PMS", Bally\'s Intralot "Set to S1 Speculative Bet", CVS Group and Fevertree S1 Speculative Bets on the 50D by a change of class ("Q4 = A")';
+async function runCorrection20261111() {
+  var hits = [], skipped = [];
+  Object.keys(EDITS || {}).forEach(function (slot) { trancheKeys(slot).forEach(function (k) {
+    var t = EDITS[slot][k];
+    if (!t || typeof t !== 'object' || !t.tranche_id || !FIX_2026_11_11[t.tranche_id] || t.fix_2026_11_11) return;
+    var f = FIX_2026_11_11[t.tranche_id];
+    if (Math.abs((t.target_size_pct || 0) - f.size_before) > 1e-6) { skipped.push(t.tranche_id + ' (size now ' + t.target_size_pct + ', expected ' + f.size_before + ')'); return; }
+    hits.push([slot, k]);
+  }); });
+  if (skipped.length) console.warn('[D-PMS-V4-165] not changed, edited since 11-Nov: ' + skipped.join('; '));
+  if (!hits.length) return false;
+  try { localStorage.setItem('pms_edits_pre_fix_2026_11_11', JSON.stringify(EDITS)); } catch (e) {}
+  var done = [];
+  hits.forEach(function (x) {
+    var slot = x[0], k = x[1], t = EDITS[slot][k], f = FIX_2026_11_11[t.tranche_id];
+    var ticker = effectiveTicker((CONFIG.investments || [])[parseInt(slot, 10)], slot);
+    var onDay = latestCloseDate(ticker); if (t.entry_date && onDay < t.entry_date) onDay = t.entry_date;
+    var rec = { applied_at: new Date().toISOString(), ruled: FIX_2026_11_11_RULED, size_before: t.target_size_pct };
+    if (f.size === 0) {
+      t.exited_size_pct = t.target_size_pct; t.target_size_pct = 0; t.exited_on = f.exit; t.exited_on_exact = true;
+    } else if (f.size != null) { t.target_size_pct = f.size; }
+    rec.size_after = t.target_size_pct; rec.size_why = f.size_why || null;
+    if (!Array.isArray(t.stop_history)) t.stop_history = [];
+    var lineBefore = stopMaFor(k, t, ticker);
+    if (f.type) {
+      var from = trancheKind(t, ticker);
+      rec.type_before = from;
+      if (from !== f.type) {
+        t.type = f.type; t.type_changed_on = '2026-11-11';
+        t.type_history = (Array.isArray(t.type_history) ? t.type_history : []).concat([{ from: from, to: f.type, on: '2026-11-11', ruled: 'D-PMS-V4-165' }]);
+        if (f.type === 'core') {
+          if (!t.promoted_from) t.promoted_from = TRANCHE_KIND_LABEL[from];
+          t.promoted_at = '2026-11-11';
+          t.stop_history.push({ stop_ma: lineBefore, set_on: onDay, exact: true, via: 'promotion', previous: lineBefore, explicit: !!t.stop_ma,
+            note: 'promoted to a Core Middle Innings Investment on 11-Nov-2026 (D-PMS-V4-165); tranches not split' });
+        } else if (from === 'core') {
+          var ln = f.stop_ma || lineBefore; t.stop_ma = ln;
+          t.stop_history.push({ stop_ma: ln, set_on: onDay, exact: true, via: 'type-change', previous: lineBefore, explicit: true,
+            note: 'type changed from ' + TRANCHE_KIND_LABEL[from] + ' to ' + TRANCHE_KIND_LABEL[f.type] + ' (' + (f.bet_stage || '') + ') on 11-Nov-2026 (D-PMS-V4-165); the stop-loss count restarts from the close of ' + onDay });
+        } else { t.type = f.type; }
+      }
+      rec.type_after = t.type;
+    }
+    if (f.bet_stage) { rec.bet_stage_before = t.bet_stage || null; t.bet_stage = f.bet_stage; }
+    var lineNow = stopMaFor(k, t, ticker);
+    if (f.stop_ma && lineNow !== f.stop_ma) {
+      t.stop_ma = f.stop_ma;
+      t.stop_history.push({ stop_ma: f.stop_ma, set_on: onDay, exact: true, explicit: true, via: 'edit', previous: lineNow,
+        note: 'line changed from the ' + lineNow + ' to the ' + f.stop_ma + ' on 11-Nov-2026 (D-PMS-V4-165); the stop-loss count restarts from the close of ' + onDay });
+    }
+    rec.line_before = lineBefore; rec.line_after = stopMaFor(k, t, ticker);
+    t.fix_2026_11_11 = rec;
+    t.last_edited = '2026-11-11'; t.last_edited_exact = true; t.last_edited_at = rec.applied_at;
+    done.push(ticker + ' ' + k + ': size ' + rec.size_before + ' -> ' + rec.size_after + (rec.type_after ? ', type ' + rec.type_before + ' -> ' + rec.type_after : '') + (f.bet_stage ? ' ' + f.bet_stage : '') + ', line ' + rec.line_before + ' -> ' + rec.line_after);
+  });
+  console.log('[D-PMS-V4-165] one-time correction to UBS 10-Nov-2026 and the 11-Nov classes, ' + done.length + ' tranches:\n  ' + done.join('\n  '));
+  seedEditFingerprints();
+  saveEditsToLocalStorage();
+  if (diskWriteEnabled) await writeStateToDisk();
+  return true;
+}
 async function runTrancheTypeChangeover() {
   if (typeChangeoverInFlight) return;
   if (await runEntryDateCorrection()) render();   // D-PMS-V4-155
+  if (await runCorrection20261111()) render();   // D-PMS-V4-165
   if (!Object.keys(EDITS || {}).length) return;
   var need = function (slot, k) {
     var t = EDITS[slot] && EDITS[slot][k];
@@ -3164,7 +3235,7 @@ function maRank(ma) { return stopMaDays(ma) || 999; }   // V4: any length sorts 
 function calcStop(ma, buf) { var b = (buf == null) ? BUFFER : buf; return (ma == null) ? null : +(ma * (1 - b)).toFixed(4); }
 
 // STOP-RULE-V2-2026-09-18-MARKER. THE 10-DAY STOP-LOSS RULE, VERSION 4 (Richard, 2-Nov-2026, decisions D-PMS-V4-130 to 133),
-// JavaScript twin of scripts/stop_rule.py ("ten-day-two-level-v4-2026-11-02"); both are tested against
+// JavaScript twin of scripts/stop_rule.py ("ten-day-two-level-v5-no-volume-test-2026-11-11"); both are tested against
 // scripts/stop_rule_cases.json (python3 -B scripts/stop_rule_cases_test.py; node scripts/stop_rule_page_test.js). Change one,
 // change both. It applies to Early Innings Probing Bets only; a Middle Innings Core Investment has no MA stop-loss.
 // TWO LEVELS PER TRANCHE: the MA Richard chooses (any whole number of days from 5 to 250) and the stop-loss, the MA less the
