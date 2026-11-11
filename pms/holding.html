@@ -251,7 +251,10 @@
     window.addEventListener('resize', debounce(function () { if (!fullDrawn || document.body.classList.contains('os-on')) return; if (Math.abs(window.innerWidth - lastW) < 2) return; lastW = window.innerWidth; drawAll(); }, 200));
   }
   var fullDrawn = false;
-  function viewNow() { try { var v = localStorage.getItem('pmsPerStockView'); if (v === 'one' || v === 'full') return v; } catch (e) { /* storage refused: the default */ } return 'one'; }
+  /* 11-Nov-2026 (APM, Capital Deployment In Range): ?view=one or ?view=full opens that view for this visit without changing the
+     remembered choice; Richard: "Make clicking on the name open the per-stock dashboard in a new tab in the browser for that stock. in one-page mode" */
+  function viewNow() { try { var qv = new URLSearchParams(location.search).get('view'); if (qv === 'one' || qv === 'full') return qv; } catch (e) { /* no URL parameters: fine */ }
+    try { var v = localStorage.getItem('pmsPerStockView'); if (v === 'one' || v === 'full') return v; } catch (e) { /* storage refused: the default */ } return 'one'; }
   function setView(v, save) {
     document.body.classList.toggle('os-on', v === 'one'); document.documentElement.classList.toggle('os-on', v === 'one');
     Array.prototype.forEach.call(document.querySelectorAll('.vtog button'), function (b) { b.classList.toggle('on', b.dataset.v === v); });
