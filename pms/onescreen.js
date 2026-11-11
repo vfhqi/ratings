@@ -146,6 +146,12 @@
     document.getElementById('os-nm').innerHTML = DU.esc(m.name) + ' <span class="tk">' + DU.esc(m.t) + '</span>';
     document.getElementById('os-hsub').innerHTML = DU.esc(m.ind) + ' &middot; ' + DU.esc(m.sec) + ' &middot; ' + (m.notHeld ? '<span class="pill grey os-pill">Not held</span>'
       : '<span class="pill ' + (m.probing ? 'blue' : 'grey') + ' os-pill">' + DU.esc(m.status) + '</span> <b>' + R.size_pct.toFixed(2) + '%</b> of capital now, ' + m.tranches.length + ' tranche' + (m.tranches.length === 1 ? '' : 's'));
+    /* 11-Nov-2026 (D-PMS-V4-167): relative price against its 52W high, moved here from panel 2: today's distance and Sell Criterion 5's
+       month-end reading (the one the rule acts on); red when today's distance is beyond the (25%) sell line */
+    var rdT = null; for (var ri = m.daily.length - 1; ri >= 0; ri--) if (m.daily[ri] && m.daily[ri].rdh != null) { rdT = m.daily[ri].rdh; break; }
+    var c5 = ((R && R.criteria) || []).filter(function (c) { return c.id === 'C5'; })[0], par = function (v) { return v >= 0 ? 'at' : '(' + Math.round(-v * 100) + '%) below'; };
+    if (rdT != null) document.getElementById('os-hsub').innerHTML += ' &middot; <span class="os-rdh" title="Sell Criterion 5: relative price more than 25% below its 52W high at a month-end" style="color:' + (rdT <= -0.25 ? C.red : 'inherit') + '">relative price <b>' + par(rdT) + '</b> its 52W high' +
+      (c5 && c5.value != null && c5.reading_day ? ' (' + fmtD(c5.reading_day) + ': ' + (c5.value >= 0 ? 'at it' : '(' + Math.round(-c5.value * 100) + '%)') + '; sell line (25%) at a month-end)' : '; sell line (25%) at a month-end') + '</span>';
     document.getElementById('os-asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
   }
   var started = false;
@@ -309,17 +315,11 @@
     var ends = [{ y: yC(q0.dist25) + 3.5, t: String(q0.dist25), c: C.red }]; if (net[n - 1] != null) ends.push({ y: Math.max(yS(net[n - 1]), F.top + F.ph - sH + 8) + 3.5, t: net[n - 1] > 0 ? '+' + net[n - 1] : net[n - 1] < 0 ? '(' + (-net[n - 1]) + ')' : '0', c: net[n - 1] > 0 ? GREEN : net[n - 1] < 0 ? C.red : C.ink3 });
     endLab(F, ends);
     dates(F); hover(hC, F, function (i) { return '<div>distribution days in 25 sessions: ' + rows[i].dist25 + '</div>' + (ud[i] ? '<div>in the same 25 sessions: ' + ud[i].u + ' up days, ' + ud[i].n + ' down days</div>' : ''); });
-    /* pane D: relative price against its 52W high */
-    var dD = ov(hD, '<b>Relative price against its 52W high</b>; sell line (25%)', 34, 'bottom'), cD = dD.offsetHeight + 6;
-    F = frame(hD, 36); var rd = rows.map(function (q) { var x_ = DL[q.d]; return x_ && x_.rdh != null ? x_.rdh * 100 : null; }), rdv = rd.filter(function (v) { return v != null; });
-    var dLo = Math.min(-35, Math.floor((Math.min.apply(null, rdv.concat([0])) - 3) / 5) * 5), yD = function (v) { return F.top + F.ph - cD - (v - dLo) / (0 - dLo) * (F.ph - cD); };
-    for (var t = 0; t >= dLo; t -= 10) { el('line', { x1: F.pad.l, x2: F.W - F.pad.r, y1: yD(t), y2: yD(t), stroke: C.grid }, F.svg); txt(F.svg, F.pad.l - 4, yD(t) + 3.5, t ? '(' + (-t) + '%)' : '0%', { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); }
-    el('rect', { x: F.pad.l, y: yD(-25), width: F.W - F.pad.l - F.pad.r, height: yD(dLo) - yD(-25), fill: 'rgba(207,34,46,0.06)' }, F.svg);
-    el('line', { x1: F.pad.l, x2: F.W - F.pad.r, y1: yD(-25), y2: yD(-25), stroke: C.red, 'stroke-dasharray': '3 2', 'stroke-width': 1.3 }, F.svg);
-    txt(F.svg, F.pad.l - 4, yD(-25) + 3.5, '(25%)', { 'text-anchor': 'end', 'font-size': 9.5, fill: C.red, 'font-weight': 700 });
-    var dr = ''; rd.forEach(function (v, i) { if (v == null) return; dr += (dr ? 'L' : 'M') + F.xi(i).toFixed(1) + ',' + yD(v).toFixed(1); }); if (dr) el('path', { d: dr, fill: 'none', stroke: C.rel, 'stroke-width': 1.8 }, F.svg);
-    var lr = rd[n - 1]; if (lr != null) endLab(F, [{ y: yD(lr) + 3.5, t: '(' + Math.round(-lr) + '%)', c: C.rel }]);
-    dates(F); hover(hD, F, function (i) { return rd[i] != null ? '<div>relative price (' + Math.round(-rd[i]) + '%) below its 52W high</div>' : ''; });
+    /* pane D: daily volatility and closes in the top half of the day's range (Richard, 11-Nov-2026 17:56: "For the one-screen version, do replace the
+       relative price against 52W High chart"; D-PMS-V4-167). Drawn by the full page's own function (dashboard.js rangePane), so both views read alike.
+       Relative price against its 52W high (Sell Criterion 5) moved to the header line under the stock's name. */
+    var cD = cardH(hD, '<b>Daily volatility</b>', 34);
+    if (DASH.rangePane) DASH.rangePane(hD, m, rows.map(function (q) { return q.d; }), { compact: true, top: cD, padL: 34 });
   }
 
   /* ================= 4. SS estimate upgrades: EPS and revenue by named FY (item 4 today), PT with the analyst ratings behind it (item 5 today) ================= */
