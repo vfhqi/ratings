@@ -857,8 +857,35 @@
     lines.forEach(function (l, i) { txt(svg, x, y + i * lh, l, { 'font-size': fs, fill: fill || C.ink3 }); });
     return lines.length;
   }
-  /* o.part: 'vol' (the lines over time alone: the full page's daily volatility sub-panel), 'closes' (the six figures alone: the full page's closes
-     sub-panel), or both (the one-screen view and the Multi-stock Dashboard) */
+  /* closes in the top half of the day's range, over time (Richard, 12-Nov-2026 06:39: "Shift to a display that shows how the numbers change over time
+     (on the x-axis). Use a toggle to turn on/off the L1M and L3M lines, and have them on top of each other in the same panel"; 07:16, on the four mock-ups:
+     "Do Option B. Remove Universe."): one panel, up days green, down days red, all days black, L1M solid, L3M dashed, 0 to 100%; the L1M and L3M toggles
+     are kept in this browser ("pmsCloseLines") for both views and every stock; at least one stays on. Read from the volume rows' h1u ... h3a (extract 1.12). */
+  var CLVIS = (function () { var v = { l1: true, l3: true }; try { var o = JSON.parse(localStorage.getItem('pmsCloseLines') || 'null'); if (o) for (var k in v) if (typeof o[k] === 'boolean') v[k] = o[k]; } catch (e) { /* none kept */ } if (!v.l1 && !v.l3) v.l1 = true; return v; })();
+  function saveClVis() { try { localStorage.setItem('pmsCloseLines', JSON.stringify(CLVIS)); } catch (e) { /* not kept: fine */ } }
+  var CLK = [['u', 'up days', 'up', '#1a7f37'], ['d', 'down days', 'down', '#cf222e'], ['a', 'all days', 'all', '#1f2328']];
+  function closesKey(m, dates, cp) {
+    var V = (m.H && m.H.volume) || [], by = {}; V.forEach(function (q) { if (q) by[q.d] = q; });
+    var S = {}, any = false; ['1', '3'].forEach(function (w) { CLK.forEach(function (k) { S[k[0] + w] = dates.map(function (d) { var q = by[d]; var v = q ? q['h' + w + k[0]] : null; if (v != null) any = true; return v == null ? null : v; }); }); });
+    var w = CLVIS.l1 ? '1' : '3', last = function (a) { for (var i = a.length - 1; i >= 0; i--) if (a[i] != null) return a[i]; return null; };
+    var items = [{ id: 'l1', t: cp ? 'L1M' : 'L1M, solid', c: C.ink2, w: 2, toggle: true, on: CLVIS.l1 }, { id: 'l3', t: cp ? 'L3M' : 'L3M, dashed', c: C.ink2, w: 1.6, dash: '5 3', toggle: true, on: CLVIS.l3 }];
+    if (cp) items.push({ t: 'top half:', c: C.ink2, sw: false });
+    CLK.forEach(function (k) { var v = last(S[k[0] + w]); items.push({ t: (cp ? k[2] : k[1]) + ' ' + (v == null ? 'n/a' : v + '%'), c: k[3], w: 2.2, sw: cp ? false : undefined }); });   /* one-screen: the text's colour is the line's */
+    return { items: items, S: S, any: any, w: w };
+  }
+  function drawCloses(svg, F, top, h, CK, cp) {
+    var y = function (v) { return top + h - v / 100 * h; }, x0 = F.pad.l, x1 = F.W - F.pad.r;
+    tdGrid(svg, F, top, h);
+    (cp || h < 90 ? [0, 50, 100] : [0, 25, 50, 75, 100]).forEach(function (v) { el('line', { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: v === 50 ? '#d8dee4' : C.grid }, svg); txt(svg, x0 - (cp ? 4 : 6), y(v) + (cp ? 3 : 4), v + '%', { 'text-anchor': 'end', 'font-size': cp ? 9 : 10.5, fill: C.ink2 }); });
+    CLK.forEach(function (k) { if (CLVIS.l3) tdPath(svg, F, CK.S[k[0] + '3'], y, k[3], cp ? 1.1 : 1.5, '5 3', 0.9); });
+    CLK.forEach(function (k) { if (CLVIS.l1) tdPath(svg, F, CK.S[k[0] + '1'], y, k[3], cp ? 1.5 : 2.1); });
+    el('line', { x1: x0, x2: x1, y1: top + h, y2: top + h, stroke: C.border }, svg);
+  }
+  function closesTip(CK, i) { var h = ''; ['1', '3'].forEach(function (w) { if (!CLVIS['l' + w]) return; h += '<div>closes in the top half, L' + w + 'M: ' + CLK.map(function (k) { var v = CK.S[k[0] + w][i]; return k[1] + ' ' + (v == null ? 'n/a' : v + '%'); }).join(', ') + '</div>'; }); return h; }
+  function cpDates(svg, F, y) { for (var j = 0; j < F.n; j++) { if (!(j === 0 || F.mstart(j))) continue; var mo = F.ds[j].getUTCMonth(), xx = j === 0 ? F.edge(0) + 1 : F.edge(j) + 2; if (j === 0 && F.n > 1 && F.mstart(1)) continue; if (j === 0) { var k1 = 0; for (var q2 = 1; q2 < F.n; q2++) if (F.mstart(q2)) { k1 = q2; break; } if (k1 && F.edge(k1) - xx < 24) continue; }
+      txt(svg, xx, y, MON[mo] + (mo === 0 ? ' ' + String(F.ds[j].getUTCFullYear()).slice(2) : ''), { 'font-size': 8.5, fill: C.ink2, 'font-weight': mo % 3 === 0 ? 700 : 500 }); } }
+  /* o.part: 'vol' (the full page's daily volatility sub-panel), 'closes' (the full page's closes sub-panel), or both, one above the other (the one-screen
+     view and the Multi-stock Dashboard) */
   function rangePane(host, m, dates, o) {
     o = o || {};
     var part = o.part || 'both', showVol = part !== 'closes', showCl = part !== 'vol';
@@ -866,86 +893,78 @@
     if (Wc < 80 || Hc < 80 || !dates || !dates.length) return;
     var cp = !!o.compact, svg = el('svg', { width: Wc, height: Hc, viewBox: '0 0 ' + Wc + ' ' + Hc, style: 'display:block;' + (cp ? '' : 'max-width:100%;') + 'font-family:Segoe UI,system-ui,sans-serif' }, host);
     var fs = cp ? 9 : 10.5, F = cellFrame(dates, Wc, o.padL || (cp ? 34 : 46), o.padR != null ? o.padR : (cp ? 8 : 12)), x0 = F.pad.l, x1 = Wc - F.pad.r;
-    if (o.band) tdBand(svg, F, 22, part === 'vol' ? 'Daily volatility: average true range, % a day' : part === 'closes' ? 'Closes in the top half of the day\'s range: last 1M and last 3M' : 'Daily volatility (average true range, % a day) and closes in the top half of the day\'s range', part === 'vol' ? 'Daily volatility (average true range)' : part === 'closes' ? 'Closes in the top half of the day\'s range' : 'Daily volatility and closes in the top half of the day\'s range');
-    var K = rangeKey(m, dates, cp), R = K.R, U = K.U;
-    if (!R || !K.any) { txt(svg, Wc / 2, Hc / 2, 'No readings yet: this stock\'s data file was written before 11-Nov-2026', { 'text-anchor': 'middle', 'font-size': fs, fill: C.ink3 }); return; }
+    if (o.band) tdBand(svg, F, 22, part === 'vol' ? 'Daily volatility: average true range, % a day' : part === 'closes' ? 'Closes in the top half of the day\'s range, over time' : 'Daily volatility and closes in the top half of the day\'s range', part === 'vol' ? 'Daily volatility (average true range)' : part === 'closes' ? 'Closes in the top half of the day\'s range' : 'Daily volatility; closes in the top half');
+    var K = rangeKey(m, dates, cp), CK = closesKey(m, dates, cp), R = K.R;
+    if (showVol && (!R || !K.any) || (!showVol && !CK.any)) { txt(svg, Wc / 2, Hc / 2, 'No readings yet: this stock\'s data file was written before ' + (showVol ? '11' : '12') + '-Nov-2026', { 'text-anchor': 'middle', 'font-size': fs, fill: C.ink3 }); return; }
     var DEF1 = 'Average true range: each day\'s high to low, stretched to the previous close on a gap, as a % of the previous close; L5D the last 5 sessions, L1M and L3M the last 30 and 91 days. Click a line\'s name above to hide or show it.';
-    var DEF2 = 'Top half: a close above the midpoint of the day\'s high-low range; an up day closes at or above the previous close. Grey band: the universe\'s 10th to 90th percentile; tick: its middle.';
-    var DEFS = cp ? 'Average true range, % of the previous close. Top half: a close above the day\'s midpoint. Grey band: the universe\'s 10th to 90th percentile.' : null;
-    var tip = null, redraw = function (id) { var on = 0; for (var k in VOLVIS) if (VOLVIS[k]) on++; if (VOLVIS[id] && on === 1) return; VOLVIS[id] = !VOLVIS[id]; saveVolVis(); if (svg.parentNode) svg.parentNode.removeChild(svg); if (tip && tip.parentNode) tip.parentNode.removeChild(tip); rangePane(host, m, dates, o); };
-    var keyY = o.keyTop || ((o.top || 0) + (o.band ? 36 : 9)), kr = showVol ? keyToggles(svg, x0 - (cp ? 30 : 0), x1, keyY, K.items, cp, redraw) : 0;
-    var pTop = showVol ? Math.max(o.plotTop || 0, keyY + (kr - 1) * (cp ? 12 : KEYLH) + (cp ? 5 : 9)) : (o.plotTop || keyY - 8);
-    /* the sizes: the six figures and the definitions at the foot; the chart takes what is left */
-    var rh = cp ? (Hc >= 200 ? 13 : 11) : (part === 'closes' ? Math.max(22, Math.min(34, Math.floor((Hc - pTop - 90) / 3))) : 19), hdr = cp ? 10 : (part === 'closes' ? 22 : 16), gridH = showCl ? hdr + 3 * rh + 2 : 0;
-    var defFs = cp ? 8 : 9.5, defLh = cp ? 9.5 : 12, defLines = cp ? (Hc >= 150 ? 2 : 0) : (part === 'both' ? 4 : 2), defH = defLines ? defLines * defLh + (cp ? 2 : 6) : 0;
-    var dl = cp ? 12 : 30, gap = cp ? 3 : (showCl && showVol ? 10 : 0), pH = showVol ? Hc - pTop - dl - gap - gridH - defH - 2 : 0;
-    if (showVol && pH < 40 && defLines) { defLines = 0; defH = 0; pH = Hc - pTop - dl - gap - gridH - 2; }
-    if (showVol && o.chartH) pH = o.chartH;   /* the full page: the same plot height as the sub-panels beside it */
-    /* smaller one-screen sizes (1536 x 730): the six figures as two lines of text, coloured against the universe (details on hover), so the lines over
-       time keep their room; the smallest (1366 x 650 and below): no room for the lines over time, the key above carries today's three readings */
-    var txtMode = false; if (cp && showCl && pH < 34) { var g2 = 2 * rh + 1, p2 = pH + gridH - g2; if (p2 >= 26) { txtMode = true; gridH = g2; pH = p2; } }
-    var tiny = cp && pH < 24;
-    /* (A) the lines over time, those switched on, with the universe's middle (L3M) dotted; the scale fits the lines shown */
-    if (showVol && !tiny) {
-    var shown = [['a5', K.A5], ['a1m', K.A1], ['a3m', K.A3]].filter(function (a) { return VOLVIS[a[0]]; });
-    var vv = []; shown.forEach(function (a) { vv = vv.concat(a[1].filter(function (v) { return v != null; })); }); if (K.ua != null) vv.push(K.ua);
-    var hi = Math.max.apply(null, vv.concat([0.5])) * 1.08, NT = niceTicks(0, hi, cp ? 2 : 4); if (NT[NT.length - 1] > hi) hi = NT[NT.length - 1];
-    var y = function (v) { return pTop + pH - v / hi * pH; };
-    tdGrid(svg, F, pTop, pH);
-    NT.forEach(function (v) { if (v > hi + 1e-9) return; el('line', { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, x0 - (cp ? 4 : 6), y(v) + (cp ? 3 : 4), v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': cp ? 9 : 10.5, fill: C.ink2 }); });
-    if (K.ua != null) el('line', { x1: x0, x2: x1, y1: y(K.ua), y2: y(K.ua), stroke: C.ink3, 'stroke-width': 1.3, 'stroke-dasharray': '2 3' }, svg);
-    tdTranches(svg, F, m, pTop, pTop + pH);
-    if (VOLVIS.a3m) tdPath(svg, F, K.A3, y, VOLC.a3m, cp ? 1.8 : 2.2); if (VOLVIS.a1m) tdPath(svg, F, K.A1, y, VOLC.a1m, cp ? 1.6 : 2); if (VOLVIS.a5) tdPath(svg, F, K.A5, y, VOLC.a5, cp ? 1.2 : 1.5);
-    el('line', { x1: x0, x2: x1, y1: pTop + pH, y2: pTop + pH, stroke: C.border }, svg);
-    if (cp) { for (var j = 0; j < F.n; j++) { if (!(j === 0 || F.mstart(j))) continue; var mo = F.ds[j].getUTCMonth(), xx = j === 0 ? F.edge(0) + 1 : F.edge(j) + 2; if (j === 0 && F.n > 1 && F.mstart(1)) continue; if (j === 0) { var k1 = 0; for (var q2 = 1; q2 < F.n; q2++) if (F.mstart(q2)) { k1 = q2; break; } if (k1 && F.edge(k1) - xx < 24) continue; }
-        txt(svg, xx, pTop + pH + 10, MON[mo] + (mo === 0 ? ' ' + String(F.ds[j].getUTCFullYear()).slice(2) : ''), { 'font-size': 8.5, fill: C.ink2, 'font-weight': mo % 3 === 0 ? 700 : 500 }); } }
-    else tdLabels(svg, F, pTop + pH + 14);
+    var DEF2 = 'The share of closes in the top half of the day\'s range (above the midpoint of its high-low range) over the last 30 days (L1M, solid) and 91 days (L3M, dashed), recalculated each day; an up day closes at or above the previous close. Click L1M or L3M above to hide or show them.';
+    var DEFS = 'Upper: average true range, % of the previous close. Lower: the share of closes in the top half of the day\'s range (above its midpoint).';
+    var tip = null, redraw = function (id) { var st = id in VOLVIS ? VOLVIS : CLVIS, on = 0; for (var k in st) if (st[k]) on++; if (st[id] && on === 1) return; st[id] = !st[id]; if (st === VOLVIS) saveVolVis(); else saveClVis();
+      if (svg.parentNode) svg.parentNode.removeChild(svg); if (tip && tip.parentNode) tip.parentNode.removeChild(tip); rangePane(host, m, dates, o); };
+    var LH = cp ? 12 : KEYLH, keyY = o.keyTop || ((o.top || 0) + (o.band ? 36 : 9)), regions = [];
+    if (part === 'vol' || part === 'closes') {
+      var items = part === 'vol' ? K.items : CK.items, kr = keyToggles(svg, x0, x1, keyY, items, false, redraw);
+      var pTop = Math.max(o.plotTop || 0, keyY + (kr - 1) * LH + 9), pH = o.chartH || (Hc - pTop - 30 - 40);
+      if (part === 'vol') {
+        var shown = [['a5', K.A5], ['a1m', K.A1], ['a3m', K.A3]].filter(function (a) { return VOLVIS[a[0]]; }), vv = [];
+        shown.forEach(function (a) { vv = vv.concat(a[1].filter(function (v) { return v != null; })); }); if (K.ua != null) vv.push(K.ua);
+        var hi = Math.max.apply(null, vv.concat([0.5])) * 1.08, NT = niceTicks(0, hi, 4); if (NT[NT.length - 1] > hi) hi = NT[NT.length - 1];
+        var y = function (v) { return pTop + pH - v / hi * pH; };
+        tdGrid(svg, F, pTop, pH);
+        NT.forEach(function (v) { if (v > hi + 1e-9) return; el('line', { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, x0 - 6, y(v) + 4, v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+        if (K.ua != null) el('line', { x1: x0, x2: x1, y1: y(K.ua), y2: y(K.ua), stroke: C.ink3, 'stroke-width': 1.3, 'stroke-dasharray': '2 3' }, svg);
+        if (VOLVIS.a3m) tdPath(svg, F, K.A3, y, VOLC.a3m, 2.2); if (VOLVIS.a1m) tdPath(svg, F, K.A1, y, VOLC.a1m, 2); if (VOLVIS.a5) tdPath(svg, F, K.A5, y, VOLC.a5, 1.5);
+        el('line', { x1: x0, x2: x1, y1: pTop + pH, y2: pTop + pH, stroke: C.border }, svg);
+        regions.push({ top: pTop, bot: pTop + pH, kind: 'vol' });
+      } else { drawCloses(svg, F, pTop, pH, CK, false); regions.push({ top: pTop, bot: pTop + pH, kind: 'cl' }); }
+      tdTranches(svg, F, m, pTop, pTop + pH);
+      tdLabels(svg, F, pTop + pH + 14);
+      wrapTxt(svg, x0, Hc - 32, part === 'vol' ? DEF1 : DEF2, x1 - x0, 9.5, 11.5, 3);
+    } else {
+      /* both, one above the other, at the one-screen sizes: two charts where they fit (1920 x 950); the closes as two lines of text where only one chart
+         fits (1536 x 730); no charts at the smallest (1366 x 650): the volatility key carries today's readings */
+      var krV = keyToggles(svg, x0 - 30, x1, keyY, K.items, true, redraw), pTopV = keyY + (krV - 1) * LH + 5;
+      var krC = keyRows(CK.items, x0 - 30, x1, true), keyCH = krC * LH + 2, dl = 12, defH = Hc >= 230 ? 2 * 9.5 + 2 : 0, gapM = 5;
+      var R2 = Hc - pTopV - dl - defH - 2 - gapM - keyCH, pV = Math.floor(R2 / 2), mode = pV >= 24 ? 'two' : 'txt';
+      var txtH = 2 * 11 + 3;
+      if (mode === 'txt') { pV = Hc - pTopV - dl - txtH - 4 - (Hc >= 170 ? 0 : 0); if (pV < 24) mode = 'tiny'; }
+      if (mode !== 'tiny') {
+        var shown2 = [['a5', K.A5], ['a1m', K.A1], ['a3m', K.A3]].filter(function (a) { return VOLVIS[a[0]]; }), vv2 = [];
+        shown2.forEach(function (a) { vv2 = vv2.concat(a[1].filter(function (v) { return v != null; })); }); if (K.ua != null) vv2.push(K.ua);
+        var hi2 = Math.max.apply(null, vv2.concat([0.5])) * 1.08, NT2 = niceTicks(0, hi2, 2); if (NT2[NT2.length - 1] > hi2) hi2 = NT2[NT2.length - 1];
+        var yV = function (v) { return pTopV + pV - v / hi2 * pV; };
+        tdGrid(svg, F, pTopV, pV);
+        NT2.forEach(function (v) { if (v > hi2 + 1e-9) return; el('line', { x1: x0, x2: x1, y1: yV(v), y2: yV(v), stroke: C.grid }, svg); txt(svg, x0 - 4, yV(v) + 3, v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': 9, fill: C.ink2 }); });
+        if (K.ua != null) el('line', { x1: x0, x2: x1, y1: yV(K.ua), y2: yV(K.ua), stroke: C.ink3, 'stroke-width': 1.2, 'stroke-dasharray': '2 3' }, svg);
+        tdTranches(svg, F, m, pTopV, pTopV + pV);
+        if (VOLVIS.a3m) tdPath(svg, F, K.A3, yV, VOLC.a3m, 1.8); if (VOLVIS.a1m) tdPath(svg, F, K.A1, yV, VOLC.a1m, 1.6); if (VOLVIS.a5) tdPath(svg, F, K.A5, yV, VOLC.a5, 1.2);
+        el('line', { x1: x0, x2: x1, y1: pTopV + pV, y2: pTopV + pV, stroke: C.border }, svg);
+        regions.push({ top: pTopV, bot: pTopV + pV, kind: 'vol' });
+      }
+      if (mode === 'two') {
+        var yKC = pTopV + pV + gapM + 9; keyToggles(svg, x0 - 30, x1, yKC, CK.items, true, redraw);
+        var pTopC = yKC + (krC - 1) * LH + 5, pC = Hc - pTopC - dl - defH - 2;
+        drawCloses(svg, F, pTopC, pC, CK, true); tdTranches(svg, F, m, pTopC, pTopC + pC); regions.push({ top: pTopC, bot: pTopC + pC, kind: 'cl' });
+        cpDates(svg, F, pTopC + pC + 10);
+        if (defH) wrapTxt(svg, 2, pTopC + pC + dl + 9, DEFS, Wc - 6, 8, 9.5, 2);
+      } else {
+        if (mode === 'txt') cpDates(svg, F, pTopV + pV + 10);
+        var tY = mode === 'txt' ? pTopV + pV + dl + 10 : pTopV + 6;
+        ['1', '3'].forEach(function (w, j) { var t = txt(svg, 2, tY + j * 11, 'top half, L' + w + 'M:', { 'font-size': 8.5, fill: C.ink2, 'font-weight': 650 });
+          CLK.forEach(function (k) { var a = CK.S[k[0] + w], v = null; for (var i = a.length - 1; i >= 0; i--) if (a[i] != null) { v = a[i]; break; }
+            var s1 = el('tspan', { fill: C.ink2, 'font-weight': 400 }, t); s1.textContent = '  ' + k[2] + ' '; var s2 = el('tspan', { fill: k[3], 'font-weight': 700 }, t); s2.textContent = v == null ? 'n/a' : v + '%'; }); });
+      }
     }
-    /* (B) today's six figures, each against the universe's 10th to 90th percentile (grey band) and its middle (tick) */
-    var TH = R.top_half || {}, UT = (U && U.top_half) || {}, gTop = !showVol ? pTop + 4 : tiny ? pTop - 1 : pTop + pH + dl + gap, gx0 = cp ? 2 : 8, gx1 = Wc - (cp ? 4 : 12);
-    var big = part === 'closes', labW = cp ? 56 : big ? 86 : 72, colGap = cp ? 8 : 18, valW = cp ? 27 : 92, cw = (gx1 - gx0 - labW - colGap) / 2, tw = Math.max(20, cw - valW - 5), bh = cp ? 7 : big ? 13 : 9;
-    var WINS = [['L1M', cp ? 'top half, L1M' : 'closes in the top half, last 1M (30 days)'], ['L3M', cp ? 'top half, L3M' : 'closes in the top half, last 3M (91 days)']], KINDS = [['up', 'Up days'], ['down', 'Down days'], ['all', 'All days']];
-    var cells = [], fCol = function (f, u) { return f == null ? C.ink3 : u && f > u[2] ? '#1a7f37' : u && f < u[0] ? C.red : '#57606a'; };
-    if (showCl) {
-    if (txtMode) WINS.forEach(function (w, j) { var yy = gTop + rh * (j + 1) - 3, t = txt(svg, gx0, yy, 'top half, ' + w[0] + ':', { 'font-size': 8.5, fill: C.ink2, 'font-weight': 650 });
-      KINDS.forEach(function (kd) { var c = (TH[w[0]] || {})[kd[0]], u = (UT[w[0]] || {})[kd[0]], f = c && c[1] >= 3 ? c[0] / c[1] : null, a = el('tspan', { fill: C.ink2, 'font-weight': 400 }, t); a.textContent = '  ' + kd[1].split(' ')[0].toLowerCase() + ' ';
-        var b = el('tspan', { fill: fCol(f, u), 'font-weight': 700 }, t); b.textContent = f == null ? 'n/a' : pctS(f); cells.push({ x0: gx0, x1: gx1, y0: yy - rh + 2, y1: yy + 2, kind: kd[1], kk: kd[0], win: w[0], c: c, u: u, f: f, nr: (TH[w[0]] || {}).no_range }); }); });
-    if (!txtMode) WINS.forEach(function (w, j) { txt(svg, gx0 + labW + j * (cw + colGap), gTop + hdr - 4, w[1], { 'font-size': cp ? 8.5 : big ? 11 : 10, fill: C.ink2, 'font-weight': 650 }); });
-    if (!txtMode) KINDS.forEach(function (kd, r) {
-      var yy = gTop + hdr + r * rh + rh / 2;
-      txt(svg, gx0, yy + 3.5, kd[1], { 'font-size': cp ? 8.5 : big ? 11.5 : 10.5, fill: C.ink, 'font-weight': 600 });
-      WINS.forEach(function (w, j) {
-        var tx = gx0 + labW + j * (cw + colGap), c = (TH[w[0]] || {})[kd[0]], u = (UT[w[0]] || {})[kd[0]], f = c && c[1] >= 3 ? c[0] / c[1] : null;
-        el('rect', { x: tx, y: yy - bh / 2, width: tw, height: bh, fill: '#f6f8fa', stroke: C.border, 'stroke-width': 0.6 }, svg);
-        if (u) el('rect', { x: tx + u[0] * tw, y: yy - bh / 2, width: Math.max(1, (u[2] - u[0]) * tw), height: bh, fill: 'rgba(110,119,129,0.18)' }, svg);
-        var col = fCol(f, u);
-        if (f != null) el('rect', { x: tx, y: yy - bh / 2 + 2, width: Math.max(1, f * tw), height: bh - 4, fill: col, opacity: col === '#57606a' ? 0.75 : 0.9 }, svg);
-        if (u) el('line', { x1: tx + u[1] * tw, x2: tx + u[1] * tw, y1: yy - bh / 2 - 2, y2: yy + bh / 2 + 2, stroke: C.ink, 'stroke-width': 1.4 }, svg);
-        var vt = txt(svg, tx + tw + 5, yy + 3.5, f == null ? 'n/a' : pctS(f), { 'font-size': cp ? 9 : big ? 11.5 : 10.5, fill: col, 'font-weight': 700 });
-        if (!cp && c) { var t2 = el('tspan', { fill: C.ink3, 'font-weight': 400, 'font-size': 9.5 }, vt); t2.textContent = '  ' + c[0] + ' of ' + c[1]; }
-        cells.push({ x0: tx, x1: tx + cw, y0: yy - rh / 2, y1: yy + rh / 2, kind: kd[1], kk: kd[0], win: w[0], c: c, u: u, f: f, nr: (TH[w[0]] || {}).no_range });
-      });
-    });
-    }
-    if (defLines && cp) wrapTxt(svg, gx0, gTop + gridH + defLh - 1, DEFS, gx1 - gx0, defFs, defLh, defLines);
-    else if (defLines && part === 'vol') wrapTxt(svg, x0, Hc - 32, DEF1, x1 - x0, 9.5, 11.5, 3);   /* at the foot, as every sub-panel's one line of definition */
-    else if (defLines && part === 'closes') wrapTxt(svg, x0, Hc - 32, DEF2, x1 - x0, 9.5, 11.5, 3);
-    else if (defLines) { var dn = wrapTxt(svg, gx0, gTop + gridH + defLh + 2, DEF1, gx1 - gx0, defFs, defLh, 2); wrapTxt(svg, gx0, gTop + gridH + defLh + 2 + dn * defLh, DEF2, gx1 - gx0, defFs, defLh, 2); }
-    /* hover: the day's readings over the chart; a figure's counts and the universe's percentiles over the six figures */
-    var cross = el('line', { x1: 0, x2: 0, y1: pTop, y2: pTop + pH, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
+    /* hover: the day's readings over each chart */
+    var cross = el('line', { x1: 0, x2: 0, y1: 0, y2: 0, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
     tip = document.createElement('div'); tip.className = 'tip'; tip.style.display = 'none'; if (!cp) host.style.position = 'relative'; host.appendChild(tip);
-    var fullDef = '<div class="mut">' + DEF1 + '</div><div class="mut">' + DEF2 + '</div>';
     svg.addEventListener('mousemove', function (ev) {
-      var r = svg.getBoundingClientRect(), sc = Wc / (r.width || Wc), px = (ev.clientX - r.left) * sc, py = (ev.clientY - r.top) * sc, h = '';
-      if (showVol && !tiny && py >= pTop - 4 && py <= pTop + pH + 4) { var i = Math.floor((px - x0) / F.bw); if (i >= 0 && i < F.n) { cross.setAttribute('x1', F.xi(i)); cross.setAttribute('x2', F.xi(i)); cross.setAttribute('opacity', 1);
-          h = '<b>' + fmtDY(dates[i]) + '</b><div>average true range: L5D ' + atrS(K.A5[i]) + ', L1M ' + atrS(K.A1[i]) + ', L3M ' + atrS(K.A3[i]) + '</div>' + (K.ua != null ? '<div class="mut">the universe\'s middle, L3M, as at ' + fmtDY(R.asof) + ': ' + atrS(K.ua) + '</div>' : ''); } }
-      else { cross.setAttribute('opacity', 0); var hits = cells.filter(function (q) { return px >= q.x0 && px <= q.x1 && py >= q.y0 && py <= q.y1; }), hit = hits[0];
-        if (hits.length > 1) h = hits.map(function (q) { return '<b>' + q.kind + ', ' + q.win + '</b>' + (q.c ? '<div>' + q.c[0] + ' of ' + q.c[1] + ' in the top half' + (q.f != null ? ' (' + pctS(q.f) + ')' : '') + (q.u ? '; the universe ' + pctS(q.u[0]) + ', ' + pctS(q.u[1]) + ', ' + pctS(q.u[2]) + ' (10th, middle, 90th)' : '') + '</div>' : ''); }).join('') + fullDef;
-        else if (hit) h = '<b>' + hit.kind + ', ' + hit.win + ' to ' + fmtDY(R.asof) + '</b>' + (hit.c ? '<div>' + hit.c[0] + ' of ' + hit.c[1] + ' closed in the top half of the day\'s range' + (hit.f != null ? ' (' + pctS(hit.f) + ')' : '') + '</div>' : '') +
-          (hit.u ? '<div>the universe (' + ((((U.top_half_counts || {})[hit.win] || {})[hit.kk]) || U.stocks || 'n/a') + ' stocks): 10th percentile ' + pctS(hit.u[0]) + ', middle ' + pctS(hit.u[1]) + ', 90th ' + pctS(hit.u[2]) + '</div>' : '') + (hit.nr ? '<div class="mut">' + hit.nr + ' day' + (hit.nr === 1 ? '' : 's') + ' with no range left out</div>' : '') + fullDef;
-        else if (showCl && py > gTop + gridH) h = fullDef; }
+      var r = svg.getBoundingClientRect(), sc = Wc / (r.width || Wc), px = (ev.clientX - r.left) * sc, py = (ev.clientY - r.top) * sc, h = '', i = Math.floor((px - x0) / F.bw);
+      var reg = regions.filter(function (g) { return py >= g.top - 4 && py <= g.bot + 4; })[0];
+      if (reg && i >= 0 && i < F.n) { cross.setAttribute('x1', F.xi(i)); cross.setAttribute('x2', F.xi(i)); cross.setAttribute('y1', reg.top); cross.setAttribute('y2', reg.bot); cross.setAttribute('opacity', 1);
+        h = '<b>' + fmtDY(dates[i]) + '</b>' + (reg.kind === 'vol' ? '<div>average true range: L5D ' + atrS(K.A5[i]) + ', L1M ' + atrS(K.A1[i]) + ', L3M ' + atrS(K.A3[i]) + '</div>' + (K.ua != null ? '<div class="mut">the universe\'s middle, L3M, as at ' + fmtDY(R.asof) + ': ' + atrS(K.ua) + '</div>' : '') : closesTip(CK, i)); }
       if (!h) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; }
-      tip.innerHTML = h; tip.style.display = 'block'; tip.style.maxWidth = '340px'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 300)) + 'px'; tip.style.top = Math.max(0, ev.clientY - r.top + 10) + 'px'; });
+      tip.innerHTML = h; tip.style.display = 'block'; tip.style.maxWidth = '360px'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 300)) + 'px'; tip.style.top = Math.max(0, ev.clientY - r.top + 10) + 'px'; });
     svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
   }
   /* 29-Oct-2026 16:01 and 16:19 (Richard: image 3 "doesn't communicate anything of value to me on volume trends. It needs to show the
@@ -1008,8 +1027,8 @@
       .concat(uL ? [{ t: 'beneath: up days less down days, ' + uL.u + ' up, ' + uL.n + ' down', c: net[L] >= 0 ? GREEN : C.red, w: 6 }] : []);
     var lastD = null; for (var k3 = n - 1; k3 >= 0; k3--) if (rd[k3] != null) { lastD = k3; break; }
     var itD = (lastD != null ? [{ t: (rd[lastD] >= 0 ? 'at' : '(' + Math.round(-rd[lastD]) + '%) below') + ' its 52W high now', c: C.rel, w: 1.9 }] : []).concat([{ t: '(25%): the sell line, read at the month-end', c: C.red, dash: '3 2', w: 1.4 }]);
-    var itE = rangeKey(m, dates, false).items;
-    var kr = Math.max(keyRows(itA, kx0, kx1), keyRows(itB, kx0, kx1), keyRows(itC, kx0, kx1), keyRows(itD, kx0, kx1), keyRows(itE, kx0, kx1));
+    var itE = rangeKey(m, dates, false).items, itF = closesKey(m, dates, false).items;
+    var kr = Math.max(keyRows(itA, kx0, kx1), keyRows(itB, kx0, kx1), keyRows(itC, kx0, kx1), keyRows(itD, kx0, kx1), keyRows(itE, kx0, kx1), keyRows(itF, kx0, kx1));
     var pT = keyY + (kr - 1) * KEYLH + 9, hP = 170, H = pT + hP + DLB + FOOT + 4;
     var foot = function (svg, s) { wrapTxt(svg, kx0, pT + hP + DLB + 12, s, kx1 - kx0, 9.5, 11.5, 3); };
     /* ---- 1. daily volume */
@@ -1085,9 +1104,9 @@
     /* ---- 4. daily volatility (the shared function; the toggles live in its key) */
     var dE = document.createElement('div'); dE.style.position = 'relative'; dE.style.minWidth = '0'; grid.appendChild(dE);
     rangePane(dE, m, dates, { part: 'vol', w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT, chartH: hP });
-    /* ---- 5. closes in the top half of the day's range (today's six figures until Richard picks the over-time version, D-PMS-V4-168) */
+    /* ---- 5. closes in the top half of the day's range, over time (Richard, 12-Nov-2026 07:16: "Do Option B. Remove Universe.", D-PMS-V4-169) */
     var dF = document.createElement('div'); dF.style.position = 'relative'; dF.style.minWidth = '0'; grid.appendChild(dF);
-    rangePane(dF, m, dates, { part: 'closes', w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT });
+    rangePane(dF, m, dates, { part: 'closes', w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT, chartH: hP });
     /* ---- 6. relative price against its 52W high, last (Richard, 12-Nov-2026) */
     var cD = vCell(grid, cw, H), sD = cD.svg;
     tdBand(sD, FB, 22, 'Relative price against its 52W high (%): more than 25% below at a month-end is a sell signal', 'Relative price against its 52W high: below (25%) at a month-end is a sell signal');
