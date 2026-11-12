@@ -1996,7 +1996,9 @@ function latestCloseDate(ticker) {
 // The one call every total, alert and row makes: the tester with this tranche's own MA, buffer and type.
 function runTranche(ticker, key, t) {
   if (!trancheHeld(t)) return null;
-  return runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, trancheIsCore(t, ticker));
+  var isCore = trancheIsCore(t, ticker);
+  return runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, isCore,
+                   isCore ? core200StartFor(t, ticker) : null);   // CORE-200D-RULE-2026-11-12
 }
 // The stock's live types, in a fixed order, for the colour marks on both pages.
 function stockKinds(invIdx) {
@@ -2447,10 +2449,42 @@ async function runCorrection20261111() {
   if (diskWriteEnabled) await writeStateToDisk();
   return true;
 }
+// CLASS-CHANGES-QUEUE-2026-11-12 (D-PMS-V4-170; Richard, 10-Nov-2026: "Stocks to be categorised correctly in our PMS system
+// automatically. APM to ensure it happens, as part of APM PMS Q&A SOP"). Applies the weekly class check's queue
+// (POSITIONS.class_changes, from pms-data/class-changes.json). Only the S1/S3 label of a Speculative Bet tranche; only when the
+// tranche still holds the 'before' value; each applied change is recorded on the tranche (class_change_log).
+async function runClassChangesQueue() {
+  var q = (typeof POSITIONS !== 'undefined' && POSITIONS && Array.isArray(POSITIONS.class_changes)) ? POSITIONS.class_changes : [];
+  if (!q.length || !Object.keys(EDITS || {}).length) return false;
+  var done = [];
+  Object.keys(EDITS).forEach(function (slot) { trancheKeys(slot).forEach(function (k) {
+    var t = EDITS[slot][k];
+    if (!t || typeof t !== 'object' || !t.tranche_id || !trancheHeld(t)) return;
+    var ticker = effectiveTicker((CONFIG.investments || [])[parseInt(slot, 10)], slot);
+    q.forEach(function (c) {
+      if (!c || c.tranche_id !== t.tranche_id || c.field !== 'bet_stage' || (c.after !== 'S1' && c.after !== 'S3')) return;
+      var log = Array.isArray(t.class_change_log) ? t.class_change_log : [];
+      if (log.some(function (x) { return x.id === c.id; })) return;
+      var cur = t.bet_stage || null;
+      if (cur !== (c.before == null ? null : c.before) || trancheKind(t, ticker) !== 'speculative') return;   // edited since: left alone
+      t.bet_stage = c.after;
+      t.class_change_log = log.concat([{ id: c.id, field: c.field, before: cur, after: c.after, why: c.why || null,
+                                         queued_on: c.queued_on || null, applied_at: new Date().toISOString(), ruled: 'D-PMS-V4-170' }]);
+      done.push(ticker + ' ' + k + ': S1/S3 label ' + (cur || 'none') + ' -> ' + c.after);
+    });
+  }); });
+  if (!done.length) return false;
+  console.log('[D-PMS-V4-170] weekly class check, ' + done.length + ' change(s) applied:\n  ' + done.join('\n  '));
+  seedEditFingerprints();
+  saveEditsToLocalStorage();
+  if (diskWriteEnabled) await writeStateToDisk();
+  return true;
+}
 async function runTrancheTypeChangeover() {
   if (typeChangeoverInFlight) return;
   if (await runEntryDateCorrection()) render();   // D-PMS-V4-155
   if (await runCorrection20261111()) render();   // D-PMS-V4-165
+  if (await runClassChangesQueue()) render();   // D-PMS-V4-170
   if (!Object.keys(EDITS || {}).length) return;
   var need = function (slot, k) {
     var t = EDITS[slot] && EDITS[slot][k];
@@ -3487,7 +3521,46 @@ function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, pr
 }
 // V4: for a Middle Innings Core Investment every stop-loss figure is withheld (null), so no alert, total, sort or chart line
 // can count it; price, value and paper P&L are kept. `core: true` tells the row to grey the stop columns out.
-function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType, isCoreOverride) {
+// CORE-200D-RULE-2026-11-12 (D-PMS-V4-168; Rules section 8). THE 200-DAY LINE RULE FOR CORE MIDDLE INNINGS INVESTMENTS, the twin
+// of core_200d_block in scripts/apm_pms_alignment.py: the 200-day moving average of the share price, the stop-loss at that line
+// less 6%, the 10-day stop-loss rule (stopRuleWalk); the walk starts on 11-Nov-2026 or on the first Core tranche's purchase if
+// later, and judges from that day. A confirmed exit sells every Core tranche of the holding at the Tuesday session. A recorded
+// keep is a stop override with tranche "CORE200". Every Core tranche row shows the holding's verdict.
+var CORE_200D_START = '2026-11-11';
+var CORE_200D_SLOT = 'CORE200';
+function core200StartFor(t, ticker) {
+  var best = null, today = todayISO();
+  Object.keys(EDITS || {}).some(function (ix) {
+    var se = EDITS[ix]; if (!se || typeof se !== 'object') return false;
+    if (!Object.keys(se).some(function (k) { return se[k] === t; })) return false;
+    Object.keys(se).forEach(function (k) {
+      var o = se[k];
+      if (k.charAt(0) === '_' || !o || typeof o !== 'object' || !trancheHeld(o) || o.entry_date > today) return;
+      if (!trancheIsCore(o, ticker)) return;
+      var since = String(o.promoted_at || o.entry_date).slice(0, 10);   // review fix 1: Core since its promotion, if promoted
+      if (!best || since < best) best = since;
+    });
+    return true;
+  });
+  var e = best || (t && t.entry_date) || CORE_200D_START;
+  return e > CORE_200D_START ? e : CORE_200D_START;
+}
+// review fix 3: a recorded keep for the 200-day line rule (tranche CORE200) matches whatever entry date it carries
+function core200Keeps(ticker) {
+  var all = (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.stop_overrides) || [];
+  return all.filter(function (o) { return o && holdingKey(o.ticker) === holdingKey(ticker) && o.tranche === CORE_200D_SLOT; });
+}
+function core200Walk(ticker, startDate) {
+  var series = (CHART_DATA.data || {})[ticker];
+  if (!series) return null;
+  var startIdx = findIndexByDate(ticker, startDate);
+  if (startIdx < 0) return null;
+  var w = stopRuleWalk(series, startIdx, 'ma200', BUFFER, [], stopMechanicalDaysFor(ticker), startDate, null,
+                       { resets: [], judgeFromFirstAbove: false, overrides: core200Keeps(ticker) });
+  if (w) { w.core200 = true; w.core200_start = startDate; }
+  return w;
+}
+function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType, isCoreOverride, core200Start) {
   var r = runTesterAll(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history, promotedAt, slotType);
   // D-PMS-V4-150 ("Q1 = Concur"): the TRANCHE's type decides; the stock's classification only when no type is given
   if (r && r.ok && (isCoreOverride === undefined ? holdingIsCore(ticker) : !!isCoreOverride)) {
@@ -3498,7 +3571,8 @@ function runTester(ticker, pctAum, entryDateStr, stopMa, bufferOverride, history
                current_ma: r.current_ma, current_stop: r.current_stop, stop_distance_pct: r.stop_distance_pct, loss_risk_aum: r.loss_risk_aum };
     r.core = true; r.entry_ma = null; r.entry_stop = null; r.initial_stop_distance_pct = null;
     r.current_ma = null; r.current_stop = null; r.stop_distance_pct = null; r.loss_risk_aum = null;
-    r.entry_warn = null; r.breach = null;
+    r.entry_warn = null;
+    r.breach = core200Walk(ticker, core200Start || CORE_200D_START);   // CORE-200D-RULE-2026-11-12: the holding's 200-day line verdict
   }
   return r;
 }
@@ -5153,7 +5227,8 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       + '<input type="date" class="edit-input date exit-date" value="' + esc(edit.exited_on || '') + '" onchange="setExitDate(' + invIdx + ',\'' + slotType + '\',this.value)" title="The date this tranche was removed (sold)">'
       + (edit.exited_on_exact === false ? '<span class="exit-le" title="Reconstructed: removed on or before this date">&#8804;</span>' : '') + '</span></td>';
   } else if (r && r.ok && r.core) {
-    cells += '<td class="col-group-start"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span></td>';
+    cells += '<td class="col-group-start"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span>'
+      + (r.breach && r.breach.core200 ? ' ' + breachBadge(r) : '') + '</td>';   // CORE-200D-RULE-2026-11-12
   } else if (r && r.ok) {
     cells += '<td class="col-group-start">' + breachBadge(r) + '</td>';
   } else {
@@ -5462,6 +5537,13 @@ function pctBp(v) {
 }
 function esc(s) { var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
 function breachBadge(r) {
+  // CORE-200D-RULE-2026-11-12: the same badges, worded for the 200-day line rule on a Core Middle Innings Investment
+  if (r && r.breach && r.breach.core200 && !r._core200Worded) {
+    var h = breachBadge(Object.assign({}, r, { _core200Worded: true }));
+    h = h.replace('title="', 'title="The 200-day line rule for a Core Middle Innings Investment (from 11-Nov-2026): the 10-day stop-loss rule on the 200-day line, the stop-loss at the line less 6%; an exit sells the whole Core holding at the Tuesday session. ')
+         .replace(/the MA/g, 'the 200-day line').replace(/MA ([0-9])/g, '200-day line $1');
+    return h.replace(/">(EXIT CONFIRMED|TESTING|tested|kept|no)/, '">200-day line: $1');
+  }
   if (!r.breach) return '<span class="badge b-active">no</span>';
   var B = r.breach;
   // D-PMS-V2-17 (Richard, 22-Sep-2026): a tranche bought from that date at or below its MA is not judged until its first close above it
