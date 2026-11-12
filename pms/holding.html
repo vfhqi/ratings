@@ -219,8 +219,10 @@ body.os-on .toc, html.os-on .toc { display:none; }
     if (!T) T = hs.length ? hs[0].t : null;
     var held = !!T && hs.some(function (h) { return h.t === T; });
     var ux = (!held && T && IDX) ? IDX.stocks.filter(function (s) { return s.t === T; })[0] : null;
-    var groups = {}; hs.forEach(function (h) { var g = h.probing ? 'Early Innings Probing Bets' : 'Middle Innings Core Investments'; (groups[g] = groups[g] || []).push(h); });
-    document.getElementById('picker').innerHTML = (ux ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + Object.keys(groups).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    /* D-PMS-V4-175: four groups by Richard's class names (11-Nov-2026), from each holding's tranches; a mixed holding under its Core class */
+    var groups = {}; hs.forEach(function (h) { var g = DU.classOf(h.reading, h.probing).group; (groups[g] = groups[g] || []).push(h); });
+    var GORDER = ['Core Middle Innings Investments', 'Early S2 Probing Bets', 'S1 Speculative Bets', 'S3 Speculative Bets'];
+    document.getElementById('picker').innerHTML = (ux ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + GORDER.filter(function (g) { return groups[g]; }).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
     document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value); };
     var op = document.getElementById('os-picker'); op.innerHTML = document.getElementById('picker').innerHTML; op.value = T; op.onchange = document.getElementById('picker').onchange;   /* the one-screen header's copy */
     findBox();

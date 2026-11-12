@@ -68,7 +68,16 @@
     if (M && M.failed && M.failed.length) out.push('No page could be built in the last update for: ' + M.failed.map(function (x) { return esc((M.failed_names || {})[x] || x); }).join(', ') + '. ' + (M.failed.length === 1 ? 'It is' : 'They are') + ' missing from the list below, not cleared.');
     return out.length ? '<div class="err">' + out.join('<br>') + '</div>' : '';
   }
-  window.DU = { warnBanner: warnBanner, fmtD: fmtD, fmtDY: fmtDY, esc: esc, pctS: pctS, pct0: pct0, pctI: pctI, intS: intS, br: br, sgn: sgn, ratingColor: ratingColor, fmtVol: fmtVol };
+  /* THREE-CLASSES-2026-11-12 (D-PMS-V4-175): a holding's class from its tranches' own classes (reading.tranches[].kind and
+     bet_stage), by Richard's names of 11-Nov-2026; a holding with no tranche class falls back to the old probing flag. */
+  function classOf(R, probingFlag) {
+    var ks = {}, names = { core: 'Core Middle Innings Investment', probing: 'Early S2 Probing Bet', S1: 'S1 Speculative Bet', S3: 'S3 Speculative Bet' };
+    ((R && R.tranches) || []).forEach(function (x) { var k = x.kind || x.type; if (k === 'speculative') k = (x.bet_stage === 'S3') ? 'S3' : 'S1'; if (names[k]) ks[k] = 1; });
+    var got = ['core', 'probing', 'S1', 'S3'].filter(function (k) { return ks[k]; });
+    if (!got.length) got = [probingFlag ? 'probing' : 'core'];
+    return { key: got[0], label: got.length === 1 ? names[got[0]] : 'Mixed: ' + got.map(function (k) { return names[k]; }).join(' and '), group: names[got[0]] + 's' };
+  }
+  window.DU = { classOf: classOf, warnBanner: warnBanner, fmtD: fmtD, fmtDY: fmtDY, esc: esc, pctS: pctS, pct0: pct0, pctI: pctI, intS: intS, br: br, sgn: sgn, ratingColor: ratingColor, fmtVol: fmtVol };
 
   /* ------------------------------------------------------------------ a stacked time chart (SVG), one level deeper on hover */
   function stack(container, opts) {
@@ -398,7 +407,7 @@
     expandCols(Hd);
     var R = Hd.reading, m = { H: Hd, R: R };
     m.t = Hd.ticker; m.name = Hd.name; m.ind = Hd.industry; m.sec = Hd.sector; m.coh = Hd.cohort_name || Hd.cohort; m.probing = !!Hd.probing;
-    m.status = R.holding_status === 'Core Investment' ? 'Middle Innings Core Investment' : (R.holding_status || ''); m.oneOff = !!R.one_off_in_out_link; m.order = R.order_state || '';
+    m.status = classOf(R, m.probing).label;   /* D-PMS-V4-175: Richard's class names, from the tranches */ m.oneOff = !!R.one_off_in_out_link; m.order = R.order_state || '';
     /* 28-Oct-2026 (Richard: "I want to be able to per-stock dashboard for any stock in our universe"; Watson's Q2 = A, D-PMS-V4-102): a stock
        we do not hold has Sell Criteria 1 to 5 read as if held (the Master Dashboard's own readings), and no tranche, MA SL, 30% or item 10 rows */
     m.notHeld = !!R.not_held;
@@ -531,7 +540,7 @@
 
   /* ------------------------------------------------------------------ text pieces */
   function stateWords(m) {
-    if (m.probing) return 'Early Innings Probing Bet: the 10-day stop-loss rule decides the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
+    if (m.probing) return m.status + ': the 10-day stop-loss rule decides the sale. ' + maWords(m) + ' The six Sell Criteria are shown for information.';
     var ma = '';   /* 2-Nov-2026: MA SLs are retired for a Core Investment; its order words are the six Sell Criteria's */
     var o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order;
     if (/^AWAITING/.test(o)) return 'AWAITING REPLACEMENT: ' + m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + '; it is sold when a replacement is bought, under your one-off in/out link.' + ma;
@@ -566,7 +575,7 @@
     var days = {}; m.R.criteria.forEach(function (c) { if (c.reading_day && c.reading_day > wr) days[c.reading_day] = 1; });
     var dl = Object.keys(days).sort(); if (!dl.length) return '';
     var f = firedWords(m), n = m.fired.length, o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order, tue = (/(\d{4}-\d{2}-\d{2})/.exec(o || '') || [])[1];
-    var gives = m.probing ? (n ? (n === 1 ? 'would give a sell signal' : 'would give sell signals') + ' for a Core Investment (information only for an Early Innings Probing Bet): ' + f : 'would give no sell signal even for a Core Investment')
+    var gives = m.probing ? (n ? (n === 1 ? 'would give a sell signal' : 'would give sell signals') + ' for a Core Middle Innings Investment (information only for ' + (/^[AEIOU]/.test(m.status) ? 'an ' : 'a ') + m.status + '): ' + f : 'would give no sell signal even for a Core Middle Innings Investment')
       : n ? (n === 1 ? 'give a sell signal: ' : 'give sell signals: ') + f + (/^AWAITING/.test(o) ? '. It is held under your one-off in/out link, so the rules sell it when its replacement is bought' : /^SELL/.test(o) ? '. The rules sell the whole holding at the Tuesday ' + (tue ? fmtD(tue) + ' ' : '') + 'session' : '')
       : 'give no sell signal from the six Sell Criteria';
     return '<div class="wbefore" style="border-left:3px solid ' + C.amber + ';background:rgba(191,135,0,0.08);padding:6px 10px;margin:2px 0 10px;font-size:13px;line-height:1.45">' +
@@ -583,7 +592,7 @@
   function oneLine(m) {
     var stop = (m.H.stops && m.H.stops[0]) ? String(m.H.stops[0].label || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, function (s) { return fmtD(s); }).replace(/^[A-Z ]+(?= )/, function (s) { return s.toLowerCase(); }) : '';
     var lose = ' What we could lose: ' + (m.estNearer != null ? Math.max(0, m.estNearer).toFixed(2) : 'n/a') + '% of capital.';
-    if (m.probing) return m.name + ' is an Early Innings Probing Bet, so the 10-day stop-loss rule decides the sale. ' + maWords(m) + lose;
+    if (m.probing) return m.name + ' is ' + (/^[AEIOU]/.test(m.status) ? 'an ' : 'a ') + m.status + ', so the 10-day stop-loss rule decides the sale. ' + maWords(m) + lose;
     var nr = m.nearestRow, ex = false;   /* 2-Nov-2026: MA SLs are retired for a Core Investment */
     return (ex ? maWords(m) + ' ' : '') + (m.metCount ? m.metCount + ' of the six Sell Criteria ' + (m.metCount === 1 ? 'gives a sell signal' : 'give a sell signal') + (/^AWAITING/.test(m.order) ? '; it is held under your one-off in/out link until a replacement is bought.' : '.') : 'No sell signal from any of the six Sell Criteria. ' + (m.earlyText || 'Nearest to selling: ' + (nr ? nr.text : ''))) + lose;
   }

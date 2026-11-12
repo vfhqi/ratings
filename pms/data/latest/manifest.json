@@ -1,38 +1,34 @@
 {
- "asof": "2026-11-11",
+ "asof": "2026-11-12",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 436107,
-   "warnings": [
-    "check rs: sector_rs on 2026-10-30 drawn 17, the reader says 18; the reader's value is used"
-   ]
+   "bytes": 436405,
+   "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 423300,
-   "warnings": [
-    "check rs: sector_rs on 2026-10-30 drawn 14, the reader says 16; the reader's value is used"
-   ]
+   "bytes": 428427,
+   "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 445007,
+   "bytes": 445561,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 459704,
+   "bytes": 468351,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 466366,
+   "bytes": 466546,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 456832,
+   "bytes": 457447,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -41,12 +37,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 319767,
+   "bytes": 320610,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 461089,
+   "bytes": 461678,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -55,49 +51,47 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 449789,
+   "bytes": 460158,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 455439,
+   "bytes": 455811,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 456664,
+   "bytes": 457256,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 456934,
+   "bytes": 456582,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 451769,
+   "bytes": 452041,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 469910,
+   "bytes": 460672,
    "warnings": []
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 463648,
+   "bytes": 464415,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 442350,
+   "bytes": 443194,
    "warnings": []
   }
  },
  "failed": [],
  "warnings": [
-  "AZA-SE: check rs: sector_rs on 2026-10-30 drawn 17, the reader says 18; the reader's value is used",
-  "BYLOT-GR: check rs: sector_rs on 2026-10-30 drawn 14, the reader says 16; the reader's value is used",
   "HTWS-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
@@ -105,5 +99,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 114.1
+ "seconds": 66.6
 }
