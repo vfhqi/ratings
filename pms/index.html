@@ -1091,6 +1091,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Load from localStorage initially (migration source if user grants disk later)
   loadEditsFromLocalStorage();
+  adoptPublishedStateIfNewer();   // D-PMS-V4-173: the latest saved positions on any device
   cleanupCorruptPromoteMetadata(); if (typeof applyStopHistoryBackfill === 'function' && typeof EDITS === 'object' && EDITS) { applyStopHistoryBackfill(); }  // D-PMS-67: clean up any already-corrupt state on load
   seedEditFingerprints();           // D-PMS-191: baseline BEFORE any user edit
   restorePosSort();                 // D-PMS-192
@@ -1622,7 +1623,7 @@ async function writeStateToDisk() {
     var writable = await fileHandle.createWritable();
     await writable.write(JSON.stringify(payload, null, 2));
     await writable.close();
-    try { localStorage.setItem('pms_v6_written', payload._meta.saved_at); } catch (e) {}
+    try { localStorage.setItem('pms_v6_written', payload._meta.saved_at); localStorage.setItem('pms_edits_base_at', payload._meta.saved_at); localStorage.removeItem('pms_edits_offline_since'); } catch (e) {}   // D-PMS-V4-173
     lastSavedAt = payload._meta.saved_at; lastSavedToDisk = true; renderSavedAt();  // D-PMS-193
     return true;
   } catch (e) {
@@ -1679,6 +1680,36 @@ async function pruneAutoBackups() {
   }
 }
 
+// PUBLISHED-STATE-2026-11-12 (D-PMS-V4-173; Richard, 12-Nov-2026: "if you do it, then that change is always pushed to the version
+// I can see, regardless of if I am "connected" or not"). POSITIONS.published_state is the desktop's saved positions
+// (pms-data/pms-state.json), published with the page. A browser starts from it when it is newer than the copy this browser
+// started from (pms_edits_base_at, or this browser's own last disk write, pms_v6_written), unless this browser holds edits
+// Richard made while not connected (pms_edits_offline_since): those are kept and the header says so. A connected browser
+// still reads the disk afterwards, exactly as before; the published copy never writes to disk by itself.
+var PUBLISHED_STATE_USED = null, PUBLISHED_STATE_SKIPPED = null;
+function adoptPublishedStateIfNewer() {
+  try {
+    var pub = (typeof POSITIONS !== 'undefined' && POSITIONS) ? POSITIONS.published_state : null;
+    if (!pub || !pub.saved_at || !pub.edits || typeof pub.edits !== 'object') return false;
+    var offline = localStorage.getItem('pms_edits_offline_since');
+    var base = [localStorage.getItem('pms_edits_base_at') || '', localStorage.getItem('pms_v6_written') || ''].sort().pop();
+    var haveLocal = EDITS && typeof EDITS === 'object' && Object.keys(EDITS).length > 0;
+    if (offline && haveLocal) {
+      if (pub.saved_at > base) PUBLISHED_STATE_SKIPPED = { published_at: pub.saved_at, offline_since: offline };
+      return false;
+    }
+    if (haveLocal && !(pub.saved_at > base)) return false;
+    if (haveLocal) { try { localStorage.setItem('pms_edits_pre_published_backup', JSON.stringify({ at: new Date().toISOString(), base: base, EDITS: EDITS })); } catch (e) {} }
+    EDITS = JSON.parse(JSON.stringify(pub.edits));
+    localStorage.setItem('pms_edits_v6', JSON.stringify(EDITS));
+    localStorage.setItem('pms_edits_base_at', pub.saved_at);
+    localStorage.setItem('pms_edits_saved_at_v5', pub.saved_at);
+    lastSavedAt = pub.saved_at; lastSavedToDisk = false;
+    PUBLISHED_STATE_USED = { saved_at: pub.saved_at };
+    console.log('[D-PMS-V4-173] started from the published saved positions of ' + pub.saved_at + ' (this browser started from ' + (base || 'nothing') + ')');
+    return true;
+  } catch (e) { console.warn('[D-PMS-V4-173] published state not used', e); return false; }
+}
 function loadEditsFromLocalStorage() {
   try { var raw = localStorage.getItem('pms_edits_v6') || localStorage.getItem('pms_edits_v5') || localStorage.getItem('pms_edits_v4'); if (raw) EDITS = JSON.parse(raw); } catch(e) { EDITS = {}; }
 }
@@ -1713,10 +1744,14 @@ function renderSavedAt() {
   } else if (diskWriteEnabled) {
     el.innerHTML = esc(shown) + ' <span style="color:var(--fg3)">(disk connected, awaiting first write)</span>';
     el.className = 'pf-value';
+  } else if (PUBLISHED_STATE_USED && !localStorage.getItem('pms_edits_offline_since')) {   // D-PMS-V4-173
+    el.innerHTML = esc(shown) + ' <span style="color:var(--fg3)">the desktop\'s saved positions, published; connect to disk to save a change</span>';
+    el.className = 'pf-value';
   } else {
     el.innerHTML = '<span class="pf-stale">&#9888; ' + esc(shown)
       + ' &mdash; THIS BROWSER ONLY, not saved to disk. '
       + (gestureReconnectArmed ? 'Click anywhere on the page to reconnect.' : 'Press &ldquo;Connect to disk&rdquo;.')   // D-PMS-V4-158
+      + (PUBLISHED_STATE_SKIPPED ? ' Newer saved positions were published at ' + esc(PUBLISHED_STATE_SKIPPED.published_at) + ' and NOT loaded, because this browser holds changes made since ' + esc(PUBLISHED_STATE_SKIPPED.offline_since) + ' while not connected.' : '')   // D-PMS-V4-173
       + '</span>';
     el.className = 'pf-value';
   }
@@ -1724,6 +1759,8 @@ function renderSavedAt() {
 
 function saveEdits() {
   stampChangedTranches();  // D-PMS-191: central last_edited stamping, before anything persists
+  // D-PMS-V4-173: an edit made while not connected is marked, so a newer published copy never replaces it
+  if (!diskWriteEnabled) { try { if (!localStorage.getItem('pms_edits_offline_since')) localStorage.setItem('pms_edits_offline_since', new Date().toISOString()); } catch (e) {} }
   // Always mirror to localStorage for safety
   saveEditsToLocalStorage();
   // Queue async disk write if enabled
