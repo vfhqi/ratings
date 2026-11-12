@@ -8,7 +8,7 @@
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 354286,
+   "bytes": 354280,
    "warnings": []
   },
   "CARL.B-DK": {
@@ -18,7 +18,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 390092,
+   "bytes": 390095,
    "warnings": []
   },
   "FEVR-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 387044,
+   "bytes": 387060,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -37,12 +37,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 281535,
+   "bytes": 281529,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 391619,
+   "bytes": 391615,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -51,12 +51,12 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 380377,
+   "bytes": 380380,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 384433,
+   "bytes": 384425,
    "warnings": []
   },
   "HTRO-SE": {
@@ -66,12 +66,12 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 387367,
+   "bytes": 387370,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 380755,
+   "bytes": 380745,
    "warnings": []
   },
   "HFG-GB": {
@@ -81,12 +81,12 @@
   },
   "ALFEN-NL": {
    "file": "ALFEN-NL.json",
-   "bytes": 392908,
+   "bytes": 392902,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 371265,
+   "bytes": 371262,
    "warnings": []
   }
  },
@@ -99,5 +99,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 116.7
+ "seconds": 93.3
 }
