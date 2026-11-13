@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-11",
+ "current_week": "2026-11-12",
  "prior_week": "2026-09-11",
  "industry": {
   "A. Consumer staples": {
@@ -16,7 +16,7 @@
    "prior": "D"
   },
   "D. Infrastructure": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "E. Utilities": {
@@ -28,11 +28,11 @@
    "prior": "F"
   },
   "G. Financials": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "H. Consumer discretionary": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "I. Transportation": {
@@ -64,17 +64,17 @@
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
-   "current": "B",
+   "current": "C",
    "prior": "A"
   }
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "A.4. Household products": {
@@ -118,7 +118,7 @@
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "C.1. Telecoms - MNOs": {
@@ -178,7 +178,7 @@
    "prior": "C"
   },
   "G.5. Digital investment and trading platforms": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "H.1. Luxury goods": {
@@ -186,7 +186,7 @@
    "prior": "F"
   },
   "H.11. Airlines and travel": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
@@ -194,7 +194,7 @@
    "prior": "F"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "H.15. Automotive - OEM or supplier": {
@@ -230,11 +230,11 @@
    "prior": "C"
   },
   "I.1. Logistics": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "J.1. IT services - consulting": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "J.2. IT services - reselling": {
@@ -250,7 +250,7 @@
    "prior": "D"
   },
   "J.5. Software - VMS": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -282,7 +282,7 @@
    "prior": "B"
   },
   "K.9. Recruitment services": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "L.1. Content, TV and other media": {
@@ -342,11 +342,11 @@
    "prior": "F"
   },
   "O.1. Industrial services": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "D",
+   "current": "C",
    "prior": "A"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
