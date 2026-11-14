@@ -769,7 +769,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .ticker-cell .tk-line2 { display: block; overflow: hidden; text-overflow: ellipsis; font-family: var(--font); font-size: 11px; font-weight: 500; color: var(--fg3); line-height: 15px; }
 .ticker-cell .tk-line2 .tk-primary { font-size: 11px; }
 .ticker-cell .tk-line3 { display: block; overflow: hidden; line-height: 17px; }
-.ticker-cell .tk-line4 { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font); font-size: 10.5px; font-weight: 600; color: var(--fg2); line-height: 14px; }  /* SIX-NAMES-2026-11-14 */
+.ticker-cell .tk-line4 { display: block; white-space: normal; overflow-wrap: break-word; max-width: 210px; font-family: var(--font); font-size: 10.5px; font-weight: 600; color: var(--fg2); line-height: 13px; margin-top: 1px; }  /* SIX-NAMES-2026-11-14: wraps, never cut short (Richard's names are never shortened) */
 .ticker-cell .kind-pill { font-size: 10px; padding: 0 7px; line-height: 15px; margin: 0 3px 0 0; vertical-align: middle; }
 .ticker-cell input.ticker-edit { margin-top: 0; height: 24px; box-sizing: border-box; }
 .dup-slot-icon { color: var(--amber); cursor: help; margin-left: 4px; }
