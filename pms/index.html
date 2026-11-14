@@ -2065,8 +2065,16 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
     if (value > KIND_CAP_DECIMAL[kind] && !confirm((value * 100).toFixed(2) + '% is above the ' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '% usual for a ' + TRANCHE_KIND_LABEL[kind] + ' tranche. Continue?')) { if (inputEl) inputEl.value = ''; return; }
   }
   if (field === 'stop_ma') { value = stopNormaliseMa(rawValue); if (!value) { flashError('MA for the stop-loss must be a whole number of days from ' + STOP_MA_MIN_DAYS + ' to ' + STOP_MA_MAX_DAYS + ' (for example 75D).'); if (inputEl) inputEl.value = ''; return; } }
+  if (field === 'stop_ma' && kind !== 'core') {   // PMS-MA-ABOVE-2026-11-14: a new tranche's line is checked on its day of investment (today until a date is typed)
+    var why1 = maNotSelectable(ticker, null, value);
+    if (why1) { flashError(why1); if (inputEl) inputEl.value = ''; return; }
+  }
   if (field === 'buffer_pct') { var n = parseFloat(rawValue); if (isNaN(n)) return; value = Math.max(0, Math.min(50, n)) / 100; }
   if (field === 'entry_date' && !value) return;
+  if (field === 'entry_date' && kind !== 'core') {   // PMS-MA-ABOVE-2026-11-14: the default line of the new tranche, checked on the date typed
+    var why2 = maNotSelectable(ticker, value, KIND_DEFAULT_STOP[kind]);
+    if (why2) flashError(why2 + ' Choose a shorter line the price is above.');
+  }
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   var key = newTrancheKey(invIdx);
   var t = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], _added_at: new Date().toISOString() };
@@ -3202,6 +3210,11 @@ function setStopMaEdit(invIdx, slotType, inputEl) {
     inputEl.value = stopMaFor(slotType, prior, effectiveTicker(CONFIG.investments[invIdx], invIdx)) || '';
     return;
   }
+  var t0 = getEdit(invIdx, slotType), tk0 = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (trancheKind(t0, tk0) !== 'core') {   // PMS-MA-ABOVE-2026-11-14: a changed line is checked on the latest close
+    var why0 = maNotSelectable(tk0, null, v);
+    if (why0) { flashError(why0); inputEl.value = stopMaFor(slotType, t0, tk0) || ''; return; }
+  }
   setEditField(invIdx, slotType, 'stop_ma', v);
 }
 // V4: the size of a Probing Bet tranche that loses 0.5% of AUM at its stop-loss, capped at 3%: from the entry close (or today's
@@ -3269,6 +3282,19 @@ function pmsFundFactor(ticker, entryDate) {
   var fxe = ccy === 'EUR' ? 1 : onb((b.fx || {})[ccy] || [], e), fxn = ccy === 'EUR' ? 1 : (b.fx_now || {})[ccy];
   if (!re || !rn || !fxe || !fxn) return 1;
   return (fxn / fxe) / (rn / re);
+}
+// PMS-MA-ABOVE-2026-11-14 (Richard, 13-Nov-2026, D-MD-TM-18: "A line may be chosen only when the price is above that moving average on
+// the day of investment"; Position Entry and Exit Rules, sections 5 and 7). Returns null when the line may be chosen, else the reason.
+function maNotSelectable(ticker, dateStr, ma) {
+  var series = (CHART_DATA && CHART_DATA.data || {})[ticker];
+  if (!series || !series.length || !ma) return null;   // no prices to check against: the page does not block
+  var idx = dateStr ? findIndexByDate(ticker, dateStr) : -1;
+  if (idx < 0) idx = series.length - 1;
+  var price = stopNum(series[idx].c), v = stopMaValue(series, idx, ma);
+  if (price == null || v == null) return null;
+  if (price > v) return null;
+  return 'The ' + ma + ' cannot be this tranche\'s stop-loss line: on ' + series[idx].d + ' the close (' + fmt(price, 2) + ') was not above the ' + ma + ' (' + fmt(v, 2) + '). '
+    + 'A line may be chosen only when the price is above that moving average (Position Entry and Exit Rules, 13-Nov-2026).';
 }
 function findIndexByDate(ticker, dateStr) {
   var series = (CHART_DATA.data || {})[ticker];
