@@ -71,6 +71,10 @@
   /* THREE-CLASSES-2026-11-12 (D-PMS-V4-175): a holding's class from its tranches' own classes (reading.tranches[].kind and
      bet_stage), by Richard's names of 11-Nov-2026; a holding with no tranche class falls back to the old probing flag. */
   function classOf(R, probingFlag) {
+    /* SIX-NAMES-2026-11-14 (D-MD-TM-61): the six Investment Classifications of the rules of 13-Nov-2026, from
+       pms-data/held-classifications.json through the extract; the tranche classes below are the fallback. */
+    var hc = R && R.held_classification;
+    if (hc && hc.name) return { key: hc.key, label: hc.name, group: hc.name + 's' };
     var ks = {}, names = { core: 'Core Middle Innings Investment', probing: 'Early S2 Probing Bet', S1: 'S1 Speculative Bet', S3: 'S3 Speculative Bet' };
     ((R && R.tranches) || []).forEach(function (x) { var k = x.kind || x.type; if (k === 'speculative') k = (x.bet_stage === 'S3') ? 'S3' : 'S1'; if (names[k]) ks[k] = 1; });
     var got = ['core', 'probing', 'S1', 'S3'].filter(function (k) { return ks[k]; });
@@ -324,7 +328,7 @@
       lo: -0.2, hi: 0.3, trigger: 0, triggerSide: 'below', fmt: pct0, nfmt: pct0, state: st, todayState: st, ruleIsToday: true, m1d: m.trendFrom, dist: now == null ? 9 : now / 0.5,
       marks: [{ v: t1 ? dAbove(t1.entry_date) : null, kind: 'entry' }, { v: dAbove(m.me3), kind: 'm3' }, { v: dAbove(m.me1), kind: 'm1' }, { v: dAbove(m.me0), kind: 'm0' }, { v: dAbove(m.trendFrom), kind: 'tf' }, { v: now, kind: 'latest' }],
       text: text, text2: rule ? 'The 200D MA is ' + (maNow != null ? fpx(maNow) : 'n/a') + ' and the stop-loss ' + (stNow != null ? fpx(stNow) : 'n/a') + (aboveMa != null ? '; the price is ' + Math.round(Math.abs(aboveMa) * 100) + '% ' + (aboveMa > 0 ? 'above' : 'at or below') + ' the MA.' : '.')
-        : 'Information only: the 200-day line rule sells a Core Middle Innings Investment. Its stop-loss is ' + (stNow != null ? fpx(stNow) : 'n/a') + ', the 200D MA ' + (maNow != null ? fpx(maNow) : 'n/a') + '.' };
+        : 'Information only: the 200-day line rule sells a Core Investment. Its stop-loss is ' + (stNow != null ? fpx(stNow) : 'n/a') + ', the 200D MA ' + (maNow != null ? fpx(maNow) : 'n/a') + '.' };
   }
   var SL_ORDER = { fires: 0, near: 1, clear: 2, info: 3 };
   function slWrap(s, n) { var out = [], cur = ''; String(s || '').split(' ').forEach(function (w) { if ((cur + ' ' + w).trim().length > n && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); return out; }
@@ -824,7 +828,7 @@
     var days = {}; m.R.criteria.forEach(function (c) { if (c.reading_day && c.reading_day > wr) days[c.reading_day] = 1; });
     var dl = Object.keys(days).sort(); if (!dl.length) return '';
     var f = firedWords(m), n = m.fired.length, o = m.R.order_state_criteria != null ? m.R.order_state_criteria : m.order, tue = (/(\d{4}-\d{2}-\d{2})/.exec(o || '') || [])[1];
-    var gives = m.probing ? (n ? (n === 1 ? 'would give a sell signal' : 'would give sell signals') + ' for a Core Middle Innings Investment (information only for ' + (/^[AEIOU]/.test(m.status) ? 'an ' : 'a ') + m.status + '): ' + f : 'would give no sell signal even for a Core Middle Innings Investment')
+    var gives = m.probing ? (n ? (n === 1 ? 'would give a sell signal' : 'would give sell signals') + ' for a Core Investment (information only for ' + (/^[AEIOU]/.test(m.status) ? 'an ' : 'a ') + m.status + '): ' + f : 'would give no sell signal even for a Core Investment')
       : n ? (n === 1 ? 'give a sell signal: ' : 'give sell signals: ') + f + (/^AWAITING/.test(o) ? '. It is held under your one-off in/out link, so the rules sell it when its replacement is bought' : /^SELL/.test(o) ? '. The rules sell the whole holding at the Tuesday ' + (tue ? fmtD(tue) + ' ' : '') + 'session' : '')
       : 'give no sell signal from the six Sell Criteria';
     return '<div class="wbefore" style="border-left:3px solid ' + C.amber + ';background:rgba(191,135,0,0.08);padding:6px 10px;margin:2px 0 10px;font-size:13px;line-height:1.45">' +
