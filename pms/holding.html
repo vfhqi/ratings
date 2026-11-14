@@ -23,6 +23,13 @@ body.toc-pinned .wrap { padding-left:284px; }
 body.os-on .toc, html.os-on .toc { display:none; }
 @media (max-width:1580px) { body.v2:not(.os-on):not(.toc-pinned) .wrap { padding-left:36px; } }   /* where the page reaches the window's edge, the tab sits clear of it */
 @media (max-width:760px) { .toc { display:none; } }
+/* PMS-SLCHARTS-2026-11-14: item 10's one time switch */
+.slbar { display:flex; align-items:center; gap:6px; margin:2px 0 8px; font-size:11.5px; font-weight:400; }
+#s8 h2 .slbar { margin:0 auto 0 18px; }
+.slbar .slw { font:inherit; font-size:11.5px; cursor:pointer; padding:1px 9px; border-radius:4px; border:1px solid #c9cfdc; background:#fff; color:#57606a; }
+.slbar .slw.on { background:#1d2433; color:#fff; border-color:#1d2433; }
+#s8 .ladkey2 { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px 16px; font-size:11px; line-height:1.35; margin-top:6px; }
+@media (max-width:1250px) { #s8 .ladkey2 { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 </style>
 </head>
 <body class="v2">
@@ -159,7 +166,7 @@ body.os-on .toc, html.os-on .toc { display:none; }
   </div>
 
   <div class="sec" id="s8">
-    <h2><span>10. Distance from SLs</span><span class="mut" id="s8-say">nearest first</span></h2>
+    <h2><span>10. Distance from SLs</span><span class="slbar" id="s8-bar"></span><span class="mut" id="s8-say">nearest first; the 200-day line on every stock</span></h2>
     <div class="xs"><div id="ladder"></div></div>
     <div class="ladkey ladkey2" id="ladkey"></div>
   </div>
@@ -316,8 +323,9 @@ body.os-on .toc, html.os-on .toc { display:none; }
     DASH.ratingsRender(document.getElementById('ratings2'), m, widthOf('ratings2'));
     DASH.nubRender(document.getElementById('nub'), m, widthOf('nub'));
     var W = widthOf('ladder'), lad = document.getElementById('ladder'); lad.innerHTML = '';
-    DASH.ladder(lad, m.rowsSorted, { me: { m3: m.me3, m1: m.me1, m0: m.me0 }, width: W, labelWidth: Math.min(310, Math.round(W * 0.30)), rightWidth: Math.min(380, Math.round(W * 0.34)) });
-    document.getElementById('ladkey').innerHTML = DASH.ladderKey(m);
+    /* PMS-SLCHARTS-2026-11-14 (D-MD-TM-11): item 10 as charts, one time switch; the ladder stays in dashboard.js as a fallback */
+    DASH.slCharts(lad, m, { width: W, barHost: document.getElementById('s8-bar') });
+    document.getElementById('ladkey').innerHTML = DASH.slKey(m);
     drawPeers();
     DASH.insightsRender(document.getElementById('insights'), document.getElementById('ins-say'), m);
     DASH.addsRender(document.getElementById('adds'), document.getElementById('add-say'), m);
@@ -325,7 +333,7 @@ body.os-on .toc, html.os-on .toc { display:none; }
   }
   /* 28-Oct-2026 (Richard: "The text on the SP/MA chart should not run over the lines in the chart"): on a wide screen the exit levels
      are named in a right-hand margin beside the price scale and the tranche dates above the plot, so no text sits on the chart */
-  function chartOpts() { var cw = document.getElementById('chart-container').clientWidth || 0, rm = cw >= 1000 ? 300 : cw >= 760 ? 230 : 68; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: rm > 68 ? 50 : 22, r: rm, b: 48, l: 78 } }; } /* 29-Oct-2026: b 32 to 48, room for the month names' row at 1M and 3M (PMS-DASH 16) */ /* re-check 28-Oct: a 230-pixel margin from 760 pixels (an iPad), so the text stays off the chart there too */
+  function chartOpts() { var cw = document.getElementById('chart-container').clientWidth || 0, rm = cw >= 1000 ? 300 : cw >= 760 ? 230 : 68; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: rm > 68 ? 62 : 22, r: rm, b: 48, l: 78 } }; /* 13-Nov-2026: 62, four rows of tranche event labels above the plot */ } /* 29-Oct-2026: b 32 to 48, room for the month names' row at 1M and 3M (PMS-DASH 16) */ /* re-check 28-Oct: a 230-pixel margin from 760 pixels (an iPad), so the text stays off the chart there too */
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');

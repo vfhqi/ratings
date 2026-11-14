@@ -1,10 +1,10 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-14T06:12:04 from master-dashboard/index.html (md5 19cd92bb7b6d92907d56970ae03d330c),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 21. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-14T09:02:03 from master-dashboard/index.html (md5 607bec881ef069d76e94d82d19d59ccd),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 23. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
-var chartVis={ma5:false,ma10:false,ma20:true,ma50:true,ma100:true,ma150:true,ma200:true,obv:true,vol:true,vol20:true,vol50:true};
+var chartVis={ma5:false,ma10:false,ma20:true,ma50:true,ma100:true,ma150:true,ma200:true,obv:true,vol:true,vol20:true,vol50:true,volx:true}; /* PMS-DASH 23 */
 // MD-S76-CHART-PERSIST: localStorage helpers. Key shared across sessions and browser windows.
 var _CHART_PREFS_KEY='vf_chart_prefs_v1';
 function saveChartPrefs(){return; /* PMS-DASH 1 */
@@ -420,7 +420,8 @@ function drawMasterChart(ticker,_sspo){
   }}
 
   // Volume % labels inside bars (when bars wide enough)
-  if(barW>16&&vis.vol){ctx.textAlign="center";
+  /* PMS-DASH 23: the earlier labels (% against the 50-day and the 20-day) are replaced by the volume multiple above or below each candle (PMS-DASH 23d) */
+  if(false&&barW>16&&vis.vol){ctx.textAlign="center";
     for(j=0;j<chart.length;j++){var x2=xPos(j);var barBottom=pad.t+plotH;
       var pct50v=volMA50[j]>0?Math.round((chart[j].v/volMA50[j]-1)*100):0;
       var pct20v=volMA20[j]>0?Math.round((chart[j].v/volMA20[j]-1)*100):0;
@@ -496,13 +497,28 @@ function drawMasterChart(ticker,_sspo){
       _labs.forEach(function(Q){Q.y=Q.ly});_labs.sort(function(a,b){return a.y-b.y});for(var _r=1;_r<_labs.length;_r++){if(_labs[_r].y<_labs[_r-1].y+14)_labs[_r].y=_labs[_r-1].y+14}
       ctx.font='bold 11px sans-serif';ctx.textAlign='right';_labs.forEach(function(Q){var _tw=ctx.measureText(Q.t).width;ctx.fillStyle='rgba(255,255,255,0.88)';ctx.fillRect(W-pad.r-8-_tw,Q.y-11,_tw+6,14);ctx.fillStyle=Q.c;ctx.fillText(Q.t,W-pad.r-4,Q.y)});
     }
-    (_pov.marks||[]).forEach(function(M,mi){var k=_idx[M.d];if(k==null){for(j=0;j<chart.length;j++){if(chart[j].d>=M.d){k=j;break}}}if(k==null||chart[0].d>M.d)return;var xx=xPos(k);
+    /* PMS-DASH 23 (13-Nov-2026, Richard: "show all Tranch Entries, Adds, Promotes, Exits"): many dated marks, so each label takes the
+       lowest row whose last label ends left of it (rows above the plot when the top margin allows, else at the plot's top), never on top
+       of another label; a mark's own colour (purchase and add purple, promotion blue, sale orange) */
+    var _mk=[];(_pov.marks||[]).forEach(function(M){var k=_idx[M.d];if(k==null){for(j=0;j<chart.length;j++){if(chart[j].d>=M.d){k=j;break}}}if(k==null||chart[0].d>M.d)return;_mk.push({M:M,x:xPos(k)})});
+    _mk.sort(function(a,b){return b.x-a.x}); /* the newest first, so if a label must be left out it is the oldest */
+    var top_=pad.t>=40,_nr=top_?Math.max(1,Math.floor((pad.t-8)/12)):5,_re=[];ctx.font='11px sans-serif';
+    _mk.forEach(function(o){var M=o.M,xx=o.x;
       ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1.2;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,pad.t+plotH);ctx.stroke();ctx.setLineDash([]);
-      if(M.label){ctx.font='11px sans-serif';ctx.textAlign='left';var rw=(M.row!=null?M.row:mi)%3,top_=pad.t>=40,ly=top_?pad.t-5-rw*12:pad.t+12+rw*13;
-        if(top_){ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1;ctx.setLineDash([2,2]);ctx.beginPath();ctx.moveTo(xx,ly+2);ctx.lineTo(xx,pad.t);ctx.stroke();ctx.setLineDash([])}
-        ctx.fillStyle='#ffffff';var tw=ctx.measureText(M.label).width,lx_=(xx+4+tw>W-2)?xx-4-tw:xx+4;ctx.fillRect(lx_-2,ly-10,tw+4,13);ctx.fillStyle=M.color||'#8250df';ctx.fillText(M.label,lx_,ly)} /* PMS-DASH 21 (6-Nov-2026): a tranche date near the right edge is written left of its line, never cut off */});
+      if(!M.label)return;var tw=ctx.measureText(M.label).width,lx_=(xx+4+tw>W-2)?xx-4-tw:xx+4,rw=0;
+      var _hit=function(r){return (_re[r]||[]).some(function(q){return lx_<q[1]+6&&lx_+tw>q[0]-6})};while(rw<_nr&&_hit(rw))rw++;if(rw>=_nr)return; /* no free row: the mark's line is drawn, its words left out rather than written over another label */(_re[rw]=_re[rw]||[]).push([lx_,lx_+tw]);
+      var ly=top_?pad.t-9-rw*12:pad.t+12+rw*13; /* 4 pixels clear of the price scale's top number */
+      if(top_){ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1;ctx.setLineDash([2,2]);ctx.beginPath();ctx.moveTo(xx,ly+2);ctx.lineTo(xx,pad.t);ctx.stroke();ctx.setLineDash([])}
+      ctx.fillStyle='#ffffff';ctx.fillRect(lx_-2,ly-10,tw+4,13);ctx.fillStyle=M.color||'#8250df';ctx.textAlign='left';ctx.fillText(M.label,lx_,ly)}); /* PMS-DASH 21: a label near the right edge is written left of its line */
   }
   window.PMS_CHART_LAYOUT=window.PMS_CHART_LAYOUT||{};window.PMS_CHART_LAYOUT[_cid]={W:W,H:H,pad:pad,n:n,barW:barW,dates:chart.map(function(r){return r.d})}; /* PMS-DASH 8 */
+  /* PMS-DASH 23d (Richard, 13-Nov-2026 12:33: "Add a toggle that shows above (green positive SP day) or below (red negative SP day) volume vs. ... average ... to 1DP, e.g. 1.3, 1.9, 0.8"; Question 5: "Only for 1M and 3M zooms"; 13-Nov 16:44: against the 50-day average): each day's volume as a multiple of its 50-day average, one decimal, green above an up day's candle (close at or above the previous close), red below a down day's; drawn after the lines, with a halo; legend toggle "Vol / 50D avg" */
+  var _zNow=(_sspo&&_sspo.zoom)||chartZoom;
+  if(vis.volx!==false&&(_zNow==="1M"||_zNow==="3M")){ctx.save();ctx.textAlign="center";ctx.font=(_zNow==="1M"?"bold 11px":"bold 9px")+" sans-serif";ctx.lineJoin="round";
+    for(j=0;j<chart.length;j++){if(!(volMA50[j]>0))continue;var _vm=chart[j].v/volMA50[j];var _pc=fullChart[visStart+j-1];var _up=_pc?chart[j].c>=_pc.c:chart[j].c>=chart[j].o;
+      var _ty=_up?priceY(chart[j].h)-5:priceY(chart[j].l)+(_zNow==="1M"?13:11);var _tx=xPos(j),_t=_vm.toFixed(1);
+      ctx.lineWidth=3;ctx.strokeStyle=bgCol;ctx.strokeText(_t,_tx,_ty);ctx.fillStyle=_up?"#1a7f37":"#cf222e";ctx.fillText(_t,_tx,_ty);}
+    ctx.restore();}
   // Current price label (bold, RHS)
   if(chart.length>0){var lastC=chart[chart.length-1].c;var lcy2=priceY(lastC);ctx.fillStyle=textColBright;ctx.font="bold 13px monospace";ctx.textAlign="left";_mal.push({y:lcy2,c:textColBright,t:_fpx(lastC),f:'bold 13px monospace',p:1})}_drawMal(); /* PMS-DASH 15, 16 */
 
@@ -544,7 +560,8 @@ function chartLegendHTML(){
     {key:"ma100",label:"MA-100D",color:"#2ca02c"},{key:"ma150",label:"MA-150D",color:"#1a5276"},
     {key:"ma200",label:"MA-200D (absolute)",color:"#4a3d9e"} /* PMS-DASH 18 (30-Oct-2026, Richard: "Make sure any reference to the 200D MAs is called either relative or absolute") */,{key:"obv",label:"OBV",color:"#bc8cff"},
     {key:"vol",label:"Volume",color:"rgba(204,180,0,0.6)"},{key:"vol50",label:"Vol 50D MA",color:"#9a6700"},
-    {key:"vol20",label:"Vol 20D MA",color:"#0969da"}
+    {key:"vol20",label:"Vol 20D MA",color:"#0969da"},
+    {key:"volx",label:"Vol \u00f7 50D avg (1M, 3M zooms)",color:"#1a7f37"} /* PMS-DASH 23 */
   ];
   var h="";
   for(var j=0;j<items.length;j++){
