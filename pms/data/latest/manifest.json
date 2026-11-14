@@ -23,7 +23,7 @@
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 579964,
+   "bytes": 579983,
    "warnings": []
   },
   "HTWS-GB": {
@@ -66,7 +66,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509849,
+   "bytes": 509870,
    "warnings": []
   },
   "DIE-BE": {
@@ -94,5 +94,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 70.9
+ "seconds": 93.4
 }
