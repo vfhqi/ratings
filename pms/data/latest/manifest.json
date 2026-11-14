@@ -23,7 +23,7 @@
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 579983,
+   "bytes": 579964,
    "warnings": []
   },
   "HTWS-GB": {
@@ -94,5 +94,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 137.2
+ "seconds": 70.9
 }
