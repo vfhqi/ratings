@@ -3,32 +3,32 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 436899,
+   "bytes": 437400,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 428748,
+   "bytes": 429101,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 446131,
+   "bytes": 447491,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 468972,
+   "bytes": 469290,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 467158,
+   "bytes": 468260,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 458046,
+   "bytes": 458474,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -37,12 +37,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 321368,
+   "bytes": 322052,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 462439,
+   "bytes": 462873,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -51,37 +51,37 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 460803,
+   "bytes": 461356,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 456448,
+   "bytes": 457121,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 457792,
+   "bytes": 458440,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 457156,
+   "bytes": 457821,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 452645,
+   "bytes": 453238,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 461196,
+   "bytes": 462303,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 443716,
+   "bytes": 444570,
    "warnings": []
   }
  },
@@ -94,5 +94,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 68.0
+ "seconds": 123.0
 }
