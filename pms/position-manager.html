@@ -769,6 +769,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .ticker-cell .tk-line2 { display: block; overflow: hidden; text-overflow: ellipsis; font-family: var(--font); font-size: 11px; font-weight: 500; color: var(--fg3); line-height: 15px; }
 .ticker-cell .tk-line2 .tk-primary { font-size: 11px; }
 .ticker-cell .tk-line3 { display: block; overflow: hidden; line-height: 17px; }
+.ticker-cell .tk-line4 { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font); font-size: 10.5px; font-weight: 600; color: var(--fg2); line-height: 14px; }  /* SIX-NAMES-2026-11-14 */
 .ticker-cell .kind-pill { font-size: 10px; padding: 0 7px; line-height: 15px; margin: 0 3px 0 0; vertical-align: middle; }
 .ticker-cell input.ticker-edit { margin-top: 0; height: 24px; box-sizing: border-box; }
 .dup-slot-icon { color: var(--amber); cursor: help; margin-left: 4px; }
@@ -3319,6 +3320,14 @@ function holdingStatus(ticker) {
   }
   return _HOLDING_STATUS_N[holdingKey(ticker)] || null;
 }
+// SIX-NAMES-2026-11-14 (D-MD-TM-61): the holding's Investment Classification under the six names (display only;
+// pms-data/held-classifications.json, embedded by generate_position_data.py as POSITIONS.held_classifications).
+function heldClassName(ticker) {
+  var hc = (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.held_classifications) || {};
+  var k = holdingKey(ticker), out = null;
+  Object.keys(hc).forEach(function (t) { if (holdingKey(t) === k) out = hc[t]; });
+  return out;
+}
 function holdingIsCore(ticker) { return /^core/i.test(String(holdingStatus(ticker) || '').trim()); }
 var CORE_NOT_USED_TEXT = 'Not used: Middle Innings Core Investment (sold by the six Sell Criteria)';
 // Richard's recorded keeps (pms-data/stop-overrides.json, embedded as POSITIONS.stop_overrides), matched by ticker, slot type
@@ -5199,7 +5208,8 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       tickerCellHtml = '<span class="tk-line1" title="' + esc(displayName) + '">' + esc(displayName) + '</span>'
         + '<span class="tk-line2"><span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>'
         + (pxTxt ? '<span class="tk-px" title="' + esc(pxTitle) + '"> · ' + pxTxt + '</span>' : '') + '</span>'
-        + '<span class="tk-line3">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</span>';
+        + '<span class="tk-line3">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</span>'
+        + (heldClassName(ticker) ? '<span class="tk-line4" title="Investment Classification (Position Entry and Exit Rules, 13-Nov-2026): ' + esc(heldClassName(ticker)) + '">' + esc(heldClassName(ticker)) + '</span>' : '');   // SIX-NAMES-2026-11-14
     }
     var sev = isPlaceholder ? '' : stockSeverity(invIdx, ticker);
     cells += '<td class="al ticker-cell' + (sev ? ' tk-sev-' + sev : '') + '" rowspan="' + (totalRowspan || 1) + '">' + tickerCellHtml + '</td>';
