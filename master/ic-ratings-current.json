@@ -299,7 +299,7 @@
       "market_cap_eur_bn": 18.5,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-13",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
@@ -307,7 +307,7 @@
         "p3_fundamental_change": "—",
         "p4_building_blocks": "—",
         "p5_ss_earnings_momentum": "B",
-        "p6_valuation": "A"
+        "p6_valuation": "B"
       },
       "investment_case": {
         "primary_setup": null,
@@ -327,7 +327,7 @@
         "reassessment_trigger": null
       },
       "interest_level": "medium",
-      "_quant_refresh_at": "2026-11-13"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "XVIVO",
@@ -336,10 +336,10 @@
       "market_cap_eur_bn": 1.2,
       "stage": "DD",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "D",
+        "p1_technical_momentum": "F",
         "p2_market_paradigm_fit": "—",
         "p3_fundamental_change": "—",
         "p4_building_blocks": "—",
@@ -364,7 +364,7 @@
         "reassessment_trigger": null
       },
       "interest_level": "medium",
-      "_quant_refresh_at": "2026-11-14",
+      "_quant_refresh_at": "2026-11-15",
       "_quant_source_ticker": "XVIVO-SE"
     },
     {
@@ -455,7 +455,7 @@
       "last_updated": "2026-04-16",
       "last_updated_by": "APM",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "C",
@@ -480,7 +480,7 @@
         "reassessment_trigger": "Minervini <7/8 sustained; DC quarterly growth <20% x2; BEAD cancelled/delayed >24M; value-destructive M&A"
       },
       "interest_level": "medium",
-      "_p1_refresh_at": "2026-11-14"
+      "_p1_refresh_at": "2026-11-15"
     },
     {
       "ticker": "ASML",
@@ -497,7 +497,7 @@
         "p3_fundamental_change": "B",
         "p4_building_blocks": "B",
         "p5_ss_earnings_momentum": "A",
-        "p6_valuation": "B"
+        "p6_valuation": "A"
       },
       "investment_case": {
         "primary_setup": "Demand-Driven EPSU/EPT (AI Capex Supercycle)",
@@ -521,7 +521,7 @@
       "_quant_refresh_at": "2026-06-26",
       "_quant_source_ticker": "ASML-NL",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_p6_refresh_at": "2026-11-10",
+      "_p6_refresh_at": "2026-11-15",
       "_p1_refresh_at": "2026-11-11"
     },
     {
@@ -1796,7 +1796,7 @@
         "p3_fundamental_change": "A",
         "p4_building_blocks": "B",
         "p5_ss_earnings_momentum": "D",
-        "p6_valuation": "B"
+        "p6_valuation": "A"
       },
       "investment_case": {
         "primary_setup": null,
@@ -1818,7 +1818,7 @@
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
       "_quant_refresh_at": "2026-07-17",
-      "_p6_refresh_at": "2026-11-10",
+      "_p6_refresh_at": "2026-11-15",
       "_p1_refresh_at": "2026-10-03"
     },
     {
@@ -2096,10 +2096,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-12",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "C",
@@ -2125,7 +2125,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-12"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "VOD-GB",
@@ -2443,7 +2443,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-13",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
@@ -2451,7 +2451,7 @@
         "p3_fundamental_change": "D",
         "p4_building_blocks": "D",
         "p5_ss_earnings_momentum": "D",
-        "p6_valuation": "B"
+        "p6_valuation": "A"
       },
       "investment_case": {
         "primary_setup": null,
@@ -2472,7 +2472,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-13"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "LBTYA-US",
@@ -2557,10 +2557,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "B",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "B",
@@ -2586,7 +2586,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "MOVE-CH",
@@ -3091,14 +3091,14 @@
       "market_cap_eur_bn": null,
       "stage": "Early-Stage Assessment",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "B",
-        "p5_ss_earnings_momentum": "A",
+        "p5_ss_earnings_momentum": "B",
         "p6_valuation": "D"
       },
       "investment_case": {
@@ -3120,7 +3120,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "PROX-BE",
@@ -3205,10 +3205,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-13",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "C",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
@@ -3234,7 +3234,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-13"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "ALIF.B-SE",
@@ -3471,7 +3471,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-10",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
@@ -3479,6 +3479,44 @@
         "p3_fundamental_change": "C",
         "p4_building_blocks": "D",
         "p5_ss_earnings_momentum": "D",
+        "p6_valuation": "C"
+      },
+      "investment_case": {
+        "primary_setup": null,
+        "supporting_setup": null,
+        "setup_maturity": null,
+        "false_friend_risk": null,
+        "fulcrum_drivers": null,
+        "key_drivers": null,
+        "transmission_clarity": null,
+        "complexity_flag": false
+      },
+      "actions": {
+        "apm_recommendation": null,
+        "next_action": null,
+        "key_question": null,
+        "parking_reason": null,
+        "reassessment_trigger": null
+      },
+      "interest_level": "medium",
+      "_pipeline_source": "memo-pipeline/Station-6",
+      "_quant_refresh_at": "2026-11-15"
+    },
+    {
+      "ticker": "CMB-IT",
+      "company_name": "CMB-IT",
+      "sector": null,
+      "market_cap_eur_bn": null,
+      "stage": "Triaging",
+      "status": "Active",
+      "last_updated": "2026-11-15",
+      "last_updated_by": "quant_refresh",
+      "pillars": {
+        "p1_technical_momentum": "D",
+        "p2_market_paradigm_fit": "B",
+        "p3_fundamental_change": "B",
+        "p4_building_blocks": "C",
+        "p5_ss_earnings_momentum": "B",
         "p6_valuation": "D"
       },
       "investment_case": {
@@ -3500,45 +3538,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-10"
-    },
-    {
-      "ticker": "CMB-IT",
-      "company_name": "CMB-IT",
-      "sector": null,
-      "market_cap_eur_bn": null,
-      "stage": "Triaging",
-      "status": "Active",
-      "last_updated": "2026-11-14",
-      "last_updated_by": "quant_refresh",
-      "pillars": {
-        "p1_technical_momentum": "C",
-        "p2_market_paradigm_fit": "B",
-        "p3_fundamental_change": "B",
-        "p4_building_blocks": "C",
-        "p5_ss_earnings_momentum": "B",
-        "p6_valuation": "F"
-      },
-      "investment_case": {
-        "primary_setup": null,
-        "supporting_setup": null,
-        "setup_maturity": null,
-        "false_friend_risk": null,
-        "fulcrum_drivers": null,
-        "key_drivers": null,
-        "transmission_clarity": null,
-        "complexity_flag": false
-      },
-      "actions": {
-        "apm_recommendation": null,
-        "next_action": null,
-        "key_question": null,
-        "parking_reason": null,
-        "reassessment_trigger": null
-      },
-      "interest_level": "medium",
-      "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "HIAB-FI",
@@ -3775,7 +3775,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-02",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
@@ -3783,7 +3783,7 @@
         "p3_fundamental_change": "D",
         "p4_building_blocks": "C",
         "p5_ss_earnings_momentum": "D",
-        "p6_valuation": "A"
+        "p6_valuation": "B"
       },
       "investment_case": {
         "primary_setup": null,
@@ -3804,7 +3804,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-02"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "BCHN-CH",
@@ -3851,10 +3851,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "C",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
@@ -3880,7 +3880,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "DEMANT-DK",
@@ -4383,7 +4383,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-11",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "B",
@@ -4391,7 +4391,7 @@
         "p3_fundamental_change": "C",
         "p4_building_blocks": "D",
         "p5_ss_earnings_momentum": "B",
-        "p6_valuation": "F"
+        "p6_valuation": "D"
       },
       "investment_case": {
         "primary_setup": null,
@@ -4412,7 +4412,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-11"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "EXENS-FR",
@@ -4763,7 +4763,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-11",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
@@ -4771,7 +4771,7 @@
         "p3_fundamental_change": "D",
         "p4_building_blocks": "D",
         "p5_ss_earnings_momentum": "C",
-        "p6_valuation": "C"
+        "p6_valuation": "B"
       },
       "investment_case": {
         "primary_setup": null,
@@ -4792,7 +4792,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-11"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "PPC-GR",
@@ -5219,10 +5219,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-12",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "A",
+        "p1_technical_momentum": "B",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "D",
@@ -5248,7 +5248,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-12"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "LAGR.B-SE",
@@ -5371,7 +5371,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-13",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "C",
@@ -5379,7 +5379,7 @@
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
         "p5_ss_earnings_momentum": "B",
-        "p6_valuation": "A"
+        "p6_valuation": "B"
       },
       "investment_case": {
         "primary_setup": null,
@@ -5400,7 +5400,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-13"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "ADS-DE",
@@ -5713,7 +5713,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-10",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "D",
@@ -5721,7 +5721,7 @@
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
         "p5_ss_earnings_momentum": "B",
-        "p6_valuation": "C"
+        "p6_valuation": "B"
       },
       "investment_case": {
         "primary_setup": null,
@@ -5742,7 +5742,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-10"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "ATS-AT",
@@ -5789,10 +5789,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "C",
+        "p1_technical_momentum": "A",
         "p2_market_paradigm_fit": "D",
         "p3_fundamental_change": "B",
         "p4_building_blocks": "C",
@@ -5818,7 +5818,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "BOKU-GB",
@@ -6435,7 +6435,7 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-13",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
         "p1_technical_momentum": "F",
@@ -6443,7 +6443,7 @@
         "p3_fundamental_change": "C",
         "p4_building_blocks": "C",
         "p5_ss_earnings_momentum": "C",
-        "p6_valuation": "D"
+        "p6_valuation": "F"
       },
       "investment_case": {
         "primary_setup": null,
@@ -6464,7 +6464,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-13"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "GRG-GB",
@@ -7232,10 +7232,10 @@
       "market_cap_eur_bn": null,
       "stage": "Triaging",
       "status": "Active",
-      "last_updated": "2026-11-14",
+      "last_updated": "2026-11-15",
       "last_updated_by": "quant_refresh",
       "pillars": {
-        "p1_technical_momentum": "B",
+        "p1_technical_momentum": "C",
         "p2_market_paradigm_fit": "C",
         "p3_fundamental_change": "C",
         "p4_building_blocks": "D",
@@ -7261,7 +7261,7 @@
       },
       "interest_level": "medium",
       "_pipeline_source": "memo-pipeline/Station-6",
-      "_quant_refresh_at": "2026-11-14"
+      "_quant_refresh_at": "2026-11-15"
     },
     {
       "ticker": "YSN-DE",
