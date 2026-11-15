@@ -2391,6 +2391,11 @@ function addTrancheFromUbs(invIdx, date, pct) {
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   var key = newTrancheKey(invIdx);
   EDITS[invIdx][key] = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], entry_date: date, target_size_pct: Math.round(target * 1e6) / 1e6, _added_at: new Date().toISOString(), added_from_ubs: true };
+  if (kind === 'core') {   // CORE-OWN-LINE-UBS-2026-11-15: a Core purchase found in UBS's file is a new Core tranche, on its own line (rules sections 2 and 5)
+    EDITS[invIdx][key].own_line = true;
+    var whyU = maNotSelectable(ticker, date, EDITS[invIdx][key].stop_ma);
+    if (whyU) flashError(whyU + ' Change its MA to a line the price was above.');
+  }
   saveEdits(); render();
 }
 var UBS_GAP_FLAG_PP = 0.3;   // the gap that is raised between the book and UBS (D-PMS-V4-146)
