@@ -3,7 +3,7 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 486554,
+   "bytes": 486550,
    "warnings": []
   },
   "BYLOT-GR": {
@@ -51,12 +51,12 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 623667,
+   "bytes": 623668,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 617890,
+   "bytes": 617891,
    "warnings": []
   },
   "HTRO-SE": {
@@ -66,7 +66,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 507477,
+   "bytes": 507454,
    "warnings": []
   },
   "DIE-BE": {
@@ -94,5 +94,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 66.0
+ "seconds": 124.8
 }
