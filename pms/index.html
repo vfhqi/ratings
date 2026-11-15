@@ -131,6 +131,13 @@ body.hide-alerts .warn-line { display: none !important; }
 .edit-input.pct { width: 55px; text-align: right; }
 .edit-input.ma { width: 60px; padding: 2px 18px 2px 4px; -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%23656d76'/></svg>"); background-repeat: no-repeat; background-position: right 4px center; background-size: 8px 5px; }
 .edit-input.ma::-ms-expand { display: none; }
+.own-line-tick { display: flex; justify-content: center; align-items: center; gap: 3px; margin: 1px 0 0; font-family: var(--font, sans-serif); font-size: 10.5px; color: var(--fg2, #57606a); white-space: nowrap; cursor: pointer; }   /* CORE-OWN-LINE-2026-11-15 */
+.pos-table tbody tr.tranche-row > td.ma-own-cell.ma-own-cell { white-space: normal; overflow: visible; padding-top: 3px; padding-bottom: 3px; }
+/* the verdict badges are never cut off with an ellipsis: the cell wraps, so the row grows only when it has more to show */
+.pos-table tbody tr.tranche-row > td.info-cell.info-cell { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; padding-top: 3px; padding-bottom: 3px; text-align: left; }
+.pos-table tbody tr.tranche-row > td.info-cell .badge { display: inline-block; margin: 1px 0; white-space: nowrap; }
+.own-line-tick input { margin: 0; width: 12px; height: 12px; }
+.badge.b-own { background: #e8eefb; color: #2a4f9e; border: 1px solid #b9c9ee; }
 .input-with-suffix { display: inline-flex; align-items: center; gap: 2px; }
 .input-suffix { color: var(--fg3); font-size: 11px; font-family: var(--mono); }
 
@@ -585,6 +592,10 @@ body.scrolled-past-header .sticky-top .header.toolbar { border-radius: var(--rad
 
 /* --- Messages --- */
 #errorBox.visible, #successBox.visible { border-radius: var(--radius); font-weight: 500; }
+/* CORE-OWN-LINE-2026-11-15: a refusal or a confirmation is pinned at the top of the screen, so it is seen from whichever row was edited */
+#errorBox.visible, #successBox.visible { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); width: min(900px, calc(100vw - 40px)); margin: 0; z-index: 10000; box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+#errorBox.visible { background: linear-gradient(var(--red-bg), var(--red-bg)), #fff; }
+#successBox.visible { background: linear-gradient(var(--green-bg), var(--green-bg)), #fff; }
 
 /* --- KPI strip --- */
 .portfolio-summary { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 14px 0; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
@@ -1041,7 +1052,8 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['176px', '158px', '70px', '140px', '172px', '78px', '80px', '58px', '58px', '58px', '58px', '72px', '72px', '72px', '80px', '64px', '104px', '88px', '70px', '74px', '210px', '28px'];   // D-PMS-V4-159: one-line rows; the surplus width is spread over every column   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
+var COL_WIDTHS = ['176px', '158px', '70px', '140px', '172px', '78px', '80px', '58px', '58px', '58px', '58px', '72px', '72px', '72px', '80px', '64px', '104px', '88px', '70px', '74px', '280px', '28px'];   // CORE-OWN-LINE-2026-11-15: the Information column fits one verdict badge a line (was 210px, which cut the 200-day line rule's badge off)
+//   // D-PMS-V4-159: one-line rows; the surplus width is spread over every column   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
 var CONFIG = null;
@@ -1957,6 +1969,55 @@ function trancheKind(t, ticker) {
   return kindFromHoldingStatus(ticker) || 'probing';
 }
 function trancheIsCore(t, ticker) { return trancheKind(t, ticker) === 'core'; }
+// CORE-OWN-LINE-2026-11-15 (D-MD-TM-83; Position Entry and Exit Rules of 13-Nov-2026, sections 2, 5, 7 and 8): a tranche added to a
+// Core Investment starts on its own 50, 100, 150 or 200-day line until promoted. That line's 10-day stop-loss rule sells that
+// tranche alone; the six Sell Criteria and the 200-day line rule still sell the whole holding. Marked own_line: true on the
+// tranche (every Core tranche bought before 13-Nov-2026 is full Core and has no mark, so nothing about it changes). A 200-day
+// own line is the 200-day line rule itself (section 8), so only the 50, 100 and 150-day lines get a walk of their own.
+// The Python twin is core_own_line in scripts/apm_pms_alignment.py and scripts/pms_book.py.
+var OWN_LINE_LINES = ['50D', '100D', '150D', '200D'];
+var OWN_LINE_WALKED = { '50D': true, '100D': true, '150D': true };
+var OWN_LINE_TEXT = 'Own line (Position Entry and Exit Rules, 13-Nov-2026): a Core tranche added since 13-Nov-2026 is on its own 50, 100, 150 or 200-day line until promoted; that line\'s 10-day stop-loss rule sells this tranche alone, and the six Sell Criteria and the 200-day line rule still sell the whole holding. Untick to promote it to full Core status (no line of its own).';
+function trancheOwnLineMarked(t, ticker) { return !!t && t.own_line === true && trancheIsCore(t, ticker); }
+function trancheOwnLine(t, ticker) { return trancheOwnLineMarked(t, ticker) && !!OWN_LINE_WALKED[t.stop_ma || KIND_DEFAULT_STOP.core]; }
+// Rules section 7: promotion needs the price more than 10% above the tranche's entry price, and above the wider moving average
+// (for full Core status the 200-day line). Information for the page's warning; Richard decides.
+function ownLinePromotionTest(ticker, t) {
+  var series = (CHART_DATA && CHART_DATA.data || {})[ticker];
+  if (!series || !series.length || !t || !t.entry_date) return null;
+  var i0 = findIndexByDate(ticker, t.entry_date), n = series.length - 1;
+  var entry = i0 >= 0 ? stopNum(series[i0].c) : null, px = stopNum(series[n].c), m200 = stopMaValue(series, n, '200D');
+  var up = (entry && px != null) ? px / entry - 1 : null, above = (m200 != null && px != null) ? px > m200 : null;
+  return { ok: up != null && up > 0.10 && above === true, up: up, above: above, px: px, ma200: m200, d: series[n].d };
+}
+// Tick or untick "own line" on a Core tranche. Ticking puts it on its own line from the latest close (the line must be one of
+// the four and the price above it; the 10-day count starts that day, as a type change does). Unticking is a promotion to full
+// Core status: the page shows the promotion test and asks before it changes anything.
+function setOwnLine(invIdx, key, on, inputEl) {
+  var t = getEdit(invIdx, key), ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!t || !trancheIsCore(t, ticker)) return;
+  var today = todayISO(), line = t.stop_ma || KIND_DEFAULT_STOP.core;
+  if (on) {
+    if (OWN_LINE_LINES.indexOf(line) < 0) { flashError('A Core tranche\'s own line is the 50, 100, 150 or 200-day line; type one of those in the MA cell first (this tranche shows ' + line + ').'); if (inputEl) inputEl.checked = false; return; }
+    var why = maNotSelectable(ticker, null, line);
+    if (why) { flashError(why); if (inputEl) inputEl.checked = false; return; }
+    t.stop_ma = line;
+    if (!Array.isArray(t.stop_history)) t.stop_history = [];
+    var onDay = latestCloseDate(ticker);
+    if (t.entry_date && onDay < t.entry_date) onDay = t.entry_date;
+    t.stop_history.push({ stop_ma: line, set_on: onDay, exact: true, via: 'own-line', previous: line, explicit: true,
+      note: 'put on its own line (' + line + ') on ' + today + '; the 10-day count starts from the close of ' + onDay });
+  } else {
+    var pt = ownLinePromotionTest(ticker, t);
+    var msg = pt ? ('Promotion test (rules section 7) on ' + pt.d + ': ' + (pt.up == null ? 'no entry price' : (pt.up * 100).toFixed(1) + '% from entry (more than 10% needed)')
+      + '; ' + (pt.above == null ? 'no 200-day line' : (pt.above ? 'above' : 'not above') + ' the 200-day line') + ' -> ' + (pt.ok ? 'met' : 'NOT met') + '.')
+      : 'The promotion test could not be read (no prices).';
+    if (!confirm('Promote this tranche to full Core status (no line of its own)? ' + msg + ' Your decision; continue?')) { if (inputEl) inputEl.checked = true; return; }
+  }
+  t.own_line = !!on;
+  t.own_line_history = (Array.isArray(t.own_line_history) ? t.own_line_history : []).concat([{ on: today, own_line: !!on, line: line }]);
+  saveEdits(); render();
+}
 // The MA in force when none is typed: the old key's default for a pre-6-Nov tranche (so no stop "changes" on the
 // change-over), else the type's default.
 function defaultStopFor(key, t, ticker) { return DEFAULT_STOP_MA[key] || KIND_DEFAULT_STOP[trancheKind(t, ticker)] || '50D'; }
@@ -2034,9 +2095,12 @@ function latestCloseDate(ticker) {
 // The one call every total, alert and row makes: the tester with this tranche's own MA, buffer and type.
 function runTranche(ticker, key, t) {
   if (!trancheHeld(t)) return null;
-  var isCore = trancheIsCore(t, ticker);
-  return runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, isCore,
+  var own = trancheOwnLine(t, ticker);   // CORE-OWN-LINE-2026-11-15: a Core tranche on its own line is tested on that line
+  var isCore = trancheIsCore(t, ticker) && !own;
+  var r = runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, isCore,
                    isCore ? core200StartFor(t, ticker) : null);   // CORE-200D-RULE-2026-11-12
+  if (own && r && r.ok) { r.own_line = true; r.core200 = core200Walk(ticker, core200StartFor(t, ticker)); }   // the holding's 200-day line rule still applies
+  return r;
 }
 // The stock's live types, in a fixed order, for the colour marks on both pages.
 function stockKinds(invIdx) {
@@ -2066,19 +2130,21 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
     if (value > KIND_CAP_DECIMAL[kind] && !confirm((value * 100).toFixed(2) + '% is above the ' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '% usual for a ' + TRANCHE_KIND_LABEL[kind] + ' tranche. Continue?')) { if (inputEl) inputEl.value = ''; return; }
   }
   if (field === 'stop_ma') { value = stopNormaliseMa(rawValue); if (!value) { flashError('MA for the stop-loss must be a whole number of days from ' + STOP_MA_MIN_DAYS + ' to ' + STOP_MA_MAX_DAYS + ' (for example 75D).'); if (inputEl) inputEl.value = ''; return; } }
-  if (field === 'stop_ma' && kind !== 'core') {   // PMS-MA-ABOVE-2026-11-14: a new tranche's line is checked on its day of investment (today until a date is typed)
+  if (field === 'stop_ma' && kind === 'core' && OWN_LINE_LINES.indexOf(value) < 0) { flashError('A new Core tranche is on its own 50, 100, 150 or 200-day line (Position Entry and Exit Rules, 13-Nov-2026).'); if (inputEl) inputEl.value = ''; return; }   // CORE-OWN-LINE-2026-11-15
+  if (field === 'stop_ma') {   // PMS-MA-ABOVE-2026-11-14 (CORE-OWN-LINE-2026-11-15: Core too): a new tranche's line is checked on its day of investment (today until a date is typed)
     var why1 = maNotSelectable(ticker, null, value);
     if (why1) { flashError(why1); if (inputEl) inputEl.value = ''; return; }
   }
   if (field === 'buffer_pct') { var n = parseFloat(rawValue); if (isNaN(n)) return; value = Math.max(0, Math.min(50, n)) / 100; }
   if (field === 'entry_date' && !value) return;
-  if (field === 'entry_date' && kind !== 'core') {   // PMS-MA-ABOVE-2026-11-14: the default line of the new tranche, checked on the date typed
+  if (field === 'entry_date') {   // PMS-MA-ABOVE-2026-11-14 (CORE-OWN-LINE-2026-11-15: Core too): the default line of the new tranche, checked on the date typed
     var why2 = maNotSelectable(ticker, value, KIND_DEFAULT_STOP[kind]);
     if (why2) flashError(why2 + ' Choose a shorter line the price is above.');
   }
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   var key = newTrancheKey(invIdx);
   var t = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], _added_at: new Date().toISOString() };
+  if (kind === 'core') t.own_line = true;   // CORE-OWN-LINE-2026-11-15: a new Core tranche starts on its own line (rules sections 2 and 5)
   t[field] = value;
   EDITS[invIdx][key] = t;
   delete pendingNewKind[invIdx];
@@ -2102,6 +2168,7 @@ function setTrancheType(invIdx, key, kind) {
   t.type_changed_on = today;
   t.type_history = (Array.isArray(t.type_history) ? t.type_history : []).concat([{ from: from, to: kind, on: today }]);
   if (kind === 'core') {
+    t.own_line = false;   // CORE-OWN-LINE-2026-11-15: a promotion to Core Investment is to full Core status (rules section 7)
     // a promotion; an earlier promotion's slot name is kept (it identifies the zero-size row that promotion left behind)
     if (!t.promoted_from) t.promoted_from = TRANCHE_KIND_LABEL[from];
     t.type_history[t.type_history.length - 1].previous_promoted_at = t.promoted_at || null;
@@ -2773,7 +2840,8 @@ function seedUnknownBaseline(t, slotType, prevEdited, today) {
     note: 'in force when this page first saw the tranche on ' + today + '; set on or before ' + (prevEdited || 'an unknown date') }];
   return true;
 }
-var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type', 'exited_on'];   // D-PMS-V4-150: + type, exit date
+var FP_FIELDS = ['entry_date', 'target_size_pct', 'stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type', 'exited_on', 'own_line'];   // CORE-OWN-LINE-2026-11-15: + own_line
+//   // D-PMS-V4-150: + type, exit date
 
 function trancheFingerprint(t) {
   if (!t || typeof t !== 'object') return null;
@@ -3212,7 +3280,8 @@ function setStopMaEdit(invIdx, slotType, inputEl) {
     return;
   }
   var t0 = getEdit(invIdx, slotType), tk0 = effectiveTicker(CONFIG.investments[invIdx], invIdx);
-  if (trancheKind(t0, tk0) !== 'core') {   // PMS-MA-ABOVE-2026-11-14: a changed line is checked on the latest close
+  if (trancheOwnLineMarked(t0, tk0) && OWN_LINE_LINES.indexOf(v) < 0) { flashError('A Core tranche\'s own line is the 50, 100, 150 or 200-day line.'); inputEl.value = stopMaFor(slotType, t0, tk0) || ''; return; }   // CORE-OWN-LINE-2026-11-15
+  if (trancheKind(t0, tk0) !== 'core' || trancheOwnLineMarked(t0, tk0)) {   // PMS-MA-ABOVE-2026-11-14: a changed line is checked on the latest close (CORE-OWN-LINE-2026-11-15: an own line too)
     var why0 = maNotSelectable(tk0, null, v);
     if (why0) { flashError(why0); inputEl.value = stopMaFor(slotType, t0, tk0) || ''; return; }
   }
@@ -4072,7 +4141,7 @@ function confirmSplit() {
   orig.split_on = today;
   for (var i = 1; i < plan.parts.length; i++) {
     var part = { entry_date: orig.entry_date, target_size_pct: plan.parts[i], split_from: sourceId, split_on: today, type: 'core' };
-    ['stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type_changed_on'].forEach(function (k) { if (orig[k] != null) part[k] = orig[k]; });
+    ['stop_ma', 'buffer_pct', 'promoted_from', 'promoted_at', 'type_changed_on', 'own_line'].forEach(function (k) { if (orig[k] != null) part[k] = orig[k]; });
     if (Array.isArray(orig.stop_history)) part.stop_history = JSON.parse(JSON.stringify(orig.stop_history));   // the same resets apply
     if (Array.isArray(orig.type_history)) part.type_history = JSON.parse(JSON.stringify(orig.type_history));
     EDITS[invIdx][newTrancheKey(invIdx)] = part;
@@ -5160,7 +5229,9 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var bufferDecimal = bufferFor(edit);
   var r = null;
   if (!isPlaceholder && !isNew && trancheHeld(edit)) r = runTranche(ticker, slotType, edit);
-  var isCore = !isPlaceholder && kind === 'core';   // a Core Investment tranche: MA stop-losses shown greyed, not used
+  var ownMarked = !isPlaceholder && !isNew && kind === 'core' && trancheOwnLineMarked(edit, ticker);   // CORE-OWN-LINE-2026-11-15
+  var isCore = !isPlaceholder && kind === 'core' && !(ownMarked && trancheOwnLine(edit, ticker));   // a full Core Investment tranche: MA stop-losses shown greyed, not used
+  var shadeCore = isCore && !ownMarked;   // a 200-day own line is the 200-day line rule: its line is not greyed
   var rowKey = invIdx + ':' + slotType;
   var rowCls = 'tranche-row kind-row-' + kind + (isCore ? ' row-core' : '');
   if (!isPlaceholder && stopMa && !isCore && !exited && !isNew) rowCls += ' ma-' + stopMa;   // D-PMS-42
@@ -5234,7 +5305,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
     + ' onchange="' + (isNew ? onNew('entry_date') : 'setEditField(' + invIdx + ',\'' + slotType + '\',\'entry_date\',this.value)') + '">' + promo + '</td>';
   // --- % at entry (+ the size for a 0.5% loss, Probing and Speculative Bets)
   var sizeHint = '';
-  if (!isPlaceholder && !isCore && !exited && stopMa) {
+  if (!isPlaceholder && kind !== 'core' && !exited && stopMa) {   // CORE-OWN-LINE-2026-11-15: a Core tranche is 1.67%, never sized for a 0.5% loss
     var sh = probingSizeHint(ticker, entryDate, stopMa, bufferDecimal);
     if (sh) {
       var shFull = sh.size != null
@@ -5249,9 +5320,12 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   // --- MA for stop-loss + MA→stop buffer: every tranche has both and can set them (Richard, 6-Nov-2026: "a consistent visual
   // framework for all tranches"); on a Core Investment tranche the cell is shaded and the levels are information only
   var notUsedTitle = ' title="' + esc(CORE_INFO_TEXT) + '"';
-  cells += '<td class="col-key-bold' + (isCore ? ' cell-not-used' : '') + '"' + (isCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
-    + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '"></td>';
-  cells += '<td' + (isCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
+  // CORE-OWN-LINE-2026-11-15: a Core tranche shows its "own line" tick (a new Core tranche is created ticked)
+  var ownTick = (kind === 'core' && !isPlaceholder && !exited && (isNew || ownMarked)) ? '<label class="own-line-tick" title="' + esc(OWN_LINE_TEXT) + '"><input type="checkbox"' + ((isNew || ownMarked) ? ' checked' : '') + (isNew ? ' disabled' : '')
+    + ' onchange="setOwnLine(' + invIdx + ',\'' + slotType + '\',this.checked,this)">own</label>' : '';
+  cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
+    + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '">' + ownTick + '</td>';
+  cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
     + ' onchange="' + (isNew ? onNew('buffer_pct') : call('setBufferEdit', ',this')) + '"><span class="input-suffix">%</span></span></td>';
   // --- 4 derived "at entry" cells (col-atentry, hideable)
   var notUsed = '<span class="not-used"' + notUsedTitle + '>not used</span>';
@@ -5300,10 +5374,13 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       + '<input type="date" class="edit-input date exit-date" value="' + esc(edit.exited_on || '') + '" onchange="setExitDate(' + invIdx + ',\'' + slotType + '\',this.value)" title="The date this tranche was removed (sold)">'
       + (edit.exited_on_exact === false ? '<span class="exit-le" title="Reconstructed: removed on or before this date">&#8804;</span>' : '') + '</span></td>';
   } else if (r && r.ok && r.core) {
-    cells += '<td class="col-group-start"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span>'
+    cells += '<td class="col-group-start info-cell"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span>'
       + (r.breach && r.breach.core200 ? ' ' + breachBadge(r) : '') + '</td>';   // CORE-200D-RULE-2026-11-12
+  } else if (r && r.ok && r.own_line) {   // CORE-OWN-LINE-2026-11-15: its own line's verdict, then the holding's 200-day line rule
+    cells += '<td class="col-group-start info-cell"><span class="badge b-own" title="' + esc(OWN_LINE_TEXT) + '">own line</span> ' + breachBadge(r)
+      + (r.core200 ? ' ' + breachBadge({ ok: true, breach: r.core200 }) : '') + '</td>';
   } else if (r && r.ok) {
-    cells += '<td class="col-group-start">' + breachBadge(r) + '</td>';
+    cells += '<td class="col-group-start info-cell">' + breachBadge(r) + '</td>';
   } else {
     cells += '<td class="col-group-start">—</td>';
   }
@@ -5337,7 +5414,7 @@ function renderInvTotalsRow(inv, invIdx, view) {
     if (!trancheHeld(edit)) return;
     sumDeployed += edit.target_size_pct;   // D-PMS-190: counts regardless of price data
     if (!ticker) return;
-    if (!trancheIsCore(edit, ticker)) anyStopRule = true;
+    if (!trancheIsCore(edit, ticker) || trancheOwnLine(edit, ticker)) anyStopRule = true;   // CORE-OWN-LINE-2026-11-15
     var r = runTranche(ticker, key, edit);
     if (r && r.ok) { sumPnl += r.paper_pnl_aum || 0; sumRisk += r.loss_risk_aum || 0; sumValueAum += r.value_aum_pct || 0; }
   });
@@ -5394,7 +5471,7 @@ function stockSeverity(invIdx, ticker) {
   var rank = { 'breach-immediate': 3, 'breach-grace': 2, 'warn': 1 }, best = '';
   trancheKeys(invIdx).forEach(function (k) {
     var e = getEdit(invIdx, k);
-    if (!trancheHeld(e) || trancheIsCore(e, ticker)) return;
+    if (!trancheHeld(e) || (trancheIsCore(e, ticker) && !trancheOwnLine(e, ticker))) return;   // CORE-OWN-LINE-2026-11-15
     var r = runTranche(ticker, k, e);
     if (!r || !r.ok || r.core) return;
     var sv = (r.breach && r.breach.grace_breach) ? 'breach-immediate' : (r.breach && r.breach.triggered) ? 'breach-grace'
@@ -5485,6 +5562,7 @@ function renderAlerts() {
       if (!r || !r.ok) return;
       if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.grace_breach, tier: 'confirmed' });
       else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.triggered, tier: 'triggered' });
+      if (r.own_line && r.core200 && r.core200.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key) + ' (the 200-day line rule)', breach: r.core200.grace_breach, tier: 'confirmed' });   // CORE-OWN-LINE-2026-11-15
     });
   });
   var el = document.getElementById('alertBanner');
