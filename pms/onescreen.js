@@ -125,7 +125,7 @@
   var KEY = 'pmsOneScreenSettings';
   function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (k !== 'estL' && typeof o[k] === 'string') st[k] = o[k];   /* the estimates layout is fixed: three stacked (Richard, 6-Nov 15:41) */
     if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
-  function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200'].forEach(function (k) { o.mas[k] = !!chartVis[k]; }); localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
+  function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200', 'volx'].forEach(function (k) { o.mas[k] = !!chartVis[k]; });   /* VOLX-ONESCREEN-2026-11-15: + volx */ localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
   var WIN = { L1M: 30, L3M: 91, L6M: 182 };
   /* the sell-side series: the stored month-ends (re-marked as month-ends), then every stored daily reading (ss2.daily, ss.years_daily:
      scripts/pms_dashboard_extract.py 1.9, D-PMS-V4-152). A file without daily rows shows its month-ends only, with no gaps hatched. */
@@ -180,7 +180,10 @@
     /* the Layers buttons, on item 1's title line (Richard, 6-Nov 14:02): the same MAs and colours as the live Layers row, written once as "MAs" then each period; click to show or hide */
     var MAS = [['ma5', '5D', '#8b0000'], ['ma10', '10D', '#e88a9a'], ['ma20', '20D', '#e74c3c'], ['ma50', '50D', '#ff8c00'], ['ma100', '100D', '#2ca02c'], ['ma150', '150D', '#1a5276'], ['ma200', '200D (absolute)', '#4a3d9e']];
     ['obv', 'vol', 'vol50', 'vol20'].forEach(function (k) { chartVis[k] = false; });
-    document.getElementById('os-legend').innerHTML = '<span class="lb">MAs</span>' + MAS.map(function (a) { var on = chartVis[a[0]]; return '<button class="ma' + (on ? ' on' : '') + '" data-k="' + a[0] + '" style="color:' + a[2] + ';border-color:' + (on ? a[2] : 'transparent') + '">' + a[1] + '</button>'; }).join('');
+    document.getElementById('os-legend').innerHTML = '<span class="lb">MAs</span>' + MAS.map(function (a) { var on = chartVis[a[0]]; return '<button class="ma' + (on ? ' on' : '') + '" data-k="' + a[0] + '" style="color:' + a[2] + ';border-color:' + (on ? a[2] : 'transparent') + '">' + a[1] + '</button>'; }).join('')
+      /* VOLX-ONESCREEN-2026-11-15 (Richard, 13-Nov-2026 Message 1: "Add a toggle that shows ... volume vs. 20D average ... to 1DP"; his Question 5 answer: "Only for
+         1M and 3M zooms"; the 50-day average, clearly labelled, 13-Nov 16:44): the same switch as the Full page view's Layers row, on this view too */
+      + '<span class="lb">Volume</span><button class="ma' + (chartVis.volx !== false ? ' on' : '') + '" data-k="volx" title="Each day\'s volume divided by its 50-day average, written above an up day (green) or below a down day (red); shown at the 1M and 3M zooms" style="color:#1a7f37;border-color:' + (chartVis.volx !== false ? '#1a7f37' : 'transparent') + '">Vol \u00f7 50D avg</button>';
     document.getElementById('os-legend').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartVis[b.dataset.k] = !chartVis[b.dataset.k]; drawSP(); };
     window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; drawSP(); };
     chartTicker = m.t;
