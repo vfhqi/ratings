@@ -804,6 +804,9 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .rel-tag.rel-neg { color: var(--red); }
 .tot-badges .md-badge { margin-right: 3px; font-size: 9px; padding: 0 4px; vertical-align: middle; }
 .tot-badges .md-badge:last-child { margin-right: 0; }
+.tot-badges .md-badge.cls-today { background: #e8f0e8; color: #1d4f3a; border: 1px solid #b9cfba; white-space: normal; }  /* PMS-CLASS-TODAY-2026-11-16 */
+.tot-badges .md-badge.cls-step { background: #f3efe2; color: #5a5440; border: 1px solid #ddd4bb; }
+.tot-badges .md-badge.cls-none { background: #f5f5f5; color: #777; border: 1px solid #ddd; }
 .pos-table tr.inv-totals td.tot-badges { padding-left: 6px; padding-right: 4px; }
 .pos-table tr.inv-totals td.tot-rel { padding-left: 6px; padding-right: 4px; }
 .pos-table tbody tr.tranche-row td.pct-cell { text-align: left; }
@@ -5444,7 +5447,7 @@ function renderInvTotalsRow(inv, invIdx, view) {
     + '<td>' + pctNoSign1dp(sumDeployed) + '</td>'
     + '<td class="al tot-rel" colspan="2">' + relHtml + '</td>'
     + '<td class="col-atentry col-group-start"></td><td class="col-atentry"></td><td class="col-atentry"></td><td class="col-atentry"></td>'
-    + '<td class="al tot-badges col-group-start" colspan="4"' + (md ? ' title="Master Dashboard filters for this stock"' : '') + '>' + md + '</td>'
+    + '<td class="al tot-badges col-group-start" colspan="4">' + md + '</td>'
     + '<td>' + pctNoSign1dp(sumValueAum) + '</td>'
     + '<td class="ubs-cell">' + ubsTot + '</td>'
     + '<td class="col-group-start"></td>'
@@ -5459,16 +5462,15 @@ function relTagHtml(v, label, span) {
   var txt = (v > 0 ? '+' : v < 0 ? '(' : '') + Math.abs(v * 100).toFixed(1) + (v < 0 ? ')' : '') + '%';
   return '<span class="rel-tag ' + (v > 0.0005 ? 'rel-pos' : v < -0.0005 ? 'rel-neg' : '') + '" title="Share price over ' + span + ', relative to STOXX Europe 600">' + label + ' ' + txt + '</span>';
 }
-// The Master Dashboard filter badges (moved from under the stock's name, D-PMS-V4-159; wording unchanged)
+// PMS-CLASS-TODAY-2026-11-16 (Richard, 15-Nov-2026, "Q1 = A"; D-MD-TM-92): the total row shows the holding's classification
+// today under the signed rules (as new capital, with its furthest step), from the daily classification file, in place of the
+// old Master Dashboard filter badges (Speculative or probing bet, MM99, Uptrend retest), whose tests are retired.
 function mdBadgesHtml(ticker) {
   var fr = (FILTER_RESULTS.data || {})[ticker];
-  if (fr && fr.available) {
-    return '<span class="md-badge b-' + fr.pb_pass + '" title="PB stage: ' + esc(fr.pb_stage || 'None') + '">Speculative or probing bet ' + (fr.pb_pass === 'pass' ? '✓' : fr.pb_pass === 'partial' ? '◑' : '✗') + '</span>'
-      + '<span class="md-badge b-' + fr.mm99_pass + '" title="MM99 stage: ' + esc(fr.mm99_stage || 'None') + ' · score ' + (fr.mm99_score || 0) + '/11">MM99 ' + (fr.mm99_pass === 'pass' ? '✓' : fr.mm99_pass === 'partial' ? '◑' : '✗') + ' (' + (fr.mm99_score || 0) + ')</span>'
-      + '<span class="md-badge b-' + fr.utr_pass + '" title="UTR stage: ' + esc(fr.utr_stage || 'null') + '">Uptrend retest ' + (fr.utr_pass === 'pass' ? '✓' : fr.utr_pass === 'partial' ? '◑' : '✗') + '</span>';
-  }
-  if (fr && !fr.available) return '<span class="md-badge b-fail" title="No MD filter data">no MD data</span>';
-  return '';
+  if (!fr || fr.cls_today === undefined) return '<span class="md-badge cls-today cls-none" title="The daily classification file has not reached this page yet">Classification today: not yet built</span>';
+  var name = fr.cls_today || 'none of the six fits', when = fr.cls_date ? ' (close of ' + fr.cls_date + ')' : '';
+  return '<span class="md-badge cls-today" title="' + esc('Investment Classification as new capital today under the signed rules' + when + ': ' + name + '. Furthest step: ' + (fr.cls_step || 'none') + '. Your held classification is under the stock\'s name.') + '">Today: ' + esc(name) + '</span>'
+    + '<span class="md-badge cls-step" title="Furthest step reached on that classification\'s route (early indicator, late indicator, trigger day)">' + esc(fr.cls_step || 'none') + '</span>';
 }
 // D-PMS-V4-159: the stock's name cell takes the colour of its most serious tranche (exit confirmed, then testing, then
 // bought below the MA), the same colours as the tranche rows
