@@ -3,32 +3,32 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 486552,
+   "bytes": 489287,
    "warnings": []
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 524353,
+   "bytes": 529239,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 496419,
+   "bytes": 499491,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 635715,
+   "bytes": 644050,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 574903,
+   "bytes": 579268,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 507319,
+   "bytes": 509922,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -37,12 +37,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 344970,
+   "bytes": 346092,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 512338,
+   "bytes": 515028,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -51,37 +51,40 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 623575,
-   "warnings": []
+   "bytes": 631519,
+   "warnings": [
+    "check stop: tranche MM2's stop-loss line (today's line less its buffer) ends at 194.9654, the alignment calculation script says 193.3627",
+    "check stop: tranche T1's stop-loss line (today's line less its buffer) ends at 194.9654, the alignment calculation script says 193.3627"
+   ]
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 617874,
+   "bytes": 624512,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 505761,
+   "bytes": 509028,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 507451,
+   "bytes": 510851,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 559176,
+   "bytes": 562315,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 511754,
+   "bytes": 512324,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 490928,
+   "bytes": 493726,
    "warnings": []
   }
  },
@@ -92,7 +95,9 @@
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
+  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
+  "XVIVO-SE: check stop: tranche MM2's stop-loss line (today's line less its buffer) ends at 194.9654, the alignment calculation script says 193.3627",
+  "XVIVO-SE: check stop: tranche T1's stop-loss line (today's line less its buffer) ends at 194.9654, the alignment calculation script says 193.3627"
  ],
- "seconds": 94.4
+ "seconds": 63.5
 }
