@@ -1,7 +1,7 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-13",
- "prior_week": "2026-09-11",
+ "current_week": "2026-11-16",
+ "prior_week": "2026-09-18",
  "industry": {
   "A. Consumer staples": {
    "current": "B",
@@ -17,7 +17,7 @@
   },
   "D. Infrastructure": {
    "current": "C",
-   "prior": "F"
+   "prior": "D"
   },
   "E. Utilities": {
    "current": "D",
@@ -33,7 +33,7 @@
   },
   "H. Consumer discretionary": {
    "current": "D",
-   "prior": "D"
+   "prior": "F"
   },
   "I. Transportation": {
    "current": "A",
@@ -78,7 +78,7 @@
    "prior": "D"
   },
   "A.4. Household products": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "A.5. Food retail": {
@@ -91,15 +91,15 @@
   },
   "A.7. General retail": {
    "current": "D",
-   "prior": "C"
+   "prior": "D"
   },
   "B.11. Biotech - clinical stage": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "B.3. Hospitals, clinics and care homes": {
    "current": "C",
-   "prior": "D"
+   "prior": "C"
   },
   "B.4. Pharma manufacturing services and supplies": {
    "current": "C",
@@ -107,23 +107,23 @@
   },
   "B.5. Medtech - consumables": {
    "current": "B",
-   "prior": "F"
+   "prior": "D"
   },
   "B.6. Medtech - capital goods": {
    "current": "A",
-   "prior": "C"
+   "prior": "B"
   },
   "B.7. Pharma/biotech": {
    "current": "C",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
-   "current": "D",
-   "prior": "F"
+   "current": "C",
+   "prior": "D"
   },
   "C.1. Telecoms - MNOs": {
    "current": "D",
-   "prior": "C"
+   "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
    "current": "D",
@@ -138,7 +138,7 @@
    "prior": "D"
   },
   "E.2. Utilities - integrated and multi-utilities": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "E.3. Utilities - renewable generators and developers": {
@@ -147,7 +147,7 @@
   },
   "F.1. Defence - Primes": {
    "current": "F",
-   "prior": "F"
+   "prior": "D"
   },
   "F.2. Defence - Non-primes": {
    "current": "F",
@@ -166,8 +166,8 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "B",
-   "prior": "B"
+   "current": "C",
+   "prior": "C"
   },
   "G.3. Specialist/Alternative Finance": {
    "current": "F",
@@ -175,11 +175,11 @@
   },
   "G.4. Holding companies": {
    "current": "C",
-   "prior": "C"
+   "prior": "D"
   },
   "G.5. Digital investment and trading platforms": {
    "current": "C",
-   "prior": "B"
+   "prior": "C"
   },
   "H.1. Luxury goods": {
    "current": "F",
@@ -190,8 +190,8 @@
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "C",
-   "prior": "F"
+   "current": "B",
+   "prior": "D"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
    "current": "D",
@@ -203,7 +203,7 @@
   },
   "H.16. Homebuilders": {
    "current": "D",
-   "prior": "F"
+   "prior": "D"
   },
   "H.17. Consumer products": {
    "current": "D",
@@ -211,11 +211,11 @@
   },
   "H.2. Retail - apparel": {
    "current": "B",
-   "prior": "D"
+   "prior": "F"
   },
   "H.3. Retail - general/physical": {
    "current": "B",
-   "prior": "C"
+   "prior": "D"
   },
   "H.4. Retail - online and delivery platforms": {
    "current": "A",
@@ -231,23 +231,23 @@
   },
   "I.1. Logistics": {
    "current": "A",
-   "prior": "B"
+   "prior": "A"
   },
   "J.1. IT services - consulting": {
    "current": "B",
-   "prior": "B"
+   "prior": "C"
   },
   "J.2. IT services - reselling": {
    "current": "C",
-   "prior": "C"
+   "prior": "B"
   },
   "J.3. Fintech/payment processing": {
    "current": "F",
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "B",
-   "prior": "D"
+   "current": "A",
+   "prior": "C"
   },
   "J.5. Software - VMS": {
    "current": "B",
@@ -262,7 +262,7 @@
    "prior": "D"
   },
   "J.9. Semiconductors": {
-   "current": "C",
+   "current": "D",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
@@ -271,7 +271,7 @@
   },
   "K.11. Information services": {
    "current": "A",
-   "prior": "D"
+   "prior": "F"
   },
   "K.3. Testing and inspection services": {
    "current": "B",
@@ -282,12 +282,12 @@
    "prior": "B"
   },
   "K.9. Recruitment services": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "L.1. Content, TV and other media": {
    "current": "F",
-   "prior": "D"
+   "prior": "F"
   },
   "M.1. Chemicals - Fragrances/ingredients": {
    "current": "A",
@@ -295,7 +295,7 @@
   },
   "M.10. Building materials - cement and aggregates": {
    "current": "D",
-   "prior": "D"
+   "prior": "F"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
    "current": "C",
@@ -311,11 +311,11 @@
   },
   "M.7. Forestry, paper and packaging": {
    "current": "F",
-   "prior": "D"
+   "prior": "C"
   },
   "M.9. Steel and metals": {
    "current": "D",
-   "prior": "A"
+   "prior": "B"
   },
   "N.1. Real estate - residential landlords": {
    "current": "F",
@@ -355,14 +355,14 @@
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
    "current": "D",
-   "prior": "C"
+   "prior": "B"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
    "current": "C",
-   "prior": "B"
+   "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
@@ -383,7 +383,7 @@
   },
   "O.8. Mining, construction and material-handling equipment": {
    "current": "F",
-   "prior": "D"
+   "prior": "C"
   },
   "P.1. Energy - downstream distribution": {
    "current": "A",
@@ -395,11 +395,11 @@
   },
   "P.3. Energy - services and engineering contractors": {
    "current": "D",
-   "prior": "C"
+   "prior": "B"
   },
   "P.4. Agriculture": {
    "current": "D",
-   "prior": "D"
+   "prior": "F"
   },
   "P.5. Metals and mining": {
    "current": "F",
