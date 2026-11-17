@@ -8,12 +8,12 @@
   },
   "BYLOT-GR": {
    "file": "BYLOT-GR.json",
-   "bytes": 525547,
+   "bytes": 525550,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 497876,
+   "bytes": 497869,
    "warnings": []
   },
   "CVSG-GB": {
@@ -28,7 +28,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 508457,
+   "bytes": 508453,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -56,12 +56,12 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 618281,
+   "bytes": 618286,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 507744,
+   "bytes": 507747,
    "warnings": []
   },
   "SDIP.B-SE": {
@@ -81,7 +81,7 @@
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 492282,
+   "bytes": 492280,
    "warnings": []
   }
  },
@@ -94,5 +94,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 62.0
+ "seconds": 67.6
 }

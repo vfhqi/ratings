@@ -1,5 +1,5 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-17T19:44:02 from master-dashboard/index.html (md5 df33818c0fa20180989337e9d648f1e8),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-17T22:46:02 from master-dashboard/index.html (md5 ef83af7925ea4e52f902847f924c6480),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 23. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
@@ -425,8 +425,8 @@ function drawMasterChart(ticker,_sspo){
     for(j=0;j<chart.length;j++){var x2=xPos(j);var barBottom=pad.t+plotH;
       var pct50v=volMA50[j]>0?Math.round((chart[j].v/volMA50[j]-1)*100):0;
       var pct20v=volMA20[j]>0?Math.round((chart[j].v/volMA20[j]-1)*100):0;
-      ctx.fillStyle="#9a6700";ctx.font="9px monospace";ctx.fillText((pct50v>=0?"+":"")+pct50v+"%",x2,barBottom-20);
-      ctx.fillStyle="#0969da";ctx.fillText((pct20v>=0?"+":"")+pct20v+"%",x2,barBottom-10);
+      ctx.fillStyle="#9a6700";ctx.font="9px monospace";ctx.fillText((pct50v<0?"("+(-pct50v)+")%":"+"+pct50v+"%"),x2,barBottom-20);
+      ctx.fillStyle="#0969da";ctx.fillText((pct20v<0?"("+(-pct20v)+")%":"+"+pct20v+"%"),x2,barBottom-10);
     }
   }
 
