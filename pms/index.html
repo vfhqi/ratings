@@ -2199,8 +2199,13 @@ function promotionTest(ticker, t, opt) {
   var mv5 = (p5 && px != null) ? px / p5 - 1 : null;
   var cls = classTodayName(ticker), clsOk = !!(cls && CORE_CLASS_NAMES[cls]);
   var need3 = !!(opt && opt.toCore);
+  // PMS-PROMOTION-SIX-2026-11-18 (Richard, 18-Nov-2026, Message 119, "Q2 = Yes"): a promotion to Core status also needs what a fresh Core
+  // purchase needs: the Market Cycle Phase Uptrend; for Reinforcing / Proven S2, the Pool; and a trigger day (the furthest step today)
+  var fr = (FILTER_RESULTS && FILTER_RESULTS.data || {})[ticker] || {}, ph = ((FILTER_RESULTS && FILTER_RESULTS._meta) || {}).market_phase || {};
+  var phaseOk = /^uptrend/i.test(String(ph.label || '')), needPool = cls === 'Reinforcing / Proven S2 Core Investment', poolOk = fr.pool_in === true, trigOk = fr.cls_step === 'trigger day';
   return { d: series[n].d, px: px, entry: entry, up: up, ma: ma, maVal: mv, above: above, mv5: mv5, cls: cls, clsOk: clsOk, need3: need3,
-           ok: up != null && up > 0.10 && above === true && (!need3 || clsOk) };
+           phase: ph.label || null, phaseOk: phaseOk, needPool: needPool, poolOk: poolOk, poolTests: fr.pool_tests || null, step: fr.cls_step || null, trigOk: trigOk,
+           ok: up != null && up > 0.10 && above === true && (!need3 || (clsOk && phaseOk && (!needPool || poolOk) && trigOk)) };
 }
 function fmtPctB(v, dp) { if (v == null) return 'n.a.'; var s = Math.abs(v * 100).toFixed(dp == null ? 1 : dp) + '%'; return v < 0 ? '(' + s + ')' : '+' + s; }
 function promotionTestText(pt) {
@@ -2208,7 +2213,12 @@ function promotionTestText(pt) {
   var lines = ['Promotion test (Position Entry and Exit Rules, section 7), on the close of ' + pt.d + ':',
     '(1) ' + (pt.up != null && pt.up > 0.10 ? 'MET' : 'NOT MET') + ': the price is ' + fmtPctB(pt.up) + ' from the entry price (more than +10% needed).',
     '(2) ' + (pt.above ? 'MET' : 'NOT MET') + ': the close ' + (pt.px != null ? fmt(pt.px, 2) : 'n.a.') + ' is ' + (pt.above == null ? 'not measurable against' : pt.above ? 'above' : 'not above') + ' the ' + maDays(pt.ma) + '-day line (' + (pt.maVal != null ? fmt(pt.maVal, 2) : 'n.a.') + ').'];
-  if (pt.need3) lines.push('(3) ' + (pt.clsOk ? 'MET' : 'NOT MET') + ': classification today ' + (pt.cls ? pt.cls : (pt.cls === '' ? 'none of the six fits' : 'not yet read')) + ' (Broadening / Early S2 or Reinforcing / Proven S2 Core Investment needed).');
+  if (pt.need3) {
+    lines.push('(3) ' + (pt.clsOk ? 'MET' : 'NOT MET') + ': classification today ' + (pt.cls ? pt.cls : (pt.cls === '' ? 'none of the six fits' : 'not yet read')) + ' (Broadening / Early S2 or Reinforcing / Proven S2 Core Investment needed).');
+    lines.push('(4) ' + (pt.phaseOk ? 'MET' : 'NOT MET') + ': the Market Cycle Phase is ' + (pt.phase || 'not read') + ' (Uptrend needed).');
+    if (pt.needPool) lines.push('(5) ' + (pt.poolOk ? 'MET' : 'NOT MET') + ': in the Pool of Stocks Eligible for Middle Innings Portfolio Selection (needed for Reinforcing / Proven S2)' + (pt.poolTests ? ': size ' + (pt.poolTests.size ? 'yes' : 'no') + ', Stock RS 80 or more ' + (pt.poolTests.stock_rs ? 'yes' : 'no') + ', Sector RS 50 or more ' + (pt.poolTests.sector_rs ? 'yes' : 'no') + ', SS Sales Net Upgrade Breadth 0% or more ' + (pt.poolTests.ss_sales_nub ? 'yes' : 'no') : ': not read') + '.');
+    lines.push('(' + (pt.needPool ? 6 : 5) + ') ' + (pt.trigOk ? 'MET' : 'NOT MET') + ': a trigger day (furthest step today: ' + (pt.step || 'not read') + ').');
+  }
   lines.push('Last 5 sessions: ' + fmtPctB(pt.mv5) + (pt.mv5 != null && pt.mv5 < 0 ? '. The price fell: the rules say a stop-loss is never widened while the price is falling towards its line.' : '.'));
   lines.push(pt.ok && !(pt.mv5 != null && pt.mv5 < 0) ? 'All tests met.' : (pt.ok ? 'All tests met, but the price is falling.' : 'NOT all tests met: going ahead overrules the rule, and the overrule is recorded on the tranche.'));
   return lines.join('\n');
