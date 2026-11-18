@@ -3,27 +3,27 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 600871,
+   "bytes": 601618,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 617380,
+   "bytes": 618002,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 638408,
+   "bytes": 638409,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 576528,
+   "bytes": 576537,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 625852,
+   "bytes": 626462,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,54 +32,47 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 348585,
+   "bytes": 348584,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 515949,
+   "bytes": 515914,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
    ]
   },
-  "XVIVO-SE": {
-   "file": "XVIVO-SE.json",
-   "bytes": 504578,
-   "warnings": []
-  },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619513,
+   "bytes": 619505,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 509113,
+   "bytes": 509098,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509845,
+   "bytes": 509819,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 559778,
+   "bytes": 559770,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 509091,
+   "bytes": 569746,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 548297,
-   "warnings": [
-    "check stop: the alignment calculation script gave no levels_series for tranche T1"
-   ]
+   "bytes": 488360,
+   "warnings": []
   }
  },
  "failed": [],
@@ -89,8 +82,7 @@
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
-  "ART-ES: check stop: the alignment calculation script gave no levels_series for tranche T1"
+  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 89.8
+ "seconds": 68.1
 }
