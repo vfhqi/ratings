@@ -2372,7 +2372,8 @@ function applySale() {
     var p = Math.min(100, ps.pct[k]) / 100, before = t.target_size_pct || 0;
     if (p >= 0.9999) { applySize(ps.invIdx, k, 0, ps.date); return; }
     var after = Math.round(before * (1 - p) * 1e6) / 1e6, sk = 'sale_' + ps.date.replace(/-/g, '_'), prev = t[sk];
-    t[sk] = { size_before: (prev && prev.size_before != null) ? prev.size_before : before, size_after: after, fraction_sold: p,
+    var sb0 = (prev && prev.size_before != null) ? prev.size_before : before;   // a second sale the same day: the fraction is of the day's first size
+    t[sk] = { size_before: sb0, size_after: after, fraction_sold: sb0 > 0 ? Math.round((1 - after / sb0) * 1e4) / 1e4 : p,
               what: 'sold ' + (p * 100).toFixed(0) + '% of the tranche on ' + ps.date + ' (recorded on the Position Management System page)', recorded_at: new Date().toISOString() };
     t.target_size_pct = after;
   });
