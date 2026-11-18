@@ -995,6 +995,9 @@
         lines.push({ label: (lv ? lv + ': ' : '') + 'the stop-loss, the ' + maName(g[0].stop_ma) + ' less ' + bw + (short ? '' : ', for ' + trj), num: lv,
           key: 'the stop-loss of ' + trj + ': the ' + maName(g[0].stop_ma) + ' less ' + bw, skey: 'stop-loss, ' + trj, color: cs[0], colors: cs, ink: cs[0], dash: [6, 4], width: 1.6, byDate: by, labelDy: 14 });
         if (layerOn(per) && g[0].ma_level != null) keys.push({ num: fpx(g[0].ma_level), c: MA_COL[per] || C.ink2, t: 'the ' + maName(g[0].stop_ma) + ', the line the stop-loss of ' + trj + ' follows', st: 'the ' + maName(g[0].stop_ma) + ': ' + trj + ' follow it' });
+        /* QC 18-Nov-2026: an MA length with no Layers button (any length other than 5, 10, 20, 50, 100, 150 and 200 days) is drawn here, grey and solid, so the line the stop-loss follows is always on the chart */
+        if (!MA_COL[per]) { var bm = {}; (lg.line_ma_pts || lg.ma_pts || []).forEach(function (q) { bm[q[0]] = q[1]; }); var mv = g[0].ma_level != null ? fpx(g[0].ma_level) : null;
+          lines.push({ label: (mv ? mv + ': ' : '') + 'the ' + maName(g[0].stop_ma), num: mv, key: 'the ' + maName(g[0].stop_ma) + ', the line the stop-loss of ' + trj + ' follows', skey: 'the ' + maName(g[0].stop_ma) + ': ' + trj + ' follow it', color: C.ink2, ink: C.ink2, dash: [], width: 1.6, byDate: bm, labelDy: -5 }); }
       });
     }
     /* PMS-EVENTS-2026-11-13 (Richard, 13-Nov-2026: "show all Tranch Entries, Adds, Promotes, Exits"): one dated mark per event in the PMS book; a purchase
@@ -1038,7 +1041,7 @@
       cs.forEach(function (c, i) { s += '<line x1="1" x2="25" y1="5" y2="5" stroke="' + c + '" stroke-width="2.4" stroke-dasharray="' + (cs.length > 1 ? a + ' ' + (cy * cs.length - a) : a + ' ' + (d[1] || 3)) + '" stroke-dashoffset="' + (-i * cy) + '"/>'; });
       return s + '</svg>'; };
     var it = [];
-    (ov.lines || []).forEach(function (L) { if (!L.key) return; it.push({ v: parseFloat(String(L.num || '').replace(/,/g, '')), h: '<span class="ok-i">' + sw(L.colors && L.colors.length > 1 ? L.colors : [L.ink || L.color], L.dash || []) + (L.num ? '<b style="color:' + (L.ink || L.color) + '">' + esc(L.num) + '</b> ' : '') + esc(o.compact ? (L.skey || L.key) : L.key) + '</span>' }); });
+    (ov.lines || []).forEach(function (L) { if (!L.key) return; it.push({ v: parseFloat(String(L.num || '').replace(/,/g, '')), h: '<span class="ok-i">' + sw(L.colors && L.colors.length > 1 ? L.colors : [L.ink || L.color], L.dash || [], !!(L.dash && !L.dash.length)) + (L.num ? '<b style="color:' + (L.ink || L.color) + '">' + esc(L.num) + '</b> ' : '') + esc(o.compact ? (L.skey || L.key) : L.key) + '</span>' }); });
     (ov.keys || []).forEach(function (K) { it.push({ v: parseFloat(String(K.num || '').replace(/,/g, '')), h: '<span class="ok-i">' + sw([K.c], [], true) + '<b style="color:' + K.c + '">' + esc(K.num) + '</b> ' + esc(o.compact ? (K.st || K.t) : K.t) + '</span>' }); });
     it.sort(function (a, b) { return (isNaN(b.v) ? -1e15 : b.v) - (isNaN(a.v) ? -1e15 : a.v); });
     var h = it.map(function (x) { return x.h; });
