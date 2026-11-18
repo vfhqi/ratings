@@ -8,12 +8,12 @@
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 617771,
+   "bytes": 617770,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 639156,
+   "bytes": 639155,
    "warnings": []
   },
   "FEVR-GB": {
@@ -23,7 +23,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 626231,
+   "bytes": 626235,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -46,27 +46,27 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619212,
+   "bytes": 619225,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 508759,
+   "bytes": 508755,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509402,
+   "bytes": 509400,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 559376,
+   "bytes": 559393,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 569779,
+   "bytes": 569781,
    "warnings": []
   },
   "ART-ES": {
@@ -84,5 +84,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 78.6
+ "seconds": 64.2
 }
