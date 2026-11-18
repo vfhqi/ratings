@@ -3,7 +3,7 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 601618,
+   "bytes": 601617,
    "warnings": []
   },
   "CARL.B-DK": {
@@ -13,7 +13,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 638409,
+   "bytes": 638408,
    "warnings": []
   },
   "FEVR-GB": {
@@ -23,7 +23,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 626462,
+   "bytes": 626469,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,17 +32,22 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 348584,
+   "bytes": 348585,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 515914,
+   "bytes": 515879,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
    ]
+  },
+  "XVIVO-SE": {
+   "file": "XVIVO-SE.json",
+   "bytes": 626148,
+   "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
@@ -51,12 +56,12 @@
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 509098,
+   "bytes": 509097,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509819,
+   "bytes": 509830,
    "warnings": []
   },
   "DIE-BE": {
@@ -66,12 +71,12 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 569746,
+   "bytes": 569906,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 488360,
+   "bytes": 493807,
    "warnings": []
   }
  },
@@ -84,5 +89,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 68.1
+ "seconds": 87.5
 }
