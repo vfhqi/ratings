@@ -647,7 +647,7 @@ body.scrolled-past-header .sticky-top .header.toolbar { border-radius: var(--rad
 .edit-input { border: 1px solid #d3d9e3; border-radius: 6px; padding: 3px 6px; font-family: var(--font); font-size: 12.5px; background: var(--surface); }
 .edit-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,79,158,0.14); background: var(--surface); }
 input.edit-input.ma { width: 50px; padding: 3px 4px; }
-.edit-input.pct { width: 46px; padding: 3px 5px; }
+.edit-input.pct { width: 46px; padding: 3px 3px; }   /* UI QC 18-Nov-2026 (part 15): 2.6 was clipped when the table is zoomed to fit */
 .pos-table td:last-child:has(> .btn-icon.btn-danger) { padding: 0 2px; text-align: center; overflow: visible; }
 .size-hint { white-space: normal; font-size: 9.5px; line-height: 1.25; }
 input.ticker-edit { font-family: var(--font); font-size: 12.5px; border: 1px solid #d3d9e3; border-radius: 6px; padding: 3px 7px; margin-top: 4px; background: var(--surface); color: var(--fg); }
@@ -854,7 +854,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .pgm-test span[title] { color: var(--fg3); cursor: help; text-decoration: underline dotted; }
 .tot-sale .btn-addtr, .tot-sale .btn-remove-inv, .tot-label .btn-remove-inv { margin-right: 2px; font-size: 10.5px; padding: 1px 6px; }
 .tot-label .btn-addtr, .tot-sale .btn-addtr { font-size: 10.5px; padding: 1px 6px; }
-.edit-input.pct.buf { width: 36px; }
+.edit-input.pct.buf { width: 36px; padding: 1px 2px; }   /* UI QC 18-Nov-2026 (part 15): "6.0" was cut to "6." */
 select.kind-select { width: 128px !important; font-size: 10px !important; padding: 1px 1px !important; }
 .ticker-cell .tk-line2 { white-space: normal !important; text-overflow: clip !important; }
 .ticker-cell .tk-line4 { font-weight: 700 !important; font-size: 11px !important; color: var(--ink) !important; }
@@ -2210,14 +2210,15 @@ function promotionTest(ticker, t, opt) {
 function fmtPctB(v, dp) { if (v == null) return 'n.a.'; var s = Math.abs(v * 100).toFixed(dp == null ? 1 : dp) + '%'; return v < 0 ? '(' + s + ')' : '+' + s; }
 function promotionTestText(pt) {
   if (!pt) return 'The promotion test could not be read (no prices or no entry date).';
-  var lines = ['Promotion test (Position Entry and Exit Rules, section 7), on the close of ' + pt.d + ':',
+  var lines = ['Promotion test (Position Entry and Exit Rules, section 7), on the close of ' + fmtDate(pt.d) + ':',
     '(1) ' + (pt.up != null && pt.up > 0.10 ? 'MET' : 'NOT MET') + ': the price is ' + fmtPctB(pt.up) + ' from the entry price (more than +10% needed).',
     '(2) ' + (pt.above ? 'MET' : 'NOT MET') + ': the close ' + (pt.px != null ? fmt(pt.px, 2) : 'n.a.') + ' is ' + (pt.above == null ? 'not measurable against' : pt.above ? 'above' : 'not above') + ' the ' + maDays(pt.ma) + '-day line (' + (pt.maVal != null ? fmt(pt.maVal, 2) : 'n.a.') + ').'];
   if (pt.need3) {
     lines.push('(3) ' + (pt.clsOk ? 'MET' : 'NOT MET') + ': classification today ' + (pt.cls ? pt.cls : (pt.cls === '' ? 'none of the six fits' : 'not yet read')) + ' (Broadening / Early S2 or Reinforcing / Proven S2 Core Investment needed).');
     lines.push('(4) ' + (pt.phaseOk ? 'MET' : 'NOT MET') + ': the Market Cycle Phase is ' + (pt.phase || 'not read') + ' (Uptrend needed).');
     if (pt.needPool) lines.push('(5) ' + (pt.poolOk ? 'MET' : 'NOT MET') + ': in the Pool of Stocks Eligible for Middle Innings Portfolio Selection (needed for Reinforcing / Proven S2)' + (pt.poolTests ? ': size ' + (pt.poolTests.size ? 'yes' : 'no') + ', Stock RS 80 or more ' + (pt.poolTests.stock_rs ? 'yes' : 'no') + ', Sector RS 50 or more ' + (pt.poolTests.sector_rs ? 'yes' : 'no') + ', SS Sales Net Upgrade Breadth 0% or more ' + (pt.poolTests.ss_sales_nub ? 'yes' : 'no') : ': not read') + '.');
-    lines.push('(' + (pt.needPool ? 6 : 5) + ') ' + (pt.trigOk ? 'MET' : 'NOT MET') + ': a trigger day (furthest step today: ' + (pt.step || 'not read') + ').');
+    else lines.push('(5) not needed: the Pool applies only when the classification today is Reinforcing / Proven S2.');
+    lines.push('(6) ' + (pt.trigOk ? 'MET' : 'NOT MET') + ': a trigger day (furthest step today: ' + (pt.step || 'not read') + ').');
   }
   lines.push('Last 5 sessions: ' + fmtPctB(pt.mv5) + (pt.mv5 != null && pt.mv5 < 0 ? '. The price fell: the rules say a stop-loss is never widened while the price is falling towards its line.' : '.'));
   lines.push(pt.ok && !(pt.mv5 != null && pt.mv5 < 0) ? 'All tests met.' : (pt.ok ? 'All tests met, but the price is falling.' : 'NOT all tests met: going ahead overrules the rule, and the overrule is recorded on the tranche.'));
@@ -2238,11 +2239,23 @@ function promotionAvailable(invIdx, key, t, ticker) {
   if (pc && pc.ok && !(pc.mv5 != null && pc.mv5 < 0)) return { to: 'full Core status' + (kind === 'core' ? '' : ' (Core Investment)'), test: pc };
   var cur = maDays(stopMaFor(key, t, ticker)), lines = allowedLines(invIdx, ticker, kind), best = null;
   lines.forEach(function (l) { if (maDays(l) > cur) { var p = promotionTest(ticker, t, { toCore: false, ma: l }); if (p && p.ok && !(p.mv5 != null && p.mv5 < 0)) best = { to: 'the ' + maDays(l) + '-day line', test: p }; } });
+  if (best && pc) best.notCore = coreFails(pc);   // UI QC 18-Nov-2026 (part 15): say why it is not full Core status
   return best;
+}
+function coreFails(pc) {
+  var f = [];
+  if (!(pc.up != null && pc.up > 0.10)) f.push('(1) more than 10% above entry');
+  if (pc.above !== true) f.push('(2) above the 200-day line');
+  if (!pc.clsOk) f.push('(3) classified Broadening or Reinforcing today');
+  if (!pc.phaseOk) f.push('(4) Market Cycle Phase Uptrend');
+  if (pc.needPool && !pc.poolOk) f.push('(5) in the Pool' + (pc.poolTests && pc.poolTests.sector_rs === false ? ' (Sector RS below 50)' : '') + (pc.poolTests && pc.poolTests.stock_rs === false ? ' (Stock RS below 80)' : ''));
+  if (!pc.trigOk) f.push('(6) a trigger day');
+  if (pc.ok && pc.mv5 != null && pc.mv5 < 0) f.push('the price fell over the last 5 sessions');
+  return f;
 }
 function promotionFlagHtml(pa) {
   if (!pa) return '';
-  return '<span class="promo-avail" title="' + esc('Promotion available to ' + pa.to + '. ' + promotionTestText(pa.test).replace(/\n/g, ' ') + ' Your decision.') + '">Promotion available</span>';
+  return '<span class="promo-avail" title="' + esc('Promotion available to ' + pa.to + '. ' + promotionTestText(pa.test).replace(/\n/g, ' ') + (pa.notCore && pa.notCore.length ? ' Not full Core status today: not met ' + pa.notCore.join('; ') + '.' : '') + ' Your decision.') + '">Promotion available</span>';
 }
 // Tick or untick "own line" on a Core tranche. Ticking puts it on its own line from the latest close (the line must be one of
 // the four and the price above it; the 10-day count starts that day, as a type change does). Unticking is a promotion to full
@@ -5750,7 +5763,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
     + ' onchange="setOwnLine(' + invIdx + ',\'' + slotType + '\',this.checked,this)">own</label>' : '';
   cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><select class="edit-input ma' + (maColour(stopMa) ? ' ma-col" style="color:' + maColour(stopMa) + ';border-color:' + maColour(stopMa) : '') + '"' + dis + ' title="' + esc('Lines this tranche may use (Position Entry and Exit Rules, section 2): ' + allowedLinesText(allowedLines(invIdx, ticker, kind)) + (isNew ? '' : '. A wider line is a promotion: the test is shown before it changes.')) + '"'
     + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '">' + maOptionsHtml(allowedLines(invIdx, ticker, kind), stopMa) + '</select>' + ownTick + '</td>';
-  cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct buf" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
+  cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct buf" value="' + esc(String(+(bufferDecimal * 100).toFixed(1))) + '" placeholder="6"' + dis
     + ' onchange="' + (isNew ? onNew('buffer_pct') : call('setBufferEdit', ',this')) + '"><span class="input-suffix">%</span></span></td>';
   // --- 4 derived "at entry" cells (col-atentry, hideable)
   var notUsed = '<span class="not-used"' + notUsedTitle + '>not used</span>';
@@ -5946,7 +5959,7 @@ function renderKpis() {
     if (hasAny) activeInvs += 1;
   });
   var el = document.getElementById('portfolioSummary');
-  el.innerHTML = kpiCard('Deployed (current % of AUM)', pct(deployed), deployed > 0.8 ? 'val-warn' : deployed > 0 ? 'val-pos' : 'val-muted')
+  el.innerHTML = kpiCard('Deployed (current % of AUM)', pct(deployed, 0), deployed > 0.8 ? 'val-warn' : deployed > 0 ? 'val-pos' : 'val-muted')
     + kpiCard('At-risk loss', pctBp(risk), risk < -0.005 ? 'val-neg' : 'val-warn')
     + kpiCard('Paper P&L', pctBp(pnl), pnl > 0 ? 'val-pos' : pnl < 0 ? 'val-neg' : '')
     + kpiCard('Active investments', activeInvs + ' / ' + CONFIG.investments.length, '')
@@ -6015,7 +6028,7 @@ function renderAlerts() {
   }
   if (!alerts.length) { el.className = 'alert-banner'; el.innerHTML = ''; return; }
   var _nConf = alerts.filter(function(a) { return a.tier === 'confirmed'; }).length;
-  var html = '<h2>⚠ STOP-LOSSES (Probing Bet and Speculative Bet tranches) — ' + _nConf + ' exit' + (_nConf === 1 ? '' : 's') + ' confirmed, not yet sold; ' + (alerts.length - _nConf) + ' testing the MA</h2>';
+  var html = '<h2>⚠ STOP-LOSSES (the 10-day stop-loss rule on each tranche\'s line; the 200-day line rule for Core Investment) — ' + _nConf + ' exit' + (_nConf === 1 ? '' : 's') + ' confirmed, not yet sold; ' + (alerts.length - _nConf) + ' testing the MA</h2>';
   alerts.forEach(function(a) {
     html += '<div class="alert-item">'
       + '<span class="alert-ticker">' + esc(a.ticker) + '</span>'
