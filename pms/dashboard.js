@@ -145,8 +145,9 @@
         if (th.zone === 'below') el('rect', { x: L, y: y(th.v), width: W - L - R, height: Math.max(0, p.h - y(th.v)), fill: th.fill || C.redFill }, g);
         if (th.zone === 'above') el('rect', { x: L, y: 0, width: W - L - R, height: Math.max(0, y(th.v)), fill: th.fill || C.redFill }, g);
       });
+      var mkOcc = [];   /* the tranche labels' boxes, kept clear by the month-end values below */
       var mkBoxes = [];   /* PMSD-EVERY-TRANCHE-2026-11-18: a marker's label takes the first row where it does not touch another's */
-      (p.markers || opts.markers || []).forEach(function (m, mi) { if (m.d < d0 || m.d > d1) return; el('line', { x1: x(m.d), x2: x(m.d), y1: 0, y2: p.h, stroke: m.color || C.entry, 'stroke-width': 1, 'stroke-dasharray': '3 3' }, g); if (pi === 0 && m.label) { var lw = String(m.label).length * 5.6 + 6, lx = x(m.d) + 3; if (lx + lw > W - R + 4) lx = x(m.d) - 3 - lw; var row = 0; while (row < 4 && mkBoxes.some(function (b) { return b.r === row && !(lx + lw < b.a || lx > b.b); })) row++; if (row < 4) { mkBoxes.push({ r: row, a: lx, b: lx + lw }); txt(g, lx, 11 + 11 * row, m.label, { fill: m.color || C.entry, 'font-size': 10, halo: true }); } } });
+      (p.markers || opts.markers || []).forEach(function (m, mi) { if (m.d < d0 || m.d > d1) return; el('line', { x1: x(m.d), x2: x(m.d), y1: 0, y2: p.h, stroke: m.color || C.entry, 'stroke-width': 1, 'stroke-dasharray': '3 3' }, g); if (pi === 0 && m.label) { var lw = String(m.label).length * 5.6 + 6, lx = x(m.d) + 3; if (lx + lw > W - R + 4) lx = x(m.d) - 3 - lw; var row = 0; while (row < 4 && mkBoxes.some(function (b) { return b.r === row && !(lx + lw < b.a || lx > b.b); })) row++; if (row < 4) { mkBoxes.push({ r: row, a: lx, b: lx + lw }); mkOcc.push([lx - 2, 11 * row, lx + lw + 2, 11 + 11 * row + 3]); txt(g, lx, 11 + 11 * row, m.label, { fill: m.color || C.entry, 'font-size': 10, halo: true }); } } });
       var ends = [];
       p.series.forEach(function (s) {
         var yy = s.axis === 'right' ? y2 : y;
@@ -183,7 +184,7 @@
       });
       /* PMSD-MONTHVALS-2026-11-18: the month-end values, on the lines that ask for them (s.mvals) */
       var mvl = [], nMon = Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4); p.series.forEach(function (s) { if (!s.mvals) return; var yy = s.axis === 'right' ? y2 : y; monthPts(s.pts, d0, d1).forEach(function (q) { mvl.push({ x: x(q.d), y: yy(q.v), v: (s.fmt || fmtN)(q.v), mom: q.mom, c: s.color }); }); });
-      if (mvl.length) mvLabels(g, mvl, { x0: L, x1: W - R, y0: 2, y1: p.h - 2, side: (W - L - R) / nMon >= 64, skipR: 6 });
+      if (mvl.length) mvLabels(g, mvl, { x0: L, x1: W - R, y0: 2, y1: p.h - 2, side: (W - L - R) / nMon >= 64, skipR: 6, occ: mkOcc });
       /* round 2: end labels pushed apart so two lines ending close together never print on top of each other */
       var gapE = p.labelGap || 12; ends.forEach(function (e) { e.y = Math.max(10, e.y); }); ends.sort(function (a, b) { return a.y - b.y; }); for (var ei = 1; ei < ends.length; ei++) if (ends[ei].y - ends[ei - 1].y < gapE) ends[ei].y = ends[ei - 1].y + gapE;
       if (ends.length && ends[ends.length - 1].y > p.h + 8) { var sh = ends[ends.length - 1].y - (p.h + 8); ends.forEach(function (e) { e.y -= sh; }); for (var ej = ends.length - 2; ej >= 0; ej--) if (ends[ej + 1].y - ends[ej].y < gapE) ends[ej].y = ends[ej + 1].y - gapE; }
