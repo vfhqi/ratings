@@ -23,7 +23,7 @@
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 626469,
+   "bytes": 626465,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -37,7 +37,7 @@
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 515879,
+   "bytes": 515911,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -61,7 +61,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509830,
+   "bytes": 509818,
    "warnings": []
   },
   "DIE-BE": {
@@ -89,5 +89,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 87.5
+ "seconds": 74.0
 }

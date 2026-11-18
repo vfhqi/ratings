@@ -145,7 +145,8 @@
         if (th.zone === 'below') el('rect', { x: L, y: y(th.v), width: W - L - R, height: Math.max(0, p.h - y(th.v)), fill: th.fill || C.redFill }, g);
         if (th.zone === 'above') el('rect', { x: L, y: 0, width: W - L - R, height: Math.max(0, y(th.v)), fill: th.fill || C.redFill }, g);
       });
-      (p.markers || opts.markers || []).forEach(function (m, mi) { if (m.d < d0 || m.d > d1) return; el('line', { x1: x(m.d), x2: x(m.d), y1: 0, y2: p.h, stroke: m.color || C.entry, 'stroke-width': 1, 'stroke-dasharray': '3 3' }, g); if (pi === 0 && m.label) txt(g, x(m.d) + 3, 11 + 11 * (mi % 2), m.label, { fill: m.color || C.entry, 'font-size': 10, halo: true }); });
+      var mkBoxes = [];   /* PMSD-EVERY-TRANCHE-2026-11-18: a marker's label takes the first row where it does not touch another's */
+      (p.markers || opts.markers || []).forEach(function (m, mi) { if (m.d < d0 || m.d > d1) return; el('line', { x1: x(m.d), x2: x(m.d), y1: 0, y2: p.h, stroke: m.color || C.entry, 'stroke-width': 1, 'stroke-dasharray': '3 3' }, g); if (pi === 0 && m.label) { var lw = String(m.label).length * 5.6 + 6, lx = x(m.d) + 3; if (lx + lw > W - R + 4) lx = x(m.d) - 3 - lw; var row = 0; while (row < 4 && mkBoxes.some(function (b) { return b.r === row && !(lx + lw < b.a || lx > b.b); })) row++; if (row < 4) { mkBoxes.push({ r: row, a: lx, b: lx + lw }); txt(g, lx, 11 + 11 * row, m.label, { fill: m.color || C.entry, 'font-size': 10, halo: true }); } } });
       var ends = [];
       p.series.forEach(function (s) {
         var yy = s.axis === 'right' ? y2 : y;
@@ -416,7 +417,8 @@
     var pxSer = [{ pts: ser(m.daily, 'c'), color: C.price, w: 1.8, label: 'Share price', fmt: fpx }];
     var lvg = {}; (m.H.levels || []).forEach(function (lv) { var k = lv.level.toFixed(4); (lvg[k] = lvg[k] || []).push(lv); });
     Object.keys(lvg).forEach(function (k) { var g = lvg[k], trs = g.map(function (z) { return z.tranche; }).sort(function (a, b) { return a - b; }), longest = g.slice().sort(function (a, b) { return b.pts.length - a.pts.length; })[0];
-      pxSer.push({ pts: serP(longest.pts), color: (R_.C6 && R_.C6.state === 'info') ? C.neutral : C.red, pri: (R_.C6 && R_.C6.state === 'info') ? 4 : 1, w: 1.4, dash: '3 3', label: '30% level, ' + trList(trs), fmt: fpx, end: fpx(g[0].level) + ': 30% level, ' + trList(trs) }); });
+      var cs30 = trs.map(trCol);   /* PMSD-ITEM10-TRANCHE-COLOURS-2026-11-18 (Richard, 18-Nov-2026, "Q5 = Yes"): in each tranche's colour, alternating where shared */
+      pxSer.push({ pts: serP(longest.pts), color: cs30[0], colors: cs30, ink: cs30[0], pri: (R_.C6 && R_.C6.state === 'info') ? 4 : 1, w: 1.6, dash: '3 3', label: '30% level, ' + trList(trs), fmt: fpx, end: fpx(g[0].level) + ': 30% level, ' + trList(trs) }); });
     if (r200) { var C2s = m.H.core200;
       pxSer.push({ pts: serP(C2s.ma_pts), color: MA_COL[200], pri: C2s.rule_for_this_holding ? 1 : 3, w: 1.3, label: 'The absolute 200D MA', fmt: fpx, end: fpx(C2s.ma_pts[C2s.ma_pts.length - 1][1]) + ': 200D MA' });
       pxSer.push({ pts: serP(C2s.pts), color: lighten(MA_COL[200], 0.7), ink: MA_COL[200], pri: C2s.rule_for_this_holding ? 0 : 3, w: 1.5, dash: '6 4', label: 'The 200-day line\'s stop-loss', fmt: fpx, end: fpx(C2s.pts[C2s.pts.length - 1][1]) + ': its stop-loss' + (C2s.rule_for_this_holding ? '' : ' (information)') }); }
@@ -426,7 +428,8 @@
         var trs = g.map(function (s) { var tr = m.tranches.filter(function (z) { return z.slot_label === s.type; })[0] || m.tranches.filter(function (z) { return z.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; }).sort();
         var lp = (lg.line_pts || lg.pts || []), lm = (lg.line_ma_pts || lg.ma_pts || []);
         if (lm.length) pxSer.push({ pts: serP(lm), color: mc, pri: 0, w: 1.3, label: 'The ' + maName(g[0].stop_ma) + ', ' + trList(trs), fmt: fpx, end: fpx(lm[lm.length - 1][1]) + ': ' + maName(g[0].stop_ma) });
-        if (lp.length) pxSer.push({ pts: serP(lp), color: lighten(mc, 0.75), ink: mc, pri: 0, w: 1.5, dash: '6 4', label: 'The stop-loss, ' + trList(trs), fmt: fpx, end: fpx(lp[lp.length - 1][1]) + ': stop-loss, ' + trList(trs) }); }); }
+        var csl = trs.filter(function (t) { return t !== '?'; }).map(trCol);   /* PMSD-ITEM10-TRANCHE-COLOURS-2026-11-18: the stop-loss in its tranche's colour, as on chart 1 */
+        if (lp.length) pxSer.push({ pts: serP(lp), color: csl[0] || mc, colors: csl.length > 1 ? csl : null, ink: csl[0] || mc, pri: 0, w: 1.6, dash: '6 4', label: 'The stop-loss, ' + trList(trs), fmt: fpx, end: fpx(lp[lp.length - 1][1]) + ': stop-loss, ' + trList(trs) }); }); }
     P.push({ k: 'px', title: 'The share price, its 30% levels and stop-loss lines', sub: 'each rule on this chart reads each day\'s close', rows: pxRows, h: Math.max(108, pxRows.length * 40), series: pxSer, price: true, yFmt: fpx });
     var rowOf = function (id) { return id === 'L200' ? r200 : R_[id]; };
     var n1 = Math.floor((RW - 36) / 6.35), n2 = Math.floor((RW - 36) / 6.25), n3 = Math.floor((RW - 36) / 5.4);
@@ -487,7 +490,10 @@
         var pts = s.pts.filter(function (q) { return q.v != null; }), clip = pts.filter(function (q, i) { return (q.d >= d0 || (pts[i + 1] && pts[i + 1].d >= d0)) && q.d <= d1; });
         if (!clip.length) return;
         var dp = ''; clip.forEach(function (q, i) { var xa = x(q.d); if (xa < L && clip[i + 1]) { var xb = x(clip[i + 1].d), f = (L - xa) / ((xb - xa) || 1); dp += 'M' + L.toFixed(1) + ',' + y(q.v + (clip[i + 1].v - q.v) * f).toFixed(1); return; } dp += (dp ? 'L' : 'M') + Math.max(L, xa).toFixed(1) + ',' + y(q.v).toFixed(1); });
-        el('path', { d: dp, fill: 'none', stroke: s.color, 'stroke-width': s.w || 1.6, 'stroke-dasharray': s.dash || '', 'stroke-linejoin': 'round' }, g);
+        if (s.colors && s.colors.length > 1) {   /* PMSD-ITEM10-TRANCHE-COLOURS-2026-11-18: a line shared by several tranches, in alternating dashes of each colour */
+          var segL = 6, nC = s.colors.length;
+          s.colors.forEach(function (cc, ci) { el('path', { d: dp, fill: 'none', stroke: cc, 'stroke-width': s.w || 1.6, 'stroke-dasharray': segL + ' ' + (segL * (nC - 1) + 0.01), 'stroke-dashoffset': String(-ci * segL), 'stroke-linejoin': 'round' }, g); });
+        } else el('path', { d: dp, fill: 'none', stroke: s.color, 'stroke-width': s.w || 1.6, 'stroke-dasharray': s.dash || '', 'stroke-linejoin': 'round' }, g);
         if (s.dots) clip.forEach(function (q) { if (q.d >= d0) el('circle', { cx: x(q.d), cy: y(q.v), r: 2.4, fill: s.color }, g); });
       });
       /* labels never overprint: each is placed in the first free spot, else left out (its number is in the dot's title) */
@@ -580,7 +586,7 @@
       sw('<svg width="26" height="22"><circle cx="5" cy="11" r="3.2" fill="' + C.industry + '"/><circle cx="13" cy="11" r="3.2" fill="' + C.sector + '"/><circle cx="21" cy="11" r="3.2" fill="' + C.stock + '"/></svg><span><b>Month-end dots</b> in their line\'s colour (' + fmtD(m.me3) + ', ' + fmtD(m.me1) + ', ' + fmtD(m.me0) + ' where shown); point at a dot for its date</span>'),
       t1 ? sw('<svg width="26" height="22"><circle cx="13" cy="11" r="5" fill="#fff" stroke="' + C.entry + '" stroke-width="2"/></svg><span><b>Purple ring:</b> the reading when tranche 1 was bought (' + d(t1.entry_date) + '); ◂ on the left edge when earlier than the time shown</span>') : '',
       sw('<svg width="26" height="22"><rect x="2" y="8" width="22" height="9" fill="rgba(207,34,46,.14)"/><line x1="2" x2="24" y1="8" y2="8" stroke="' + C.red + '" stroke-width="1.3" stroke-dasharray="5 3"/></svg><span><b>Dashed line, red band:</b> the line that sells and the selling zone (grey: information only for this class)</span>'),
-      sw('<svg width="26" height="22"><line x1="2" x2="24" y1="7" y2="7" stroke="' + C.red + '" stroke-width="1.4" stroke-dasharray="3 3"/><line x1="2" x2="24" y1="16" y2="16" stroke="' + lighten(MA_COL[200], 0.7) + '" stroke-width="1.5" stroke-dasharray="6 4"/></svg><span><b>Share price chart:</b> red dashes, each tranche\'s 30% level (30% below its highest close since bought); light dashes, a stop-loss in its moving average\'s colour</span>')
+      sw('<svg width="26" height="22"><line x1="2" x2="24" y1="7" y2="7" stroke="' + trCol(1) + '" stroke-width="1.6" stroke-dasharray="3 3"/><line x1="2" x2="24" y1="16" y2="16" stroke="' + trCol(2) + '" stroke-width="1.6" stroke-dasharray="6 4"/></svg><span><b>Share price chart:</b> short dashes, each tranche\'s 30% level (30% below its highest close since bought); long dashes, a tranche\'s stop-loss; each in its tranche\'s colour, as on item 1, and in alternating dashes of each colour where tranches share a line</span>')
     ].join('');
   }
 
@@ -2044,7 +2050,9 @@
   function chip(lab, c, fmtc, band) { var k = trKind(c, band || 0.005); return '<span class="cg ' + k + '">' + lab + ' ' + (c == null ? 'n/a' : fmtc ? fmtc(c) : pctS1(c)) + '</span>'; }
   function pctS1(c) { var v = Math.round(c * 1000) / 10; return v > 0 ? '+' + v.toFixed(1) + '%' : v < 0 ? '(' + Math.abs(v).toFixed(1) + '%)' : '0.0%'; }
   function swatch(yi, col) { return '<svg width="26" height="10"><line x1="1" x2="25" y1="5" y2="5" stroke="' + (col || '#57606a') + '" stroke-width="' + (FYW[yi] || 2.3) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
-  function trMarker(m) { if (!m.tranches.length) return []; var t1 = m.tranches.slice().sort(function (a, b) { return a.tranche_number - b.tranche_number; })[0]; return [{ d: t1.entry_date, label: 'tranche ' + t1.tranche_number + ' bought, ' + fmtD(t1.entry_date), color: trCol(t1.tranche_number) }]; }   /* PMSD-2026-11-18: in its tranche's colour */
+  /* PMSD-EVERY-TRANCHE-2026-11-18 (Richard, 18-Nov-2026, Message 118, agreeing to mark every tranche on the Full page view's items 4 to 6, as the
+     One screen view does): one dashed line per purchase and add, each in its tranche's colour, labelled with its date */
+  function trMarker(m) { if (!m.tranches.length) return []; return m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : a.entry_date > b.entry_date ? 1 : a.tranche_number - b.tranche_number; }).map(function (t) { return { d: t.entry_date, label: 'tranche ' + t.tranche_number + ', ' + fmtD(t.entry_date), color: trCol(t.tranche_number) }; }); }
   function snakeRender(host, m, W) {
     /* FY3-B (29-Oct-2026, Richard: "Q1 = B. Concur" and "Q2 = B. Yes, always; this should always be the case for anything related to the SS
        estimates"): the lines are the company's FY+1, FY+2 and FY+3 (its first, second and third unreported years), named as the company
