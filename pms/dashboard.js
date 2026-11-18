@@ -84,6 +84,31 @@
   window.DU = { classOf: classOf, warnBanner: warnBanner, fmtD: fmtD, fmtDY: fmtDY, esc: esc, pctS: pctS, pct0: pct0, pctI: pctI, intS: intS, br: br, sgn: sgn, ratingColor: ratingColor, fmtVol: fmtVol };
 
   /* ------------------------------------------------------------------ a stacked time chart (SVG), one level deeper on hover */
+  /* PMSD-MONTHVALS-2026-11-18 (Richard, 18-Nov-2026, on panel 4: "for each month on the charts, show the numerical value as well as the line. And next to each
+     numerical value, in small writing, show the % MoM increase (1 decimal place). For ONE PAGE and LONGER VIEW"): each line's value at each month-end (the
+     last reading of each calendar month; the month still running is left to the line's end label) with its change on the month-end before, 1 decimal place,
+     negative in brackets, green rising, red falling; beside the value where a month is wide enough, else under it; above the point, else below it; a label
+     that would touch another is left out (the hover still gives every value). */
+  function monthPts(pts, d0, d1) { var by = {}, ks = []; (pts || []).forEach(function (q) { if (q.v == null) return; var k = q.d.slice(0, 7); if (!by[k]) ks.push(k); by[k] = q; }); ks.sort();
+    var out = [], last = ks.length ? by[ks[ks.length - 1]] : null, nextM = function (k) { var y_ = +k.slice(0, 4), mo = +k.slice(5, 7); return mo === 12 ? (y_ + 1) + '-01' : y_ + '-' + (mo < 9 ? '0' : '') + (mo + 1); };
+    ks.forEach(function (k, i) { var q = by[k]; if (q === last && addDays(q.d, 4).slice(0, 7) === k) return; if (q.d < d0 || q.d > d1) return; var pr = i && nextM(ks[i - 1]) === k ? by[ks[i - 1]] : null; out.push({ d: q.d, v: q.v, mom: pr && pr.v ? q.v / pr.v - 1 : null }); });
+    return out; }
+  function mvLabels(g, list, b) {
+    var occ = (b.occ || []).slice(), hit = function (r) { return occ.some(function (o) { return r[0] < o[2] && r[2] > o[0] && r[1] < o[3] && r[3] > o[1]; }); };
+    var fsV = b.small ? 9 : 10, fsP = b.small ? 7.5 : 8.5, pc = function (c) { var v = Math.round(c * 1000) / 10; return v > 0 ? '+' + v.toFixed(1) + '%' : v < 0 ? '(' + Math.abs(v).toFixed(1) + '%)' : '0.0%'; };
+    list.slice().sort(function (a, c) { return a.x - c.x; }).forEach(function (q) {
+      if (q.x < b.x0 + (b.skipL || 0) || q.x > b.x1 - (b.skipR || 0)) return;
+      var pt = q.mom == null ? '' : pc(q.mom), wV = q.v.length * fsV * 0.6, wP = pt.length * fsP * 0.58, side = !!b.side, w = side ? wV + 3 + wP : Math.max(wV, wP), hg = side ? fsV + 2 : fsV + fsP + 3;
+      var tops = [q.y - 5 - hg, q.y + 5];
+      for (var i = 0; i < 2; i++) { var top = tops[i], x0 = Math.max(b.x0 + 1, Math.min(b.x1 - w - 1, q.x - w / 2)), r = [x0, top, x0 + w, top + hg];
+        if (top < b.y0 || top + hg > b.y1 || hit(r)) continue;
+        occ.push([r[0] - 3, r[1] - 1, r[2] + 3, r[3] + 1]);
+        var col = q.mom == null ? C.ink3 : q.mom >= 0.0005 ? '#1a7f37' : q.mom <= -0.0005 ? '#cf222e' : '#6e7781';
+        if (side) { txt(g, x0, top + fsV, q.v, { 'font-size': fsV, 'font-weight': 700, fill: q.c, halo: true }); if (pt) txt(g, x0 + wV + 3, top + fsV, pt, { 'font-size': fsP, fill: col, halo: true }); }
+        else { txt(g, x0 + w / 2, top + fsV, q.v, { 'font-size': fsV, 'font-weight': 700, fill: q.c, halo: true, 'text-anchor': 'middle' }); if (pt) txt(g, x0 + w / 2, top + fsV + fsP + 1, pt, { 'font-size': fsP, fill: col, halo: true, 'text-anchor': 'middle' }); }
+        break; }
+    });
+  }
   function stack(container, opts) {
     var W = opts.width || container.clientWidth || 900, L = opts.left || 48, R = opts.right == null ? 150 : opts.right, gap = 24;
     var d0 = opts.d0, d1 = opts.d1;
@@ -155,6 +180,9 @@
           if (s.endLabel) { var q = pts[pts.length - 1]; ends.push({ x: p.labelEdge ? W - R + 6 : x(q.d) + 6, y: yy(q.v) + 4, t: s.endLabel, c: s.color }); }
         }
       });
+      /* PMSD-MONTHVALS-2026-11-18: the month-end values, on the lines that ask for them (s.mvals) */
+      var mvl = [], nMon = Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4); p.series.forEach(function (s) { if (!s.mvals) return; var yy = s.axis === 'right' ? y2 : y; monthPts(s.pts, d0, d1).forEach(function (q) { mvl.push({ x: x(q.d), y: yy(q.v), v: (s.fmt || fmtN)(q.v), mom: q.mom, c: s.color }); }); });
+      if (mvl.length) mvLabels(g, mvl, { x0: L, x1: W - R, y0: 2, y1: p.h - 2, side: (W - L - R) / nMon >= 64, skipR: 6 });
       /* round 2: end labels pushed apart so two lines ending close together never print on top of each other */
       var gapE = p.labelGap || 12; ends.forEach(function (e) { e.y = Math.max(10, e.y); }); ends.sort(function (a, b) { return a.y - b.y; }); for (var ei = 1; ei < ends.length; ei++) if (ends[ei].y - ends[ei - 1].y < gapE) ends[ei].y = ends[ei - 1].y + gapE;
       if (ends.length && ends[ends.length - 1].y > p.h + 8) { var sh = ends[ends.length - 1].y - (p.h + 8); ends.forEach(function (e) { e.y -= sh; }); for (var ej = ends.length - 2; ej >= 0; ej--) if (ends[ej + 1].y - ends[ej].y < gapE) ends[ej].y = ends[ej + 1].y - gapE; }
@@ -416,7 +444,13 @@
       p.h = Math.max(p.h, Math.ceil(9 + (nl - 1) * 11.5 + 3.5 * (p.R.length - 1) + 3 - 14));
       if (p.k !== 'px' && p.R.every(function (r) { return r.state === 'info'; })) p.sub = 'Information only: the 10-day stop-loss rule decides the sale'; });
     P = P.filter(function (p) { return p.R.length; }).sort(function (a, b) { return a.uk - b.uk; });   /* nearest first, as the ladder was */
-    var GAP = 22, TOP = 6, H = TOP + P.reduce(function (a, p) { return a + p.h + GAP; }, 0) - 8;
+    var GAP = 22, TOP = 6;
+    /* PMSD-SL-FULLHEIGHT-2026-11-18 (Richard, 17-Nov-2026: "Make 10. Distance from SLs take up the full height of a screen. It makes the charts easier to read"):
+       the page passes the height one screen leaves once the section's title, time buttons and key are counted (opts.fitH); each chart grows in proportion to fill it */
+    if (opts.fitH) { var sumH = P.reduce(function (a, p) { return a + p.h; }, 0), avail = opts.fitH - TOP - GAP * P.length + 8; if (avail > sumH) P.forEach(function (p) { p.h = Math.floor(p.h * avail / sumH); }); }
+    var H = TOP + P.reduce(function (a, p) { return a + p.h + GAP; }, 0) - 8;
+    /* PMSD-SL-LINKS-2026-11-18 (Richard, 17-Nov-2026: "For this section, for each test, and same for section 11, include a hyperlink to take me up to the relevant section above to see the item in focus in more depth") */
+    var SLUP = { rs: ['#s2rs', '3. RS'], c2: ['#relma', '1. SP and MAs: the relative 200D MA'], c5: ['#s2', '2. Volume: relative price against its 52W high'], c4b: ['#s5', '6. Net Upgrade Breadth'], px: ['#s1', '1. SP and MAs'] };
     var svg = el('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, host);
     var y0 = TOP, hov = [];
     P.forEach(function (p) {
@@ -433,7 +467,9 @@
       /* left: the chart's name and how its rules read; a bar in the colour of its nearest rule */
       el('rect', { x: 0, y: -4, width: 3, height: h + 8, fill: col0 }, g);
       var ty = 12; slWrap(p.title, LW > 150 ? 24 : 19).slice(0, 3).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink, 'font-size': 12, 'font-weight': 650 }); ty += 14; });
-      ty += 2; slWrap(p.sub, LW > 150 ? 31 : 25).slice(0, Math.max(1, Math.floor((h + 14 - ty) / 12))).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink3, 'font-size': 10 }); ty += 12; });
+      var UP = SLUP[p.k], upL = UP ? slWrap('\u2191 see ' + UP[1], LW > 150 ? 27 : 21) : [];
+      ty += 2; slWrap(p.sub, LW > 150 ? 31 : 25).slice(0, Math.max(1, Math.floor((h + 14 - ty - upL.length * 13) / 12))).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink3, 'font-size': 10 }); ty += 12; });
+      if (UP) { var a_ = el('a', { href: UP[0], 'class': 'uplink' }, g); upL.forEach(function (l, li) { txt(a_, 10, Math.max(ty + 4, h + 6 - (upL.length - 1 - li) * 13) + (li ? 0 : 0), l, { fill: C.stock, 'font-size': 10.5, 'font-weight': 600, 'text-decoration': 'underline' }); }); }
       /* the chart: gridlines, months (Fridays on L1M), the selling zone, the lines that sell */
       el('rect', { x: L, y: 0, width: X1 - L, height: h, fill: C.surface, stroke: C.border }, g);
       (p.ticks || niceTicks(lo, hi, h > 120 ? 4 : 3)).forEach(function (v) { if (v < lo - 1e-9 || v > hi + 1e-9) return; el('line', { x1: L, x2: X1, y1: y(v), y2: y(v), stroke: C.grid }, g); txt(g, L - 6, Math.max(9, Math.min(h, y(v) + 4)), (p.yFmt || fmtN)(v), { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
@@ -908,59 +944,67 @@
   var SHOW_200D_ALL = true;  /* Richard, 13-Nov-2026, Question 3 = A: the 200-day line and its stop-loss on every stock (information on a class it does not sell) */
   function lighten(hex, k) { var n = parseInt(String(hex).slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, f = function (c) { return Math.round(c + (255 - c) * (1 - k)); };
     return 'rgb(' + f(r) + ',' + f(g) + ',' + f(b) + ')'; }
+  /* PMSD-TRANCHE-COLOURS-2026-11-18 (Richard, 17-Nov-2026: "In the SP chart, colour coordinate each Tranche bought/added and its relevant 30% below the
+     tranche line or relevant SL lines, so that each tranche is a slightly different colour. ... Goal is to visually signal which SLs go with which tranche"):
+     one colour per tranche number, kept clear of the moving averages' colours, for its purchase mark, its 30% level and its stop-loss on chart 1, and its
+     line on the charts below; a line several tranches share is drawn in alternating dashes of each one's colour; a tranche sold since is grey. */
+  var TRCOL = ['#0b7a75', '#b7791f', '#2b6cb0', '#9c4221', '#5f6b00', '#4a5568'];
+  function trCol(n) { return n ? TRCOL[(n - 1) % TRCOL.length] : '#8b949e'; }
+  /* PMSD-AUM-2026-11-18 (Richard, 17-Nov-2026: "In the SP chart, next to "tranche added", add the % of AUM bought"): the tranche's size when bought
+     (entry_size_pct, % of AUM at entry: his rule that every other % of AUM means today's value); a tranche sold since keeps no size in the record */
+  function trSize(m, n) { var t = n ? m.tranches.filter(function (x) { return x.tranche_number === n; })[0] : null; return t && t.entry_size_pct != null ? t.entry_size_pct : null; }
   function overlayFor(m, short) {
-    var H = m.H, lines = [];
+    var H = m.H, lines = [], keys = [], fp = fpx;
+    /* PMSD-MA-BUTTONS-2026-11-18 (Richard, 18-Nov-2026, two screenshots of Xvivo: "the 20D button is on in one and toggled off in another, yet the 20D line is
+       in both. The 20D label is broken, too. Error. Fix it"): a moving average is drawn only when its button is on, on every holding, in both views. The
+       13-Nov-2026 design drew the MA a tranche's stop-loss follows (and the absolute 200D MA) a second time whenever its button was off, and its words
+       appeared only then. Now: the button alone decides; when it is on, the key under the chart says which tranches' stop-loss follows that MA. */
+    var layerOn = function (per) { return !!(window.chartVis && chartVis['ma' + per]); };
+    var trw = function (trs) { return trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0]; };
+    var cols = function (trs) { var c = trs.filter(function (t) { return t && t !== '?'; }).map(trCol); return c.length ? c : ['#cf222e']; };
     if (!m.probing) {
       var groups = {};
       H.levels.forEach(function (lv) { var k = lv.level.toFixed(4); (groups[k] = groups[k] || []).push(lv); });
-      /* round 2 (Richard, image 1): each line's label says in words what the price on it means */
-      var fp = fpx; /* 29-Oct-2026 08:45 (Richard: "Do not have such extreme decimal places"): one rounding rule, fpx below */
-      var trw = function (trs) { return trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0]; };
-      Object.keys(groups).forEach(function (k, gi) { var g = groups[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; }); var trs = g.map(function (x) { return x.tranche; });
-        lines.push({ label: short ? '30% level ' + fp(g[0].level) : fp(g[0].level) + ': 30% below the highest close since ' + trw(trs) + (trs.length > 1 ? ' were' : ' was') + ' bought', color: '#cf222e', dash: [3, 3], width: 1.7, byDate: by, labelDy: 14 }); });
+      Object.keys(groups).forEach(function (k) { var g = groups[k], by = {}; g[0].pts.forEach(function (q) { by[q[0]] = q[1]; });
+        var trs = g.map(function (x) { return x.tranche; }).sort(function (a, b) { return a - b; }), cs = cols(trs), was = trs.length > 1 ? ' were' : ' was';
+        lines.push({ label: short ? '30% level ' + fp(g[0].level) : fp(g[0].level) + ': 30% below the highest close since ' + trw(trs) + was + ' bought', num: fp(g[0].level),
+          key: '30% below the highest close since ' + trw(trs) + was + ' bought', skey: '30% level, ' + trw(trs), color: cs[0], colors: cs, ink: cs[0], dash: [3, 3], width: 1.8, byDate: by, labelDy: 14 }); });
       var bt = {}; H.daily.forEach(function (q) { if (q.trig) bt[q.d] = q.trig; });
       var lastT = H.daily[H.daily.length - 1].trig;
-      lines.push({ label: short ? '52-week-high line ' + (lastT ? fp(lastT) : '') : (lastT ? fp(lastT) + ': ' : '') + 'below this price, relative price is more than 25% under its 52-week high', color: '#bf3989', dash: [6, 3], width: 1.4, byDate: bt, labelDy: -5 });
+      lines.push({ label: short ? '52-week-high line ' + (lastT ? fp(lastT) : '') : (lastT ? fp(lastT) + ': ' : '') + 'below this price, relative price is more than 25% under its 52-week high', num: lastT ? fp(lastT) : null,
+        key: 'below this price, relative price is more than 25% under its 52-week high', skey: '52-week-high line (relative price 25% under its high below it)', color: '#bf3989', dash: [6, 3], width: 1.4, byDate: bt, labelDy: -5 });
     }
-    /* PMS-CORE200-2026-11-13 (Richard, 13-Nov-2026 12:33: "10. Distance from SLs needs to display the 200D MA SL"; the 200-day line rule for
-       Core Middle Innings Investments, live 12-Nov-2026, D-PMS-V4-168): its stop-loss, the share price's 200-day line less 6%, light and
-       dashed in the 200-day line's colour (H.core200, pms_dashboard_extract.py v1.13). SHOW_200D_ALL: the same line, as information, on
-       a holding of another class (waits on Richard's answer to Question 3 of 13-Nov-2026). */
+    /* PMS-CORE200-2026-11-13: the 200-day line rule's stop-loss (the absolute 200D MA less 6%), light and dashed, on every stock (SHOW_200D_ALL; information on a class it does not sell) */
     var C2 = H.core200;
     if (C2 && C2.pts && (C2.rule_for_this_holding || SHOW_200D_ALL)) {
-      var b2 = {}, m2 = {}; C2.pts.forEach(function (q) { b2[q[0]] = q[1]; }); C2.ma_pts.forEach(function (q) { m2[q[0]] = q[1]; });
-      var lv2 = C2.pts.length ? fpx(C2.pts[C2.pts.length - 1][1]) + ': ' : '';
-      lines.push({ label: lv2 + 'the 200-day line rule\'s stop-loss, the absolute 200D MA less ' + bufWords(C2.buffer_pct) + (C2.rule_for_this_holding ? '' : ' (information: not this class\'s selling rule)'), color: lighten(MA_COL[200], 0.7), dash: [6, 4], width: 1.5, byDate: b2, labelDy: 14 });
-      if (!(window.chartVis && chartVis.ma200)) lines.push({ label: (C2.ma_pts.length ? fpx(C2.ma_pts[C2.ma_pts.length - 1][1]) + ': ' : '') + 'the absolute 200D MA', color: MA_COL[200], dash: [], width: 1.4, byDate: m2, labelDy: -5 });
+      var b2 = {}; C2.pts.forEach(function (q) { b2[q[0]] = q[1]; });
+      var s2 = C2.pts.length ? fpx(C2.pts[C2.pts.length - 1][1]) : null, inf2 = C2.rule_for_this_holding ? '' : ' (information: not this class\'s selling rule)';
+      lines.push({ label: (s2 ? s2 + ': ' : '') + 'the 200-day line rule\'s stop-loss, the absolute 200D MA less ' + bufWords(C2.buffer_pct) + inf2, num: s2,
+        key: 'the 200-day line rule\'s stop-loss, the absolute 200D MA less ' + bufWords(C2.buffer_pct) + inf2, skey: 'the 200-day line rule\'s stop-loss' + (C2.rule_for_this_holding ? '' : ' (information)'),
+        color: lighten(MA_COL[200], 0.7), ink: MA_COL[200], dash: [6, 4], width: 1.5, byDate: b2, labelDy: 14 });
+      if (layerOn(200) && C2.ma_pts && C2.ma_pts.length) keys.push({ num: fpx(C2.ma_pts[C2.ma_pts.length - 1][1]), c: MA_COL[200], t: 'the absolute 200D MA' + (C2.rule_for_this_holding ? ', the line the 200-day line rule reads' : ''), st: 'the absolute 200D MA' });
     }
-    if (m.probing) { /* 2-Nov-2026 (D-PMS-V4-132): an Early Innings Probing Bet's two levels per tranche under the 10-day stop-loss rule, from the
-         alignment calculation script's own levels: the stop-loss (pts, red dotted, as before) and the MA chosen for the tranche (ma_pts, the
-         same red, paler and dashed). Tranches on the same MA and stop-loss share one pair of lines. A Core Investment has none. */
+    if (m.probing) { /* D-PMS-V4-132: a Probing or Speculative tranche's stop-loss under the 10-day stop-loss rule, the MA chosen for it less its buffer; tranches on the same MA and stop-loss share one line */
       var sg = {};
       (H.stops || []).forEach(function (s) { var k = (s.stop_level || 0).toFixed(4) + '|' + s.stop_ma + '|' + s.buffer_pct; (sg[k] = sg[k] || []).push(s); });
-      Object.keys(sg).forEach(function (k) { var g = sg[k], lg = g.slice().sort(function (a, b) { return (b.pts || []).length - (a.pts || []).length; })[0], by = {}, bym = {};
-        /* 13-Nov-2026: line_pts, today's line less the buffer on every day (pms_dashboard_extract.py v1.13), so the dashed stop-loss runs just below the
-           moving average it is linked to; before v1.13 data, the day-by-day walk (pts) */
-        (lg.line_pts || lg.pts || []).forEach(function (q) { by[q[0]] = q[1]; }); (lg.line_ma_pts || lg.ma_pts || []).forEach(function (q) { bym[q[0]] = q[1]; });
-        var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; }).sort();
-        var trj = trs.length > 1 ? 'tranches ' + trs.slice(0, -1).join(', ') + ' and ' + trs[trs.length - 1] : 'tranche ' + trs[0], trp = trj + '\'s';
-        var lvl = g[0].stop_level ? fpx(g[0].stop_level) + ': ' : '', bw = bufWords(g[0].buffer_pct), mlv = g[0].ma_level != null ? fpx(g[0].ma_level) + ': ' : '';
-        /* PMS-SL-STYLE-2026-11-13 (Richard, 13-Nov-2026 12:33: "show the SL levels linked to any MAs as light dashed lines below the MA"): the
-           stop-loss in its moving average's own colour, light and dashed, just below that line; the moving average itself is drawn by its own
-           layer, or here in the same colour when that layer is switched off */
-        var per = parseInt(g[0].stop_ma, 10), mc = MA_COL[per] || '#cf222e', layerOn = !!(window.chartVis && chartVis['ma' + per]);
-        lines.push({ label: lvl + 'the stop-loss, the ' + maName(g[0].stop_ma) + ' less ' + (bw || 'its buffer') + (short ? '' : ', for ' + trj), color: lighten(mc, 0.75), dash: [6, 4], width: 1.5, byDate: by, labelDy: 14 });
-        if (Object.keys(bym).length && !layerOn) lines.push({ label: mlv + (trs.length > 1 ? 'the MA of ' + trj : trp + ' MA') + ' (the ' + maName(g[0].stop_ma) + ')', color: mc, dash: [], width: 1.4, byDate: bym, labelDy: -5 });
+      Object.keys(sg).forEach(function (k) { var g = sg[k], lg = g.slice().sort(function (a, b) { return (b.pts || []).length - (a.pts || []).length; })[0], by = {};
+        (lg.line_pts || lg.pts || []).forEach(function (q) { by[q[0]] = q[1]; });
+        var trs = g.map(function (s) { var tr = m.tranches.filter(function (x) { return x.slot_label === s.type; })[0] || m.tranches.filter(function (x) { return x.entry_date === s.entry_date; })[0]; return tr ? tr.tranche_number : '?'; }).sort(function (a, b) { return a - b; });
+        var trj = trw(trs), bw = bufWords(g[0].buffer_pct) || 'its buffer', per = parseInt(g[0].stop_ma, 10), cs = cols(trs), lv = g[0].stop_level ? fpx(g[0].stop_level) : null;
+        lines.push({ label: (lv ? lv + ': ' : '') + 'the stop-loss, the ' + maName(g[0].stop_ma) + ' less ' + bw + (short ? '' : ', for ' + trj), num: lv,
+          key: 'the stop-loss of ' + trj + ': the ' + maName(g[0].stop_ma) + ' less ' + bw, skey: 'stop-loss, ' + trj, color: cs[0], colors: cs, ink: cs[0], dash: [6, 4], width: 1.6, byDate: by, labelDy: 14 });
+        if (layerOn(per) && g[0].ma_level != null) keys.push({ num: fpx(g[0].ma_level), c: MA_COL[per] || C.ink2, t: 'the ' + maName(g[0].stop_ma) + ', the line the stop-loss of ' + trj + ' follows', st: 'the ' + maName(g[0].stop_ma) + ': ' + trj + ' follow it' });
       });
     }
-    /* PMS-EVENTS-2026-11-13 (Richard, 13-Nov-2026 12:33: "In the PMS Per-stock Dashboard SP charts, show all Tranch Entries, Adds, Promotes,
-       Exits"): one dated mark per event in the PMS book (H.events, pms_dashboard_extract.py v1.13): purple a purchase (tranche 1) or an add,
-       blue a promotion or a change of class, orange a sale. Before v1.13 data, the tranches' purchase dates as before. */
-    var EVC = { entry: '#8250df', add: '#8250df', promote: '#0969da', exit: '#bc4c00' };
+    /* PMS-EVENTS-2026-11-13 (Richard, 13-Nov-2026: "show all Tranch Entries, Adds, Promotes, Exits"): one dated mark per event in the PMS book; a purchase
+       or an add in its tranche's colour (grey for a tranche sold since), a promotion or a change of class blue, a sale orange */
+    var EVC = { promote: '#0969da', exit: '#bc4c00' };
+    var evCol = function (e) { return (e.kind === 'entry' || e.kind === 'add') ? trCol(e.tranche) : EVC[e.kind] || '#8250df'; };
+    var szw = function (n) { var v = trSize(m, n); return v == null ? '' : ', ' + v.toFixed(2) + '% of AUM at entry'; };
     var evWords = function (e) {
       var tn = e.tranche ? 'tranche ' + e.tranche : null;
-      if (e.kind === 'entry') return (tn || 'tranche 1') + (/in the record from/.test(e.text || '') ? ' in the record from ' : ' bought ') + fmtD(e.d);
-      if (e.kind === 'add') return tn ? tn + ' added ' + fmtD(e.d) : 'added ' + fmtD(e.d) + ' (sold since)';
+      if (e.kind === 'entry') return (tn || 'tranche 1') + (/in the record from/.test(e.text || '') ? ' in the record from ' : ' bought ') + fmtD(e.d) + szw(e.tranche);
+      if (e.kind === 'add') return tn ? tn + ' added ' + fmtD(e.d) + szw(e.tranche) : 'added ' + fmtD(e.d) + ' (sold since)';
       if (e.kind === 'promote') return (tn || 'a tranche') + (e.to && e.to !== 'core' ? ' to ' + (e.to === 'speculative' ? 'Speculative Bet' : e.to) : ' promoted to Core') + ' ' + fmtD(e.d);
       if (e.kind === 'exit') return (tn ? tn + ' sold ' : 'sold ') + fmtD(e.d) + (tn ? '' : ' (bought ' + fmtD(e.bought) + ')');
       return fmtD(e.d);
@@ -968,19 +1012,37 @@
     /* events of one kind on one day share one label ("tranches 1 and 2 to Speculative Bet 11-Nov"; "2 tranches sold 4-Nov (bought 6-Jul, 11-Aug)") */
     var evGroup = function (E) { var out = [], at = {};
       E.forEach(function (e) { var k = e.d + '|' + e.kind + '|' + (e.kind === 'promote' ? (e.to || 'core') : ''); if (at[k] == null) { at[k] = out.length; out.push([]); } out[at[k]].push(e); });
-      return out.map(function (g) { if (g.length === 1) return { d: g[0].d, kind: g[0].kind, label: evWords(g[0]) };
+      return out.map(function (g) { if (g.length === 1) return { d: g[0].d, kind: g[0].kind, label: evWords(g[0]), tranche: g[0].tranche, sz: trSize(m, g[0].tranche) };
         var e = g[0], ns = g.map(function (x) { return x.tranche; }).filter(function (x) { return x; }), lst = function (a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : String(a[0]); };
         var who = ns.length === g.length ? 'tranches ' + lst(ns) : g.length + ' tranches';
         if (e.kind === 'promote') return { d: e.d, kind: e.kind, label: who + (e.to && e.to !== 'core' ? ' to ' + (e.to === 'speculative' ? 'Speculative Bet' : e.to) : ' promoted to Core') + ' ' + fmtD(e.d) };
         if (e.kind === 'exit') return { d: e.d, kind: e.kind, label: who + ' sold ' + fmtD(e.d) + (ns.length === g.length ? '' : ' (bought ' + g.map(function (x) { return fmtD(x.bought); }).join(', ') + ')') };
-        return { d: e.d, kind: e.kind, label: who + (e.kind === 'add' ? ' added ' : ' bought ') + fmtD(e.d) }; }); };
-    /* the One screen view's small chart: the same marks, shorter words (what happened and the date) */
-    var evShort = function (e) { var n = e.label.match(/^(\d+) tranches|^tranches [\d, and]+/), many = n ? (n[1] ? n[1] + ' ' : '') : '';
-      return e.kind === 'entry' ? 'bought ' + fmtD(e.d) : e.kind === 'add' ? 'added ' + fmtD(e.d) : e.kind === 'exit' ? (many || '') + 'sold ' + fmtD(e.d)
+        var szs = ns.map(function (n) { return trSize(m, n); }).filter(function (v) { return v != null; });
+        return { d: e.d, kind: e.kind, tranche: ns[0], label: who + (e.kind === 'add' ? ' added ' : ' bought ') + fmtD(e.d) + (szs.length === g.length ? ', ' + szs.map(function (v) { return v.toFixed(2) + '%'; }).join(' and ') + ' of AUM at entry' : '') }; }); };
+    /* the One screen view's small chart: the same marks, shorter words (what happened, the date, the size bought) */
+    var evShort = function (e) { var n = e.label.match(/^(\d+) tranches|^tranches [\d, and]+/), many = n ? (n[1] ? n[1] + ' ' : '') : '', sz = e.sz != null ? ', ' + e.sz.toFixed(2) + '%' : '';
+      return e.kind === 'entry' ? 'bought ' + fmtD(e.d) + sz : e.kind === 'add' ? 'added ' + fmtD(e.d) + sz : e.kind === 'exit' ? (many || '') + 'sold ' + fmtD(e.d)
         : (/to Speculative Bet/.test(e.label) ? 'to Speculative Bet ' : 'to Core ') + fmtD(e.d); };
-    var marks = (H.events && H.events.length) ? evGroup(H.events).map(function (e) { return { d: e.d, label: short ? evShort(e) : e.label, color: EVC[e.kind] || '#8250df', kind: e.kind }; })
-      : m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), row: i }; });
-    return { lines: lines, marks: marks };
+    var marks = (H.events && H.events.length) ? evGroup(H.events).map(function (e) { return { d: e.d, label: short ? evShort(e) : e.label, color: (e.kind === 'entry' || e.kind === 'add') ? trCol(e.tranche) : EVC[e.kind] || '#8250df', kind: e.kind }; })
+      : m.tranches.map(function (tr, i) { return { d: tr.entry_date, label: 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), color: trCol(tr.tranche_number), row: i }; });
+    return { lines: lines, marks: marks, keys: keys };
+  }
+  /* PMSD-KEY-2026-11-18 (Richard, 17-Nov-2026: "Move the "9.70 below the..." onto the y-axis and expand the charts to take up the white space on RHS"): each
+     level's number sits on the price scale in its line's colour (chart-renderer-dashboard.js PMS-DASH 24) and its words here, under the chart, highest
+     price first, each beside a sample of its line; with the meaning of the volume labels' colours at the 1M and 3M zooms (Richard, 18-Nov-2026) */
+  function overlayKey(ov, o) {
+    o = o || {};
+    var sw = function (cs, d, solid) { var s = '<svg class="oksw" width="26" height="10" viewBox="0 0 26 10">', a = d[0] || 4, cy = a + (d[1] || 3);
+      if (solid) return s + '<line x1="1" x2="25" y1="5" y2="5" stroke="' + cs[0] + '" stroke-width="2.4"/></svg>';
+      cs.forEach(function (c, i) { s += '<line x1="1" x2="25" y1="5" y2="5" stroke="' + c + '" stroke-width="2.4" stroke-dasharray="' + (cs.length > 1 ? a + ' ' + (cy * cs.length - a) : a + ' ' + (d[1] || 3)) + '" stroke-dashoffset="' + (-i * cy) + '"/>'; });
+      return s + '</svg>'; };
+    var it = [];
+    (ov.lines || []).forEach(function (L) { if (!L.key) return; it.push({ v: parseFloat(String(L.num || '').replace(/,/g, '')), h: '<span class="ok-i">' + sw(L.colors && L.colors.length > 1 ? L.colors : [L.ink || L.color], L.dash || []) + (L.num ? '<b style="color:' + (L.ink || L.color) + '">' + esc(L.num) + '</b> ' : '') + esc(o.compact ? (L.skey || L.key) : L.key) + '</span>' }); });
+    (ov.keys || []).forEach(function (K) { it.push({ v: parseFloat(String(K.num || '').replace(/,/g, '')), h: '<span class="ok-i">' + sw([K.c], [], true) + '<b style="color:' + K.c + '">' + esc(K.num) + '</b> ' + esc(o.compact ? (K.st || K.t) : K.t) + '</span>' }); });
+    it.sort(function (a, b) { return (isNaN(b.v) ? -1e15 : b.v) - (isNaN(a.v) ? -1e15 : a.v); });
+    var h = it.map(function (x) { return x.h; });
+    if (o.vol) h.push('<span class="ok-i ok-vol"><b>Volume labels</b>' + (o.compact ? ': volume &divide; 50D average; ' : ' (1M and 3M zooms): each day\'s volume as a multiple of its 50-day average, above an up day and below a down day; ') + '<b style="color:#1a7f37">green</b> positive (an up day on high volume, or a down day on low volume), <b style="color:#cf222e">red</b> negative (an up day on low volume, or a down day on high volume), <b style="color:#6e7781">grey</b> near the average' + (o.compact ? '' : '; full colour at 1.5 times the average or more and at 0.5 times or less') + '</span>');
+    return h.length ? '<div class="ovkey' + (o.compact ? ' cp' : '') + '">' + h.join('') + '</div>' : '';
   }
 
   /* round 2 (17-Oct-2026, Richard's images 2, 3 and 5): under the price chart, on its trading days, two panes:
@@ -1056,23 +1118,39 @@
   /* a pane's title band, as on items 4 to 6 */
   function tdBand(svg, F, top, title, short) { var bwid = F.W - F.pad.l - F.pad.r, t = (short && title.length * 6.3 > bwid - 14) ? short : title, fs = t.length * 6.3 > bwid - 14 ? Math.max(9.5, (bwid - 14) / t.length / 0.55) : 11.5;
     el('rect', { x: F.pad.l, y: top - 20, width: bwid, height: 19, fill: C.bg2 }, svg); el('line', { x1: F.pad.l, x2: F.pad.l, y1: top - 20, y2: top - 1, stroke: C.ink3, 'stroke-width': 3 }, svg); txt(svg, F.pad.l + 7, top - 6, t, { fill: C.ink, 'font-size': fs, 'font-weight': 600 }); }
-  /* the tranche lines, labelled above the first pane */
+  /* the tranche lines, labelled above the first pane.
+     PMSD-TRANCHE-LINES-2026-11-18 (Richard, 17-Nov-2026: "In the volume charts, there are vertical purple lines with no labels. If they are linked to
+     tranches, they need to be labelled accordingly"): they are the held tranches' purchase dates; each is now drawn in its tranche's colour (trCol, as on
+     chart 1) and always named: above the pane where the pane has a label row (labelY), otherwise small at the pane's top, in up to three rows so two
+     tranches bought close together never print on top of each other. */
   function tdTranches(svg, F, m, top, bot, labelY) {
-    var rowsUsed = [];
-    m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr, ti) {
+    var rowsUsed = [], inside = labelY == null;
+    m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) {
       var k = -1; for (var j = 0; j < F.n; j++) { if (F.ds[j] >= D(tr.entry_date)) { k = j; break; } }
       if (k < 0 || F.ds[0] > D(tr.entry_date)) return;
-      el('line', { x1: F.xi(k), x2: F.xi(k), y1: labelY == null ? top : labelY + 3, y2: bot, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1.1 }, svg);
-      if (labelY != null) { var lab = 'tranche ' + tr.tranche_number + ' bought, ' + fmtD(tr.entry_date), x0 = F.xi(k) + 3, wl = lab.length * 6.0, row = 0;
-        if (x0 + wl > F.W - F.pad.r + 50) x0 = F.W - F.pad.r + 50 - wl;   /* 7-Nov-2026: clamped before the overlap test, not after */
-        while (row < 2 && (rowsUsed[row] || []).some(function (o) { return x0 < o[1] + 6 && x0 + wl > o[0] - 6; })) row++;
-        (rowsUsed[row] = rowsUsed[row] || []).push([x0, x0 + wl]);
-        txt(svg, x0, labelY - row * 12, lab, { fill: C.entry, 'font-size': 10.5, halo: true }); }
+      var col = trCol(tr.tranche_number);
+      el('line', { x1: F.xi(k), x2: F.xi(k), y1: inside ? top : labelY + 3, y2: bot, stroke: col, 'stroke-dasharray': '3 3', 'stroke-width': 1.2 }, svg);
+      var lab = inside ? 'tranche ' + tr.tranche_number : 'tranche ' + tr.tranche_number + ' bought, ' + fmtD(tr.entry_date), fs = inside ? 9.5 : 10.5, wl = lab.length * (inside ? 5.2 : 6.0), x0 = F.xi(k) + 3, row = 0, rmax = inside ? F.W - F.pad.r - 2 : F.W - F.pad.r + 50;
+      if (x0 + wl > rmax) x0 = inside ? F.xi(k) - 3 - wl : rmax - wl;   /* 7-Nov-2026: clamped before the overlap test, not after */
+      while (row < (inside ? 3 : 2) && (rowsUsed[row] || []).some(function (o) { return x0 < o[1] + 6 && x0 + wl > o[0] - 6; })) row++;
+      (rowsUsed[row] = rowsUsed[row] || []).push([x0, x0 + wl]);
+      txt(svg, x0, inside ? top + 10 + row * 11 : labelY - row * 12, lab, { fill: col, 'font-size': fs, 'font-weight': 600, halo: true });
     });
+  }
+  /* PMSD-KEY-2026-11-18: with chart 1 widened into the space on its right (its margin now only the scale's width), the panes under it write their
+     line names right-aligned in their title band and only the numbers in the margin (tdEnds, narrow) */
+  function tdBandKey(svg, F, top, items, titleW) {
+    /* the key must clear the title: each item's short words (it.s) are used when the long ones do not fit, and no key at all when neither does */
+    var need = function (arr, k) { return arr.reduce(function (a, it) { return a + (it[k] || it.t).length * 6.3 + 30; }, 0); }, room = F.W - F.pad.r - 6 - (F.pad.l + 7 + (titleW || 0) + 18);
+    if (need(items, 't') > room) { if (need(items, 's') > room) return; items = items.map(function (it) { return { t: it.s || it.t, c: it.c, w: it.w, dash: it.dash }; }); }
+    var xr = F.W - F.pad.r - 6;
+    items.slice().reverse().forEach(function (it) { var w = it.t.length * 6.3; txt(svg, xr, top - 6, it.t, { 'text-anchor': 'end', fill: it.c, 'font-size': 10.5, 'font-weight': 600 }); xr -= w + 4;
+      el('line', { x1: xr - 16, x2: xr - 2, y1: top - 10, y2: top - 10, stroke: it.c, 'stroke-width': it.w || 2.4, 'stroke-dasharray': it.dash || '' }, svg); xr -= 26; });
   }
   /* end-of-line labels in the right-hand margin, kept apart */
   function tdEnds(svg, F, ends, top, h) {
-    if (!F.wide) return;
+    if (!F.wide) { var nn = ends.filter(function (e) { return e.n != null; }); nn.sort(function (a, b) { return a.y - b.y; }); for (var i0 = 1; i0 < nn.length; i0++) if (nn[i0].y - nn[i0 - 1].y < 13) nn[i0].y = nn[i0 - 1].y + 13;
+      nn.forEach(function (e) { txt(svg, F.W - F.pad.r + 5, Math.max(top + 9, Math.min(top + h + 4, e.y)), e.n, { fill: e.c, 'font-size': 10.5, 'font-weight': 700 }); }); return; }   /* PMSD-KEY-2026-11-18 */
     ends.sort(function (a, b) { return a.y - b.y; }); for (var i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
     var over = ends.length ? ends[ends.length - 1].y - (top + h + 4) : 0; if (over > 0) { ends.forEach(function (e) { e.y -= over; }); for (var k = ends.length - 2; k >= 0; k--) if (ends[k + 1].y - ends[k].y < 13) ends[k].y = ends[k + 1].y - 13; }
     ends.forEach(function (e) { el('line', { x1: F.W - F.pad.r + 58, x2: F.W - F.pad.r + 72, y1: e.y - 4, y2: e.y - 4, stroke: e.c, 'stroke-width': 2, 'stroke-dasharray': e.dash || '' }, svg); txt(svg, F.W - F.pad.r + 76, e.y, e.t, { fill: e.c, 'font-size': 10.5, 'font-weight': 600 }); });
@@ -1136,7 +1214,8 @@
      one line stays on; the y-axis is scaled to the lines shown (and the universe's middle). */
   var VOLVIS = (function () { var v = { a5: true, a1m: true, a3m: true }; try { var o = JSON.parse(localStorage.getItem('pmsVolLines') || 'null'); if (o) for (var k in v) if (typeof o[k] === 'boolean') v[k] = o[k]; } catch (e) { /* none kept */ } if (!v.a5 && !v.a1m && !v.a3m) v.a3m = true; return v; })();
   function saveVolVis() { try { localStorage.setItem('pmsVolLines', JSON.stringify(VOLVIS)); } catch (e) { /* not kept: fine */ } }
-  function pctS(f) { return Math.round(f * 100) + '%'; }
+  /* PMSD-2026-11-18: a second function pctS here (no brackets, unused here) replaced the one at the top of this file for the whole file, so every
+     negative Net Upgrade Breadth was written -5% instead of (5%) (Richard's standing rule: negative numbers in brackets). Removed. */
   function atrS(v) { return v == null ? 'n/a' : v.toFixed(1) + '%'; }
   function rangeKey(m, dates, cp) {
     var V = (m.H && m.H.volume) || [], by = {}; V.forEach(function (q) { if (q) by[q.d] = q; });
@@ -1467,10 +1546,10 @@
       if (dp) el('path', { d: dp, fill: 'none', stroke: s[1], 'stroke-width': 1.9, 'stroke-linejoin': 'round' }, svg);
       P.forEach(function (o) { var v = o.q[s[0]]; if (v == null) return; if (o.q.k === 'me') el('circle', { cx: xi(o.i), cy: y(v), r: 3.4, fill: s[1], stroke: C.surface, 'stroke-width': 1.2 }, svg); });
       var L = null; for (var k = P.length - 1; k >= 0; k--) if (P[k].q[s[0]] != null) { L = P[k]; break; }
-      if (L) ends.push({ y: y(L.q[s[0]]) + 4, t: s[2] + ' ' + L.q[s[0]] + ' (' + fmtD(L.q.d) + ')', c: s[1] });
+      if (L) ends.push({ y: y(L.q[s[0]]) + 4, t: s[2] + ' ' + L.q[s[0]] + ' (' + fmtD(L.q.d) + ')', n: String(L.q[s[0]]), c: s[1] });
     });
     el('line', { x1: pad.l, x2: W - pad.r, y1: top + h, y2: top + h, stroke: C.border }, svg);
-    if (F.wide) tdEnds(svg, F, ends, top, h);
+    tdEnds(svg, F, ends, top, h);
     tdTranches(svg, F, m, top, top + h, 22);
     tdLabels(svg, F, top + h + 14);
     if (!P.length) txt(svg, (pad.l + W - pad.r) / 2, top + h / 2, 'No RS readings are stored for these dates.', { 'text-anchor': 'middle', fill: C.ink3, 'font-size': 12 });
@@ -1499,7 +1578,8 @@
     var h1 = 230, h2 = 150, gap = 34, TB = 22, LBL = 30, top1 = LBL + TB, top2 = top1 + h1 + gap + TB, Htot = top2 + h2 + 40;
     var svg = el('svg', { width: W, height: Htot, viewBox: '0 0 ' + W + ' ' + Htot, style: 'display:block;max-width:100%;font-family:Segoe UI,system-ui,sans-serif' }, host);
     /* pane 1: relative price and its 200D MA */
-    tdBand(svg, F, top1, 'Relative price (against the average of the universe\'s stocks of EUR 500m or more) and its relative 200D MA', 'Relative price and its relative 200D MA');
+    var t1w = F.wide ? 'Relative price (against the average of the universe\'s stocks of EUR 500m or more) and its relative 200D MA' : 'Relative price (against the average of the universe\'s stocks of EUR 500m or more)';
+    tdBand(svg, F, top1, t1w, 'Relative price and its relative 200D MA');
     var vv = rel.concat(rma).filter(function (v) { return v != null; });
     var lo = vv.length ? Math.min.apply(null, vv) : 0, hi = vv.length ? Math.max.apply(null, vv) : 1, padv = (hi - lo) * 0.06 || 1;
     var y0 = lo - padv, y1v = hi + padv, T1 = niceTicks(y0, y1v, 8);   /* the scale is the data's range; gridlines inside it (render test 29-Oct: ticks as the range let the line run out of the pane) */
@@ -1528,8 +1608,9 @@
     el('line', { x1: pad.l, x2: W - pad.r, y1: top1 + h1, y2: top1 + h1, stroke: C.border }, svg);
     var lastI = -1; for (var k = n - 1; k >= 0; k--) if (rel[k] != null) { lastI = k; break; }
     var ends = [];
-    if (lastI >= 0) { ends.push({ y: y1(rel[lastI]) + 4, t: 'relative price ' + rel[lastI].toFixed(0), c: C.ink }); if (rma[lastI] != null) ends.push({ y: y1(rma[lastI]) + 4, t: 'relative 200D MA ' + rma[lastI].toFixed(0), c: rmCol(slo[lastI]) }); }
-    if (F.wide) tdEnds(svg, F, ends, top1, h1);
+    if (lastI >= 0) { ends.push({ y: y1(rel[lastI]) + 4, t: 'relative price ' + rel[lastI].toFixed(0), n: rel[lastI].toFixed(0), c: C.ink }); if (rma[lastI] != null) ends.push({ y: y1(rma[lastI]) + 4, t: 'relative 200D MA ' + rma[lastI].toFixed(0), n: rma[lastI].toFixed(0), c: rmCol(slo[lastI]) }); }
+    tdEnds(svg, F, ends, top1, h1);
+    if (!F.wide) tdBandKey(svg, F, top1, [{ t: 'relative price', s: 'relative price', c: C.ink, w: 1.5 }, { t: 'its relative 200D MA: green while its change over the month is above 0, red at or below', s: 'its relative 200D MA', c: lastI >= 0 ? rmCol(slo[lastI]) : C.industry, w: 3 }], (t1w.length * 6.3 > W - pad.l - pad.r - 14 ? 'Relative price and its relative 200D MA' : t1w).length * 6.3);
     tdTranches(svg, F, m, top1, top1 + h1, 22);
     /* pane 2: the sell test */
     tdBand(svg, F, top2, 'The sell test, read each Friday: the relative 200D MA\'s change over the month (%). At or below 0 (red) is a sell signal', 'Sell test: relative 200D MA change over the month (%); at or below 0 is a sell signal');
@@ -1538,13 +1619,13 @@
     var y2 = function (v) { return top2 + h2 - (v - z0) / (z1 - z0) * h2; };
     tdGrid(svg, F, top2, h2);
     el('rect', { x: pad.l, y: y2(0), width: W - pad.l - pad.r, height: top2 + h2 - y2(0), fill: 'rgba(207,34,46,0.06)' }, svg);
-    T2.forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y2(v), y2: y2(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y2(v) + 4, (v > 0 ? '+' : '') + v.toFixed(Math.abs(v) < 1 && v !== 0 ? 1 : 0) + '%', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
+    T2.forEach(function (v) { el('line', { x1: pad.l, x2: W - pad.r, y1: y2(v), y2: y2(v), stroke: C.grid }, svg); txt(svg, pad.l - 6, y2(v) + 4, (v > 0 ? '+' : v < 0 ? '(' : '') + Math.abs(v).toFixed(Math.abs(v) < 1 && v !== 0 ? 1 : 0) + (v < 0 ? '%)' : '%'), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 });   /* PMSD-2026-11-18: negative in brackets */ });
     var bwid = Math.max(1, Math.min(bw * 0.8, 10));
     slo.forEach(function (v, i) { if (v == null) return; var fri = F.ds[i].getUTCDay() === 5, col = v <= 0 ? C.red : C.industry;
       el('rect', { x: xi(i) - bwid / 2, y: Math.min(y2(v), y2(0)), width: bwid, height: Math.max(1, Math.abs(y2(v) - y2(0))), fill: col, opacity: fri ? 0.95 : 0.3 }, svg); });
     el('line', { x1: pad.l, x2: W - pad.r, y1: y2(0), y2: y2(0), stroke: C.ink, 'stroke-width': 1.4 }, svg);
     if (F.wide) txt(svg, W - pad.r + 6, y2(0) + 4, '0: the sell line', { 'font-size': 10, fill: C.ink, 'font-weight': 700 });
-    if (lastI >= 0 && slo[lastI] != null && F.wide) txt(svg, W - pad.r + 6, Math.min(top2 + h2, Math.max(top2 + 10, y2(slo[lastI]) + 4 + (Math.abs(y2(slo[lastI]) - y2(0)) < 13 ? (slo[lastI] > 0 ? -13 : 13) : 0))), 'today ' + (slo[lastI] > 0 ? '+' : '') + slo[lastI].toFixed(2) + '%', { 'font-size': 10, fill: slo[lastI] <= 0 ? C.red : C.industry, 'font-weight': 700 });
+    if (lastI >= 0 && slo[lastI] != null) txt(svg, W - pad.r + (F.wide ? 6 : 5), Math.min(top2 + h2, Math.max(top2 + 10, y2(slo[lastI]) + 4 + (Math.abs(y2(slo[lastI]) - y2(0)) < 13 ? (slo[lastI] > 0 ? -13 : 13) : 0))), (F.wide ? 'today ' : '') + (slo[lastI] > 0 ? '+' + slo[lastI].toFixed(2) + '%' : slo[lastI] < 0 ? '(' + Math.abs(slo[lastI]).toFixed(2) + '%)' : '0.00%'), { 'font-size': 10, fill: slo[lastI] <= 0 ? C.red : C.industry, 'font-weight': 700 });   /* PMSD-2026-11-18: negative in brackets (was -1.15%) */
     tdLabels(svg, F, top2 + h2 + 14);
     if (!vv.length) txt(svg, (pad.l + W - pad.r) / 2, top1 + h1 / 2, 'No relative price is stored for these dates.', { 'text-anchor': 'middle', fill: C.ink3, 'font-size': 12 });
     var cross = el('line', { x1: 0, x2: 0, y1: top1, y2: top2 + h2, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
@@ -1737,7 +1818,9 @@
     el('rect', { x: padL, y: padT, width: pw, height: ph, fill: 'none', stroke: '#e8e3d4' }, svg);
     // the tranches, by date (month i spans (i-1 .. i], the month-end sits at i, as the valuation page places a daily date)
     var dateX = function (iso) { var i = win.indexOf(iso.slice(0, 7)); if (i < 0) return null; var d = +iso.slice(8, 10), dim = new Date(+iso.slice(0, 4), +iso.slice(5, 7), 0).getDate(); return padL + ((i - 1) + d / dim) * pw / (n - 1); };
-    m.tranches.forEach(function (tr, k) { var xx = dateX(tr.entry_date); if (xx == null) return; el('line', { x1: xx, x2: xx, y1: padT, y2: padT + ph, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1.2 }, svg); if (!compact) txt(svg, xx - 3, padT + ph - 6 - (k % 3) * 12, 'tranche ' + tr.tranche_number, { fill: C.entry, 'font-size': 10, halo: true, 'text-anchor': 'end' }); });
+    /* PMSD-VAL-TRANCHES-2026-11-18 (Richard, 17-Nov-2026: "Why is only Tranche 1 visible in the valuation charts for Avanza. Seems an error. Fix"): a tranche bought after the
+       last month-end the valuation file holds was dropped; it now sits at the right edge, saying so, in its tranche's colour */
+    m.tranches.forEach(function (tr, k) { var xx = dateX(tr.entry_date), aft = false; if (xx == null && tr.entry_date.slice(0, 7) > win[win.length - 1]) { xx = padL + pw - 1 - k * 4; aft = true; } if (xx == null) return; el('line', { x1: xx, x2: xx, y1: padT, y2: padT + ph, stroke: trCol(tr.tranche_number), 'stroke-dasharray': '3 3', 'stroke-width': 1.2 }, svg); if (!compact) txt(svg, xx - 3, padT + ph - 6 - (k % 3) * 12, 'tranche ' + tr.tranche_number + (aft ? ' (bought ' + fmtD(tr.entry_date) + ', after the last month-end shown)' : ''), { fill: trCol(tr.tranche_number), 'font-size': 10, halo: true, 'text-anchor': 'end' }); });
     niceTicks(a, b, compact ? 3 : 5).forEach(function (v) { if (y(v) < padT + 4 || y(v) > padT + ph) return; el('line', { x1: padL + pw, x2: padL + pw + 3, y1: y(v), y2: y(v), stroke: C.ink3 }, svg); txt(svg, padL + pw + 5, y(v) + 4, (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)) + 'x', { 'font-size': 10, fill: C.ink3 }); });
     // hover
     var tip = document.createElement('div'); tip.className = 'tip'; tip.style.display = 'none'; host.style.position = 'relative'; host.appendChild(tip);
@@ -1955,7 +2038,7 @@
   function chip(lab, c, fmtc, band) { var k = trKind(c, band || 0.005); return '<span class="cg ' + k + '">' + lab + ' ' + (c == null ? 'n/a' : fmtc ? fmtc(c) : pctS1(c)) + '</span>'; }
   function pctS1(c) { var v = Math.round(c * 1000) / 10; return v > 0 ? '+' + v.toFixed(1) + '%' : v < 0 ? '(' + Math.abs(v).toFixed(1) + '%)' : '0.0%'; }
   function swatch(yi, col) { return '<svg width="26" height="10"><line x1="1" x2="25" y1="5" y2="5" stroke="' + (col || '#57606a') + '" stroke-width="' + (FYW[yi] || 2.3) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
-  function trMarker(m) { if (!m.tranches.length) return []; var t1 = m.tranches.slice().sort(function (a, b) { return a.tranche_number - b.tranche_number; })[0]; return [{ d: t1.entry_date, label: 'tranche 1 bought, ' + fmtD(t1.entry_date) }]; }
+  function trMarker(m) { if (!m.tranches.length) return []; var t1 = m.tranches.slice().sort(function (a, b) { return a.tranche_number - b.tranche_number; })[0]; return [{ d: t1.entry_date, label: 'tranche ' + t1.tranche_number + ' bought, ' + fmtD(t1.entry_date), color: trCol(t1.tranche_number) }]; }   /* PMSD-2026-11-18: in its tranche's colour */
   function snakeRender(host, m, W) {
     /* FY3-B (29-Oct-2026, Richard: "Q1 = B. Concur" and "Q2 = B. Yes, always; this should always be the case for anything related to the SS
        estimates"): the lines are the company's FY+1, FY+2 and FY+3 (its first, second and third unreported years), named as the company
@@ -1977,7 +2060,7 @@
         /* 29-Oct-2026 16:19 (D-PMS-V4-119; Richard 16:03: the colour coding "not clear"): one colour per year for the whole line, from
            that year's change over 3 months (green rising more than 1%, red falling more than 1%, grey between); the year is told by
            the line style (solid, dashed, dotted). Replaces the month-by-month colouring, which made one line change colour along its length. */
-        ser.push({ pts: pts, color: TRC[lk], w: FYW[yi] || 2.3, dash: FYDASH[yi] || '', label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest'; }, dotR: 3.6, endLabel: names[yi] + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')', yi: yi, c1: c1, c3: c3, c6: c6 }); });
+        ser.push({ pts: pts, color: TRC[lk], w: FYW[yi] || 2.3, dash: FYDASH[yi] || '', label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.src === 'latest'; }, dotR: 3.6, endLabel: names[yi] + ': ' + fmtN(last.v) + ' (' + fmtD(last.d) + ')', yi: yi, c1: c1, c3: c3, c6: c6, mvals: true }); });
       var missing = names.filter(function (nm) { return !ser.some(function (sr) { return sr.label === nm + ' consensus'; }); });
       var mains = ser.filter(function (sr) { return sr.label; }), chips = mains.map(function (sr) { return '<span class="chipline">' + swatch(sr.yi, TRC[trKind(sr.c3, 0.01)]) + '<b>' + esc(sr.label.replace(' consensus', '')) + '</b>' + chip('1M', sr.c1) + chip('3M', sr.c3, null, 0.01) + chip('6M', sr.c6) + '</span>'; }).join('');
       /* the background: FY+2's 3-month trend (the year the investment case rests on; FY+1 fills in only while FY+2 is missing). It was the
@@ -2014,7 +2097,7 @@
       series: [{ kind: 'stacked', gap: 45, pts: rp, label: 'ratings', unit: '%', endLabels: true, endFmt: function (v) { return v + '%'; },
         layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.42)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.30)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.42)', ink: '#cf222e', tip: '#ffaba8' }] }] });
     if (tpp.length || px.length) { var vv = tpp.concat(px).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.1 || 1, lt = tpp[tpp.length - 1], lp = px[px.length - 1];
-      var ptSer = [{ pts: px, color: C.ink3, w: 1.2, label: 'SP', fmt: fmtN, endLabel: lp ? 'SP ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }].concat([{ pts: tpp, color: TRC[pk], w: FYW[0], label: 'average PT', fmt: fmtN, endLabel: lt ? 'PT ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6 }]);
+      var ptSer = [{ pts: px, color: C.ink3, w: 1.2, label: 'SP', fmt: fmtN, endLabel: lp ? 'SP ' + fmtN(lp.v) : '', endDy: (lt && lp && lp.v > lt.v) ? -6 : 8 }].concat([{ pts: tpp, color: TRC[pk], w: FYW[0], label: 'average PT', fmt: fmtN, endLabel: lt ? 'PT ' + fmtN(lt.v) : '', endDy: (lt && lp && lp.v > lt.v) ? 8 : -6, mvals: true }]);
       panels.push({ title: 'Average PT against SP' + (sc !== 1 ? ' (PT converted from pounds to pence)' : '') + '; 3-month trend in the average PT: ' + (pk === 'up' ? 'rising' : pk === 'dn' ? 'falling' : 'flat (within 1%)'), h: 360, labelEdge: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 9).filter(function (v) { return v >= lo3 - p3 && v <= hi3 + p3; }), bg: TRBG[pk],
         series: ptSer }); }
     if (!panels.length) { host.innerHTML = '<div class="nohist">No ratings or PT history is stored for ' + esc(m.name) + '.</div>'; return; }
@@ -2042,7 +2125,9 @@
       var fys = pts.map(function (q) { return q.fy; }).filter(Boolean), fyNow = fys.length ? fys[fys.length - 1] : null;
       var head = kk[1] + (buys ? ': Buys, Other and Sells (counts) with % Buys' : ': Net Upgrade Breadth' + (fyNow ? ', FY' + fyNow : '') + ', 100-day count');
       var latest = !last ? '' : buys ? fmtD(last.d) + ': ' + last.up + ' of ' + last.n + ' Buys (' + Math.round(last.v * 100) + '%)' : fmtD(last.d) + ': ' + last.up + ' of ' + last.n + ' raising, ' + last.dn + ' cutting, ' + last.nc + ' no change; Net Upgrade Breadth ' + pctS(last.v);
-      var h2 = cellIn(host, head + (latest ? ' <span class="mut">&middot; ' + latest + '</span>' : ''));
+      /* PMSD-2026-11-18 (Richard, 17-Nov-2026: "Using Avanza as example, remove \"· 13-Nov: 6 of 19 raising, 8 cutting, 5 no change; Net Upgrade Breadth -11%\" from Section 6 and
+         equivalents, because its communicated in the diagrams - remove the duplication"): the title only; the counts and the breadth are written on the chart */
+      var h2 = cellIn(host, head); void latest;
       if (!pts.length) { h2.innerHTML = '<div class="nohist">No stored ' + kk[1] + ' counts for ' + esc(m.name) + ' in the last twelve months.</div>'; return; }
       var mx = Math.max.apply(null, pts.map(function (q) { return q.n; }).concat([1]));
       var markers = [];
@@ -2080,10 +2165,12 @@
     return red ? 'red' : green ? 'green' : 'grey';
   }
   var COLWORD = { red: 'sell signal, close to one, or moving towards one', green: 'no sell signal, and moving away', grey: 'no sell signal, little change' };
+  /* PMSD-SL-LINKS-2026-11-18: each item of section 11 links up to the section that shows its test in depth, and to its chart in section 10 */
+  var INSUP = { C1: ['#s2rs', '3. RS'], C2: ['#relma', '1. SP and MAs: the relative 200D MA'], C3: ['#s2rs', '3. RS'], C4: ['#s5', '6. Net Upgrade Breadth'], C5: ['#s2', '2. Volume: relative price against its 52W high'], C6: ['#s1', '1. SP and MAs'], L200: ['#s1', '1. SP and MAs'], MA: ['#s1', '1. SP and MAs'] };
   function insItems(host, items, m, key) {
     host.innerHTML = (key ? '<div class="inskey">' + key + '</div>' : '') + items.map(function (it) {
       var col = testColour(m, it.id), bl = it.bullets && it.bullets.length ? '<ul class="insb">' + it.bullets.map(function (b) { return '<li>' + (b.sign ? '<b>' + esc(b.sign) + ':</b> ' : '') + mdInline(b.text) + '</li>'; }).join('') + '</ul>' : '<div class="say">' + mdInline(it.text || '') + '</div>';
-      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'MA SLs are retired for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + '</div><div>' + bl + '</div></div>';
+      return '<div class="ins ins2' + (col ? ' ic-' + col : '') + '"><div class="crit">' + (col ? '<i class="icd"></i>' : '') + esc(it.criterion) + (it.sub ? '<span class="mut">' + esc(it.sub) + '</span>' : '') + (col && it.id && !/^(red|green|grey)$/.test(it.id) ? '<span class="icw">' + (it.id === 'MA' && !m.probing ? 'MA SLs are retired for a Core Investment' : m.probing && /^C[1-6]$/.test(it.id) ? 'information only for a Probing Bet' : COLWORD[col]) + '</span>' : '') + (INSUP[it.id] ? '<span class="uplinks"><a class="uplink" href="' + INSUP[it.id][0] + '">&uarr; see ' + esc(INSUP[it.id][1]) + '</a><a class="uplink" href="#s8">&uarr; see 10. Distance from SLs</a></span>' : '') + '</div><div>' + bl + '</div></div>';
     }).join('');
   }
   /* 29-Oct-2026 19:xx (D-PMS-V4-122): the note's date is the day it was WRITTEN, which is not always an APM PMS Q&A SOP run (the
@@ -2131,7 +2218,7 @@
     stack(cell, { d0: ds[0], d1: ds[ds.length - 1], width: W, left: 52, right: 290, markers: [], panels: [{ h: Hh, labelEdge: true, labelGap: 11.5, labelSize: 9.5, series: series, yDomain: [lo - pd, hi + pd], yFmt: function (v) { return Math.round(v); } }] });
   }
 
-  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, slCharts: slCharts, slKey: slKey, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, drawVolume: drawVolume, rangePane: rangePane, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, aheadAddWords: aheadAddWords, orderLine: orderLine, writtenBefore: writtenBefore, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
+  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, slCharts: slCharts, slKey: slKey, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, overlayKey: overlayKey, trCol: trCol, monthPts: monthPts, mvLabels: mvLabels, drawVolume: drawVolume, rangePane: rangePane, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, aheadAddWords: aheadAddWords, orderLine: orderLine, writtenBefore: writtenBefore, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
     rsPanel: rsPanel, relPanel: relPanel, statusPanel: statusPanel, ssPanels: ssPanels, ssLegend: ssLegend, ssTable: ssTable, valChart: valChart, valLine: valLine, pctNow: pctNow, peersPicture: peersPicture, peersTable: peersTable, peersKey: peersKey, ladderKey: ladderKey, insightsRender: insightsRender, addsRender: addsRender,
     renderRatings: renderRatings, renderContext: renderContext, renderJudgement: renderJudgement, renderPlaceholders: renderPlaceholders, renderExperiment: renderExperiment, overlay: overlay, CRIT_WORDS: CRIT_WORDS, addDays: addDays, ordinal: ordinal };
 })();

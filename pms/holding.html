@@ -31,6 +31,25 @@ body.os-on .toc, html.os-on .toc { display:none; }
 #s8 .ladkey2 { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px 16px; font-size:11px; line-height:1.35; margin-top:6px; }
 @media (max-width:1250px) { #s8 .ladkey2 { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 </style>
+<style id="pmsd-2026-11-18">
+/* PMSD-2026-11-18 (the PMS Per-stock Dashboard build window): the key under chart 1, the links up from sections 10 and 11, the amber line when the
+   readings are behind the latest price bar */
+.ovkey { display:flex; flex-wrap:wrap; gap:3px 20px; margin:4px 0 2px 78px; font-size:12px; color:#424a53; line-height:1.45; }
+.ovkey .ok-i { display:inline-flex; align-items:center; gap:6px; }
+.ovkey .ok-i b { font-variant-numeric:tabular-nums; }
+.ovkey .oksw { flex:0 0 auto; }
+.ovkey .ok-vol { flex-basis:100%; display:block; color:#57606a; }
+#os .ovkey.cp { margin:1px 4px 0; font-size:10px; gap:0 10px; line-height:1.35; }
+#os .ovkey.cp .oksw { width:16px; }
+#os-key { flex:0 0 auto; }
+/* the One screen view's chart 1 title row: where its buttons do not fit on one line (1920 pixels wide cut "200D (absolute)" short), they wrap to a second line rather than being cut */
+#os #os-p1 > .ph { flex-wrap:wrap; row-gap:2px; }
+a.uplink { color:#0969da; font-size:11.5px; font-weight:600; text-decoration:underline; cursor:pointer; white-space:normal; }
+.ins .crit .uplinks { display:flex; flex-direction:column; gap:1px; margin-top:6px; }
+.sec, #relma { scroll-margin-top:10px; }
+.behind { margin:6px 0 2px; padding:6px 12px; border:1px solid #d4a72c; border-left:5px solid #9a6700; background:#fff8c5; color:#4d2d00; border-radius:6px; font-size:13px; }
+#os .asof.behind-os { color:#9a6700; font-weight:700; }
+</style>
 </head>
 <body class="v2">
 <!-- version 2.3 (29-Oct-2026, Richie login): see the note above item 1. version 2 (27-Oct-2026): Richard's rebuild, one column, his items only and in his order (D-PMS-V4-16, V4-33 to V4-57).
@@ -60,6 +79,7 @@ body.os-on .toc, html.os-on .toc { display:none; }
       <div class="ph"><b>1. SP and MAs</b><span class="sp"></span><span class="tg" id="os-zooms"></span><span class="tg" id="os-scales"></span><span class="lay1" id="os-legend"></span></div>
       <div class="pb" style="display:flex;flex-direction:column">
         <div style="flex:1 1 auto;min-height:0;position:relative"><div id="os-chart-container"><canvas id="os-canvas" style="width:100%;display:block"></canvas></div></div>
+        <div id="os-key"></div>
       </div>
     </div>
     <!-- 2 -->
@@ -103,6 +123,7 @@ body.os-on .toc, html.os-on .toc { display:none; }
     <span class="asof" id="asof"></span>
   </div>
   <div id="err"></div>
+  <div id="behind"></div>
   <div class="head2" id="head"></div>
 
   <!-- 29-Oct-2026 (Richard, Richie login; D-PMS-V4-104 onwards): item 3, RS, restored after the volume chart ("Restore the RS section after
@@ -110,10 +131,11 @@ body.os-on .toc, html.os-on .toc { display:none; }
        stock against the rules for adding capital, added ("can you create a similar section but in relation to the stock against adding
        capital criteria/rules"). The items are renumbered in page order; the section ids keep their old names where code reads them. -->
   <div class="sec" id="s1">
-    <h2><span>1. SP and MAs</span><span class="mut" id="s1-say">daily; the MAs, the 200D included, are absolute (of the share price); SL levels and tranches marked; beneath, relative price and its relative 200D MA</span></h2>
+    <h2><span>1. SP and MAs</span><span class="mut" id="s1-say"></span></h2>
     <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut">Layers</span></div>
     <div class="layers" id="legend"></div>
     <div class="xs"><div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div></div>
+    <div id="s1key"></div>
     <div class="xs" style="margin-top:14px"><div id="relma"></div></div>
   </div>
 
@@ -267,7 +289,7 @@ body.os-on .toc, html.os-on .toc { display:none; }
     m = DASH.model(Hd);
     var brand = m.notHeld ? 'Per-stock Dashboard' : 'PMS Per-stock Dashboard';
     document.title = m.name + ': ' + brand; document.getElementById('brand').textContent = brand;
-    if (m.notHeld) { document.getElementById('s1-say').textContent = 'daily; the MAs, the 200D included, are absolute (of the share price); beneath, relative price and its relative 200D MA'; document.getElementById('s8-say').textContent = 'Sell Criteria 1 to 5, read as if held; nearest first'; }
+    if (m.notHeld) { document.getElementById('s8-say').textContent = 'Sell Criteria 1 to 5, read as if held; nearest first'; }
     document.getElementById('asof').textContent = 'readings as at ' + fmtDY(m.asof) + ' (Fridays read ' + fmtD(m.lastFriday) + '; month-end read ' + fmtD(m.lastME) + ')';
     renderHead();
     DASH.overlay(m, links);
@@ -324,9 +346,11 @@ body.os-on .toc, html.os-on .toc { display:none; }
     DASH.ratingsRender(document.getElementById('ratings2'), m, widthOf('ratings2'));
     DASH.nubRender(document.getElementById('nub'), m, widthOf('nub'));
     var W = widthOf('ladder'), lad = document.getElementById('ladder'); lad.innerHTML = '';
-    /* PMS-SLCHARTS-2026-11-14 (D-MD-TM-11): item 10 as charts, one time switch; the ladder stays in dashboard.js as a fallback */
-    DASH.slCharts(lad, m, { width: W, barHost: document.getElementById('s8-bar') });
-    document.getElementById('ladkey').innerHTML = DASH.slKey(m);
+    /* PMS-SLCHARTS-2026-11-14 (D-MD-TM-11): item 10 as charts, one time switch; the ladder stays in dashboard.js as a fallback.
+       PMSD-SL-FULLHEIGHT-2026-11-18 (Richard, 17-Nov-2026: "Make 10. Distance from SLs take up the full height of a screen"): the key is written first, so the charts take the
+       height one screen leaves after the section's title row and the key */
+    var lk = document.getElementById('ladkey'); lk.innerHTML = DASH.slKey(m);
+    DASH.slCharts(lad, m, { width: W, barHost: document.getElementById('s8-bar'), fitH: Math.max(520, window.innerHeight - lk.offsetHeight - 92) });
     drawPeers();
     DASH.insightsRender(document.getElementById('insights'), document.getElementById('ins-say'), m);
     DASH.addsRender(document.getElementById('adds'), document.getElementById('add-say'), m);
@@ -334,7 +358,21 @@ body.os-on .toc, html.os-on .toc { display:none; }
   }
   /* 28-Oct-2026 (Richard: "The text on the SP/MA chart should not run over the lines in the chart"): on a wide screen the exit levels
      are named in a right-hand margin beside the price scale and the tranche dates above the plot, so no text sits on the chart */
-  function chartOpts() { var cw = document.getElementById('chart-container').clientWidth || 0, rm = cw >= 1000 ? 300 : cw >= 760 ? 230 : 68; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: DASH.overlayFor(m, false), pad: { t: rm > 68 ? 62 : 22, r: rm, b: 48, l: 78 } }; /* 13-Nov-2026: 62, four rows of tranche event labels above the plot */ } /* 29-Oct-2026: b 32 to 48, room for the month names' row at 1M and 3M (PMS-DASH 16) */ /* re-check 28-Oct: a 230-pixel margin from 760 pixels (an iPad), so the text stays off the chart there too */
+  /* PMSD-KEY-2026-11-18 (Richard, 17-Nov-2026: "Move the \"9.70 below the...\" onto the y-axis and expand the charts to take up the white space on RHS. Same for images below
+     in that same section"): the right margin is only the price scale's width (it was 300 pixels on a wide screen, for the levels' words); each level's number sits on the
+     scale in its line's colour (opts.keyOut) and its words in the key under the chart (#s1key); the panes beneath share this layout, so they widen too; with opts.axis2
+     the time axis names months and quarters (Richard, 17-Nov-2026: "The X-axis needs months and quarters appearing more dynamically when the time frame changes") */
+  /* PMSD-BEHIND-2026-11-18 (build list item 38; Richard, 17-Nov-2026, his Message 81 on Avanza; D-MD-TM-147): the page says plainly, in amber, when its readings are older than the
+     latest price bar in the Master Dashboard's chart file; the chart stops at the readings' day so every line and level on it is of one date */
+  function behind(rows) {
+    var after = (rows || []).filter(function (r) { return r.d > m.asof; }), el_ = document.getElementById('behind'), oa = document.getElementById('os-asof');
+    if (!after.length) { el_.innerHTML = ''; if (oa) oa.classList.remove('behind-os'); return; }
+    var last = after[after.length - 1].d, n = after.length;
+    el_.innerHTML = '<div class="behind"><b>Readings are ' + n + ' session' + (n > 1 ? 's' : '') + ' behind the latest price bar.</b> They are as at ' + fmtDY(m.asof) + '; the latest price bar is ' + fmtDY(last) + '. Every chart on this page stops at ' + fmtDY(m.asof) + ', so its lines and levels are of one date; the next update brings them to the latest close.</div>';
+    if (oa) { oa.classList.add('behind-os'); oa.textContent = 'readings ' + n + ' session' + (n > 1 ? 's' : '') + ' behind: as at ' + fmtD(m.asof) + ', latest price ' + fmtD(last); }
+  }
+  window.PMS_BEHIND = behind;
+  function chartOpts(ov) { var cw = document.getElementById('chart-container').clientWidth || 0; return { canvasId: 'chart-canvas', containerId: 'chart-container', height: 660, upto: m.asof, overlay: ov || DASH.overlayFor(m, false), pad: { t: cw >= 760 ? 62 : 22, r: 64, b: 48, l: 78 }, malOver: true, keyOut: true, axis2: true }; }
   function drawChart() {
     var z = document.getElementById('zooms'), s = document.getElementById('scales');
     z.innerHTML = ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return '<button class="chart-width-btn ' + (k === chartZoom ? 'active' : '') + '" data-z="' + k + '">' + k + '</button>'; }).join('');
@@ -351,9 +389,11 @@ body.os-on .toc, html.os-on .toc { display:none; }
     ['obv', 'vol', 'vol50', 'vol20'].forEach(function (k) { var e = document.getElementById('legend-' + k); if (e) e.parentNode.removeChild(e); chartVis[k] = false; });
     window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; keep(); drawChart(); };
     chartTicker = m.t;
+    var ov = DASH.overlayFor(m, false); document.getElementById('s1key').innerHTML = DASH.overlayKey(ov, { vol: (chartZoom === '1M' || chartZoom === '3M') && chartVis.volx !== false });
     loadChartData(m.t, function (rows) {
       if (!rows) { document.getElementById('chart-container').innerHTML = '<div class="err">No chart data for ' + esc(m.t) + ' on the Master Dashboard.</div>'; return; }
-      drawMasterChart(m.t, chartOpts());
+      behind(rows);
+      drawMasterChart(m.t, chartOpts(ov));
       DASH.ratingsRender(document.getElementById('ratings2'), m, widthOf('ratings2'), rows);
       var lay = (window.PMS_CHART_LAYOUT || {})['chart-canvas'];
       DASH.drawVolume(document.getElementById('vb'), m, lay);

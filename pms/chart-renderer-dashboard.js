@@ -1,6 +1,6 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.7 on 2026-11-18T12:10:03 from master-dashboard/index.html (md5 ef83af7925ea4e52f902847f924c6480),
- * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 23. DO NOT EDIT BY HAND: rebuild.
+ * Built by scripts/pms_dashboard_renderer_build.py v1.10 on 2026-11-18T12:22:03 from master-dashboard/index.html (md5 ef83af7925ea4e52f902847f924c6480),
+ * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 26. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
@@ -479,9 +479,14 @@ function drawMasterChart(ticker,_sspo){
     ctx.textAlign='left';_mal.forEach(function(q){ctx.font=q.f||'bold 12px monospace';ctx.fillStyle=q.c;ctx.fillText(q.t,W-pad.r+(_sspo&&_sspo.malOver?6:pad.r>=200?56:((_sspo&&_sspo.malX)||6)),q.y+4)});_mal.length=0} /* PMS-DASH 20 (6-Nov-2026): the caller may give the MA values their own column (malX), clear of the price scale */ /* wide: the values in their own column, right of the price scale */
   if(_pov){var _idx={},_labs=[];for(j=0;j<chart.length;j++)_idx[chart[j].d]=j;
     ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip(); /* PMS-DASH 14 */
-    (_pov.lines||[]).forEach(function(L){ctx.strokeStyle=L.color||'#cf222e';ctx.lineWidth=L.width||1.6;ctx.setLineDash(L.dash||[4,3]);ctx.beginPath();var st=false,lastV=null;
-      for(j=0;j<chart.length;j++){var v=L.byDate[chart[j].d];if(v==null)continue;var xx=xPos(j),yy=priceY(v);if(!st){ctx.moveTo(xx,yy);st=true}else ctx.lineTo(xx,yy);lastV=v}
-      ctx.stroke();ctx.setLineDash([]);
+    /* PMS-DASH 24 (18-Nov-2026): a line several tranches share (L.colors) is drawn in alternating dashes of each tranche's colour; with
+       opts.keyOut each line's number goes on the price scale in its colour (L.num, else the last value) and its words in the page's key */
+    (_pov.lines||[]).forEach(function(L){var _pp=[],lastV=null;
+      for(j=0;j<chart.length;j++){var v=L.byDate[chart[j].d];if(v==null)continue;_pp.push([xPos(j),priceY(v)]);lastV=v}
+      var _cs=(L.colors&&L.colors.length>1)?L.colors:[L.color||'#cf222e'],_dd=L.dash||[4,3],_cy=(_dd[0]||4)+(_dd[1]||3);
+      _cs.forEach(function(cc,ci){ctx.strokeStyle=cc;ctx.lineWidth=L.width||1.6;ctx.setLineDash(_cs.length>1?[_dd[0]||4,_cy*_cs.length-(_dd[0]||4)]:_dd);ctx.lineDashOffset=_cs.length>1?-ci*_cy:0;ctx.beginPath();
+        _pp.forEach(function(p,pi){if(!pi)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1])});ctx.stroke()});ctx.setLineDash([]);ctx.lineDashOffset=0;
+      if(lastV!=null&&_sspo&&_sspo.keyOut){var _ky=priceY(lastV),_ko=_ky<pad.t?-1:_ky>pad.t+plotH?1:0;_mal.push({y:Math.max(pad.t+8,Math.min(pad.t+plotH-2,_ky))+(_ko?-lastV*1e-7:0),c:L.ink||_cs[0],t:(_ko<0?'\u25B2':_ko>0?'\u25BC':'')+(L.num!=null?L.num:_fpx(lastV)),f:'bold 12px monospace'});return}
       if(lastV!=null&&L.label){var _y=priceY(lastV),_o=_y<pad.t?-1:_y>pad.t+plotH?1:0;_labs.push({y:Math.max(pad.t+6,Math.min(pad.t+plotH-6,_y)),ly:_y+(L.labelDy||-5),t:(_o<0?'▲ ':_o>0?'▼ ':'')+L.label+(_o<0?' (above the chart)':_o>0?' (below the chart)':''),c:L.color||'#cf222e',dash:L.dash||[4,3]})}});
     ctx.restore();
     var _lx=W-pad.r+104,_lw=W-6-_lx;
@@ -506,7 +511,7 @@ function drawMasterChart(ticker,_sspo){
     _mk.forEach(function(o){var M=o.M,xx=o.x;
       ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1.2;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,pad.t+plotH);ctx.stroke();ctx.setLineDash([]);
       if(!M.label)return;var tw=ctx.measureText(M.label).width,lx_=(xx+4+tw>W-2)?xx-4-tw:xx+4,rw=0;
-      var _hit=function(r){return (_re[r]||[]).some(function(q){return lx_<q[1]+6&&lx_+tw>q[0]-6})};while(rw<_nr&&_hit(rw))rw++;if(rw>=_nr)return; /* no free row: the mark's line is drawn, its words left out rather than written over another label */(_re[rw]=_re[rw]||[]).push([lx_,lx_+tw]);
+      var _hit=function(r){return (_re[r]||[]).some(function(q){return lx_<q[1]+16&&lx_+tw>q[0]-16})}; /* PMSD-2026-11-18: 16 pixels between two labels on one row, so two labels never read as one phrase */while(rw<_nr&&_hit(rw))rw++;if(rw>=_nr)return; /* no free row: the mark's line is drawn, its words left out rather than written over another label */(_re[rw]=_re[rw]||[]).push([lx_,lx_+tw]);
       var ly=top_?pad.t-9-rw*12:pad.t+12+rw*13; /* 4 pixels clear of the price scale's top number */
       if(top_){ctx.strokeStyle=M.color||'#8250df';ctx.lineWidth=1;ctx.setLineDash([2,2]);ctx.beginPath();ctx.moveTo(xx,ly+2);ctx.lineTo(xx,pad.t);ctx.stroke();ctx.setLineDash([])}
       ctx.fillStyle='#ffffff';ctx.fillRect(lx_-2,ly-10,tw+4,13);ctx.fillStyle=M.color||'#8250df';ctx.textAlign='left';ctx.fillText(M.label,lx_,ly)}); /* PMS-DASH 21: a label near the right edge is written left of its line */
@@ -514,10 +519,12 @@ function drawMasterChart(ticker,_sspo){
   window.PMS_CHART_LAYOUT=window.PMS_CHART_LAYOUT||{};window.PMS_CHART_LAYOUT[_cid]={W:W,H:H,pad:pad,n:n,barW:barW,dates:chart.map(function(r){return r.d})}; /* PMS-DASH 8 */
   /* PMS-DASH 23d (Richard, 13-Nov-2026 12:33: "Add a toggle that shows above (green positive SP day) or below (red negative SP day) volume vs. ... average ... to 1DP, e.g. 1.3, 1.9, 0.8"; Question 5: "Only for 1M and 3M zooms"; 13-Nov 16:44: against the 50-day average): each day's volume as a multiple of its 50-day average, one decimal, green above an up day's candle (close at or above the previous close), red below a down day's; drawn after the lines, with a halo; legend toggle "Vol / 50D avg" */
   var _zNow=(_sspo&&_sspo.zoom)||chartZoom;
+  /* PMS-DASH 26 (18-Nov-2026, Richard: "High volume vs. average for an up date is positive and low volume is negative ... Vice versa for down days ... green text for positive through grey through red for negative"): the label colour says what the volume signals: grey at 1.0 times the 50-day average, full green or full red at 1.5 times or more and at 0.5 times or less; its place (above an up day, below a down day) still says the day direction */
+  var _volSig=function(up,r){var t=Math.max(-1,Math.min(1,(r-1)/0.5));if(!up)t=-t;var g=[110,119,129],e=t>=0?[26,127,55]:[207,34,46],a=Math.abs(t);return "rgb("+Math.round(g[0]+(e[0]-g[0])*a)+","+Math.round(g[1]+(e[1]-g[1])*a)+","+Math.round(g[2]+(e[2]-g[2])*a)+")"};
   if(vis.volx!==false&&(_zNow==="1M"||_zNow==="3M")){ctx.save();ctx.textAlign="center";ctx.font=(_zNow==="1M"?"bold 11px":"bold 9px")+" sans-serif";ctx.lineJoin="round";
     for(j=0;j<chart.length;j++){if(!(volMA50[j]>0))continue;var _vm=chart[j].v/volMA50[j];var _pc=fullChart[visStart+j-1];var _up=_pc?chart[j].c>=_pc.c:chart[j].c>=chart[j].o;
       var _ty=_up?priceY(chart[j].h)-5:priceY(chart[j].l)+(_zNow==="1M"?13:11);var _tx=xPos(j),_t=_vm.toFixed(1);
-      ctx.lineWidth=3;ctx.strokeStyle=bgCol;ctx.strokeText(_t,_tx,_ty);ctx.fillStyle=_up?"#1a7f37":"#cf222e";ctx.fillText(_t,_tx,_ty);}
+      ctx.lineWidth=3;ctx.strokeStyle=bgCol;ctx.strokeText(_t,_tx,_ty);ctx.fillStyle=_volSig(_up,_vm);ctx.fillText(_t,_tx,_ty);}
     ctx.restore();}
   // Current price label (bold, RHS)
   if(chart.length>0){var lastC=chart[chart.length-1].c;var lcy2=priceY(lastC);ctx.fillStyle=textColBright;ctx.font="bold 13px monospace";ctx.textAlign="left";_mal.push({y:lcy2,c:textColBright,t:_fpx(lastC),f:'bold 13px monospace',p:1})}_drawMal(); /* PMS-DASH 15, 16 */
@@ -530,6 +537,20 @@ function drawMasterChart(ticker,_sspo){
     if(xt.label==='Mon-YY')return monthShort[d.getMonth()].toUpperCase()+'-'+String(d.getFullYear()).slice(-2);
     return String(d.getFullYear());
   }
+  /* PMS-DASH 25 (18-Nov-2026, Richard 17-Nov-2026: "The X-axis needs months and quarters appearing more dynamically when the time frame
+     changes"): with opts.axis2, at 6M and 12M each month is named under its sessions (bold at a quarter's first month) and beneath it each
+     quarter with its year; at 2Y and longer each quarter is named and beneath it each year. A name that does not fit its span is left out.
+     With a bottom margin under 44 pixels (the one-screen view) only the first row is drawn, January carrying its year. */
+  if(n>70&&_sspo&&_sspo.axis2){(function(){var MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],two=pad.b>=44,y1=pad.t+plotH+18,y2=pad.t+plotH+35;
+    var seg=function(kf){var o=[],s0=0;for(var q=1;q<=dates.length;q++){if(q<dates.length&&kf(dates[q])===kf(dates[s0]))continue;o.push({d:dates[s0],x0:s0?(xPos(s0-1)+xPos(s0))/2:pad.l,x1:q<dates.length?(xPos(q-1)+xPos(q))/2:W-pad.r});s0=q}return o};
+    var put=function(t,x,y,bold,w){ctx.font=(bold?'bold ':'')+'12px sans-serif';if(ctx.measureText(t).width+6>w)return false;ctx.fillText(t,x,y);return true};
+    var qn=function(d){return 'Q'+(Math.floor(d.getMonth()/3)+1)},yy=function(d){return ' '+String(d.getFullYear()).slice(2)};
+    ctx.fillStyle=textColBright;ctx.textAlign='center';
+    if(n<=280){seg(function(d){return d.getFullYear()*12+d.getMonth()}).forEach(function(g){var t=MS[g.d.getMonth()]+(!two&&g.d.getMonth()===0?yy(g.d):'');put(t,(g.x0+g.x1)/2,y1,g.d.getMonth()%3===0,g.x1-g.x0)});
+      if(two)seg(function(d){return d.getFullYear()*4+Math.floor(d.getMonth()/3)}).forEach(function(g){put(qn(g.d)+' '+g.d.getFullYear(),(g.x0+g.x1)/2,y2,true,g.x1-g.x0)||put(qn(g.d),(g.x0+g.x1)/2,y2,true,g.x1-g.x0)});
+    }else{seg(function(d){return d.getFullYear()*4+Math.floor(d.getMonth()/3)}).forEach(function(g){put(qn(g.d)+(!two&&g.d.getMonth()===0?yy(g.d):''),(g.x0+g.x1)/2,y1,g.d.getMonth()===0,g.x1-g.x0)});
+      if(two)seg(function(d){return d.getFullYear()}).forEach(function(g){put(String(g.d.getFullYear()),(g.x0+g.x1)/2,y2,true,g.x1-g.x0)});}
+  })();return}
   ctx.font='bold 12px sans-serif';ctx.fillStyle=textColBright;ctx.textAlign='center';
   // Anti-overlap: estimate per-label pixel width; drop alternating labels until labels fit.
   var sampleW=ctx.measureText(_fmtLabel(dates[majorIdx[0]||0])||'').width||30;

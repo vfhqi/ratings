@@ -83,6 +83,11 @@
         if (s.endLabel) { var lp = pts[pts.length - 1]; ends.push({ y: yy(lp.v) + 3.5, t: s.endLabel, c: s.color, w: 650 }); }
       }
     });
+    /* PMSD-MONTHVALS-2026-11-18 (Richard, 18-Nov-2026: "for each month on the charts, show the numerical value as well as the line. And next to each numerical value, in small
+       writing, show the % MoM increase (1 decimal place)"): dashboard.js monthPts and mvLabels, as on the Full page view; the first and last 34 pixels are left to the
+       start and end values */
+    var mvl = []; o.series.forEach(function (s) { if (!s.mvals) return; var yy = s.axis === 'right' ? y2 : y; DASH.monthPts(s.pts, d0, d1).forEach(function (q) { mvl.push({ x: x(q.d), y: yy(q.v), v: (s.fmt || fmtN)(q.v), mom: q.mom, c: s.color }); }); });
+    if (mvl.length) DASH.mvLabels(svg, mvl, { x0: L, x1: W - R, y0: T + hp, y1: T + ph, small: true, side: (W - L - R) / Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4) >= 70, skipL: 30, skipR: 30 });
     /* the value at the start of the window and at the end of each line (Richard, 6-Nov 14:02), written beside the line, kept apart */
     var SE = { s: [], e: [] };
     o.series.forEach(function (s) { if (!s.se) return; var yy = s.axis === 'right' ? y2 : y, all = s.pts.filter(function (q) { return q.v != null; }), prev = null, inw = [];
@@ -126,7 +131,10 @@
   function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (k !== 'estL' && typeof o[k] === 'string') st[k] = o[k];   /* the estimates layout is fixed: three stacked (Richard, 6-Nov 15:41) */
     if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
   function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200', 'volx'].forEach(function (k) { o.mas[k] = !!chartVis[k]; });   /* VOLX-ONESCREEN-2026-11-15: + volx */ localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
-  var WIN = { L1M: 30, L3M: 91, L6M: 182 };
+  /* PMSD-WINDOWS-2026-11-18 (Richard, 18-Nov-2026: "Add a 1M, 3M, 6M and 12M toggle option for 2. Volume, volatility and closes in the day's range and 5. SS upgrade breadth:
+     EPS, revenue, PT, Buys and 4. SS estimate upgrades: EPS, revenue, PT"): the same four buttons on all three panels, in that order, named as he wrote them. Panels 4
+     and 5 keep every weekday from 1-May-2026 and the month-ends before it, so 12M shows month-end readings until May and daily readings after */
+  var WIN = { L1M: 30, L3M: 91, L6M: 182, L12M: 365 }, WINB = [['L1M', '1M'], ['L3M', '3M'], ['L6M', '6M'], ['L12M', '12M']];
   /* the sell-side series: the stored month-ends (re-marked as month-ends), then every stored daily reading (ss2.daily, ss.years_daily:
      scripts/pms_dashboard_extract.py 1.9, D-PMS-V4-152). A file without daily rows shows its month-ends only, with no gaps hatched. */
   function merge(monthly, daily) {
@@ -183,14 +191,19 @@
     document.getElementById('os-legend').innerHTML = '<span class="lb">MAs</span>' + MAS.map(function (a) { var on = chartVis[a[0]]; return '<button class="ma' + (on ? ' on' : '') + '" data-k="' + a[0] + '" style="color:' + a[2] + ';border-color:' + (on ? a[2] : 'transparent') + '">' + a[1] + '</button>'; }).join('')
       /* VOLX-ONESCREEN-2026-11-15 (Richard, 13-Nov-2026 Message 1: "Add a toggle that shows ... volume vs. 20D average ... to 1DP"; his Question 5 answer: "Only for
          1M and 3M zooms"; the 50-day average, clearly labelled, 13-Nov 16:44): the same switch as the Full page view's Layers row, on this view too */
-      + '<span class="lb">Volume</span><button class="ma' + (chartVis.volx !== false ? ' on' : '') + '" data-k="volx" title="Each day\'s volume divided by its 50-day average, written above an up day (green) or below a down day (red); shown at the 1M and 3M zooms" style="color:#1a7f37;border-color:' + (chartVis.volx !== false ? '#1a7f37' : 'transparent') + '">Vol \u00f7 50D avg</button>';
+      + '<span class="lb">Volume</span><button class="ma' + (chartVis.volx !== false ? ' on' : '') + '" data-k="volx" title="Each day\'s volume divided by its 50-day average, written above an up day and below a down day, at the 1M and 3M zooms; green is positive (an up day on high volume, or a down day on low volume), red negative (an up day on low volume, or a down day on high volume), grey near the average" style="color:#1a7f37;border-color:' + (chartVis.volx !== false ? '#1a7f37' : 'transparent') + '">Vol \u00f7 50D avg</button>';
     document.getElementById('os-legend').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartVis[b.dataset.k] = !chartVis[b.dataset.k]; drawSP(); };
     window.toggleChartLayer = function (layer) { chartVis[layer] = !chartVis[layer]; drawSP(); };
     chartTicker = m.t;
-    var host = document.getElementById('os-chart-container'), hh = host.parentNode.getBoundingClientRect().height;
+    var host = document.getElementById('os-chart-container');
+    /* PMSD-KEY-2026-11-18: the levels' words leave the plot (Richard, 28-Oct-2026: "The text on the SP/MA chart should not run over the lines in the chart"; 17-Nov-2026: onto the
+       y-axis): numbers on the price scale in each line's colour, a short key under the chart; written before the chart is measured, so the chart takes the height left */
+    var ov1 = DASH.overlayFor(m, true), zk = (chartZoom === '1M' || chartZoom === '3M') && chartVis.volx !== false, kh = document.getElementById('os-key'); if (kh) kh.innerHTML = DASH.overlayKey(ov1, { compact: true, vol: zk });
+    var hh = host.parentNode.getBoundingClientRect().height;
     loadChartData(m.t, function (rows) {
       chartRows = rows;
-      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: DASH.overlayFor(m, true), pad: { t: 26, r: 56, b: 30, l: 6 }, priceTicks: 14, malOver: true }) /* PMS-DASH 22 (Richard, 10-Nov-2026 14:25): the values sit in the price scale's column; the margin was 82 with malX 40 */;
+      if (window.PMS_BEHIND) window.PMS_BEHIND(rows);   /* PMSD-BEHIND-2026-11-18: the amber note when the readings are behind the latest price bar */
+      drawMasterChart(m.t, { canvasId: 'os-canvas', containerId: 'os-chart-container', height: Math.max(220, Math.floor(hh)), upto: m.asof, overlay: ov1, pad: { t: 26, r: 56, b: 30, l: 6 }, priceTicks: 14, malOver: true, keyOut: true, axis2: true }) /* PMS-DASH 22 (Richard, 10-Nov-2026 14:25): the values sit in the price scale's column; the margin was 82 with malX 40 */;
       drawRS();
       drawEst();
     });
@@ -231,10 +244,10 @@
     ends.forEach(function (q) { txt(svg, q.x - 4, Math.max(top + 9, q.y), q.t, { fill: q.c, 'font-size': 10, 'font-weight': 700, 'text-anchor': 'end', halo: true }); });
     el('line', { x1: pad.l, x2: W - pad.r, y1: top + h, y2: top + h, stroke: C.border }, svg);
     /* tranches, labelled above the pane */
-    var labRows = []; m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) { var k = idxOf(tr.entry_date); if (k < 0 || tr.entry_date < lay.dates[0]) return; k = lay.dates[k] === tr.entry_date ? k : k + 1; el('line', { x1: xi(k), x2: xi(k), y1: top - 4, y2: top + h, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1 }, svg); var lab = 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), wl = lab.length * 5.3, x0 = xi(k) + 3 + wl > W - 2 ? xi(k) - 3 - wl : xi(k) + 3;
+    var labRows = []; m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) { var k = idxOf(tr.entry_date); if (k < 0 || tr.entry_date < lay.dates[0]) return; k = lay.dates[k] === tr.entry_date ? k : k + 1; el('line', { x1: xi(k), x2: xi(k), y1: top - 4, y2: top + h, stroke: DASH.trCol(tr.tranche_number), 'stroke-dasharray': '3 3', 'stroke-width': 1.1 }, svg); var lab = 'tranche ' + tr.tranche_number + ', ' + fmtD(tr.entry_date), wl = lab.length * 5.3, x0 = xi(k) + 3 + wl > W - 2 ? xi(k) - 3 - wl : xi(k) + 3;
       /* two rows (above the plot, then just inside it), so tranches bought close together never print on top of each other */
       for (var rw = 0; rw < 3; rw++) { if ((labRows[rw] = labRows[rw] || []).some(function (o) { return x0 < o[1] + 6 && x0 + wl > o[0] - 6; })) continue;
-        labRows[rw].push([x0, x0 + wl]); txt(svg, x0, rw ? top - 2 + rw * 11 : top - 6, lab, { fill: C.entry, 'font-size': 9.5, halo: true }); break; } });
+        labRows[rw].push([x0, x0 + wl]); txt(svg, x0, rw ? top - 2 + rw * 11 : top - 6, lab, { fill: DASH.trCol(tr.tranche_number), 'font-size': 9.5, 'font-weight': 600, halo: true }); break; } });
     /* dates: the month names, quarter months in bold */
     var ms = 0; for (var q = 1; q <= n; q++) { if (q < n && !msF(q)) continue; var x0 = pad.l + ms * bw, x1 = pad.l + q * bw, mo3 = ds[ms].getUTCMonth(), nm = x1 - x0 > 44 ? MON[mo3] + ' ' + String(ds[ms].getUTCFullYear()).slice(2) : x1 - x0 > 20 ? MON[mo3] : ''; if (nm) txt(svg, (x0 + x1) / 2, top + h + 14, nm, { 'text-anchor': 'middle', 'font-size': 10, fill: C.ink, 'font-weight': mo3 % 3 === 0 ? 700 : 500 }); ms = q; }
     var cross = el('line', { x1: 0, x2: 0, y1: top, y2: top + h, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
@@ -246,7 +259,7 @@
   /* ================= 2. Volume: the live four panes (dashboard.js drawVolume), each in its own square-ish sub-panel ================= */
   function drawVol() {
     save();
-    buttons(document.getElementById('os-tg2'), [['L1M', 'L1M'], ['L3M', 'L3M']], st.vol, function (k) { st.vol = k; drawVol(); });
+    buttons(document.getElementById('os-tg2'), WINB, st.vol, function (k) { st.vol = k; drawVol(); });
     var host = document.getElementById('os-vol4'); host.innerHTML = '';
     var V = m.H.volume, from = addDays(m.asof, -WIN[st.vol]), rows = V.filter(function (q) { return q.d > from && q.d <= m.asof; }), n = rows.length;
     var DL = {}; m.daily.forEach(function (q) { DL[q.d] = q; });
@@ -259,7 +272,10 @@
       /* alternate weeks shaded, a line each Monday, firmer at a month, quarter and year: the live panes' time furniture */
       var wk = 0, ws = 0; for (var i = 0; i <= n; i++) { if (i === n || (i > 0 && mon(i))) { if (wk % 2 === 1) el('rect', { x: F.edge(ws), y: F.top, width: F.edge(i) - F.edge(ws), height: F.ph, fill: 'rgba(31,35,40,0.035)' }, svg); wk++; ws = i; } }
       for (var j = 1; j < n; j++) { if (!mon(j) && !mst(j)) continue; var ms = mst(j), mo = ds[j].getUTCMonth(); el('line', { x1: F.edge(j), x2: F.edge(j), y1: F.top, y2: F.top + F.ph, stroke: ms && mo === 0 ? 'rgba(31,35,40,0.55)' : ms && mo % 3 === 0 ? 'rgba(31,35,40,0.36)' : ms ? 'rgba(31,35,40,0.22)' : 'rgba(31,35,40,0.08)', 'stroke-width': ms && mo % 3 === 0 ? 1.4 : 1 }, svg); }
-      m.tranches.forEach(function (tr) { var k = -1; for (var i2 = 0; i2 < n; i2++) if (rows[i2].d >= tr.entry_date) { k = i2; break; } if (k < 0 || rows[0].d > tr.entry_date) return; el('line', { x1: F.xi(k), x2: F.xi(k), y1: F.top, y2: F.top + F.ph, stroke: C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1 }, svg); });
+      var trRows = []; m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) { var k = -1; for (var i2 = 0; i2 < n; i2++) if (rows[i2].d >= tr.entry_date) { k = i2; break; } if (k < 0 || rows[0].d > tr.entry_date) return; var tc = DASH.trCol(tr.tranche_number); el('line', { x1: F.xi(k), x2: F.xi(k), y1: F.top, y2: F.top + F.ph, stroke: tc, 'stroke-dasharray': '3 3', 'stroke-width': 1.1 }, svg);
+        /* PMSD-TRANCHE-LINES-2026-11-18: each purchase line named, small, at the foot of the pane, in rows that never overlap */
+        var lb = 'tranche ' + tr.tranche_number, wl = lb.length * 5, x0 = F.xi(k) + 2 + wl > W - pad.r ? F.xi(k) - 2 - wl : F.xi(k) + 2, rw = 0; while (rw < 2 && (trRows[rw] || []).some(function (o) { return x0 < o[1] + 4 && x0 + wl > o[0] - 4; })) rw++; if (rw >= 2) return; (trRows[rw] = trRows[rw] || []).push([x0, x0 + wl]);
+        txt(svg, x0, F.top + F.ph - 3 - rw * 10, lb, { fill: tc, 'font-size': 8.5, 'font-weight': 600, halo: true }); });
       return F; }
     function dates(F) { var y = F.top + F.ph + 11, every = F.bw >= 13, c = 0, lastX = -99;
       for (var i = 0; i < F.n; i++) { var isMon = F.mon(i), d = F.ds[i].getUTCDate(); if (every) { txt(F.svg, F.xi(i), y, String(d), { 'text-anchor': 'middle', 'font-size': 9, fill: isMon ? C.ink : C.ink3, 'font-weight': isMon ? 700 : 400 }); continue; } if (isMon && (c++ % (F.bw * 5 >= 22 ? 1 : 2) === 0) && F.xi(i) - lastX >= 16) { lastX = F.xi(i); txt(F.svg, F.xi(i), y, String(d), { 'text-anchor': 'middle', 'font-size': 9, fill: C.ink2 }); } }
@@ -329,25 +345,26 @@
   function drawEst() {
     if (!m) return;
     save();
-    buttons(document.getElementById('os-tg4'), [['L6M', 'L6M'], ['L3M', 'L3M'], ['L1M', 'L1M']], st.est, function (k) { st.est = k; drawEst(); });
+    buttons(document.getElementById('os-tg4'), WINB, st.est, function (k) { st.est = k; drawEst(); });
     var host = document.getElementById('os-est3'); host.innerHTML = ''; host.className = 'q3 os-est-' + st.estL; var GRID = st.estL === 'grid';
     var days = WIN[st.est], d0 = addDays(m.asof, -days), d1 = addDays(m.asof, 3), band = st.est === 'L1M' ? 0.005 : 0.01, Yr = m.H.ss.years, labs = Yr.labels, names = Yr.names;
     var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? L_.v / b.v - 1 : null; };
     var chg = function (pts) { return chgD(pts, days); };
     document.getElementById('os-p4say').textContent = names.map(function (n_, i) { return n_.replace('FY20', 'FY') + ' ' + ['solid', 'dashed', 'dotted'][i]; }).join(', ');
-    var tr = m.tranches.map(function (t) { return { d: t.entry_date, color: C.entry }; });
+    var tr = m.tranches.map(function (t) { return { d: t.entry_date, color: DASH.trCol(t.tranche_number) }; });
     var L0 = 36;
     [['eps', 'EPS'], ['sales', 'Revenue (sales)']].forEach(function (kk) {
       var ser = [], vals = [], rowsH = [], bgK = 'flat', n_ = Yr.n[kk[0]] || {};
       labs.forEach(function (y, yi) { var pts = ((X.years[kk[0]] || {})[y] || []).filter(function (q) { return q.v != null && (q.src !== 'daily' || weekday(q.d)); }); if (!pts.length) return;
         pts.filter(function (q) { return q.d >= addDays(d0, -40); }).forEach(function (q) { vals.push(q.v); });
         var c = chg(pts), k_ = trKind(c, band); if (yi === 1) bgK = k_;
-        ser.push({ pts: pts, holes: true, se: fmtN, color: TRC[k_], w: FYW[yi], dash: FYDASH[yi], label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.d === pts[pts.length - 1].d; }, dotR: 2.8 });
+        ser.push({ pts: pts, holes: true, se: fmtN, color: TRC[k_], w: FYW[yi], dash: FYDASH[yi], label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.d === pts[pts.length - 1].d; }, dotR: 2.8, mvals: true });
         rowsH.unshift(tbRow(sw(yi, TRC[k_]), names[yi].replace('FY20', 'FY') + ' ' + fmtN(pts[pts.length - 1].v), [[chgD(pts, 30), 0.005], [chgD(pts, 91), 0.01], [chgD(pts, 182), 0.005]])); });
       var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.1 || Math.abs(hi) * 0.02 || 1;
       var nTxt = labs.map(function (y) { var q = n_[y]; return q && q.n != null ? q.n : null; }).filter(function (v) { return v != null; });
       var h = subCell(host), hp = cardH(h, '<div class="t1"><b>' + kk[1] + ' consensus</b>, ' + Yr.currency + (nTxt.length ? ' <span class="hh">&middot; ' + Math.max.apply(null, nTxt) + ' analysts</span>' : '') + '</div>', L0, true);
-      mini(h, { d0: d0, d1: d1, L: L0, R: 34, T: 4, headPx: hp, rightTicks: true, yDomain: [lo - pd, hi + pd], yTicks: niceTicks(lo - pd, hi + pd, 8), series: ser, bg: TRBG[bgK], markers: tr });
+      var tw = sumTable(h, rowsH, hp);
+      mini(h, { d0: d0, d1: d1, L: L0, R: 34 + tw, T: 4, headPx: hp, rightTicks: true, yDomain: [lo - pd, hi + pd], yTicks: niceTicks(lo - pd, hi + pd, 8), series: ser, bg: TRBG[bgK], markers: tr });
     });
     /* PT, with the analyst ratings (% of analysts: Buys, Other, Sells) as the coloured stacked area behind it, on its own 0-100% scale */
     var S2 = m.H.ss2, sc = S2.tp_scale || 1, tp = m.H.ss.metrics.tp, seen = {};
@@ -362,8 +379,9 @@
       layers: [{ k: 'b', label: 'Buys', color: 'rgba(26,127,55,0.26)', ink: '#1a7f37', tip: '#7ee2a8' }, { k: 'o', label: 'Other', color: 'rgba(139,148,158,0.20)', ink: '#57606a', tip: '#d0d7de' }, { k: 's', label: 'Sells', color: 'rgba(207,34,46,0.26)', ink: '#cf222e', tip: '#ffaba8' }] };
     var ratLine = '<span style="color:#1a7f37">Buys ' + bNow.b + '%</span> &middot; <span style="color:#57606a">' + (GRID ? 'Holds ' : 'Other ') + bNow.o + '%</span> &middot; <span style="color:#cf222e">Sells ' + bNow.s + '%</span>';
     var hP = subCell(host), hpP = cardH(hP, '<div class="t1"><b>Average PT against SP</b>' + (GRID ? '' : ' <span class="hh">&middot; analyst ratings behind:</span> ' + ratLine) + '</div>', L0, true);
-    var ptSeries = [{ pts: px, se: function (v) { return 'SP ' + fmtN(v); }, color: '#57606a', w: 1.1, label: 'SP', fmt: fmtN }, { pts: tpp, se: function (v) { return 'PT ' + fmtN(v); }, color: TRC[pk], w: 2.6, label: 'average PT', fmt: fmtN, dotAt: function (q) { return q.d === tpp[tpp.length - 1].d; }, dotR: 3 }];
-    mini(hP, { d0: d0, d1: d1, L: L0, R: 34, T: 4, headPx: hpP, rightTicks: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 8), yDomain2: [0, 100], markers: tr, series: GRID ? ptSeries : [RAT].concat(ptSeries) });
+    var ptSeries = [{ pts: px, se: function (v) { return 'SP ' + fmtN(v); }, color: '#57606a', w: 1.1, label: 'SP', fmt: fmtN }, { pts: tpp, se: function (v) { return 'PT ' + fmtN(v); }, color: TRC[pk], w: 2.6, label: 'average PT', fmt: fmtN, dotAt: function (q) { return q.d === tpp[tpp.length - 1].d; }, dotR: 3, mvals: true }];
+    var twP = sumTable(hP, [tbRow('<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + TRC[pk] + '" stroke-width="2.6"/></svg>', 'PT ' + fmtN(tpp[tpp.length - 1].v), [[chgD(tpp, 30), 0.005], [chgD(tpp, 91), 0.01], [chgD(tpp, 182), 0.005]])], hpP);
+    mini(hP, { d0: d0, d1: d1, L: L0, R: 34 + twP, T: 4, headPx: hpP, rightTicks: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 8), yDomain2: [0, 100], markers: tr, series: GRID ? ptSeries : [RAT].concat(ptSeries) });
     if (GRID) {
       /* layout 2 (Richard, 6-Nov 15:13: "4 sub-panels, 2x2, with Buys/Holds/Sells added as a new panel"): the analyst ratings in their own panel, the
          same stacked area as item 5 on the full page (Buys = Buy + Overweight, Holds = Hold, Sells = Sell + Underweight, % of analysts) */
@@ -374,10 +392,18 @@
     }
   }
 
+  /* PMSD-P4-TABLE-2026-11-18 (Richard, 18-Nov-2026: "Add a brief summary of changes to each estimates or PT on the page over the L1M, L3M, L6M in % terms (1 decimal
+     places). Condense the charts a bit horizontally, and add the additional information on RHS next to each chart, respectively/appropriately. For the the ONE PAGE
+     view only"): a small table at the right of each chart, one row per line (newest year first), the change over the last 1, 3 and 6 months in %, 1 decimal place,
+     negative in brackets, green rising, red falling; the chart narrows by the table's width */
+  function sumTable(sb, rows, top) {
+    if (!rows || !rows.length) return 0;
+    var d = document.createElement('div'); d.className = 'ov6 os-sum'; d.innerHTML = '<div class="tb">' + TBH + rows.join('') + '</div>'; d.style.right = '2px'; d.style.left = 'auto'; d.style.top = (top + 2) + 'px'; sb.appendChild(d);
+    return d.offsetWidth + 8; }
   /* ================= 5. SS upgrade breadth: the live Net Upgrade Breadth charts (item 6 today), daily where the daily store has the counts ================= */
   function drawNub() {
     save();
-    buttons(document.getElementById('os-tg5'), [['L1M', 'L1M'], ['L3M', 'L3M']], st.nub, function (k) { st.nub = k; drawNub(); });
+    buttons(document.getElementById('os-tg5'), WINB, st.nub, function (k) { st.nub = k; drawNub(); });
     var host = document.getElementById('os-nub4'); host.innerHTML = '';
     var d0 = addDays(m.asof, -WIN[st.nub]), d1 = addDays(m.asof, 3), NC = X.nubc;
     document.getElementById('os-p5say').textContent = 'FY' + (m.H.ss2.fy || '') + ', 100-day counts';
@@ -391,7 +417,7 @@
       var lf = function (v) { return buys ? Math.round(v * 100) + '%' : pctS(v); };
       var h = subCell(host), L0 = 22, hp = cardH(h, '<b>' + kk[1] + '</b>', L0);
       mini(h, { d0: d0, d1: d1, L: L0, R: 40, T: 4, headPx: hp, yDomain: [0, mx * 1.08], yTicks: niceTicks(0, mx, 5).filter(function (v) { return v === Math.round(v); }), yFmt: String,
-        yDomain2: buys ? [0, 1.12] : [-1.08, 1.2], yTicks2: buys ? [0, 0.25, 0.5, 0.75, 1] : [-1, -0.5, 0, 0.5, 1], yFmt2: lf, markers: m.tranches.map(function (t) { return { d: t.entry_date, color: C.entry }; }),
+        yDomain2: buys ? [0, 1.12] : [-1.08, 1.2], yTicks2: buys ? [0, 0.25, 0.5, 0.75, 1] : [-1, -0.5, 0, 0.5, 1], yFmt2: lf, markers: m.tranches.map(function (t) { return { d: t.entry_date, color: DASH.trCol(t.tranche_number) }; }),
         series: [{ kind: 'stacked', gap: 45, holes: true, numbers: true, numGap: 22, pts: pts, label: buys ? 'ratings' : 'analysts', layers: buys ? [{ k: 'up', label: 'Buys', color: GR.color, ink: GR.ink, num: GR.num, tip: GR.tip }, { k: 'nc', label: 'Other', color: NCH.color, ink: NCH.ink, num: NCH.num, tip: NCH.tip }, { k: 'dn', label: 'Sells', color: RD.color, ink: RD.ink, num: RD.num, tip: RD.tip }] : [GR, NCH, RD] },
           { kind: 'hline', axis: 'right', v: 0, color: '#000', w: 1.3 },
           { pts: pts.map(function (q) { return { d: q.d, v: q.v, src: q.src }; }), axis: 'right', color: '#0a3d91', w: 1.8, gap: 45, holes: true, label: buys ? '% Buys' : 'Net Upgrade Breadth', fmt: lf, dotAt: function () { return true; }, dotR: 1.8, ptLabel: function (q) { return lf(q.v); }, labGap: 40 }] });

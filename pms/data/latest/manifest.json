@@ -3,12 +3,12 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 488369,
+   "bytes": 601003,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 499091,
+   "bytes": 617510,
    "warnings": []
   },
   "CVSG-GB": {
@@ -37,7 +37,7 @@
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 515946,
+   "bytes": 515914,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -61,7 +61,7 @@
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509852,
+   "bytes": 509840,
    "warnings": []
   },
   "DIE-BE": {
@@ -89,5 +89,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 102.0
+ "seconds": 69.9
 }
