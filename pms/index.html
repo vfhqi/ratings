@@ -816,6 +816,35 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .pos-table tr.warn-line td { height: 20px; padding-top: 0 !important; padding-bottom: 0 !important; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; line-height: 20px; }
 .pos-table tr.ubs-unmatched td { height: 22px; padding-top: 0; padding-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
+<style id="pms-2026-11-18">
+/* PMS-2026-11-18 (PMS Per-stock Dashboard build window; Richard, 17-Nov-2026, his Message 53: "Colour code the different MAs"; "Remove the dupication in the
+   LHS labelling - the colourful lozenge just repeats what is written below it, in more detail. Right? If so, remove the colourful lozenge and just colour the
+   entire "cell" to different type of investment"; his Question 2 answer of 18-Nov-2026: "Do them all now").
+   1. One colour per moving average, the colours of every chart (the Master Dashboard and the PMS Per-stock Dashboard): 5D dark red, 10D pink, 20D red, 50D
+      orange, 100D green, 150D navy, 200D purple. The tranche row's stripe and tint (D-PMS-42) now use them too; the MA cell and both MA levels are written in it.
+   2. The holding's cell is coloured by its Investment Classification, named in words beneath the price; the coloured label that repeated it is gone. A sale
+      or warning still shows as the red or amber bar at the cell's left edge.
+   3. The price-data line of the top bar no longer runs one item into the next: each item is cut short with an ellipsis where the line is too narrow. */
+.tranche-row.ma-5D td:first-child { box-shadow: inset 3px 0 0 0 #8b0000; } .tranche-row.ma-5D { background: rgba(139,0,0,0.04); }
+.tranche-row.ma-10D td:first-child { box-shadow: inset 3px 0 0 0 #e88a9a; } .tranche-row.ma-10D { background: rgba(232,138,154,0.06); }
+.tranche-row.ma-20D td:first-child { box-shadow: inset 3px 0 0 0 #e74c3c; } .tranche-row.ma-20D { background: rgba(231,76,60,0.05); }
+.tranche-row.ma-50D td:first-child { box-shadow: inset 3px 0 0 0 #ff8c00; } .tranche-row.ma-50D { background: rgba(255,140,0,0.05); }
+.tranche-row.ma-100D td:first-child { box-shadow: inset 3px 0 0 0 #2ca02c; } .tranche-row.ma-100D { background: rgba(44,160,44,0.05); }
+.tranche-row.ma-150D td:first-child { box-shadow: inset 3px 0 0 0 #1a5276; } .tranche-row.ma-150D { background: rgba(26,82,118,0.05); }
+.tranche-row.ma-200D td:first-child { box-shadow: inset 3px 0 0 0 #4a3d9e; } .tranche-row.ma-200D { background: rgba(74,61,158,0.05); }
+.edit-input.ma.ma-col { font-weight: 700; border-width: 1.5px; }
+.ma-tint { font-weight: 600; }
+.pos-table td.ticker-cell.cls-reinf { background: #ddf2e2; }
+.pos-table td.ticker-cell.cls-broad { background: #ebf5d6; }
+.pos-table td.ticker-cell.cls-infl { background: #e0ebfa; }
+.pos-table td.ticker-cell.cls-bott { background: #fcefd2; }
+.pos-table td.ticker-cell.cls-rest { background: #ece2f8; }
+.pos-table td.ticker-cell.cls-coll { background: #f9dfdf; }
+.pos-table td.ticker-cell[class*="cls-"] .tk-line4 { font-size: 11.5px; font-weight: 700; color: #1f2328; line-height: 14px; margin-top: 3px; }
+#priceFreshness.app-row2 .pf-item { overflow: hidden; flex: 0 1 auto; }
+#priceFreshness.app-row2 .pf-item:first-child { flex: 0 0.4 auto; }
+#priceFreshness.app-row2 .pf-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; display: block; }
+</style>
 </head>
 <body>
 <header class="app-bar" id="appBar">
@@ -3414,6 +3443,12 @@ function stopOverridesFor(ticker, slotType, entryDate) {
   return all.filter(function (o) { return o && holdingKey(o.ticker) === holdingKey(ticker) && o.tranche === slotType
                                           && (o.entry_date == null || o.entry_date === entryDate); });
 }
+// PMS-2026-11-18: one colour per moving average, the charts' colours (Richard, 17-Nov-2026: "Colour code the different MAs")
+var PM_MA_COL = { 5: '#8b0000', 10: '#e88a9a', 20: '#e74c3c', 50: '#ff8c00', 100: '#2ca02c', 150: '#1a5276', 200: '#4a3d9e' };
+function maColour(ma) { var n = stopMaDays(ma); return (n && PM_MA_COL[n]) || null; }
+function maTint(ma, html) { var c = maColour(ma); return c ? '<span class="ma-tint" style="color:' + c + '">' + html + '</span>' : html; }
+// PMS-2026-11-18: the holding's cell colour, from its Investment Classification's first word
+function classCls(name) { var m = /^(Reinforcing|Broadening|Inflecting|Bottoming|Restarting|Collapsing)/.exec(String(name || '')); return m ? ' cls-' + { Reinforcing: 'reinf', Broadening: 'broad', Inflecting: 'infl', Bottoming: 'bott', Restarting: 'rest', Collapsing: 'coll' }[m[1]] : ''; }
 function maRank(ma) { return stopMaDays(ma) || 999; }   // V4: any length sorts by its number of days
 function calcStop(ma, buf) { var b = (buf == null) ? BUFFER : buf; return (ma == null) ? null : +(ma * (1 - b)).toFixed(4); }
 
@@ -5287,11 +5322,11 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       tickerCellHtml = '<span class="tk-line1" title="' + esc(displayName) + '">' + esc(displayName) + '</span>'
         + '<span class="tk-line2"><span class="tk-primary">' + esc(ticker) + '</span><span class="ccy-tag">' + esc(displayCurrency) + '</span>'
         + (pxTxt ? '<span class="tk-px" title="' + esc(pxTitle) + '"> · ' + pxTxt + '</span>' : '') + '</span>'
-        + '<span class="tk-line3">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</span>'
+        + (heldClassName(ticker) && kinds.length ? '' : '<span class="tk-line3">' + (kinds.length ? kindMarksHtml(kinds) : '<span class="val-muted">no tranche held</span>') + '</span>')   // PMS-2026-11-18: the coloured label is shown only where no classification is named
         + (heldClassName(ticker) ? '<span class="tk-line4" title="Investment Classification (Position Entry and Exit Rules, 13-Nov-2026): ' + esc(heldClassName(ticker)) + '">' + esc(heldClassName(ticker)) + '</span>' : '');   // SIX-NAMES-2026-11-14
     }
     var sev = isPlaceholder ? '' : stockSeverity(invIdx, ticker);
-    cells += '<td class="al ticker-cell' + (sev ? ' tk-sev-' + sev : '') + '" rowspan="' + (totalRowspan || 1) + '">' + tickerCellHtml + '</td>';
+    cells += '<td class="al ticker-cell' + (sev ? ' tk-sev-' + sev : '') + (isPlaceholder ? '' : classCls(heldClassName(ticker))) + '" rowspan="' + (totalRowspan || 1) + '">' + tickerCellHtml + '</td>';
   }
   // --- Type (the drop-down) + the tranche's number
   var opts = TRANCHE_KIND_ORDER.map(function (k) { return '<option value="' + k + '"' + (k === kind ? ' selected' : '') + '>' + esc(TRANCHE_KIND_LABEL[k]) + '</option>'; }).join('');
@@ -5331,7 +5366,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   // CORE-OWN-LINE-2026-11-15: a Core tranche shows its "own line" tick (a new Core tranche is created ticked)
   var ownTick = (kind === 'core' && !isPlaceholder && !exited && (isNew || ownMarked)) ? '<label class="own-line-tick" title="' + esc(OWN_LINE_TEXT) + '"><input type="checkbox"' + ((isNew || ownMarked) ? ' checked' : '') + (isNew ? ' disabled' : '')
     + ' onchange="setOwnLine(' + invIdx + ',\'' + slotType + '\',this.checked,this)">own</label>' : '';
-  cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
+  cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma' + (maColour(stopMa) ? ' ma-col" style="color:' + maColour(stopMa) + ';border-color:' + maColour(stopMa) : '') + '" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
     + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '">' + ownTick + '</td>';
   cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
     + ' onchange="' + (isNew ? onNew('buffer_pct') : call('setBufferEdit', ',this')) + '"><span class="input-suffix">%</span></span></td>';
@@ -5341,10 +5376,10 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var ri = (r && r.info) || {};
   if (r && r.ok && r.core) {
     cells += '<td class="col-atentry col-group-start">' + fmtPrice(r.entry_close) + '</td>';
-    cells += '<td class="col-atentry cell-not-used">' + info(fmtPrice(ri.entry_ma)) + '</td><td class="col-atentry cell-not-used">' + info(fmtPrice(ri.entry_stop)) + '</td><td class="col-atentry cell-not-used">' + info(pctSD(ri.initial_stop_distance_pct)) + '</td>';
+    cells += '<td class="col-atentry cell-not-used">' + info(maTint(stopMa, fmtPrice(ri.entry_ma))) + '</td><td class="col-atentry cell-not-used">' + info(fmtPrice(ri.entry_stop)) + '</td><td class="col-atentry cell-not-used">' + info(pctSD(ri.initial_stop_distance_pct)) + '</td>';
   } else if (r && r.ok) {
     cells += '<td class="col-atentry col-group-start">' + fmtPrice(r.entry_close) + '</td>';
-    cells += '<td class="col-atentry">' + fmtPrice(r.entry_ma) + '</td>';
+    cells += '<td class="col-atentry">' + maTint(stopMa, fmtPrice(r.entry_ma)) + '</td>';
     cells += '<td class="col-atentry">' + fmtPrice(r.entry_stop) + '</td>';
     cells += '<td class="col-atentry">' + pctSD(r.initial_stop_distance_pct) + '</td>';
   } else {
@@ -5353,11 +5388,11 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   // --- 5 derived "current" cells + UBS % of AUM
   if (r && r.ok && r.core) {
     cells += '<td class="col-group-start">' + fmtPrice(r.current_price) + '</td>';
-    cells += '<td class="cell-not-used">' + info(fmtPrice(ri.current_ma)) + '</td><td class="cell-not-used">' + info(fmtPrice(ri.current_stop)) + '</td><td class="col-key-bold cell-not-used">' + info(pctSD(ri.stop_distance_pct)) + '</td>';
+    cells += '<td class="cell-not-used">' + info(maTint(stopMa, fmtPrice(ri.current_ma))) + '</td><td class="cell-not-used">' + info(fmtPrice(ri.current_stop)) + '</td><td class="col-key-bold cell-not-used">' + info(pctSD(ri.stop_distance_pct)) + '</td>';
     cells += '<td>' + pctNoSign1dp(r.value_aum_pct) + '</td>';
   } else if (r && r.ok) {
     cells += '<td class="col-group-start">' + fmtPrice(r.current_price) + '</td>';
-    cells += '<td>' + fmtPrice(r.current_ma) + '</td>';
+    cells += '<td>' + maTint(stopMa, fmtPrice(r.current_ma)) + '</td>';
     cells += '<td>' + fmtPrice(r.current_stop) + '</td>';
     cells += '<td class="col-key-bold ' + stopDistCls(r.stop_distance_pct) + '">' + pctSD(r.stop_distance_pct) + '</td>';
     cells += '<td>' + pctNoSign1dp(r.value_aum_pct) + '</td>';
