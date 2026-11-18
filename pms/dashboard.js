@@ -466,13 +466,14 @@
       var col0 = p.urg ? stateCol(p.urg.todayState || p.urg.state) : C.ink3;
       /* left: the chart's name and how its rules read; a bar in the colour of its nearest rule */
       el('rect', { x: 0, y: -4, width: 3, height: h + 8, fill: col0 }, g);
-      var ty = 12; slWrap(p.title, LW > 150 ? 24 : 19).slice(0, 3).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink, 'font-size': 12, 'font-weight': 650 }); ty += 14; });
+      var ty = 12, tBox = []; slWrap(p.title, LW > 150 ? 24 : 19).slice(0, 3).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink, 'font-size': 12, 'font-weight': 650 }); tBox.push([10, ty - 11, 10 + l.length * 7.6, ty + 3]); ty += 14; });
       var UP = SLUP[p.k], upL = UP ? slWrap('\u2191 see ' + UP[1], LW > 150 ? 27 : 21) : [];
       ty += 2; slWrap(p.sub, LW > 150 ? 31 : 25).slice(0, Math.max(1, Math.floor((h + 14 - ty - upL.length * 13) / 12))).forEach(function (l) { txt(g, 10, ty, l, { fill: C.ink3, 'font-size': 10 }); ty += 12; });
       if (UP) { var a_ = el('a', { href: UP[0], 'class': 'uplink' }, g); upL.forEach(function (l, li) { txt(a_, 10, Math.max(ty + 4, h + 6 - (upL.length - 1 - li) * 13) + (li ? 0 : 0), l, { fill: C.stock, 'font-size': 10.5, 'font-weight': 600, 'text-decoration': 'underline' }); }); }
       /* the chart: gridlines, months (Fridays on L1M), the selling zone, the lines that sell */
       el('rect', { x: L, y: 0, width: X1 - L, height: h, fill: C.surface, stroke: C.border }, g);
-      (p.ticks || niceTicks(lo, hi, h > 120 ? 4 : 3)).forEach(function (v) { if (v < lo - 1e-9 || v > hi + 1e-9) return; el('line', { x1: L, x2: X1, y1: y(v), y2: y(v), stroke: C.grid }, g); txt(g, L - 6, Math.max(9, Math.min(h, y(v) + 4)), (p.yFmt || fmtN)(v), { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
+      /* QC 18-Nov-2026: a scale number that would print on the chart's name (a long first line) is left out */
+      (p.ticks || niceTicks(lo, hi, h > 120 ? 4 : 3)).forEach(function (v) { if (v < lo - 1e-9 || v > hi + 1e-9) return; el('line', { x1: L, x2: X1, y1: y(v), y2: y(v), stroke: C.grid }, g); var tl = (p.yFmt || fmtN)(v), tyv = Math.max(9, Math.min(h, y(v) + 4)), tw = String(tl).length * 5.6; if (tBox.some(function (b) { return L - 6 - tw < b[2] + 8 && tyv - 9 < b[3] && tyv + 2 > b[1]; })) return; txt(g, L - 6, tyv, tl, { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
       var tks = [];
       if (SL_WIN[win] <= 31) { for (var dd = d0; dd <= d1; dd = addDays(dd, 1)) if (D(dd).getUTCDay() === 5) tks.push({ d: dd, t: fmtD(dd), strong: false }); }
       else monthTicks(d0, d1).forEach(function (t) { var mo = D(t).getUTCMonth(); if (SL_WIN[win] > 200 && mo % 2 && mo !== 0) { tks.push({ d: t, t: '', strong: false }); return; } tks.push({ d: t, t: MON[mo] + (mo === 0 ? '-' + String(D(t).getUTCFullYear()).slice(2) : ''), strong: mo === 0 }); });
@@ -1124,12 +1125,13 @@
      chart 1) and always named: above the pane where the pane has a label row (labelY), otherwise small at the pane's top, in up to three rows so two
      tranches bought close together never print on top of each other. */
   function tdTranches(svg, F, m, top, bot, labelY) {
-    var rowsUsed = [], inside = labelY == null;
+    var rowsUsed = [], noLab = labelY === false, inside = labelY == null || noLab;   /* QC 18-Nov-2026: labelY false = the lines only, for the small one-screen panes (the larger panes name them) */
     m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) {
       var k = -1; for (var j = 0; j < F.n; j++) { if (F.ds[j] >= D(tr.entry_date)) { k = j; break; } }
       if (k < 0 || F.ds[0] > D(tr.entry_date)) return;
       var col = trCol(tr.tranche_number);
       el('line', { x1: F.xi(k), x2: F.xi(k), y1: inside ? top : labelY + 3, y2: bot, stroke: col, 'stroke-dasharray': '3 3', 'stroke-width': 1.2 }, svg);
+      if (noLab) return;
       var lab = inside ? 'tranche ' + tr.tranche_number : 'tranche ' + tr.tranche_number + ' bought, ' + fmtD(tr.entry_date), fs = inside ? 9.5 : 10.5, wl = lab.length * (inside ? 5.2 : 6.0), x0 = F.xi(k) + 3, row = 0, rmax = inside ? F.W - F.pad.r - 2 : F.W - F.pad.r + 50;
       if (x0 + wl > rmax) x0 = inside ? F.xi(k) - 3 - wl : rmax - wl;   /* 7-Nov-2026: clamped before the overlap test, not after */
       while (row < (inside ? 3 : 2) && (rowsUsed[row] || []).some(function (o) { return x0 < o[1] + 6 && x0 + wl > o[0] - 6; })) row++;
@@ -1325,7 +1327,7 @@
         tdGrid(svg, F, pTopV, pV);
         NT2.forEach(function (v) { if (v > hi2 + 1e-9) return; el('line', { x1: x0, x2: x1, y1: yV(v), y2: yV(v), stroke: C.grid }, svg); txt(svg, x0 - 4, yV(v) + 3, v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': 9, fill: C.ink2 }); });
         if (K.ua != null) el('line', { x1: x0, x2: x1, y1: yV(K.ua), y2: yV(K.ua), stroke: C.ink3, 'stroke-width': 1.2, 'stroke-dasharray': '2 3' }, svg);
-        tdTranches(svg, F, m, pTopV, pTopV + pV);
+        tdTranches(svg, F, m, pTopV, pTopV + pV, false);
         if (VOLVIS.a3m) tdPath(svg, F, K.A3, yV, VOLC.a3m, 1.8); if (VOLVIS.a1m) tdPath(svg, F, K.A1, yV, VOLC.a1m, 1.6); if (VOLVIS.a5) tdPath(svg, F, K.A5, yV, VOLC.a5, 1.2);
         el('line', { x1: x0, x2: x1, y1: pTopV + pV, y2: pTopV + pV, stroke: C.border }, svg);
         regions.push({ top: pTopV, bot: pTopV + pV, kind: 'vol' });
@@ -1333,7 +1335,7 @@
       if (mode === 'two') {
         var yKC = pTopV + pV + gapM + 9; keyToggles(svg, x0 - 30, x1, yKC, CK.items, true, redraw);
         var pTopC = yKC + (krC - 1) * LH + 5, pC = Hc - pTopC - dl - defH - 2;
-        drawCloses(svg, F, pTopC, pC, CK, true); tdTranches(svg, F, m, pTopC, pTopC + pC); regions.push({ top: pTopC, bot: pTopC + pC, kind: 'cl' });
+        drawCloses(svg, F, pTopC, pC, CK, true); tdTranches(svg, F, m, pTopC, pTopC + pC, false); regions.push({ top: pTopC, bot: pTopC + pC, kind: 'cl' });
         cpDates(svg, F, pTopC + pC + 10);
         if (defH) wrapTxt(svg, 2, pTopC + pC + dl + 9, DEFS, Wc - 6, 8, 9.5, 2);
       } else {
@@ -1442,7 +1444,8 @@
     });
     tdPath(sA, FB, rows.map(function (q) { return q && q.v50 ? q.v50 * 1.25 : null; }), yA, C.red, 1.1, '2 3', 0.75);
     /* the multiples of today's 50D average, in the narrow right margin every sub-panel keeps so the time axes line up down each column */
-    if (v50now) { var lastY = -99; [0.5, 1, 1.25, 2, 3].forEach(function (k) { var v = k * v50now; if (v > cap) return; var yy = yA(v); if (Math.abs(yy - lastY) < 9 && k !== 1.25) return; el('line', { x1: kx1, x2: kx1 + 3, y1: yy, y2: yy, stroke: C.ink3 }, sA); txt(sA, kx1 + 4, yy + 3.5, k + 'x', { 'font-size': 9.5, fill: k === 1.25 ? C.red : C.ink2, 'font-weight': k === 1.25 || k === 1 ? 650 : 400 }); lastY = yy; }); }
+    if (v50now) { var lastY = -99, usedY = [];   /* QC 18-Nov-2026: 1.25x (the distribution-day line) first; any other multiple within 9 pixels of a written one is left out */
+      [1.25, 0.5, 1, 2, 3].forEach(function (k) { var v = k * v50now; if (v > cap) return; var yy = yA(v); if (usedY.some(function (u) { return Math.abs(yy - u) < 9; })) return; usedY.push(yy); el('line', { x1: kx1, x2: kx1 + 3, y1: yy, y2: yy, stroke: C.ink3 }, sA); txt(sA, kx1 + 4, yy + 3.5, k + 'x', { 'font-size': 9.5, fill: k === 1.25 ? C.red : C.ink2, 'font-weight': k === 1.25 || k === 1 ? 650 : 400 }); lastY = yy; }); }
     tdTranches(sA, FB, m, top, top + hP);
     el('line', { x1: kx0, x2: kx1, y1: top + hP, y2: top + hP, stroke: C.border }, sA);
     tdLabels(sA, FB, top + hP + 14);

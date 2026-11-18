@@ -3,27 +3,32 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 601003,
-   "warnings": []
+   "bytes": 601175,
+   "warnings": [
+    "check volume: distribution days 6 here, 5 on the Master Dashboard (2026-11-17)",
+    "check volume: up/down ratio 0.9686 here, 0.9848 on the Master Dashboard (2026-11-17)"
+   ]
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 617510,
+   "bytes": 617515,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 638549,
-   "warnings": []
+   "bytes": 638633,
+   "warnings": [
+    "check volume: up/down ratio 1.1272 here, 1.1312 on the Master Dashboard (2026-11-17)"
+   ]
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 576614,
+   "bytes": 576619,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 509333,
+   "bytes": 625985,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,12 +37,12 @@
   },
   "THEON-NL": {
    "file": "THEON-NL.json",
-   "bytes": 348578,
+   "bytes": 348574,
    "warnings": []
   },
   "VLX-GB": {
    "file": "VLX-GB.json",
-   "bytes": 515914,
+   "bytes": 515944,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -46,22 +51,24 @@
   },
   "XVIVO-SE": {
    "file": "XVIVO-SE.json",
-   "bytes": 626375,
+   "bytes": 626376,
    "warnings": []
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619650,
+   "bytes": 619651,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 509154,
-   "warnings": []
+   "bytes": 509239,
+   "warnings": [
+    "check volume: up/down ratio 1.4865 here, 1.4916 on the Master Dashboard (2026-11-17)"
+   ]
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509840,
+   "bytes": 509838,
    "warnings": []
   },
   "DIE-BE": {
@@ -71,23 +78,27 @@
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 509137,
+   "bytes": 509134,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 493847,
+   "bytes": 493843,
    "warnings": []
   }
  },
  "failed": [],
  "warnings": [
+  "AZA-SE: check volume: distribution days 6 here, 5 on the Master Dashboard (2026-11-17)",
+  "AZA-SE: check volume: up/down ratio 0.9686 here, 0.9848 on the Master Dashboard (2026-11-17)",
+  "CVSG-GB: check volume: up/down ratio 1.1272 here, 1.1312 on the Master Dashboard (2026-11-17)",
   "HTWS-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
+  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
+  "HTRO-SE: check volume: up/down ratio 1.4865 here, 1.4916 on the Master Dashboard (2026-11-17)"
  ],
- "seconds": 69.9
+ "seconds": 72.7
 }

@@ -45,8 +45,10 @@
     for (var t = d0; t <= d1; t = addDays(t, 1)) { var dt = D(t), first = dt.getUTCDate() === 1, mon = dt.getUTCDay() === 1;
       if (first) { var mo = dt.getUTCMonth(), yr = mo === 0, q = mo % 3 === 0; el('line', { x1: x(t), x2: x(t), y1: T, y2: T + ph, stroke: yr ? 'rgba(31,35,40,0.55)' : q ? 'rgba(31,35,40,0.36)' : 'rgba(31,35,40,0.22)', 'stroke-width': yr ? 1.6 : q ? 1.3 : 1 }, svg); }
       else if (wk && mon) el('line', { x1: x(t), x2: x(t), y1: T, y2: T + ph, stroke: 'rgba(31,35,40,0.07)' }, svg); }
-    (o.yTicks || niceTicks(lo, hi, 3)).forEach(function (v) { if (v < lo || v > hi) return; el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, L - 4, Math.max(T + 8, Math.min(T + ph, y(v) + 3.5)), (o.yFmt || fmtN)(v), { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
-    if (o.rightTicks) (o.yTicks || niceTicks(lo, hi, 3)).forEach(function (v) { if (v < lo || v > hi) return; txt(svg, W - R + 3, Math.max(T + 8, Math.min(T + ph, y(v) + 3.5)), (o.yFmt || fmtN)(v), { 'font-size': 9.5, fill: C.ink3 }); });
+    /* QC 18-Nov-2026: in a short pane, every second (or third) tick, so the axis numbers never print on top of each other */
+    var TKS = (o.yTicks || niceTicks(lo, hi, 3)).filter(function (v) { return v >= lo && v <= hi; }), tkStep = TKS.length > 1 ? Math.max(1, Math.ceil(12 / Math.max(1, Math.abs(y(TKS[1]) - y(TKS[0]))))) : 1; TKS = TKS.filter(function (v, i) { return i % tkStep === 0; });
+    TKS.forEach(function (v) { if (v < lo || v > hi) return; el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, L - 4, Math.max(T + 8, Math.min(T + ph, y(v) + 3.5)), (o.yFmt || fmtN)(v), { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
+    if (o.rightTicks) TKS.forEach(function (v) { if (v < lo || v > hi) return; txt(svg, W - R + 3, Math.max(T + 8, Math.min(T + ph, y(v) + 3.5)), (o.yFmt || fmtN)(v), { 'font-size': 9.5, fill: C.ink3 }); });
     if (o.yDomain2 && o.yTicks2) o.yTicks2.forEach(function (v) { txt(svg, W - R + 3, Math.max(T + 8, Math.min(T + ph, y2(v) + 3.5)), (o.yFmt2 || fmtN)(v), { 'font-size': 9.5, fill: C.ink3 }); });
     (o.markers || []).forEach(function (mk) { if (mk.d < d0 || mk.d > d1) return; el('line', { x1: x(mk.d), x2: x(mk.d), y1: T, y2: T + ph, stroke: mk.color || C.entry, 'stroke-dasharray': '3 3', 'stroke-width': 1 }, svg); if (mk.label) txt(svg, x(mk.d) + 2, T + 8, mk.label, { 'font-size': 9, fill: mk.color || C.entry, halo: true }); });
     var g = el('g', { 'clip-path': 'url(#' + cid + ')' }, svg), ends = [];
@@ -87,14 +89,15 @@
        writing, show the % MoM increase (1 decimal place)"): dashboard.js monthPts and mvLabels, as on the Full page view; the first and last 34 pixels are left to the
        start and end values */
     var mvl = []; o.series.forEach(function (s) { if (!s.mvals) return; var yy = s.axis === 'right' ? y2 : y; DASH.monthPts(s.pts, d0, d1).forEach(function (q) { mvl.push({ x: x(q.d), y: yy(q.v), v: (s.fmt || fmtN)(q.v), mom: q.mom, c: s.color }); }); });
-    if (mvl.length) DASH.mvLabels(svg, mvl, { x0: L, x1: W - R, y0: T + hp, y1: T + ph, small: true, side: (W - L - R) / Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4) >= 70, skipL: 30, skipR: 30 });
     /* the value at the start of the window and at the end of each line (Richard, 6-Nov 14:02), written beside the line, kept apart */
     var SE = { s: [], e: [] };
     o.series.forEach(function (s) { if (!s.se) return; var yy = s.axis === 'right' ? y2 : y, all = s.pts.filter(function (q) { return q.v != null; }), prev = null, inw = [];
       all.forEach(function (q) { if (q.d <= d0) prev = q; else if (q.d <= d1) inw.push(q); }); var a = prev || inw[0], b = inw.length ? inw[inw.length - 1] : prev; if (!a || !b) return;
       SE.s.push({ y: yy(a.v) - 4, t: s.se(a.v), c: s.color }); SE.e.push({ y: yy(b.v) - 4, t: s.se(b.v), c: s.color, x: x(b.d) }); });
+    var seOcc = [];   /* QC 18-Nov-2026: the start and end values' boxes, so the month values are never written on top of them */
     ['s', 'e'].forEach(function (side) { var A = SE[side].sort(function (p, q) { return p.y - q.y; }); for (var i = 1; i < A.length; i++) if (A[i].y - A[i - 1].y < 11) A[i].y = A[i - 1].y + 11;
-      A.forEach(function (q) { txt(svg, side === 's' ? L + 3 : Math.min(W - R - 3, q.x), Math.max(T + 8, Math.min(T + ph - 2, q.y)), q.t, { 'text-anchor': side === 's' ? 'start' : 'end', 'font-size': 9.5, 'font-weight': 700, fill: q.c, halo: true }); }); });
+      A.forEach(function (q) { var xs = side === 's' ? L + 3 : Math.min(W - R - 3, q.x), ys = Math.max(T + 8, Math.min(T + ph - 2, q.y)), ws = String(q.t).length * 9.5 * 0.6; seOcc.push(side === 's' ? [xs - 2, ys - 11, xs + ws + 4, ys + 3] : [xs - ws - 4, ys - 11, xs + 2, ys + 3]); txt(svg, side === 's' ? L + 3 : Math.min(W - R - 3, q.x), Math.max(T + 8, Math.min(T + ph - 2, q.y)), q.t, { 'text-anchor': side === 's' ? 'start' : 'end', 'font-size': 9.5, 'font-weight': 700, fill: q.c, halo: true }); }); });
+    if (mvl.length) DASH.mvLabels(svg, mvl, { x0: L, x1: W - R, y0: T + hp, y1: T + ph, small: true, side: (W - L - R) / Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4) >= 70, skipL: 30, skipR: 30, occ: seOcc });
     el('line', { x1: L, x2: W - R, y1: T + ph, y2: T + ph, stroke: C.border }, svg);
     /* the right-hand margin's end labels, pushed apart */
     ends.sort(function (a, b) { return a.y - b.y; }); for (var i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 11) ends[i].y = ends[i - 1].y + 11;
@@ -266,7 +269,7 @@
     var q0 = rows[n - 1] || {};
     var hA = subCell(host), hB = subCell(host), hC = subCell(host), hD = subCell(host);
     var GREEN = '#1a7f37';
-    function frame(hh, padR) { var sz = sizeOf(hh), W = sz.w, H = sz.h, pad = { l: 34, r: padR }, bw = (W - pad.l - pad.r) / n; var svg = el('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, style: 'display:block;font-family:Segoe UI,system-ui,sans-serif' }, hh);
+    function frame(hh, padR, lab) { var sz = sizeOf(hh), W = sz.w, H = sz.h, pad = { l: 34, r: padR }, bw = (W - pad.l - pad.r) / n; var svg = el('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, style: 'display:block;font-family:Segoe UI,system-ui,sans-serif' }, hh);
       var ds = rows.map(function (q) { return D(q.d); }), mon = function (i) { if (!i) return true; return ds[i].getUTCDay() < ds[i - 1].getUTCDay() || (ds[i] - ds[i - 1]) / 864e5 >= 7; }, mst = function (i) { return i > 0 && ds[i].getUTCMonth() !== ds[i - 1].getUTCMonth(); };
       var F = { W: W, H: H, pad: pad, bw: bw, n: n, svg: svg, top: 6, ph: H - 6 - 26, xi: function (i) { return pad.l + i * bw + bw / 2; }, edge: function (i) { return pad.l + i * bw; }, ds: ds, mon: mon, mst: mst };
       /* alternate weeks shaded, a line each Monday, firmer at a month, quarter and year: the live panes' time furniture */
@@ -274,6 +277,7 @@
       for (var j = 1; j < n; j++) { if (!mon(j) && !mst(j)) continue; var ms = mst(j), mo = ds[j].getUTCMonth(); el('line', { x1: F.edge(j), x2: F.edge(j), y1: F.top, y2: F.top + F.ph, stroke: ms && mo === 0 ? 'rgba(31,35,40,0.55)' : ms && mo % 3 === 0 ? 'rgba(31,35,40,0.36)' : ms ? 'rgba(31,35,40,0.22)' : 'rgba(31,35,40,0.08)', 'stroke-width': ms && mo % 3 === 0 ? 1.4 : 1 }, svg); }
       var trRows = []; m.tranches.slice().sort(function (a, b) { return a.entry_date < b.entry_date ? -1 : 1; }).forEach(function (tr) { var k = -1; for (var i2 = 0; i2 < n; i2++) if (rows[i2].d >= tr.entry_date) { k = i2; break; } if (k < 0 || rows[0].d > tr.entry_date) return; var tc = DASH.trCol(tr.tranche_number); el('line', { x1: F.xi(k), x2: F.xi(k), y1: F.top, y2: F.top + F.ph, stroke: tc, 'stroke-dasharray': '3 3', 'stroke-width': 1.1 }, svg);
         /* PMSD-TRANCHE-LINES-2026-11-18: each purchase line named, small, at the foot of the pane, in rows that never overlap */
+        if (!lab) return;   /* QC 18-Nov-2026: named in the daily volume pane only; the other small panes keep the lines in the same colours */
         var lb = 'tranche ' + tr.tranche_number, wl = lb.length * 5, x0 = F.xi(k) + 2 + wl > W - pad.r ? F.xi(k) - 2 - wl : F.xi(k) + 2, rw = 0; while (rw < 2 && (trRows[rw] || []).some(function (o) { return x0 < o[1] + 4 && x0 + wl > o[0] - 4; })) rw++; if (rw >= 2) return; (trRows[rw] = trRows[rw] || []).push([x0, x0 + wl]);
         txt(svg, x0, F.top + F.ph - 3 - rw * 10, lb, { fill: tc, 'font-size': 8.5, 'font-weight': 600, halo: true }); });
       return F; }
@@ -287,10 +291,11 @@
     function endLab(F, list) { list.sort(function (a, b) { return a.y - b.y; }); for (var i = 1; i < list.length; i++) if (list[i].y - list[i - 1].y < 11) list[i].y = list[i - 1].y + 11; list.forEach(function (e) { txt(F.svg, F.W - F.pad.r + 4, e.y, e.t, { fill: e.c, 'font-size': 9.5, 'font-weight': 650 }); }); }
     /* pane A: daily volume */
     var cA = cardH(hA, '<b>Daily volume</b> &#9660; distribution, &#9650; accumulation day', 34);
-    var F = frame(hA, 30); el('defs', {}, F.svg).innerHTML = '<pattern id="vhatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#57606a" stroke-width="1.5" opacity="0.75"/></pattern>'; var vmax = Math.max.apply(null, rows.map(function (q) { return q.v; }).concat([1])), v50m = Math.max.apply(null, rows.map(function (q) { return q.v50 || 0; }).concat([1]));
+    var F = frame(hA, 30, true); el('defs', {}, F.svg).innerHTML = '<pattern id="vhatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#57606a" stroke-width="1.5" opacity="0.75"/></pattern>'; var vmax = Math.max.apply(null, rows.map(function (q) { return q.v; }).concat([1])), v50m = Math.max.apply(null, rows.map(function (q) { return q.v50 || 0; }).concat([1]));
     var capRaw = Math.min(vmax, 3 * v50m) * 1.05, NT = niceTicks(0, capRaw, 3), cap = NT[NT.length - 1] >= capRaw ? NT[NT.length - 1] : capRaw, yA = function (v) { return F.top + F.ph - Math.min(v, cap) / cap * (F.ph - cA); };
     NT.forEach(function (v) { if (v > cap) return; el('line', { x1: F.pad.l, x2: F.W - F.pad.r, y1: yA(v), y2: yA(v), stroke: C.grid }, F.svg); txt(F.svg, F.pad.l - 4, yA(v) + 3.5, v ? fmtVol(v) : '0', { 'text-anchor': 'end', 'font-size': 9.5, fill: C.ink3 }); });
-    if (q0.v50) [0.5, 1, 1.25, 2, 3].forEach(function (k) { var v = k * q0.v50; if (v > cap) return; txt(F.svg, F.W - F.pad.r + 3, yA(v) + 3.5, k + 'x', { 'font-size': 9, fill: k === 1.25 ? C.red : C.ink3, 'font-weight': k === 1.25 ? 700 : 400 }); });
+    var usedY4 = [];   /* QC 18-Nov-2026: 1.25x first; a multiple within 9 pixels of one already written is left out */
+    if (q0.v50) [1.25, 0.5, 1, 2, 3].forEach(function (k) { var v = k * q0.v50; if (v > cap) return; if (usedY4.some(function (u) { return Math.abs(yA(v) - u) < 9; })) return; usedY4.push(yA(v)); txt(F.svg, F.W - F.pad.r + 3, yA(v) + 3.5, k + 'x', { 'font-size': 9, fill: k === 1.25 ? C.red : C.ink3, 'font-weight': k === 1.25 ? 700 : 400 }); });
     var bwx = Math.max(1, Math.min(F.bw * 0.72, 14));
     rows.forEach(function (q, i) { var hgt = Math.max(1, F.top + F.ph - yA(q.v)), r = q.v50 > 0 ? q.v / q.v50 : null, dist = !q.up && r > 1.25, acc = q.up && r > 1.25, quiet = r != null && r < 0.5, mech = MECHD[q.d];
       var fill = dist ? 'rgba(207,34,46,0.95)' : acc ? 'rgba(26,127,55,0.95)' : quiet ? (q.up ? 'rgba(26,127,55,0.20)' : 'rgba(207,34,46,0.17)') : q.up ? 'rgba(26,127,55,0.50)' : 'rgba(207,34,46,0.40)';
@@ -330,7 +335,9 @@
     [sMax, -sMax].forEach(function (v) { txt(F.svg, F.pad.l - 4, yS(v) + (v > 0 ? 6 : 1), v > 0 ? '+' + v : '(' + (-v) + ')', { 'text-anchor': 'end', 'font-size': 8.5, fill: v > 0 ? GREEN : C.red }); });
     for (var i3 = 0; i3 < n; i3++) { var v3 = net[i3]; if (v3 == null || v3 === 0) continue; el('rect', { x: F.edge(i3), y: Math.min(sMid, yS(v3)), width: F.bw + 0.4, height: Math.abs(yS(v3) - sMid), fill: v3 > 0 ? 'rgba(26,127,55,0.55)' : 'rgba(207,34,46,0.55)' }, F.svg); }
     var uL = ud[n - 1];
-    if (uL) txt(F.svg, F.pad.l + 3, F.top + F.ph - sH + 8, 'up days less down days: ' + uL.u + ' up, ' + uL.n + ' down', { 'font-size': 9, fill: C.ink2, halo: true });
+    /* QC 18-Nov-2026: the shortest wording is used where the full one would run past the pane (1366 pixels) */
+    if (uL) { var uOpts = ['up days less down days: ' + uL.u + ' up, ' + uL.n + ' down', 'up less down days: ' + uL.u + ' up, ' + uL.n + ' down', uL.u + ' up days, ' + uL.n + ' down'], uRoom = F.W - F.pad.r - F.pad.l - 30, uT = uOpts.filter(function (t) { return t.length * 9 * 0.56 <= uRoom; })[0] || uOpts[2];
+      txt(F.svg, F.pad.l + 3, F.top + F.ph - sH + 8, uT, { 'font-size': 9, fill: C.ink2, halo: true }); }
     var ends = [{ y: yC(q0.dist25) + 3.5, t: String(q0.dist25), c: C.red }]; if (net[n - 1] != null) ends.push({ y: Math.max(yS(net[n - 1]), F.top + F.ph - sH + 8) + 3.5, t: net[n - 1] > 0 ? '+' + net[n - 1] : net[n - 1] < 0 ? '(' + (-net[n - 1]) + ')' : '0', c: net[n - 1] > 0 ? GREEN : net[n - 1] < 0 ? C.red : C.ink3 });
     endLab(F, ends);
     dates(F); hover(hC, F, function (i) { return '<div>distribution days in 25 sessions: ' + rows[i].dist25 + '</div>' + (ud[i] ? '<div>in the same 25 sessions: ' + ud[i].u + ' up days, ' + ud[i].n + ' down days</div>' : ''); });
@@ -350,7 +357,8 @@
     var days = WIN[st.est], d0 = addDays(m.asof, -days), d1 = addDays(m.asof, 3), band = st.est === 'L1M' ? 0.005 : 0.01, Yr = m.H.ss.years, labs = Yr.labels, names = Yr.names;
     var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? L_.v / b.v - 1 : null; };
     var chg = function (pts) { return chgD(pts, days); };
-    document.getElementById('os-p4say').textContent = names.map(function (n_, i) { return n_.replace('FY20', 'FY') + ' ' + ['solid', 'dashed', 'dotted'][i]; }).join(', ');
+    /* QC 18-Nov-2026: the line style of each FY is shown by the line sample beside it in each table on the right, so the header no longer repeats it (it was cut short at 1920 pixels) */
+    document.getElementById('os-p4say').textContent = '';
     var tr = m.tranches.map(function (t) { return { d: t.entry_date, color: DASH.trCol(t.tranche_number) }; });
     var L0 = 36;
     [['eps', 'EPS'], ['sales', 'Revenue (sales)']].forEach(function (kk) {
