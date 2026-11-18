@@ -2226,6 +2226,7 @@ function promotionTestText(pt) {
 function recordPromotionCheck(t, what, pt, ok) {
   t.promotion_checks = (Array.isArray(t.promotion_checks) ? t.promotion_checks : []).concat([{ on: todayISO(), what: what, close_of: pt ? pt.d : null,
     from_entry: pt ? pt.up : null, above: pt ? pt.above : null, ma: pt ? pt.ma : null, class_today: pt ? pt.cls : null, last5: pt ? pt.mv5 : null,
+    market_phase: pt && pt.need3 ? pt.phase : null, pool_ok: pt && pt.need3 && pt.needPool ? pt.poolOk : null, furthest_step: pt && pt.need3 ? pt.step : null,   // PMS-PROMOTION-SIX-2026-11-18: conditions 4 to 6 recorded too
     all_met: !!(pt && pt.ok), overrule: !(pt && pt.ok), confirmed_by: 'Richard (Position Management System page)' }]);
 }
 // "Promotion available" (build list item 1): the widest promotion this tranche passes today, or null. Information; Richard decides.
