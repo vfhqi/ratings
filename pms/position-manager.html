@@ -848,7 +848,9 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .promo-avail { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 700; color: #0b6b3a; background: #e3f4ea; border: 1px solid #9fd3b4; cursor: help; white-space: nowrap; }
 .pms-gen-modal { width: 720px; max-width: 92vw; }
 .pgm-note { font-size: 12.5px; line-height: 1.45; margin: 6px 0; }
-.pgm-choices label { display: block; font-size: 13px; padding: 3px 0; cursor: pointer; }
+.pgm-choices label { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 0; cursor: pointer; }
+.pgm-choices input[type=radio] { width: auto; margin: 0; flex: none; }
+.modal-actions .btn:disabled { opacity: 0.45; cursor: not-allowed; }   /* UI QC 18-Nov-2026: Apply looked live when nothing had changed */   /* UI QC 18-Nov-2026 (part 15): the radio sat above its label */
 .pgm-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 10px; }
 .pgm-table th, .pgm-table td { border-bottom: 1px solid var(--border); padding: 4px 6px; text-align: left; }
 .pgm-test span[title] { color: var(--fg3); cursor: help; text-decoration: underline dotted; }
@@ -2309,7 +2311,7 @@ function openClassModal(invIdx) {
 function renderClassModal() {
   var pc = pendingClass; if (!pc) return;
   var cur = heldClassFor(pc.invIdx, pc.ticker), to = sixByKey(pc.to);
-  var html = '<h2>Classification of ' + esc(pc.ticker) + '</h2><p class="pgm-note">Held under: <b>' + esc(cur ? cur.name : 'not recorded') + '</b>. Today, as new capital: ' + esc(classTodayName(pc.ticker) || 'not yet read') + '.</p>'
+  var html = '<h2>Classification of ' + esc(getUniverseName(pc.ticker) || pc.ticker) + ' (' + esc(pc.ticker) + ')</h2><p class="pgm-note">Held under: <b>' + esc(cur ? cur.name : 'not recorded') + '</b>. Today, as new capital: ' + esc(classTodayName(pc.ticker) || 'not yet read') + '.</p>'
     + '<div class="pgm-choices">' + SIX_CLASSES.map(function (c) { return '<label><input type="radio" name="pgmCls" value="' + c.key + '"' + (pc.to === c.key ? ' checked' : '') + ' onchange="pendingClass.to=this.value;renderClassModal()"> ' + esc(c.name) + '</label>'; }).join('') + '</div>';
   var plan = to ? classChangePlan(pc.invIdx, pc.ticker, to) : [];
   if (to && plan.length) {
@@ -2334,6 +2336,7 @@ function classChangePlan(invIdx, ticker, to) {
     return { key: k, num: trancheNumber(invIdx, k), kindNow: kindNow, kindAfter: kindAfter, lineNow: lineNow, lineAfter: lineAfter,
              test: promotionTest(ticker, t, { toCore: true, ma: '200D' }) };
   });
+  plan.sort(function (a, b) { return (a.num || 0) - (b.num || 0); });   // tranche 1 first (UI QC 18-Nov-2026)
   pendingClass.plan = plan; pendingClass.planFor = to.key;
   return plan;
 }
@@ -2363,9 +2366,10 @@ var pendingSale = null;
 function openSaleModal(invIdx, whole) {
   var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx); if (!ticker) return;
   var keys = liveTrancheKeys(invIdx); if (!keys.length) { flashError(ticker + ' has no tranche held.'); return; }
+  keys.sort(function (a, b) { return (trancheNumber(invIdx, a) || 0) - (trancheNumber(invIdx, b) || 0); });   // tranche 1 first (UI QC 18-Nov-2026)
   pendingSale = { invIdx: invIdx, ticker: ticker, date: latestCloseDate(ticker), pct: {} };
   keys.forEach(function (k) { pendingSale.pct[k] = whole ? 100 : 0; });
-  var html = '<h2>' + (whole ? 'Sell whole holding: ' : 'Record a sale: ') + esc(ticker) + '</h2>'
+  var html = '<h2>' + (whole ? 'Sell whole holding: ' : 'Record a sale: ') + esc(getUniverseName(ticker) || ticker) + ' (' + esc(ticker) + ')</h2>'
     + '<p class="pgm-note">Date of the sale <input type="date" class="edit-input date" value="' + esc(pendingSale.date) + '" onchange="pendingSale.date=this.value"> (the latest close by default). Type the % of each tranche sold: 100 sells the tranche; less keeps the rest live, and the sale is recorded on the tranche with its date.</p>'
     + '<table class="pgm-table"><tr><th>Tranche</th><th>Type</th><th>Entered</th><th>% of the tranche sold</th></tr>'
     + keys.map(function (k) { var t = getEdit(invIdx, k); return '<tr><td>Tranche ' + esc(String(trancheNumber(invIdx, k))) + '</td><td>' + esc(TRANCHE_KIND_LABEL[trancheKind(t, ticker)]) + '</td><td>' + esc(fmtDate(t.entry_date)) + '</td><td><input type="number" min="0" max="100" step="any" class="edit-input pct" value="' + pendingSale.pct[k] + '" onchange="pendingSale.pct[\'' + k + '\']=+this.value"> %</td></tr>'; }).join('')
