@@ -1865,7 +1865,11 @@ function adoptPublishedStateIfNewer() {
       if (pub.saved_at > base) PUBLISHED_STATE_SKIPPED = { published_at: pub.saved_at, offline_since: offline };
       return false;
     }
-    if (haveLocal && !(pub.saved_at > base)) return false;
+    if (haveLocal && !(pub.saved_at > base)) {
+      // UI QC 18-Nov-2026 (part 15): this browser already holds the published copy (same save): say so, not "THIS BROWSER ONLY"
+      if (base === pub.saved_at) PUBLISHED_STATE_USED = { saved_at: pub.saved_at, already: true };
+      return false;
+    }
     if (haveLocal) { try { localStorage.setItem('pms_edits_pre_published_backup', JSON.stringify({ at: new Date().toISOString(), base: base, EDITS: EDITS })); } catch (e) {} }
     EDITS = JSON.parse(JSON.stringify(pub.edits));
     localStorage.setItem('pms_edits_v6', JSON.stringify(EDITS));
