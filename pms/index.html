@@ -844,6 +844,20 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 #priceFreshness.app-row2 .pf-item { overflow: hidden; flex: 0 1 auto; }
 #priceFreshness.app-row2 .pf-item:first-child { flex: 0 0.4 auto; }
 #priceFreshness.app-row2 .pf-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; display: block; }
+/* PMS-PROMOTION-2026-11-18 */
+.promo-avail { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 700; color: #0b6b3a; background: #e3f4ea; border: 1px solid #9fd3b4; cursor: help; white-space: nowrap; }
+.pms-gen-modal { width: 720px; max-width: 92vw; }
+.pgm-note { font-size: 12.5px; line-height: 1.45; margin: 6px 0; }
+.pgm-choices label { display: block; font-size: 13px; padding: 3px 0; cursor: pointer; }
+.pgm-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 10px; }
+.pgm-table th, .pgm-table td { border-bottom: 1px solid var(--border); padding: 4px 6px; text-align: left; }
+.pgm-test span[title] { color: var(--fg3); cursor: help; text-decoration: underline dotted; }
+.tot-sale .btn-addtr, .tot-sale .btn-remove-inv, .tot-label .btn-remove-inv { margin-right: 4px; font-size: 10.5px; padding: 1px 6px; }
+.tot-label .btn-addtr, .tot-sale .btn-addtr { font-size: 10.5px; padding: 1px 6px; }
+.edit-input.pct.buf { width: 36px; }
+select.kind-select { width: 128px !important; font-size: 10px !important; padding: 1px 1px !important; }
+.ticker-cell .tk-line2 { white-space: normal !important; text-overflow: clip !important; }
+.ticker-cell .tk-line4 { font-weight: 700 !important; font-size: 11px !important; color: var(--ink) !important; }
 </style>
 </head>
 <body>
@@ -1084,7 +1098,7 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['176px', '158px', '70px', '140px', '172px', '78px', '80px', '58px', '58px', '58px', '58px', '72px', '72px', '72px', '80px', '64px', '104px', '88px', '70px', '74px', '280px', '28px'];   // CORE-OWN-LINE-2026-11-15: the Information column fits one verdict badge a line (was 210px, which cut the 200-day line rule's badge off)
+var COL_WIDTHS = ['168px', '158px', '70px', '140px', '172px', '80px', '72px', '58px', '58px', '58px', '58px', '66px', '66px', '66px', '80px', '64px', '104px', '88px', '70px', '74px', '280px', '28px'];   // CORE-OWN-LINE-2026-11-15: the Information column fits one verdict badge a line (was 210px, which cut the 200-day line rule's badge off)
 //   // D-PMS-V4-159: one-line rows; the surplus width is spread over every column   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
@@ -1229,7 +1243,7 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('btnTrancheByDate').addEventListener('click', function() { setTrancheOrder(false); });
   document.getElementById('btnRestoreBackup').addEventListener('click', restoreFromBackup);
   // Restore hide-at-entry state from localStorage (D-PMS-39)
-  try { hideAtEntry = localStorage.getItem('pms_hide_at_entry_v5c') === '1'; } catch(e) {}
+  try { var _hae = localStorage.getItem('pms_hide_at_entry_v5c'); hideAtEntry = (_hae == null) ? true : _hae === '1'; } catch(e) { hideAtEntry = true; }   // PMS-FIT-2026-11-18: hidden unless shown (Richard, 18-Nov-2026, "Q1 = You decide")
   // D-PMS-98: restore hide-alerts state (default OFF — visible)
   try { hideAlerts = localStorage.getItem('pms_hide_alerts_v5j_12') === '1'; } catch(e) {}
   // D-PMS-115: restore spark-collapsed state (default OFF — expanded)
@@ -2128,6 +2142,95 @@ function ownLinePromotionTest(ticker, t) {
   var up = (entry && px != null) ? px / entry - 1 : null, above = (m200 != null && px != null) ? px > m200 : null;
   return { ok: up != null && up > 0.10 && above === true, up: up, above: above, px: px, ma200: m200, d: series[n].d };
 }
+// PMS-PROMOTION-2026-11-18 (build list items 4, 8 and 23; Position Entry and Exit Rules sections 2, 5 and 7 as amended on
+// 18-Nov-2026; decisions D-MD-TM-114 and D-MD-TM-130; Richard's agreement of 18-Nov-2026, Message 118).
+// The six classifications, the lines each tranche may use, the promotion test with its three conditions, and one place to
+// change a whole holding's classification. The holding's classification is kept on the page's saved state (slot key
+// _held_class, with _held_class_history), and pms-data/held-classifications.json is the fallback until a holding has one.
+var SIX_CLASSES = [
+  { key: 'proven', name: 'Reinforcing / Proven S2 Core Investment', kind: 'core' },
+  { key: 'early', name: 'Broadening / Early S2 Core Investment', kind: 'core' },
+  { key: 'inflecting', name: 'Inflecting / S1→S2 Probing Bet', kind: 'probing' },
+  { key: 's1', name: 'Bottoming / S1 Speculative Bet', kind: 'speculative', stage: 'S1' },
+  { key: 's3', name: 'Restarting Reinforcing / S3 Speculative Bet', kind: 'speculative', stage: 'S3' },
+  { key: 's4', name: 'Collapsing / S4 Speculative Bet', kind: 'speculative', stage: 'S4' }
+];
+function sixByKey(k) { for (var i = 0; i < SIX_CLASSES.length; i++) if (SIX_CLASSES[i].key === k) return SIX_CLASSES[i]; return null; }
+function sixByName(n) { for (var i = 0; i < SIX_CLASSES.length; i++) if (SIX_CLASSES[i].name === n) return SIX_CLASSES[i]; return null; }
+var CORE_CLASS_NAMES = { 'Reinforcing / Proven S2 Core Investment': true, 'Broadening / Early S2 Core Investment': true };
+var LINES_CORE = ['50D', '100D', '150D', '200D'], LINES_S2_PROBING = ['10D', '20D', '50D', '100D', '150D', '200D'], LINES_BET = ['10D', '20D', '50D'];
+function maDays(ma) { var m = /^(\d+)D$/.exec(String(ma || '')); return m ? +m[1] : null; }
+function invIdxOfTicker(ticker) {
+  var k = holdingKey(ticker), out = -1;
+  ((CONFIG && CONFIG.investments) || []).forEach(function (inv, i) { if (out < 0 && holdingKey(effectiveTicker(inv, i)) === k) out = i; });
+  return out;
+}
+// the holding's classification: the page's own record first, else held-classifications.json (as embedded)
+function heldClassFor(invIdx, ticker) {
+  var se = (invIdx != null && invIdx >= 0) ? (EDITS[invIdx] || {}) : {};
+  if (se._held_class && sixByKey(se._held_class)) return sixByKey(se._held_class);
+  return sixByName(heldClassNameFromFile(ticker));
+}
+function holdingClassIsCore(invIdx, ticker) { var c = heldClassFor(invIdx, ticker); return !!(c && c.kind === 'core'); }
+// the lines a tranche may use (section 2): Core, its own 50, 100, 150 or 200-day line; a Probing Bet tranche of a holding
+// classified Broadening / Early S2 or Reinforcing / Proven S2, the 10 to 200-day lines; any other Probing or Speculative
+// tranche, the 10, 20 or 50-day line
+function allowedLines(invIdx, ticker, kind) {
+  if (kind === 'core') return LINES_CORE;
+  if (kind === 'probing' && holdingClassIsCore(invIdx, ticker)) return LINES_S2_PROBING;
+  return LINES_BET;
+}
+function maOptionsHtml(lines, cur) {   // PMS-PROMOTION-2026-11-18: a line no longer allowed is shown, marked, until it is changed
+  var o = lines.map(function (l) { return '<option value="' + l + '"' + (l === cur ? ' selected' : '') + '>' + l + '</option>'; }).join('');
+  return (cur && lines.indexOf(cur) < 0 ? '<option value="' + esc(cur) + '" selected>' + esc(cur) + ' (not allowed now)</option>' : '') + o;
+}
+function allowedLinesText(lines) { var d = lines.map(function (l) { return String(maDays(l)); }); return 'the ' + d.slice(0, -1).join(', ') + ' or ' + d[d.length - 1] + '-day line'; }
+function classTodayName(ticker) { var fr = (FILTER_RESULTS && FILTER_RESULTS.data || {})[ticker]; return fr ? (fr.cls_today || '') : null; }
+// Rules section 7. opt.toCore: a promotion to Core status (the third condition applies); opt.ma: the wider line (200D for full Core)
+function promotionTest(ticker, t, opt) {
+  var series = (CHART_DATA && CHART_DATA.data || {})[ticker];
+  if (!series || !series.length || !t || !t.entry_date) return null;
+  var i0 = findIndexByDate(ticker, t.entry_date), n = series.length - 1;
+  var entry = i0 >= 0 ? stopNum(series[i0].c) : null, px = stopNum(series[n].c), ma = (opt && opt.ma) || '200D';
+  var mv = stopMaValue(series, n, ma), p5 = n >= 5 ? stopNum(series[n - 5].c) : null;
+  var up = (entry && px != null) ? px / entry - 1 : null, above = (mv != null && px != null) ? px > mv : null;
+  var mv5 = (p5 && px != null) ? px / p5 - 1 : null;
+  var cls = classTodayName(ticker), clsOk = !!(cls && CORE_CLASS_NAMES[cls]);
+  var need3 = !!(opt && opt.toCore);
+  return { d: series[n].d, px: px, entry: entry, up: up, ma: ma, maVal: mv, above: above, mv5: mv5, cls: cls, clsOk: clsOk, need3: need3,
+           ok: up != null && up > 0.10 && above === true && (!need3 || clsOk) };
+}
+function fmtPctB(v, dp) { if (v == null) return 'n.a.'; var s = Math.abs(v * 100).toFixed(dp == null ? 1 : dp) + '%'; return v < 0 ? '(' + s + ')' : '+' + s; }
+function promotionTestText(pt) {
+  if (!pt) return 'The promotion test could not be read (no prices or no entry date).';
+  var lines = ['Promotion test (Position Entry and Exit Rules, section 7), on the close of ' + pt.d + ':',
+    '(1) ' + (pt.up != null && pt.up > 0.10 ? 'MET' : 'NOT MET') + ': the price is ' + fmtPctB(pt.up) + ' from the entry price (more than +10% needed).',
+    '(2) ' + (pt.above ? 'MET' : 'NOT MET') + ': the close ' + (pt.px != null ? fmt(pt.px, 2) : 'n.a.') + ' is ' + (pt.above == null ? 'not measurable against' : pt.above ? 'above' : 'not above') + ' the ' + maDays(pt.ma) + '-day line (' + (pt.maVal != null ? fmt(pt.maVal, 2) : 'n.a.') + ').'];
+  if (pt.need3) lines.push('(3) ' + (pt.clsOk ? 'MET' : 'NOT MET') + ': classification today ' + (pt.cls ? pt.cls : (pt.cls === '' ? 'none of the six fits' : 'not yet read')) + ' (Broadening / Early S2 or Reinforcing / Proven S2 Core Investment needed).');
+  lines.push('Last 5 sessions: ' + fmtPctB(pt.mv5) + (pt.mv5 != null && pt.mv5 < 0 ? '. The price fell: the rules say a stop-loss is never widened while the price is falling towards its line.' : '.'));
+  lines.push(pt.ok && !(pt.mv5 != null && pt.mv5 < 0) ? 'All tests met.' : (pt.ok ? 'All tests met, but the price is falling.' : 'NOT all tests met: going ahead overrules the rule, and the overrule is recorded on the tranche.'));
+  return lines.join('\n');
+}
+function recordPromotionCheck(t, what, pt, ok) {
+  t.promotion_checks = (Array.isArray(t.promotion_checks) ? t.promotion_checks : []).concat([{ on: todayISO(), what: what, close_of: pt ? pt.d : null,
+    from_entry: pt ? pt.up : null, above: pt ? pt.above : null, ma: pt ? pt.ma : null, class_today: pt ? pt.cls : null, last5: pt ? pt.mv5 : null,
+    all_met: !!(pt && pt.ok), overrule: !(pt && pt.ok), confirmed_by: 'Richard (Position Management System page)' }]);
+}
+// "Promotion available" (build list item 1): the widest promotion this tranche passes today, or null. Information; Richard decides.
+function promotionAvailable(invIdx, key, t, ticker) {
+  if (!trancheHeld(t) || !ticker) return null;
+  var kind = trancheKind(t, ticker);
+  if (kind === 'core' && !trancheOwnLineMarked(t, ticker)) return null;   // full Core: nothing wider
+  var pc = promotionTest(ticker, t, { toCore: true, ma: '200D' });
+  if (pc && pc.ok && !(pc.mv5 != null && pc.mv5 < 0)) return { to: 'full Core status' + (kind === 'core' ? '' : ' (Core Investment)'), test: pc };
+  var cur = maDays(stopMaFor(key, t, ticker)), lines = allowedLines(invIdx, ticker, kind), best = null;
+  lines.forEach(function (l) { if (maDays(l) > cur) { var p = promotionTest(ticker, t, { toCore: false, ma: l }); if (p && p.ok && !(p.mv5 != null && p.mv5 < 0)) best = { to: 'the ' + l + ' line', test: p }; } });
+  return best;
+}
+function promotionFlagHtml(pa) {
+  if (!pa) return '';
+  return '<span class="promo-avail" title="' + esc('Promotion available to ' + pa.to + '. ' + promotionTestText(pa.test).replace(/\n/g, ' ') + ' Your decision.') + '">Promotion available</span>';
+}
 // Tick or untick "own line" on a Core tranche. Ticking puts it on its own line from the latest close (the line must be one of
 // the four and the price above it; the 10-day count starts that day, as a type change does). Unticking is a promotion to full
 // Core status: the page shows the promotion test and asks before it changes anything.
@@ -2146,15 +2249,129 @@ function setOwnLine(invIdx, key, on, inputEl) {
     t.stop_history.push({ stop_ma: line, set_on: onDay, exact: true, via: 'own-line', previous: line, explicit: true,
       note: 'put on its own line (' + line + ') on ' + today + '; the 10-day count starts from the close of ' + onDay });
   } else {
-    var pt = ownLinePromotionTest(ticker, t);
-    var msg = pt ? ('Promotion test (rules section 7) on ' + pt.d + ': ' + (pt.up == null ? 'no entry price' : (pt.up * 100).toFixed(1) + '% from entry (more than 10% needed)')
-      + '; ' + (pt.above == null ? 'no 200-day line' : (pt.above ? 'above' : 'not above') + ' the 200-day line') + ' -> ' + (pt.ok ? 'met' : 'NOT met') + '.')
-      : 'The promotion test could not be read (no prices).';
-    if (!confirm('Promote this tranche to full Core status (no line of its own)? ' + msg + ' Your decision; continue?')) { if (inputEl) inputEl.checked = true; return; }
+    var pt = promotionTest(ticker, t, { toCore: true, ma: '200D' });   // PMS-PROMOTION-2026-11-18: all three conditions
+    if (!confirm('Promote this tranche to full Core status (no line of its own)?\n\n' + promotionTestText(pt) + '\n\nYour decision; continue?')) { if (inputEl) inputEl.checked = true; return; }
+    recordPromotionCheck(t, 'own line to full Core status', pt, pt && pt.ok);
   }
   t.own_line = !!on;
   t.own_line_history = (Array.isArray(t.own_line_history) ? t.own_line_history : []).concat([{ on: today, own_line: !!on, line: line }]);
   saveEdits(); render();
+}
+// ---- PMS-PROMOTION-2026-11-18: one place to change a whole holding's classification (build list item 8) -------------------
+function heldClassName(ticker) { var c = heldClassFor(invIdxOfTicker(ticker), ticker); return c ? c.name : null; }
+var pendingClass = null;
+function pmsModal(html) {
+  var ov = document.getElementById('pmsGenModal');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'pmsGenModal'; ov.className = 'modal-overlay'; ov.innerHTML = '<div class="modal pms-gen-modal"></div>'; document.body.appendChild(ov); }
+  ov.querySelector('.modal').innerHTML = html; ov.classList.add('open'); return ov;
+}
+function closePmsModal() { var ov = document.getElementById('pmsGenModal'); if (ov) ov.classList.remove('open'); pendingClass = null; pendingSale = null; }
+function liveTrancheKeys(invIdx) { return trancheKeys(invIdx).filter(function (k) { return trancheHeld(getEdit(invIdx, k)); }); }
+function defaultLineFor(invIdx, ticker, kind, cur) {
+  var lines = allowedLines(invIdx, ticker, kind);
+  if (lines.indexOf(cur) >= 0) return cur;
+  var series = (CHART_DATA && CHART_DATA.data || {})[ticker], n = series ? series.length - 1 : -1, best = lines[0];
+  lines.forEach(function (l) { if (n >= 0) { var v = stopMaValue(series, n, l), px = stopNum(series[n].c); if (v != null && px != null && px > v && maDays(l) <= (maDays(cur) || 999)) best = l; } });
+  return best;
+}
+function openClassModal(invIdx) {
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx); if (!ticker) return;
+  var cur = heldClassFor(invIdx, ticker);
+  pendingClass = { invIdx: invIdx, ticker: ticker, to: cur ? cur.key : null };
+  renderClassModal();
+}
+function renderClassModal() {
+  var pc = pendingClass; if (!pc) return;
+  var cur = heldClassFor(pc.invIdx, pc.ticker), to = sixByKey(pc.to);
+  var html = '<h2>Classification of ' + esc(pc.ticker) + '</h2><p class="pgm-note">Held under: <b>' + esc(cur ? cur.name : 'not recorded') + '</b>. Today, as new capital: ' + esc(classTodayName(pc.ticker) || 'not yet read') + '.</p>'
+    + '<div class="pgm-choices">' + SIX_CLASSES.map(function (c) { return '<label><input type="radio" name="pgmCls" value="' + c.key + '"' + (pc.to === c.key ? ' checked' : '') + ' onchange="pendingClass.to=this.value;renderClassModal()"> ' + esc(c.name) + '</label>'; }).join('') + '</div>';
+  var plan = to ? classChangePlan(pc.invIdx, pc.ticker, to) : [];
+  if (to && plan.length) {
+    html += '<p class="pgm-note"><b>What changes on each tranche held</b> (the type follows the classification; a Probing Bet tranche may stay a Probing Bet in a Broadening or Reinforcing holding):</p><table class="pgm-table"><tr><th>Tranche</th><th>Type now</th><th>Type after</th><th>Line after</th><th>Promotion test</th></tr>'
+      + plan.map(function (p, i) {
+        var kinds = to.kind === 'core' ? (p.kindNow === 'probing' ? ['core', 'probing'] : ['core']) : [to.kind];
+        return '<tr><td>Tranche ' + esc(String(p.num)) + '</td><td>' + esc(TRANCHE_KIND_LABEL[p.kindNow]) + '</td><td><select onchange="pendingClass.plan[' + i + '].kindAfter=this.value;pendingClass.plan[' + i + '].lineAfter=defaultLineFor(pendingClass.invIdx,pendingClass.ticker,this.value,pendingClass.plan[' + i + '].lineNow);renderClassModal(true)">'
+          + kinds.map(function (k) { return '<option value="' + k + '"' + (k === p.kindAfter ? ' selected' : '') + '>' + esc(TRANCHE_KIND_LABEL[k]) + '</option>'; }).join('') + '</select></td>'
+          + '<td>' + (p.kindAfter === 'core' && p.kindNow !== 'core' ? 'full Core (no line of its own)' : '<select onchange="pendingClass.plan[' + i + '].lineAfter=this.value">' + allowedLines(pc.invIdx, pc.ticker, p.kindAfter).map(function (l) { return '<option' + (l === p.lineAfter ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select>') + '</td>'
+          + '<td class="pgm-test">' + (p.kindAfter === 'core' && p.kindNow !== 'core' ? (p.test && p.test.ok ? 'met' : '<b>NOT met</b>') + ' <span title="' + esc(promotionTestText(p.test)) + '">(details)</span>' : 'not a promotion') + '</td></tr>';
+      }).join('') + '</table>';
+  }
+  html += '<div class="modal-actions"><button class="btn" onclick="closePmsModal()">Cancel</button><button class="btn btn-primary" onclick="applyClassChange()"' + (to && (!cur || cur.key !== to.key || plan.some(function (p) { return p.kindAfter !== p.kindNow || p.lineAfter !== p.lineNow; })) ? '' : ' disabled') + '>Apply</button></div>';
+  pmsModal(html);
+}
+function classChangePlan(invIdx, ticker, to) {
+  if (pendingClass && pendingClass.plan && pendingClass.planFor === to.key) return pendingClass.plan;
+  var plan = liveTrancheKeys(invIdx).map(function (k) {
+    var t = getEdit(invIdx, k), kindNow = trancheKind(t, ticker), lineNow = stopMaFor(k, t, ticker);
+    var kindAfter = to.kind === 'core' ? (kindNow === 'probing' && to.kind === 'core' && holdingClassIsCore(invIdx, ticker) ? 'probing' : 'core') : to.kind;
+    var lineAfter = kindAfter === 'core' && kindNow !== 'core' ? lineNow : defaultLineFor(invIdx, ticker, kindAfter, lineNow);
+    return { key: k, num: trancheNumber(invIdx, k), kindNow: kindNow, kindAfter: kindAfter, lineNow: lineNow, lineAfter: lineAfter,
+             test: promotionTest(ticker, t, { toCore: true, ma: '200D' }) };
+  });
+  pendingClass.plan = plan; pendingClass.planFor = to.key;
+  return plan;
+}
+function applyClassChange() {
+  var pc = pendingClass; if (!pc) return;
+  var to = sixByKey(pc.to), cur = heldClassFor(pc.invIdx, pc.ticker); if (!to) return;
+  var plan = pc.plan || [], promos = plan.filter(function (p) { return p.kindAfter === 'core' && p.kindNow !== 'core'; });
+  var msg = 'Hold ' + pc.ticker + ' under ' + to.name + (cur ? ' (was ' + cur.name + ')' : '') + '?';
+  promos.forEach(function (p) { msg += '\n\nTranche ' + p.num + ' becomes a Core Investment (a promotion). ' + promotionTestText(p.test); });
+  if (!confirm(msg + '\n\nYour decision; continue?')) return;
+  var today = todayISO(), se = EDITS[pc.invIdx] = EDITS[pc.invIdx] || {};
+  se._held_class_history = (Array.isArray(se._held_class_history) ? se._held_class_history : []).concat([{ from: cur ? cur.key : null, to: to.key, on: today, at: new Date().toISOString(), by: 'Richard (Position Management System page)' }]);
+  se._held_class = to.key;
+  plan.forEach(function (p) {
+    var t = getEdit(pc.invIdx, p.key); if (!t) return;
+    if (p.kindAfter !== p.kindNow) {
+      if (p.kindAfter === 'core') recordPromotionCheck(t, 'type to Core Investment (classification change)', p.test, p.test && p.test.ok);
+      applyTrancheType(pc.invIdx, p.key, p.kindAfter, { stage: to.stage || null });
+    } else if (to.stage && p.kindAfter === 'speculative') t.bet_stage = to.stage;
+    if (!(p.kindAfter === 'core' && p.kindNow !== 'core') && p.lineAfter && p.lineAfter !== stopMaFor(p.key, t, pc.ticker)) t.stop_ma = p.lineAfter;
+  });
+  closePmsModal(); saveEdits(); render();
+  flashSuccess8s(pc.ticker + ' is now held under ' + to.name + '.');
+}
+// ---- PMS-SALES-2026-11-18: partial sales and "Sell whole holding" (build list items 11 and 12) -------------------------
+var pendingSale = null;
+function openSaleModal(invIdx, whole) {
+  var ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx); if (!ticker) return;
+  var keys = liveTrancheKeys(invIdx); if (!keys.length) { flashError(ticker + ' has no tranche held.'); return; }
+  pendingSale = { invIdx: invIdx, ticker: ticker, date: latestCloseDate(ticker), pct: {} };
+  keys.forEach(function (k) { pendingSale.pct[k] = whole ? 100 : 0; });
+  var html = '<h2>' + (whole ? 'Sell whole holding: ' : 'Record a sale: ') + esc(ticker) + '</h2>'
+    + '<p class="pgm-note">Date of the sale <input type="date" class="edit-input date" value="' + esc(pendingSale.date) + '" onchange="pendingSale.date=this.value"> (the latest close by default). Type the % of each tranche sold: 100 sells the tranche; less keeps the rest live, and the sale is recorded on the tranche with its date.</p>'
+    + '<table class="pgm-table"><tr><th>Tranche</th><th>Type</th><th>Entered</th><th>% of the tranche sold</th></tr>'
+    + keys.map(function (k) { var t = getEdit(invIdx, k); return '<tr><td>Tranche ' + esc(String(trancheNumber(invIdx, k))) + '</td><td>' + esc(TRANCHE_KIND_LABEL[trancheKind(t, ticker)]) + '</td><td>' + esc(fmtDate(t.entry_date)) + '</td><td><input type="number" min="0" max="100" step="any" class="edit-input pct" value="' + pendingSale.pct[k] + '" onchange="pendingSale.pct[\'' + k + '\']=+this.value"> %</td></tr>'; }).join('')
+    + '</table><div class="modal-actions"><button class="btn" onclick="closePmsModal()">Cancel</button>' + (whole ? '' : '<button class="btn" onclick="Object.keys(pendingSale.pct).forEach(function(k){pendingSale.pct[k]=100});applySale()">Sell whole holding</button>') + '<button class="btn btn-primary" onclick="applySale()">Record the sale</button></div>';
+  pmsModal(html);
+}
+function applySale() {
+  var ps = pendingSale; if (!ps) return;
+  if (!ps.date || implausibleDate(ps.date)) { refuseDate(ps.date); return; }
+  var parts = Object.keys(ps.pct).filter(function (k) { return ps.pct[k] > 0; });
+  if (!parts.length) { flashError('No % sold was typed.'); return; }
+  if (parts.some(function (k) { return !(ps.pct[k] > 0 && ps.pct[k] <= 100); })) { flashError('A % sold must be above 0 and at most 100.'); return; }
+  var desc = parts.map(function (k) { return 'tranche ' + trancheNumber(ps.invIdx, k) + ': ' + ps.pct[k] + '%'; }).join(', ');
+  if (!confirm('Record the sale of ' + ps.ticker + ' on ' + ps.date + ' (' + desc + ')? This records what you have sold; it does not place an order.')) return;
+  parts.forEach(function (k) {
+    var t = getEdit(ps.invIdx, k); if (!t) return;
+    var p = Math.min(100, ps.pct[k]) / 100, before = t.target_size_pct || 0;
+    if (p >= 0.9999) { applySize(ps.invIdx, k, 0, ps.date); return; }
+    var after = Math.round(before * (1 - p) * 1e6) / 1e6, sk = 'sale_' + ps.date.replace(/-/g, '_'), prev = t[sk];
+    t[sk] = { size_before: (prev && prev.size_before != null) ? prev.size_before : before, size_after: after, fraction_sold: p,
+              what: 'sold ' + (p * 100).toFixed(0) + '% of the tranche on ' + ps.date + ' (recorded on the Position Management System page)', recorded_at: new Date().toISOString() };
+    t.target_size_pct = after;
+  });
+  closePmsModal(); saveEdits(); render();
+  flashSuccess8s('Sale of ' + ps.ticker + ' recorded (' + desc + ').');
+}
+function partialSalesNote(t) {
+  var out = [];
+  Object.keys(t || {}).forEach(function (k) { var m = /^(?:ubs_)?sale_(\d{4})_(\d{2})_(\d{2})$/.exec(k); if (m && t[k] && t[k].size_after > 0) out.push({ d: m[1] + '-' + m[2] + '-' + m[3], f: t[k].fraction_sold != null ? t[k].fraction_sold : (t[k].size_before ? 1 - t[k].size_after / t[k].size_before : null) }); });
+  if (!out.length) return '';
+  out.sort(function (a, b) { return a.d < b.d ? -1 : 1; });
+  return '<span class="was-inline" title="' + esc('Partial sales recorded on this tranche: ' + out.map(function (o) { return (o.f != null ? (o.f * 100).toFixed(0) + '% ' : '') + 'on ' + fmtDate(o.d); }).join('; ') + '. The size shown is what is still held, at entry.') + '">sold ' + (out[out.length - 1].f != null ? (out[out.length - 1].f * 100).toFixed(0) + '%' : 'part') + (out.length > 1 ? ' (' + out.length + ' sales)' : '') + '</span>';
 }
 // The MA in force when none is typed: the old key's default for a pre-6-Nov tranche (so no stop "changes" on the
 // change-over), else the type's default.
@@ -2268,7 +2485,7 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
     if (value > KIND_CAP_DECIMAL[kind] && !confirm((value * 100).toFixed(2) + '% is above the ' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '% usual for a ' + TRANCHE_KIND_LABEL[kind] + ' tranche. Continue?')) { if (inputEl) inputEl.value = ''; return; }
   }
   if (field === 'stop_ma') { value = stopNormaliseMa(rawValue); if (!value) { flashError('MA for the stop-loss must be a whole number of days from ' + STOP_MA_MIN_DAYS + ' to ' + STOP_MA_MAX_DAYS + ' (for example 75D).'); if (inputEl) inputEl.value = ''; return; } }
-  if (field === 'stop_ma' && kind === 'core' && OWN_LINE_LINES.indexOf(value) < 0) { flashError('A new Core tranche is on its own 50, 100, 150 or 200-day line (Position Entry and Exit Rules, 13-Nov-2026).'); if (inputEl) inputEl.value = ''; return; }   // CORE-OWN-LINE-2026-11-15
+  if (field === 'stop_ma' && allowedLines(invIdx, ticker, kind).indexOf(value) < 0) { flashError('A new ' + TRANCHE_KIND_LABEL[kind] + ' tranche of ' + ticker + ' may use ' + allowedLinesText(allowedLines(invIdx, ticker, kind)) + ' (Position Entry and Exit Rules, section 2).'); if (inputEl) inputEl.value = ''; return; }   // PMS-PROMOTION-2026-11-18 (was CORE-OWN-LINE-2026-11-15: Core only)
   if (field === 'stop_ma') {   // PMS-MA-ABOVE-2026-11-14 (CORE-OWN-LINE-2026-11-15: Core too): a new tranche's line is checked on its day of investment (today until a date is typed)
     var why1 = maNotSelectable(ticker, null, value);
     if (why1) { flashError(why1); if (inputEl) inputEl.value = ''; return; }
@@ -2281,7 +2498,7 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
   }
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   var key = newTrancheKey(invIdx);
-  var t = { type: kind, stop_ma: KIND_DEFAULT_STOP[kind], _added_at: new Date().toISOString() };
+  var t = { type: kind, stop_ma: (allowedLines(invIdx, ticker, kind).indexOf(KIND_DEFAULT_STOP[kind]) >= 0 ? KIND_DEFAULT_STOP[kind] : allowedLines(invIdx, ticker, kind)[allowedLines(invIdx, ticker, kind).length - 1]), _added_at: new Date().toISOString() };
   if (kind === 'core') t.own_line = true;   // CORE-OWN-LINE-2026-11-15: a new Core tranche starts on its own line (rules sections 2 and 5)
   t[field] = value;
   EDITS[invIdx][key] = t;
@@ -2300,28 +2517,48 @@ function setTrancheType(invIdx, key, kind) {
   if (!t || !TRANCHE_KIND_LABEL[kind]) return;
   var from = trancheKind(t, ticker);
   if (from === kind) { t.type = kind; saveEdits(); render(); return; }
-  var today = todayISO();
+  var opts = {};
+  if (kind === 'core') {   // PMS-PROMOTION-2026-11-18: a promotion to Core status, rules section 7, all three conditions
+    var pt = promotionTest(ticker, t, { toCore: true, ma: '200D' });
+    if (!confirm('Make tranche ' + trancheNumber(invIdx, key) + ' of ' + ticker + ' a Core Investment (a promotion to full Core status)?\n\n' + promotionTestText(pt) + '\n\nYour decision; continue?')) { render(); return; }
+    recordPromotionCheck(t, 'type to Core Investment', pt, pt && pt.ok);
+  } else {
+    var lines = allowedLines(invIdx, ticker, kind), cur = stopMaFor(key, t, ticker);
+    if (lines.indexOf(cur) < 0) {   // PMS-PROMOTION-2026-11-18 (rules section 2): the line must be one the new type allows
+      var pick = prompt('A ' + TRANCHE_KIND_LABEL[kind] + ' tranche of ' + ticker + ' may use ' + allowedLinesText(lines) + '. Its line is now the ' + cur + '. Type the line to use:', defaultLineFor(invIdx, ticker, kind, cur));
+      pick = pick == null ? null : stopNormaliseMa(pick);
+      if (!pick || lines.indexOf(pick) < 0) { flashError('Type not changed: a ' + TRANCHE_KIND_LABEL[kind] + ' tranche needs ' + allowedLinesText(lines) + '.'); render(); return; }
+      opts.line = pick;
+    }
+  }
+  applyTrancheType(invIdx, key, kind, opts);
+  saveEdits(); render();
+  if (kind === 'core' && t.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) openSplit(invIdx, key);
+}
+// The change itself, without asking (setTrancheType asks; the classification change asks once for every tranche).
+function applyTrancheType(invIdx, key, kind, opts) {
+  opts = opts || {};
+  var t = getEdit(invIdx, key), ticker = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  if (!t) return;
+  var from = trancheKind(t, ticker), today = todayISO();
   if (!t.stop_ma) t.stop_ma = stopMaFor(key, t, ticker);   // keep the MA in force; a type change is not an MA change
   t.type = kind;
   t.type_changed_on = today;
   t.type_history = (Array.isArray(t.type_history) ? t.type_history : []).concat([{ from: from, to: kind, on: today }]);
+  if (kind === 'speculative') { var hc = heldClassFor(invIdx, ticker); var st = opts.stage || (hc && hc.stage) || null; if (st) t.bet_stage = st; }
   if (kind === 'core') {
     t.own_line = false;   // CORE-OWN-LINE-2026-11-15: a promotion to Core Investment is to full Core status (rules section 7)
-    // a promotion; an earlier promotion's slot name is kept (it identifies the zero-size row that promotion left behind)
     if (!t.promoted_from) t.promoted_from = TRANCHE_KIND_LABEL[from];
     t.type_history[t.type_history.length - 1].previous_promoted_at = t.promoted_at || null;
     t.promoted_at = today;
   } else if (from === 'core') {   // only from Core: Probing <-> Speculative follow the same rule, so nothing restarts
-    // dated to the latest close the page judges on (not the calendar day), so the restart takes effect on the bars shown
-    // now: a Core Investment tranche was never under the 10-day stop-loss rule, so no old confirmation is carried over
     if (!Array.isArray(t.stop_history)) t.stop_history = [];
+    if (opts.line) t.stop_ma = opts.line;
     var ma = stopMaFor(key, t, ticker), onDay = latestCloseDate(ticker);
     if (t.entry_date && onDay < t.entry_date) onDay = t.entry_date;
     t.stop_history.push({ stop_ma: ma, set_on: onDay, exact: true, via: 'type-change', previous: ma, explicit: true,
       note: 'type changed from ' + TRANCHE_KIND_LABEL[from] + ' to ' + TRANCHE_KIND_LABEL[kind] + ' on ' + today + '; the 10-day count restarts from the close of ' + onDay });
-  }
-  saveEdits(); render();
-  if (kind === 'core' && t.target_size_pct > CORE_TRANCHE_SIZE + 1e-9) openSplit(invIdx, key);
+  } else if (opts.line) t.stop_ma = opts.line;
 }
 function setExitDate(invIdx, key, value) {
   var t = getEdit(invIdx, key);
@@ -3423,6 +3660,13 @@ function setStopMaEdit(invIdx, slotType, inputEl) {
     return;
   }
   var t0 = getEdit(invIdx, slotType), tk0 = effectiveTicker(CONFIG.investments[invIdx], invIdx);
+  var k0 = trancheKind(t0, tk0), al0 = allowedLines(invIdx, tk0, k0), was0 = stopMaFor(slotType, t0, tk0);   // PMS-PROMOTION-2026-11-18
+  if (al0.indexOf(v) < 0) { flashError('This ' + TRANCHE_KIND_LABEL[k0] + ' tranche may use ' + allowedLinesText(al0) + ' (Position Entry and Exit Rules, section 2).'); inputEl.value = was0 || ''; return; }
+  if (trancheHeld(t0) && maDays(v) > maDays(was0) && !(k0 === 'core' && !trancheOwnLineMarked(t0, tk0))) {   // a wider line is a promotion (section 7)
+    var ptw = promotionTest(tk0, t0, { toCore: false, ma: v });
+    if (!confirm('Widen tranche ' + trancheNumber(invIdx, slotType) + ' of ' + tk0 + ' from the ' + was0 + ' to the ' + v + ' (a promotion)?\n\n' + promotionTestText(ptw) + '\n\nYour decision; continue?')) { inputEl.value = was0 || ''; return; }
+    recordPromotionCheck(t0, 'line widened from ' + was0 + ' to ' + v, ptw, ptw && ptw.ok);
+  }
   if (trancheOwnLineMarked(t0, tk0) && OWN_LINE_LINES.indexOf(v) < 0) { flashError('A Core tranche\'s own line is the 50, 100, 150 or 200-day line.'); inputEl.value = stopMaFor(slotType, t0, tk0) || ''; return; }   // CORE-OWN-LINE-2026-11-15
   if (trancheKind(t0, tk0) !== 'core' || trancheOwnLineMarked(t0, tk0)) {   // PMS-MA-ABOVE-2026-11-14: a changed line is checked on the latest close (CORE-OWN-LINE-2026-11-15: an own line too)
     var why0 = maNotSelectable(tk0, null, v);
@@ -3534,7 +3778,7 @@ function holdingStatus(ticker) {
 }
 // SIX-NAMES-2026-11-14 (D-MD-TM-61): the holding's Investment Classification under the six names (display only;
 // pms-data/held-classifications.json, embedded by generate_position_data.py as POSITIONS.held_classifications).
-function heldClassName(ticker) {
+function heldClassNameFromFile(ticker) {   // PMS-PROMOTION-2026-11-18: the fallback; heldClassName reads the page's record first
   var hc = (typeof POSITIONS !== 'undefined' && POSITIONS && POSITIONS.held_classifications) || {};
   var k = holdingKey(ticker), out = null;
   Object.keys(hc).forEach(function (t) { if (holdingKey(t) === k) out = hc[t]; });
@@ -3982,7 +4226,10 @@ function onDrop(ev, invIdx, slotType) {
   if (gate && gate !== 'OK') {
     if (!confirm(gate)) { onDragEnd(ev); return; }
   }
-  if (PB_TYPES[fromSlot] && MM_TYPES[toSlot]) {
+  if (PB_TYPES[fromSlot] && MM_TYPES[toSlot]) {   // PMS-PROMOTION-2026-11-18: retired; it skipped the promotion test
+    flashError('To promote a tranche, change its Type to Core Investment, widen its MA for stop-loss, or use Classification on the stock\'s Total row: the promotion test is shown first.'); onDragEnd(ev); return;
+  }
+  if (false) {
     pendingPromote = { invIdx: invIdx, fromSlot: fromSlot, toSlot: toSlot };
     var ticker = CONFIG.investments[invIdx].ticker;
     document.getElementById('promoteText').textContent = 'Promoting ' + ticker + ' from ' + fromSlot + ' → ' + toSlot + '. Original entry preserved. Pick the MA for the stop-loss:';
@@ -5168,16 +5415,31 @@ function renderStickyHeaderTable() {
 }
 // D-PMS-V4-159 (7-Nov-2026): the floating heading takes the main table's measured column widths, so its labels can never
 // drift off their columns (they did whenever the main table's spare width went to different columns from the heading's).
-function syncStickyHeaderWidths() {
+// PMS-FIT-2026-11-18 (Richard, 17-Nov-2026: "Needs to fit with no horizontal scrolling"; "Q1 = You decide", 18-Nov-2026): at 1920
+// pixels the table fits at full size with the at-entry columns hidden; in a narrower window (or with them shown) it is drawn
+// smaller to fit, never below 75%, rather than scrolling sideways.
+var POS_ZOOM = 1;
+function fitPosTable() {
+  var main = document.getElementById('posTable'), head = document.getElementById('stickyHeaderTable');
+  if (!main || !main.parentElement) return;
+  main.style.zoom = ''; if (head) head.style.zoom = ''; POS_ZOOM = 1;
+  var need = main.scrollWidth, have = main.parentElement.clientWidth;
+  if (!need || !have || need <= have + 1) return;
+  POS_ZOOM = Math.max(0.75, Math.floor(have / need * 1000) / 1000);
+  main.style.zoom = String(POS_ZOOM); if (head) head.style.zoom = String(POS_ZOOM);
+}
+window.addEventListener('resize', function () { try { fitPosTable(); syncStickyHeaderWidths(true); } catch (e) {} });
+function syncStickyHeaderWidths(noFit) {
   var t = document.getElementById('stickyHeaderTable'), main = document.getElementById('posTable');
   if (!t || !main) return;
+  if (!noFit) fitPosTable();
   var ths = Array.prototype.filter.call(main.querySelectorAll('thead tr:nth-child(2) th'), function (th) { return th.offsetParent !== null; });
   var tw = main.getBoundingClientRect().width;
   if (!ths.length || !tw) return;   // the Position manager is not on screen; showing the heading re-syncs
   var cols = t.querySelectorAll('colgroup col');
   if (cols.length !== ths.length) return;
-  ths.forEach(function (th, i) { cols[i].style.width = th.getBoundingClientRect().width + 'px'; });
-  t.style.width = tw + 'px';
+  ths.forEach(function (th, i) { cols[i].style.width = (th.getBoundingClientRect().width / POS_ZOOM) + 'px'; });   // PMS-FIT-2026-11-18
+  t.style.width = (tw / POS_ZOOM) + 'px';
 }
 
 // === D-PMS-192 (07-Aug-26): Position Manager sort ===
@@ -5465,16 +5727,16 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   }
   var wasNote = (exited && edit.exited_size_pct != null) ? '<span class="was-inline">was ' + (edit.exited_size_pct * 100).toFixed(1) + '%</span>' : '';
   cells += '<td class="pct-cell"><span class="input-with-suffix"><input type="number" step="any" min="0" class="edit-input pct" value="' + esc(decimalToPctInput(pctAumDecimal)) + '" placeholder="' + (KIND_CAP_DECIMAL[kind] * 100).toFixed(1) + '"' + dis
-    + ' onchange="' + (isNew ? onNew('target_size_pct') : call('setPctEdit', ',this')) + '"><span class="input-suffix">%</span></span>' + sizeHint + splitBtn + wasNote + '</td>';
+    + ' onchange="' + (isNew ? onNew('target_size_pct') : call('setPctEdit', ',this')) + '"><span class="input-suffix">%</span></span>' + ((!exited && !isNew && partialSalesNote(edit)) ? partialSalesNote(edit) : sizeHint) + splitBtn + wasNote + '</td>';
   // --- MA for stop-loss + MA→stop buffer: every tranche has both and can set them (Richard, 6-Nov-2026: "a consistent visual
   // framework for all tranches"); on a Core Investment tranche the cell is shaded and the levels are information only
   var notUsedTitle = ' title="' + esc(CORE_INFO_TEXT) + '"';
   // CORE-OWN-LINE-2026-11-15: a Core tranche shows its "own line" tick (a new Core tranche is created ticked)
   var ownTick = (kind === 'core' && !isPlaceholder && !exited && (isNew || ownMarked)) ? '<label class="own-line-tick" title="' + esc(OWN_LINE_TEXT) + '"><input type="checkbox"' + ((isNew || ownMarked) ? ' checked' : '') + (isNew ? ' disabled' : '')
     + ' onchange="setOwnLine(' + invIdx + ',\'' + slotType + '\',this.checked,this)">own</label>' : '';
-  cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><input type="text" class="edit-input ma' + (maColour(stopMa) ? ' ma-col" style="color:' + maColour(stopMa) + ';border-color:' + maColour(stopMa) : '') + '" list="maQuickPicks" autocomplete="off" value="' + esc(stopMa || '') + '"' + dis
-    + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '">' + ownTick + '</td>';
-  cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
+  cells += '<td class="col-key-bold' + (shadeCore ? ' cell-not-used' : '') + (ownTick ? ' ma-own-cell' : '') + '"' + (shadeCore ? notUsedTitle : '') + '><select class="edit-input ma' + (maColour(stopMa) ? ' ma-col" style="color:' + maColour(stopMa) + ';border-color:' + maColour(stopMa) : '') + '"' + dis + ' title="' + esc('Lines this tranche may use (Position Entry and Exit Rules, section 2): ' + allowedLinesText(allowedLines(invIdx, ticker, kind)) + (isNew ? '' : '. A wider line is a promotion: the test is shown before it changes.')) + '"'
+    + ' onchange="' + (isNew ? onNew('stop_ma') : call('setStopMaEdit', ',this')) + '">' + maOptionsHtml(allowedLines(invIdx, ticker, kind), stopMa) + '</select>' + ownTick + '</td>';
+  cells += '<td' + (shadeCore ? ' class="cell-not-used"' + notUsedTitle : '') + '><span class="input-with-suffix"><input type="number" step="any" min="0" max="50" class="edit-input pct buf" value="' + esc((bufferDecimal * 100).toFixed(1)) + '" placeholder="6"' + dis
     + ' onchange="' + (isNew ? onNew('buffer_pct') : call('setBufferEdit', ',this')) + '"><span class="input-suffix">%</span></span></td>';
   // --- 4 derived "at entry" cells (col-atentry, hideable)
   var notUsed = '<span class="not-used"' + notUsedTitle + '>not used</span>';
@@ -5527,9 +5789,9 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
       + (r.breach && r.breach.core200 ? ' ' + breachBadge(r) : '') + '</td>';   // CORE-200D-RULE-2026-11-12
   } else if (r && r.ok && r.own_line) {   // CORE-OWN-LINE-2026-11-15: its own line's verdict, then the holding's 200-day line rule
     cells += '<td class="col-group-start info-cell"><span class="badge b-own" title="' + esc(OWN_LINE_TEXT) + '">own line</span> ' + breachBadge(r)
-      + (r.core200 ? ' ' + breachBadge({ ok: true, breach: r.core200 }) : '') + '</td>';
+      + (r.core200 ? ' ' + breachBadge({ ok: true, breach: r.core200 }) : '') + promotionFlagHtml(promotionAvailable(invIdx, slotType, edit, ticker)) + '</td>';
   } else if (r && r.ok) {
-    cells += '<td class="col-group-start info-cell">' + breachBadge(r) + '</td>';
+    cells += '<td class="col-group-start info-cell">' + breachBadge(r) + promotionFlagHtml(promotionAvailable(invIdx, slotType, edit, ticker)) + '</td>';
   } else {
     cells += '<td class="col-group-start">—</td>';
   }
@@ -5580,7 +5842,12 @@ function renderInvTotalsRow(inv, invIdx, view) {
   var addOpen = !!showNewRow[invIdx];
   var label = '<span class="tot-word">Total</span>'
     + '<button class="btn-addtr" onclick="showNewTrancheRow(' + invIdx + ')" title="' + (addOpen ? 'Close the row for a new tranche' : 'Open a row to enter a new tranche for this stock') + '">' + (addOpen ? 'Cancel new tranche' : '+ Add tranche') + '</button>'
-    + (ticker ? '<button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Remove ' + esc(ticker) + ' from portfolio">× Remove</button>' : '');
+    + '';
+  var saleBtns = ticker ? '<button class="btn-addtr" onclick="openClassModal(' + invIdx + ')" title="Change the classification ' + esc(ticker) + ' is held under; the tranches\' types follow it, with the promotion test shown">Classification</button>'
+    + '<button class="btn-addtr" onclick="openSaleModal(' + invIdx + ',false)" title="Record a sale of part or all of any tranche, dated">Sell part</button>'
+    + '<button class="btn-addtr" onclick="openSaleModal(' + invIdx + ',true)" title="Record 0% on every live tranche on the latest close (date editable); the history is kept">Sell whole holding</button>'
+    : '';
+  if (ticker) label += '<button class="btn-remove-inv" onclick="clearTickerSlot(' + invIdx + ')" title="Deletes ' + esc(ticker) + ' and every tranche from the Position Management System with no sale recorded. For a mistake only; to record a sale use Sell whole holding.">Delete (for mistakes only)</button>';
   var relHtml = ticker ? relTagHtml(relPerf(ticker, 5), 'L1W', 'the last week (5 trading days)') + relTagHtml(relPerf(ticker, 10), 'L2W', 'the last two weeks (10 trading days)') : '';
   var md = ticker ? mdBadgesHtml(ticker) : '';
   return '<tr class="inv-totals">'
@@ -5595,7 +5862,7 @@ function renderInvTotalsRow(inv, invIdx, view) {
     + '<td>' + pctBp(sumPnl) + '</td>'
     + (anyStopRule ? '<td class="col-totals-emphasis ' + lossRiskCls(sumRisk) + '">' + pctBp(sumRisk) + '</td>'
                    : '<td class="col-totals-emphasis cell-not-used"><span class="not-used" title="' + esc(CORE_NOT_USED_TEXT) + '">not used</span></td>')
-    + '<td colspan="2" class="col-group-start"></td></tr>';
+    + '<td colspan="2" class="col-group-start al tot-sale">' + saleBtns + '</td></tr>';
 }
 // D-PMS-V4-159: the stock's share price relative to STOXX Europe 600 (the Portfolio overview's measure), green ahead, red behind
 function relTagHtml(v, label, span) {
