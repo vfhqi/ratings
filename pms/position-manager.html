@@ -2236,7 +2236,7 @@ function promotionAvailable(invIdx, key, t, ticker) {
   var pc = promotionTest(ticker, t, { toCore: true, ma: '200D' });
   if (pc && pc.ok && !(pc.mv5 != null && pc.mv5 < 0)) return { to: 'full Core status' + (kind === 'core' ? '' : ' (Core Investment)'), test: pc };
   var cur = maDays(stopMaFor(key, t, ticker)), lines = allowedLines(invIdx, ticker, kind), best = null;
-  lines.forEach(function (l) { if (maDays(l) > cur) { var p = promotionTest(ticker, t, { toCore: false, ma: l }); if (p && p.ok && !(p.mv5 != null && p.mv5 < 0)) best = { to: 'the ' + l + ' line', test: p }; } });
+  lines.forEach(function (l) { if (maDays(l) > cur) { var p = promotionTest(ticker, t, { toCore: false, ma: l }); if (p && p.ok && !(p.mv5 != null && p.mv5 < 0)) best = { to: 'the ' + maDays(l) + '-day line', test: p }; } });
   return best;
 }
 function promotionFlagHtml(pa) {
