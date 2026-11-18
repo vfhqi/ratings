@@ -1505,6 +1505,7 @@ async function mergeDiskStateIntoMemory() {
     if (parsed && typeof parsed === 'object' && parsed.EDITS) {
       diskEdits = parsed.EDITS;
       diskMeta = parsed._meta;
+      DISK_BASE = JSON.parse(text).EDITS; DISK_BASE_AT = (diskMeta && diskMeta.saved_at) || null;   // MERGE-BEFORE-SAVE-2026-11-18: merged here, so the write below is not a second merge
     }
   } catch (e) {
     if (e.name !== 'NotFoundError') console.warn('mergeDiskStateIntoMemory read error', e);
@@ -1525,6 +1526,7 @@ async function mergeDiskStateIntoMemory() {
   if (memoryCount === 0) {
     // Memory empty, disk has data — adopt disk
     EDITS = diskEdits;
+    DISK_BASE = JSON.parse(JSON.stringify(diskEdits)); DISK_BASE_AT = (diskMeta && diskMeta.saved_at) || null;   // MERGE-BEFORE-SAVE-2026-11-18
     lastAutoBackupDate = diskMeta && diskMeta.last_auto_backup_date;
     cleanupCorruptPromoteMetadata(); if (typeof applyStopHistoryBackfill === 'function' && typeof EDITS === 'object' && EDITS) { applyStopHistoryBackfill(); }  // D-PMS-67
     saveEditsToLocalStorage();
@@ -1653,8 +1655,110 @@ function countSlots(edits) {
 // Legacy fn kept for backwards-compat in case anything calls it
 async function tryLoadStateFromDisk() { return mergeDiskStateIntoMemory(); }
 
-async function writeStateToDisk() {
+// MERGE-BEFORE-SAVE-2026-11-18 (D-PMS-V4-181, the page-overwrite defect; Richard, 18-Nov-2026, Message 118: fixed first).
+// Before 18-Nov-2026 the page wrote its whole copy over pms-data/pms-state.json. A page left open therefore undid a newer
+// save made by scripts/pms_state_write.py or another tab (18-Nov-2026 12:05:34 UTC: Richard's orders written at 12:04:58
+// were undone). Now every write first re-reads the saved file. When someone else saved it after this page last wrote or
+// read it, the two are merged tranche by tranche against the copy this page last wrote (DISK_BASE): what only the other
+// save changed is taken from it, what only this page changed is kept, and where both changed the same tranche the copy
+// edited later wins (editRecency), a different tranche under the same key is kept under a new key, and each such case is
+// reported. Writes are queued one at a time, so two saves never interleave.
+var DISK_BASE = null, DISK_BASE_AT = null, _diskWriteChain = Promise.resolve(), LAST_FOREIGN_MERGE = null;
+function _same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+function threeWayMergeEdits(base, mem, disk, diskSavedAt) {
+  var merged = {}, report = { fromDisk: [], fromPage: [], conflicts: [] };
+  var slots = {};
+  [base || {}, mem || {}, disk || {}].forEach(function (o) { Object.keys(o).forEach(function (k) { slots[k] = true; }); });
+  Object.keys(slots).forEach(function (i) {
+    var B = base ? (base[i] || {}) : null, M = mem[i] || {}, D = disk[i] || {}, out = {};
+    var keys = {};
+    [B || {}, M, D].forEach(function (o) { Object.keys(o).forEach(function (k) { keys[k] = true; }); });
+    var label = function (k) { return 'slot ' + (parseInt(i, 10) + 1) + ' ' + k; };
+    var later = [];
+    Object.keys(keys).forEach(function (k) {
+      var b = B ? B[k] : undefined, m = M[k], d = D[k];
+      if (k === '_t_seq') { var mx = Math.max(+(m || 0), +(d || 0), +(b || 0)); if (mx) out[k] = mx; return; }
+      if (_same(m, d)) { if (d !== undefined) out[k] = d; return; }
+      if (B) {
+        if (_same(m, b)) { if (d !== undefined) out[k] = d; report.fromDisk.push(label(k) + (d === undefined ? ' (removed by the other save)' : '')); return; }
+        if (_same(d, b)) { if (m !== undefined) out[k] = m; report.fromPage.push(label(k)); return; }
+      } else {
+        // no base (first write after the page opened): the older two-way rule, a key on one side only is kept unless the
+        // page's copy is provably older than the other save
+        if (m === undefined) { out[k] = d; report.fromDisk.push(label(k)); return; }
+        if (d === undefined) {
+          var older = !!(m && typeof m === 'object' && m.last_edited_at && diskSavedAt && String(m.last_edited_at) < String(diskSavedAt));
+          if (older) { report.fromDisk.push(label(k) + ' (removed by the other save)'); return; }
+          out[k] = m; report.fromPage.push(label(k)); return;
+        }
+      }
+      // both sides changed this key
+      var isObj = m && d && typeof m === 'object' && typeof d === 'object';
+      if (isObj && m.tranche_id && d.tranche_id && m.tranche_id !== d.tranche_id) {
+        out[k] = d; later.push(m);   // two different tranches under one key: both kept
+        report.conflicts.push(label(k) + ': two different tranches under one key; the other save\'s kept here, this page\'s moved to a new key');
+        return;
+      }
+      if (m === undefined) { out[k] = d; report.conflicts.push(label(k) + ': removed on this page but changed by the other save; the other save\'s copy kept'); return; }
+      if (d === undefined) { out[k] = m; report.conflicts.push(label(k) + ': removed by the other save but changed on this page; this page\'s copy kept'); return; }
+      if (isObj) {
+        var pageWins = editRecency(m) > editRecency(d);
+        out[k] = pageWins ? m : d;
+        report.conflicts.push(label(k) + ': changed by both; the copy edited later (' + (pageWins ? 'this page' : 'the other save') + ') kept');
+        return;
+      }
+      out[k] = m; report.conflicts.push(label(k) + ': changed by both; this page\'s value kept');
+    });
+    later.forEach(function (t) {
+      var n = +(out._t_seq || 0);
+      Object.keys(out).forEach(function (k) { var mm = /^T(\d+)$/.exec(k); if (mm) n = Math.max(n, +mm[1]); });
+      out['T' + (n + 1)] = t; out._t_seq = n + 1;
+    });
+    if (Object.keys(out).length) merged[i] = out;
+  });
+  return { merged: merged, report: report };
+}
+async function mergeForeignSaveBeforeWrite() {
+  var parsed = null;
+  for (var attempt = 0; attempt < 2 && !parsed; attempt++) {
+    try {
+      var fh = await pmsDataDirHandle.getFileHandle('pms-state.json', { create: false });
+      parsed = JSON.parse(await (await fh.getFile()).text());
+    } catch (e) {
+      if (e && e.name === 'NotFoundError') return true;   // no file yet: nothing to merge
+      if (attempt === 0) { await new Promise(function (r) { setTimeout(r, 400); }); continue; }
+      console.error('[pms] the saved file could not be read before saving', e);
+      flashError('Not saved to disk: the saved positions file could not be read first (' + (e && e.message) + '), so this page did not write over it. Your change is kept in this browser; reload the page.');
+      return false;
+    }
+  }
+  if (!parsed || !parsed.EDITS) return true;
+  var dAt = (parsed._meta && parsed._meta.saved_at) || null;
+  var mine = null; try { mine = localStorage.getItem('pms_v6_written'); } catch (e) {}
+  if (dAt && ((DISK_BASE_AT && dAt === DISK_BASE_AT) || (!DISK_BASE_AT && mine && dAt === mine))) return true;   // nobody else saved
+  var res = threeWayMergeEdits(DISK_BASE, EDITS, parsed.EDITS, dAt);
+  var dup = dedupeTrancheIds(res.merged);
+  EDITS = res.merged;
+  if (typeof cleanupCorruptPromoteMetadata === 'function') cleanupCorruptPromoteMetadata();
+  saveEditsToLocalStorage();
+  LAST_FOREIGN_MERGE = { at: new Date().toISOString(), other_save: dAt, report: res.report, duplicates: dup };
+  console.warn('[pms] MERGE-BEFORE-SAVE: the file was saved by someone else at ' + dAt + ' after this page last wrote it (' + (DISK_BASE_AT || mine) + '). Taken from it: '
+    + (res.report.fromDisk.join(', ') || 'nothing') + '. Kept from this page: ' + (res.report.fromPage.join(', ') || 'nothing') + '. Both changed: ' + (res.report.conflicts.join('; ') || 'none') + '.');
+  var when = '';
+  try { when = new Date(dAt).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { when = String(dAt); }
+  if (res.report.conflicts.length) flashError('The saved positions were changed elsewhere at ' + when + ' (a script or another tab). Merged before saving: ' + res.report.fromDisk.length + ' change(s) taken from it, ' + res.report.fromPage.length + ' kept from this page; ' + res.report.conflicts.length + ' tranche(s) changed in both places: ' + res.report.conflicts.slice(0, 3).join('; ') + (res.report.conflicts.length > 3 ? '; ...' : '') + '. Check them.');
+  else flashSuccess8s('The saved positions were changed elsewhere at ' + when + ' (a script or another tab). Merged before saving: ' + res.report.fromDisk.length + ' change(s) taken from it, ' + res.report.fromPage.length + ' kept from this page. Nothing was overwritten.');
+  try { if (typeof render === 'function') render(); } catch (e) { console.warn('[pms] render after merge', e); }
+  return true;
+}
+function writeStateToDisk() {
+  var p = _diskWriteChain.then(_writeStateToDiskNow, _writeStateToDiskNow);
+  _diskWriteChain = p.catch(function () {});
+  return p;
+}
+async function _writeStateToDiskNow() {
   if (!pmsDataDirHandle) return false;
+  if (!(await mergeForeignSaveBeforeWrite())) return false;   // MERGE-BEFORE-SAVE-2026-11-18
   var payload = {
     _meta: {
       saved_at: new Date().toISOString(),
@@ -1666,9 +1770,11 @@ async function writeStateToDisk() {
   try {
     var fileHandle = await pmsDataDirHandle.getFileHandle('pms-state.json', { create: true });
     var writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(payload, null, 2));
+    var _text = JSON.stringify(payload, null, 2);   // MERGE-BEFORE-SAVE-2026-11-18: the exact copy written is the next base
+    await writable.write(_text);
     await writable.close();
     try { localStorage.setItem('pms_v6_written', payload._meta.saved_at); localStorage.setItem('pms_edits_base_at', payload._meta.saved_at); localStorage.removeItem('pms_edits_offline_since'); } catch (e) {}   // D-PMS-V4-173
+    DISK_BASE = JSON.parse(_text).EDITS; DISK_BASE_AT = payload._meta.saved_at;   // MERGE-BEFORE-SAVE-2026-11-18: the copy now on disk
     lastSavedAt = payload._meta.saved_at; lastSavedToDisk = true; renderSavedAt();  // D-PMS-193
     return true;
   } catch (e) {
