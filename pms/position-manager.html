@@ -852,7 +852,7 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .pgm-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 10px; }
 .pgm-table th, .pgm-table td { border-bottom: 1px solid var(--border); padding: 4px 6px; text-align: left; }
 .pgm-test span[title] { color: var(--fg3); cursor: help; text-decoration: underline dotted; }
-.tot-sale .btn-addtr, .tot-sale .btn-remove-inv, .tot-label .btn-remove-inv { margin-right: 4px; font-size: 10.5px; padding: 1px 6px; }
+.tot-sale .btn-addtr, .tot-sale .btn-remove-inv, .tot-label .btn-remove-inv { margin-right: 2px; font-size: 10.5px; padding: 1px 6px; }
 .tot-label .btn-addtr, .tot-sale .btn-addtr { font-size: 10.5px; padding: 1px 6px; }
 .edit-input.pct.buf { width: 36px; }
 select.kind-select { width: 128px !important; font-size: 10px !important; padding: 1px 1px !important; }
@@ -1098,7 +1098,7 @@ var BACKUP_RETENTION_DAYS = 30;
 // this column carries a breach date, and making a breach harder to read to save 18px is the
 // wrong trade. The table already scrolls horizontally inside its own container, so the extra
 // width costs nothing the reader notices.
-var COL_WIDTHS = ['168px', '158px', '70px', '140px', '172px', '80px', '72px', '58px', '58px', '58px', '58px', '66px', '66px', '66px', '80px', '64px', '104px', '88px', '70px', '74px', '280px', '28px'];   // CORE-OWN-LINE-2026-11-15: the Information column fits one verdict badge a line (was 210px, which cut the 200-day line rule's badge off)
+var COL_WIDTHS = ['168px', '158px', '70px', '140px', '172px', '82px', '74px', '58px', '58px', '58px', '58px', '66px', '66px', '66px', '80px', '64px', '104px', '88px', '70px', '74px', '280px', '28px'];   // CORE-OWN-LINE-2026-11-15: the Information column fits one verdict badge a line (was 210px, which cut the 200-day line rule's badge off)
 //   // D-PMS-V4-159: one-line rows; the surplus width is spread over every column   // D-PMS-V4-150: ticker, type, last edited, date entered, % at entry, MA, buffer, 4 at entry, 4 current, % of AUM, UBS % of AUM, price move, P&L, loss risk, stop state, delete  // D-PMS-93 #6: Date col 110->140 to fit 'Promoted from' badge on one line
 var TOTAL_COLS = COL_WIDTHS.length;  // D-PMS-191: single source for full-width colspans
 
@@ -5419,7 +5419,7 @@ function renderStickyHeaderTable() {
 // drift off their columns (they did whenever the main table's spare width went to different columns from the heading's).
 // PMS-FIT-2026-11-18 (Richard, 17-Nov-2026: "Needs to fit with no horizontal scrolling"; "Q1 = You decide", 18-Nov-2026): at 1920
 // pixels the table fits at full size with the at-entry columns hidden; in a narrower window (or with them shown) it is drawn
-// smaller to fit, never below 75%, rather than scrolling sideways.
+// smaller to fit, never below 70%, rather than scrolling sideways.
 var POS_ZOOM = 1;
 function fitPosTable() {
   var main = document.getElementById('posTable'), head = document.getElementById('stickyHeaderTable');
@@ -5427,7 +5427,7 @@ function fitPosTable() {
   main.style.zoom = ''; if (head) head.style.zoom = ''; POS_ZOOM = 1;
   var need = main.scrollWidth, have = main.parentElement.clientWidth;
   if (!need || !have || need <= have + 1) return;
-  POS_ZOOM = Math.max(0.75, Math.floor(have / need * 1000) / 1000);
+  POS_ZOOM = Math.max(0.7, Math.floor(have / need * 1000) / 1000);
   main.style.zoom = String(POS_ZOOM); if (head) head.style.zoom = String(POS_ZOOM);
 }
 window.addEventListener('resize', function () { try { fitPosTable(); syncStickyHeaderWidths(true); } catch (e) {} });
@@ -5845,7 +5845,7 @@ function renderInvTotalsRow(inv, invIdx, view) {
   var label = '<span class="tot-word">Total</span>'
     + '<button class="btn-addtr" onclick="showNewTrancheRow(' + invIdx + ')" title="' + (addOpen ? 'Close the row for a new tranche' : 'Open a row to enter a new tranche for this stock') + '">' + (addOpen ? 'Cancel new tranche' : '+ Add tranche') + '</button>'
     + '';
-  var saleBtns = ticker ? '<button class="btn-addtr" onclick="openClassModal(' + invIdx + ')" title="Change the classification ' + esc(ticker) + ' is held under; the tranches\' types follow it, with the promotion test shown">Classification</button>'
+  var saleBtns = (ticker && liveTrancheKeys(invIdx).length) ? '<button class="btn-addtr" onclick="openClassModal(' + invIdx + ')" title="Change the classification ' + esc(ticker) + ' is held under; the tranches\' types follow it, with the promotion test shown">Classification</button>'
     + '<button class="btn-addtr" onclick="openSaleModal(' + invIdx + ',false)" title="Record a sale of part or all of any tranche, dated">Sell part</button>'
     + '<button class="btn-addtr" onclick="openSaleModal(' + invIdx + ',true)" title="Record 0% on every live tranche on the latest close (date editable); the history is kept">Sell whole holding</button>'
     : '';
@@ -6203,6 +6203,7 @@ function breachBadge(r) {
     if (name === 'overview' && typeof fitPortfolioToViewport === 'function') {
       setTimeout(fitPortfolioToViewport, 80);
     }
+    if (name === 'pms' && typeof syncStickyHeaderWidths === 'function') setTimeout(function () { try { syncStickyHeaderWidths(); } catch (e) {} }, 80);   // PMS-FIT-2026-11-18: fit when the table is first shown
   }
   function getInitialTab() {
     // 1. URL hash
