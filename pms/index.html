@@ -1243,7 +1243,7 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('btnTrancheByDate').addEventListener('click', function() { setTrancheOrder(false); });
   document.getElementById('btnRestoreBackup').addEventListener('click', restoreFromBackup);
   // Restore hide-at-entry state from localStorage (D-PMS-39)
-  try { var _hae = localStorage.getItem('pms_hide_at_entry_v5c'); hideAtEntry = (_hae == null) ? true : _hae === '1'; } catch(e) { hideAtEntry = true; }   // PMS-FIT-2026-11-18: hidden unless shown (Richard, 18-Nov-2026, "Q1 = You decide")
+  try { var _hae = localStorage.getItem('pms_hide_at_entry_v18'); hideAtEntry = (_hae == null) ? true : _hae === '1'; } catch(e) { hideAtEntry = true; }   // PMS-FIT-2026-11-18: hidden unless shown (Richard, 18-Nov-2026, "Q1 = You decide")
   // D-PMS-98: restore hide-alerts state (default OFF — visible)
   try { hideAlerts = localStorage.getItem('pms_hide_alerts_v5j_12') === '1'; } catch(e) {}
   // D-PMS-115: restore spark-collapsed state (default OFF — expanded)
@@ -2180,6 +2180,8 @@ function allowedLines(invIdx, ticker, kind) {
   if (kind === 'probing' && holdingClassIsCore(invIdx, ticker)) return LINES_S2_PROBING;
   return LINES_BET;
 }
+// PMS-NAMES-2026-11-18 (build list item 5: "Hide the old record names MM1..MM4, PB1, PB2, T<n>"): a promotion's old slot name in plain words
+function promotedFromText(v) { v = String(v || ''); return /^PB\d+$/.test(v) ? 'a Probing Bet' : /^MM\d+$/.test(v) ? 'a Core Investment tranche' : /^T\d+$/.test(v) ? 'an earlier tranche' : (v ? 'a ' + v : 'an earlier type'); }
 function maOptionsHtml(lines, cur) {   // PMS-PROMOTION-2026-11-18: a line no longer allowed is shown, marked, until it is changed
   var o = lines.map(function (l) { return '<option value="' + l + '"' + (l === cur ? ' selected' : '') + '>' + l + '</option>'; }).join('');
   return (cur && lines.indexOf(cur) < 0 ? '<option value="' + esc(cur) + '" selected>' + esc(cur) + ' (not allowed now)</option>' : '') + o;
@@ -4576,7 +4578,7 @@ function pctInputToDecimal(s) {
 // === Render ===
 function toggleHideAtEntry() {
   hideAtEntry = !hideAtEntry;
-  try { localStorage.setItem('pms_hide_at_entry_v5c', hideAtEntry ? '1' : '0'); } catch(e) {}
+  try { localStorage.setItem('pms_hide_at_entry_v18', hideAtEntry ? '1' : '0'); } catch(e) {}
   applyHideAtEntry();
   render();                  // D-PMS-V4-154: rebuild the column widths of the Position manager too
   renderPortfolioSection();  // D-PMS-94d: re-render to show/hide Entry col conditionally
@@ -5708,7 +5710,7 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   var promo = '', splitBtn = '';
   if (edit && edit.promoted_from && edit.promoted_from !== slotType) {
     // D-PMS-V4-159: the promotion is an arrow beside the date (its details on hover); the Split button sits beside the size
-    promo = '<span class="promo-icon" title="Promoted from ' + esc(edit.promoted_from) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date shown is the original entry date.">&#8593;</span>';
+    promo = '<span class="promo-icon" title="Promoted from ' + esc(promotedFromText(edit.promoted_from)) + ' on ' + esc(fmtDate(edit.promoted_at)) + '. The date shown is the original entry date.">&#8593;</span>';
     if (kind === 'core' && !exited && edit.target_size_pct > CORE_TRANCHE_SIZE + 1e-9)
       splitBtn = '<button class="btn-split" onclick="' + call('openSplit') + '" title="This tranche is ' + (edit.target_size_pct * 100).toFixed(2) + '% of AUM at cost; a Middle Innings Core Investment tranche is 1.67%. Split it.">Split</button>';
   }
