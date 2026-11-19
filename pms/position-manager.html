@@ -5921,7 +5921,7 @@ function mdBadgesHtml(ticker) {
   if (!fr || fr.cls_today === undefined) return '<span class="md-badge cls-today cls-none" title="The daily classification file has not reached this page yet">Classification today: not yet built</span>';
   var name = fr.cls_today || 'none of the six fits', when = fr.cls_date ? ' (close of ' + fr.cls_date + ')' : '';
   return '<span class="md-badge cls-today" title="' + esc('Investment Classification as new capital today under the signed rules' + when + ': ' + name + '. Furthest step: ' + (fr.cls_step || 'none') + '. Your held classification is under the stock\'s name.') + '">Today: ' + esc(name) + '</span>'
-    + '<span class="md-badge cls-step" title="Furthest step reached on that classification\'s route (early indicator, late indicator, trigger day)">' + esc(fr.cls_step || 'none') + '</span>';
+    + '<span class="md-badge cls-step" title="Furthest step reached on that classification\'s route (Early Stage Indicator, Late Stage Indicator, trigger day)">' + esc(({ 'early indicator': 'Early Stage Indicator', 'late indicator': 'Late Stage Indicator' })[fr.cls_step] || fr.cls_step || 'none') + '</span>';
 }
 // D-PMS-V4-159: the stock's name cell takes the colour of its most serious tranche (exit confirmed, then testing, then
 // bought below the MA), the same colours as the tranche rows
