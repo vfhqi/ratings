@@ -2166,7 +2166,15 @@ var SIX_CLASSES = [
 function sixByKey(k) { for (var i = 0; i < SIX_CLASSES.length; i++) if (SIX_CLASSES[i].key === k) return SIX_CLASSES[i]; return null; }
 function sixByName(n) { for (var i = 0; i < SIX_CLASSES.length; i++) if (SIX_CLASSES[i].name === n) return SIX_CLASSES[i]; return null; }
 var CORE_CLASS_NAMES = { 'Reinforcing / Proven S2 Core Investment': true, 'Broadening / Early S2 Core Investment': true };
-var LINES_CORE = ['50D', '100D', '150D', '200D'], LINES_S2_PROBING = ['10D', '20D', '50D', '100D', '150D', '200D'], LINES_BET = ['10D', '20D', '50D'];
+var LINES_CORE = ['50D', '100D', '150D', '200D'], LINES_S2_PROBING = ['10D', '20D', '50D', '100D', '150D', '200D'], LINES_BET = ['5D', '10D', '20D', '50D'];
+/* BETS-3-TYPES-2026-11-19 (Richard, Messages 138 and 140): a NEW Speculative or Probing Bet takes the tightest of the 5-day and 10-day lines that the
+   price is above (the stop-loss is that line less 6%); the 10, 20 and 50-day lines are for widening once the price is more than 10% above entry */
+function tightestBetLine(ticker) {
+  var series = (CHART_DATA && CHART_DATA.data || {})[ticker], n = series ? series.length - 1 : -1, best = null, bv = -1;
+  if (n < 0) return '10D';
+  ['5D', '10D'].forEach(function (l) { var v = stopMaValue(series, n, l), px = stopNum(series[n].c); if (v != null && px != null && px > v && v > bv) { bv = v; best = l; } });
+  return best || '10D';
+}
 function maDays(ma) { var m = /^(\d+)D$/.exec(String(ma || '')); return m ? +m[1] : null; }
 function invIdxOfTicker(ticker) {
   var k = holdingKey(ticker), out = -1;
@@ -2541,7 +2549,7 @@ function addTrancheField(invIdx, field, rawValue, inputEl) {
   }
   if (!EDITS[invIdx]) EDITS[invIdx] = {};
   var key = newTrancheKey(invIdx);
-  var t = { type: kind, stop_ma: (allowedLines(invIdx, ticker, kind).indexOf(KIND_DEFAULT_STOP[kind]) >= 0 ? KIND_DEFAULT_STOP[kind] : allowedLines(invIdx, ticker, kind)[allowedLines(invIdx, ticker, kind).length - 1]), _added_at: new Date().toISOString() };
+  var t = { type: kind, stop_ma: ((kind === 'speculative' || kind === 'probing') && allowedLines(invIdx, ticker, kind) === LINES_BET ? tightestBetLine(ticker) : (allowedLines(invIdx, ticker, kind).indexOf(KIND_DEFAULT_STOP[kind]) >= 0 ? KIND_DEFAULT_STOP[kind] : allowedLines(invIdx, ticker, kind)[allowedLines(invIdx, ticker, kind).length - 1])), _added_at: new Date().toISOString() };   /* BETS-3-TYPES-2026-11-19 */
   if (kind === 'core') t.own_line = true;   // CORE-OWN-LINE-2026-11-15: a new Core tranche starts on its own line (rules sections 2 and 5)
   t[field] = value;
   EDITS[invIdx][key] = t;
