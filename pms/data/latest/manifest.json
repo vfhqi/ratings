@@ -46,7 +46,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619905,
+   "bytes": 619918,
    "warnings": []
   },
   "HTRO-SE": {
@@ -61,12 +61,12 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 560069,
+   "bytes": 560087,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 570475,
+   "bytes": 570461,
    "warnings": []
   },
   "ART-ES": {
@@ -84,5 +84,5 @@
   "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 189.9
+ "seconds": 150.9
 }

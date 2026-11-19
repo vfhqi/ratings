@@ -252,9 +252,26 @@ a.uplink { color:#0969da; font-size:11.5px; font-weight:600; text-decoration:und
     var groups = {}; hs.forEach(function (h) { var g = DU.classOf(h.reading, h.probing).group; (groups[g] = groups[g] || []).push(h); });
     var GORDER = ['Reinforcing / Proven S2 Core Investments', 'Broadening / Early S2 Core Investments', 'Inflecting / S1\u2192S2 Probing Bets', 'Bottoming / S1 Speculative Bets', 'Restarting Reinforcing / S3 Speculative Bets', 'Collapsing / S4 Speculative Bets', 'Core Middle Innings Investments', 'Early S2 Probing Bets', 'S1 Speculative Bets', 'S3 Speculative Bets'];   /* SIX-NAMES-2026-11-14: the six names first; the old four as the fallback */
     Object.keys(groups).forEach(function (g) { if (GORDER.indexOf(g) < 0) GORDER.push(g); });   /* never drop a holding whose group is not listed */
-    document.getElementById('picker').innerHTML = (ux ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + GORDER.filter(function (g) { return groups[g]; }).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    /* 19-Nov-2026 (Richard, Message 135): the Capital Deployment Priority lists (Notion's APM priority, High, Medium, Low) under the holdings */
+    var PRI = ['High', 'Medium', 'Low'], pri = {}; if (IDX) IDX.stocks.forEach(function (s) { if (s.p && PRI.indexOf(s.p) >= 0) (pri[s.p] = pri[s.p] || []).push(s); });
+    var priHtml = PRI.filter(function (k) { return pri[k]; }).map(function (k) { return '<optgroup label="Capital Deployment Priority: ' + k + ' (' + pri[k].length + ')">' + pri[k].slice().sort(function (a, b) { return a.n.localeCompare(b.n); }).map(function (s) { return '<option value="' + esc(s.t) + '"' + (ux && s.t === T ? ' selected' : '') + '>' + esc(s.n) + (s.h ? ' (held)' : '') + '</option>'; }).join('') + '</optgroup>'; }).join('');
+    document.getElementById('picker').innerHTML = (ux && !(ux.p && pri[ux.p]) ? '<option value="' + esc(T) + '" selected>' + esc(ux.n) + ' (not held)</option>' : '') + GORDER.filter(function (g) { return groups[g]; }).map(function (g) { return '<optgroup label="' + esc(g) + '">' + groups[g].slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (h) { return '<option value="' + esc(h.t) + '"' + (h.t === T ? ' selected' : '') + '>' + esc(h.name) + '</option>'; }).join('') + '</optgroup>'; }).join('') + priHtml;
     document.getElementById('picker').onchange = function (e) { location.href = links.holding(e.target.value); };
     var op = document.getElementById('os-picker'); op.innerHTML = document.getElementById('picker').innerHTML; op.value = T; op.onchange = document.getElementById('picker').onchange;   /* the one-screen header's copy */
+    /* 19-Nov-2026 (Message 135): the Capital Deployment Priority lists come from the Master Dashboard's own lists file, the one the Multi-stock
+       Dashboard reads, so both dashboards show the same stocks; the index's own field (above) is the fallback */
+    if (IDX) fetch(MASTER + 'multichart/populations.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (P) {
+      if (!P) return; var L = {}; (P.dropdowns || []).forEach(function (g) { (g.options || []).forEach(function (o) { L[o.id] = o.tickers || []; }); });
+      if (!L.p_h && !L.p_m && !L.p_l) return;
+      var byT = {}; IDX.stocks.forEach(function (s) { byT[s.t] = s; });
+      var html = [['High', L.p_h], ['Medium', L.p_m], ['Low', L.p_l]].filter(function (x) { return x[1] && x[1].length; }).map(function (x) {
+        var ss = x[1].map(function (t) { return byT[t] || { t: t, n: t, h: 0 }; }).sort(function (a, b) { return a.n.localeCompare(b.n); });
+        return '<optgroup label="Capital Deployment Priority: ' + x[0] + ' (' + ss.length + ')">' + ss.map(function (s) { return '<option value="' + esc(s.t) + '">' + esc(s.n) + (s.h ? ' (held)' : '') + '</option>'; }).join('') + '</optgroup>';
+      }).join('');
+      ['picker', 'os-picker'].forEach(function (id) { var el = document.getElementById(id); if (!el) return; var v = el.value;
+        [].slice.call(el.querySelectorAll('optgroup')).forEach(function (g) { if (g.label.indexOf('Capital Deployment Priority') === 0) g.parentNode.removeChild(g); });
+        el.insertAdjacentHTML('beforeend', html); el.value = v; });
+    }).catch(function () {});
     findBox();
     if (!T) { fail('No holdings in the data file.'); return; }
     if (held) return getJSON(DATA + fileOf(T)).then(function (Hd) { start(Hd); });
