@@ -1,43 +1,29 @@
 {
- "asof": "2026-11-18",
+ "asof": "2026-11-19",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 602184,
+   "bytes": 602412,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 618465,
+   "bytes": 618995,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 639849,
+   "bytes": 640032,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 576846,
+   "bytes": 576944,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 626926,
-   "warnings": [
-    "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
-    "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-    "sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
-   ]
-  },
-  "THEON-NL": {
-   "file": "THEON-NL.json",
-   "bytes": 349272,
-   "warnings": []
-  },
-  "VLX-GB": {
-   "file": "VLX-GB.json",
-   "bytes": 516689,
+   "bytes": 627292,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -46,32 +32,32 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619918,
+   "bytes": 620106,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 509425,
+   "bytes": 509494,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 510086,
+   "bytes": 510232,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 560087,
+   "bytes": 560224,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 570461,
+   "bytes": 571011,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 543368,
+   "bytes": 543295,
    "warnings": []
   }
  },
@@ -79,10 +65,7 @@
  "warnings": [
   "HTWS-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-  "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
-  "VLX-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
+  "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 150.9
+ "seconds": 75.3
 }

@@ -452,9 +452,9 @@
        sector" as you have it now and "valuation" charts, and in the valuation charts panel, have a toggle between P/E and EV/Sales") */
     var p6 = st.p6 === 'val' ? 'val' : 'peers', pv = st.pv || 'chart', show = function (id, on) { document.getElementById(id).style.display = on ? '' : 'none'; };
     buttons(document.getElementById('os-p6v'), [['peers', 'Peers'], ['val', 'Valuation']], p6, function (k) { st.p6 = k; drawPeers(); });
-    show('os-peerv', p6 === 'peers'); show('os-valf', p6 === 'val'); show('os-vallink', false);   /* the Master Dashboard link removed (Richard, 7-Nov-2026: "Remove bits in red") */
+    show('os-peerv', p6 === 'peers'); show('os-valf', p6 === 'val'); show('os-valw', p6 === 'val'); show('os-vallink', false);   /* the Master Dashboard link removed (Richard, 7-Nov-2026: "Remove bits in red") */
     if (p6 === 'val') { show('os-peerx', false); show('os-peery', false); drawVal(); return; }
-    document.getElementById('os-p6t').textContent = '6. Peers: cohort and sector';
+    document.getElementById('os-p6t').textContent = '6. Peers: cohort and sector'; document.getElementById('os-p6t').title = '';
     buttons(document.getElementById('os-peerv'), [['chart', 'Chart'], ['table', 'Table']], pv, function (k) { st.pv = k; drawPeers(); });
     document.getElementById('os-pw').className = 'pw ' + pv;
     document.getElementById('os-peerx').style.display = document.getElementById('os-peery').style.display = pv === 'chart' ? '' : 'none';
@@ -478,15 +478,20 @@
     var want = st.vf === 'evs' ? 'evs' : 'pe', alt = want === 'pe' ? 'evs' : 'pe', f = (hasF(V, want) || !hasF(V, alt)) ? want : alt, nm = NM[f];
     var gone = f === 'pe' ? 'evs' : 'pe', missing = hasF(V, f) && !hasF(V, gone) ? gone : null;
     buttons(document.getElementById('os-valf'), [['pe', 'P/E'], ['evs', 'EV/Sales']], f, function (k) { st.vf = k; save(); drawVal(); });
+    /* 19-Nov-2026 (Richard, Message 150: "Valuation chart needs toggle to change time frames for the chart"): 2, 5 or 10 years, the windows the
+       Master Dashboard's valuation page offers; remembered for the next stock */
+    var vw = ['2', '5', '10'].indexOf(String(st.vw)) >= 0 ? String(st.vw) : '10';
+    buttons(document.getElementById('os-valw'), [['2', '2Y'], ['5', '5Y'], ['10', '10Y']], vw, function (k) { st.vw = k; save(); drawVal(); });
     if (missing) { var mb = document.querySelector('#os-valf button[data-k="' + missing + '"]'); if (mb) { mb.disabled = true; mb.title = 'No ' + NM[missing] + ' history is stored for ' + m.name; } }
-    valTitle = '6. Valuation: ' + nm + (f !== want ? ' only' : '') + ', 10 years';   /* "only": the other multiple has no history (its button says so) */
+    valTitle = '6. Valuation' + (f !== want ? ': ' + SH[f] + ' only' : '');   /* the multiple and the window are shown by their own buttons (Message 150); the full name on hover */
+    document.getElementById('os-p6t').title = nm + ', ' + vw + ' years, monthly';   /* "only": the other multiple has no history (its button says so) */
     valTitleSet('');
     document.getElementById('os-pw').className = 'pw val';
     var host = document.getElementById('os-val');
     if (!hasF(V, f)) { valSrc = null; var cur = V && V.current ? V.current[f] : null; host.innerHTML = '<div class="nohist" style="margin:12px">No ' + nm + ' history is stored for ' + DU.esc(m.name) + ', so the Master Dashboard has no chart.' + (cur != null ? ' Today\'s ' + nm + ' is <b>' + cur.toFixed(2) + 'x</b>.' : '') + '</div>'; return; }
     var trd = m.tranches.slice().sort(function (p, q) { return p.tranche_number - q.tranche_number; }).map(function (tr) { return tr.entry_date; }).join(',');
     var MB = window.PMS_MASTER_BASE || 'https://vfhqi.github.io/master/';
-    var url = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=10&field=' + f + (trd ? '&tr=' + trd : '');
+    var url = MB + 'valuation.html?t=' + encodeURIComponent(m.t) + '&embed=1&pms=1&win=' + vw + '&field=' + f + (trd ? '&tr=' + trd : '');
     var fr = host.querySelector('iframe');
     if (!fr || valSrc !== url) { host.innerHTML = ''; fr = document.createElement('iframe'); fr.title = nm + ', the Master Dashboard valuation chart'; fr.className = 'osval'; fr.src = url; valSrc = url; host.appendChild(fr);
       fr.addEventListener('load', function () { fr._loaded = true; [50, 400, 1200, 2500, 5000].forEach(function (t) { setTimeout(function () { fitVal(true); }, t); }); });

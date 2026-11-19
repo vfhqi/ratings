@@ -1,5 +1,5 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.10 on 2026-11-19T16:32:05 from master-dashboard/index.html (md5 395cb06c3d66b3d6617bb9d9a4a9aeee),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.10 on 2026-11-19T18:20:03 from master-dashboard/index.html (md5 b6983db7e3490e08df2e68f855c7038c),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 26. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
