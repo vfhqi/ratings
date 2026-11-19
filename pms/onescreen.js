@@ -126,7 +126,7 @@
   /* PMSD-P4-0DP-2026-11-19 (Richard, 19-Nov-2026, Message 131: "Move to no decimal place"; "Do not state the value in the % tables on RHS"; "Make tables + charts
      vertically aligned/justified"): the change in % to no decimal place, the row named only by its line, and one fixed width for every table, so the
      three charts' plot areas and the tables' columns line up one above the other */
-  var TBH = '<span></span><span></span><span class="h">1M %</span><span class="h">3M %</span><span class="h">6M %</span>', TBW = 150;
+  var TBH = '<span class="h hc">% change</span><span class="h">1M</span><span class="h">3M</span><span class="h">6M</span>', TBW = 150;
   function tbRow(swv, lab, cs, fmt) { return '<span>' + swv + '</span><span class="lab">' + lab + '</span>' + cs.map(function (c) { var k = c[0] == null ? 'flat' : trKind(c[0], c[1]); var v = c[0] == null ? 'n/a' : fmt ? fmt(c[0]) : (function (x) { var r = Math.round(x * 100); return r > 0 ? '+' + r : r < 0 ? '(' + Math.abs(r) + ')' : '0'; })(c[0]); return '<span class="n ' + k + '">' + v + '</span>'; }).join(''); }
   function sw(yi, col) { return '<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + col + '" stroke-width="' + (FYW[yi] || 2) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
 
@@ -207,7 +207,7 @@
     var host = document.getElementById('os-chart-container');
     /* PMSD-KEY-2026-11-18: the levels' words leave the plot (Richard, 28-Oct-2026: "The text on the SP/MA chart should not run over the lines in the chart"; 17-Nov-2026: onto the
        y-axis): numbers on the price scale in each line's colour, a short key under the chart; written before the chart is measured, so the chart takes the height left */
-    var ov1 = DASH.overlayFor(m, true), zk = (chartZoom === '1M' || chartZoom === '3M') && chartVis.volx !== false, kh = document.getElementById('os-key'); if (kh) kh.innerHTML = DASH.overlayKey(ov1, { compact: true, vol: zk });
+    var ov1 = DASH.overlayFor(m, true), zk = (chartZoom === '1M' || chartZoom === '3M') && chartVis.volx !== false, kh = document.getElementById('os-key'); if (kh) { kh.innerHTML = ''; kh.style.display = 'none'; }  /* PMSD-NO-KEY-2026-11-19 (Richard, Message 133: "Remove content highlighted in blue ... I dont need this specific explainer"): the key under the share price chart is gone; zk and ov1 still drive the chart */
     var hh = host.parentNode.getBoundingClientRect().height;
     loadChartData(m.t, function (rows) {
       chartRows = rows;
@@ -417,6 +417,8 @@
   function sumTable(sb, rows, top) {
     if (!rows || !rows.length) return 0;
     var d = document.createElement('div'); d.className = 'ov6 os-sum'; d.innerHTML = '<div class="tb">' + TBH + rows.join('') + '</div>'; d.style.right = '2px'; d.style.left = 'auto'; d.style.top = (top + 2) + 'px'; d.style.width = TBW + 'px'; sb.appendChild(d);
+    /* the table centred on its chart's height, below the chart's title (Message 131: "vertically aligned/justified") */
+    var free = sb.clientHeight - top - 2 - d.offsetHeight; if (free > 4) d.style.top = (top + 2 + Math.round(free / 2)) + 'px';
     return TBW + 8; }
   /* ================= 5. SS upgrade breadth: the live Net Upgrade Breadth charts (item 6 today), daily where the daily store has the counts ================= */
   function drawNub() {

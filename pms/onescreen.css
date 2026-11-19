@@ -49,6 +49,7 @@
   #os .ov6.os-sum { box-sizing:border-box; padding:4px 7px 5px; background:rgba(255,255,255,0.92); }
   #os .ov6.os-sum .tb { grid-template-columns:20px 34px repeat(3, 1fr); column-gap:4px; row-gap:2px; font-size:11px; line-height:1.35; }
   #os .ov6.os-sum .tb .h { font-size:10.5px; }
+  #os .ov6.os-sum .tb .h.hc { grid-column:span 2; text-align:left; white-space:nowrap; }
   #os .ov6.os-sum .tb svg { width:18px; }
   #os .ov6 .tb .n { text-align:right; font-weight:650; }
   #os .ov6 .tb .n.up { color:#1a7f37; } .ov6 .tb .n.dn { color:#cf222e; } .ov6 .tb .n.flat { color:#6e7781; }
