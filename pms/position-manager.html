@@ -2135,6 +2135,7 @@ function trancheIsCore(t, ticker) { return trancheKind(t, ticker) === 'core'; }
 // The Python twin is core_own_line in scripts/apm_pms_alignment.py and scripts/pms_book.py.
 var OWN_LINE_LINES = ['50D', '100D', '150D', '200D'];
 var OWN_LINE_WALKED = { '50D': true, '100D': true, '150D': true };
+var BET_IN_CORE_TEXT = 'Inside a Core Investment (Position Entry and Exit Rules, sections 2 and 8; Richard, 18-Nov-2026): this Probing or Speculative Bet tranche is sold by the 10-day stop-loss rule on its own line, which sells it alone, and also by the six Sell Criteria and the 200-day line rule, which sell the whole holding. Whichever comes first sells it.';
 var OWN_LINE_TEXT = 'Own line (Position Entry and Exit Rules, 13-Nov-2026): a Core tranche added since 13-Nov-2026 is on its own 50, 100, 150 or 200-day line until promoted; that line\'s 10-day stop-loss rule sells this tranche alone, and the six Sell Criteria and the 200-day line rule still sell the whole holding. Untick to promote it to full Core status (no line of its own).';
 function trancheOwnLineMarked(t, ticker) { return !!t && t.own_line === true && trancheIsCore(t, ticker); }
 function trancheOwnLine(t, ticker) { return trancheOwnLineMarked(t, ticker) && !!OWN_LINE_WALKED[t.stop_ma || KIND_DEFAULT_STOP.core]; }
@@ -2490,6 +2491,12 @@ function runTranche(ticker, key, t) {
   var r = runTester(ticker, t.target_size_pct, t.entry_date, stopMaFor(key, t, ticker), bufferFor(t), t.stop_history, t.promoted_at, key, isCore,
                    isCore ? core200StartFor(t, ticker) : null);   // CORE-200D-RULE-2026-11-12
   if (own && r && r.ok) { r.own_line = true; r.core200 = core200Walk(ticker, core200StartFor(t, ticker)); }   // the holding's 200-day line rule still applies
+  // BET-IN-CORE-2026-11-19 (D-PMS-V4-183; Richard, 18-Nov-2026: "If a probing or speculative bet tranche is within a core investment, then the tranche
+  // also must adhered to those other exit criteria"): a Bet tranche in a holding classified as a Core Investment keeps its own line's verdict and is also
+  // sold by the holding's 200-day line rule and the six Sell Criteria. The Python twin is framework14_reader.py and apm_pms_alignment.py core_200d_block.
+  if (!own && !isCore && r && r.ok && holdingClassIsCore(invIdxOfTicker(ticker), ticker)) {
+    r.in_core = true; r.core200 = core200Walk(ticker, core200StartFor(t, ticker) || CORE_200D_START);
+  }
   return r;
 }
 // The stock's live types, in a fixed order, for the colour marks on both pages.
@@ -4098,20 +4105,21 @@ function walkForBreach(ticker, entryDateStr, stopMa, bufferOverride, history, pr
 var CORE_200D_START = '2026-11-11';
 var CORE_200D_SLOT = 'CORE200';
 function core200StartFor(t, ticker) {
-  var best = null, today = todayISO();
+  var best = null, bestAny = null, today = todayISO();
   Object.keys(EDITS || {}).some(function (ix) {
     var se = EDITS[ix]; if (!se || typeof se !== 'object') return false;
     if (!Object.keys(se).some(function (k) { return se[k] === t; })) return false;
     Object.keys(se).forEach(function (k) {
       var o = se[k];
       if (k.charAt(0) === '_' || !o || typeof o !== 'object' || !trancheHeld(o) || o.entry_date > today) return;
+      var ent = String(o.entry_date).slice(0, 10); if (!bestAny || ent < bestAny) bestAny = ent;   // BET-IN-CORE-2026-11-19: a Core holding with no Core tranche starts at its earliest tranche (as apm_pms_alignment.py)
       if (!trancheIsCore(o, ticker)) return;
       var since = String(o.promoted_at || o.entry_date).slice(0, 10);   // review fix 1: Core since its promotion, if promoted
       if (!best || since < best) best = since;
     });
     return true;
   });
-  var e = best || (t && t.entry_date) || CORE_200D_START;
+  var e = best || bestAny || (t && t.entry_date) || CORE_200D_START;
   return e > CORE_200D_START ? e : CORE_200D_START;
 }
 // review fix 3: a recorded keep for the 200-day line rule (tranche CORE200) matches whatever entry date it carries
@@ -5822,8 +5830,8 @@ function renderTrancheRow(inv, invIdx, slotType, isFirstSlot, isPlaceholder, tot
   } else if (r && r.ok && r.core) {
     cells += '<td class="col-group-start info-cell"><span class="badge b-notused"' + notUsedTitle + '>Sell Criteria</span>'
       + (r.breach && r.breach.core200 ? ' ' + breachBadge(r) : '') + '</td>';   // CORE-200D-RULE-2026-11-12
-  } else if (r && r.ok && r.own_line) {   // CORE-OWN-LINE-2026-11-15: its own line's verdict, then the holding's 200-day line rule
-    cells += '<td class="col-group-start info-cell"><span class="badge b-own" title="' + esc(OWN_LINE_TEXT) + '">own line</span> ' + breachBadge(r)
+  } else if (r && r.ok && (r.own_line || r.in_core)) {   // CORE-OWN-LINE-2026-11-15 and BET-IN-CORE-2026-11-19: its own line's verdict, then the holding's 200-day line rule
+    cells += '<td class="col-group-start info-cell">' + (r.in_core ? '<span class="badge b-own" title="' + esc(BET_IN_CORE_TEXT) + '">also Core exit criteria</span> ' : '<span class="badge b-own" title="' + esc(OWN_LINE_TEXT) + '">own line</span> ') + breachBadge(r)
       + (r.core200 ? ' ' + breachBadge({ ok: true, breach: r.core200 }) : '') + promotionFlagHtml(promotionAvailable(invIdx, slotType, edit, ticker)) + '</td>';
   } else if (r && r.ok) {
     cells += '<td class="col-group-start info-cell">' + breachBadge(r) + promotionFlagHtml(promotionAvailable(invIdx, slotType, edit, ticker)) + '</td>';
@@ -6012,7 +6020,7 @@ function renderAlerts() {
       if (!r || !r.ok) return;
       if (r.breach && r.breach.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.grace_breach, tier: 'confirmed' });
       else if (r.breach && r.breach.triggered) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key), breach: r.breach.triggered, tier: 'triggered' });
-      if (r.own_line && r.core200 && r.core200.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key) + ' (the 200-day line rule)', breach: r.core200.grace_breach, tier: 'confirmed' });   // CORE-OWN-LINE-2026-11-15
+      if ((r.own_line || r.in_core) && r.core200 && r.core200.grace_breach) alerts.push({ ticker: ticker, label: trancheLabel(invIdx, key) + ' (the 200-day line rule)', breach: r.core200.grace_breach, tier: 'confirmed' });   // CORE-OWN-LINE-2026-11-15
     });
   });
   var el = document.getElementById('alertBanner');
