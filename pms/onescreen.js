@@ -97,7 +97,7 @@
     var seOcc = [];   /* QC 18-Nov-2026: the start and end values' boxes, so the month values are never written on top of them */
     ['s', 'e'].forEach(function (side) { var A = SE[side].sort(function (p, q) { return p.y - q.y; }); for (var i = 1; i < A.length; i++) if (A[i].y - A[i - 1].y < 11) A[i].y = A[i - 1].y + 11;
       A.forEach(function (q) { var xs = side === 's' ? L + 3 : Math.min(W - R - 3, q.x), ys = Math.max(T + 8, Math.min(T + ph - 2, q.y)), ws = String(q.t).length * 9.5 * 0.6; seOcc.push(side === 's' ? [xs - 2, ys - 11, xs + ws + 4, ys + 3] : [xs - ws - 4, ys - 11, xs + 2, ys + 3]); txt(svg, side === 's' ? L + 3 : Math.min(W - R - 3, q.x), Math.max(T + 8, Math.min(T + ph - 2, q.y)), q.t, { 'text-anchor': side === 's' ? 'start' : 'end', 'font-size': 9.5, 'font-weight': 700, fill: q.c, halo: true }); }); });
-    if (mvl.length) DASH.mvLabels(svg, mvl, { x0: L, x1: W - R, y0: T + hp, y1: T + ph, small: true, side: (W - L - R) / Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4) >= 70, skipL: 30, skipR: 30, occ: seOcc });
+    if (mvl.length) DASH.mvLabels(svg, mvl, { dp: 0, x0: L, x1: W - R, y0: T + hp, y1: T + ph, small: true, side: (W - L - R) / Math.max(1, (D(d1) - D(d0)) / 864e5 / 30.4) >= 70, skipL: 30, skipR: 30, occ: seOcc });
     el('line', { x1: L, x2: W - R, y1: T + ph, y2: T + ph, stroke: C.border }, svg);
     /* the right-hand margin's end labels, pushed apart */
     ends.sort(function (a, b) { return a.y - b.y; }); for (var i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 11) ends[i].y = ends[i - 1].y + 11;
@@ -123,8 +123,11 @@
   function cardH(sb, html, left, wide) { var d = ov(sb, html, left, null, null, wide); return d.offsetHeight + 6; }
   function ov(sb, html, left, place, pad, wide) { var d = document.createElement('div'); d.className = 'ov6'; d.innerHTML = html; d.style.left = (wide ? 2 : left + 2) + 'px'; if (wide) { d.style.right = '2px'; d.style.maxWidth = 'none'; } if (place === 'bottom') d.style.bottom = ((pad == null ? 28 : pad) + 2) + 'px'; else d.style.top = '2px'; sb.appendChild(d); return d; }
   function chipsRow(sw, lab, val, cs, fmt) { return '<div class="r">' + sw + '<span class="v">' + lab + ' ' + val + '</span>' + cs.map(function (c) { var k = c[1] == null ? 'flat' : trKind(c[1], c[2]); return '<span class="cg ' + k + '">' + c[0] + ' ' + (c[1] == null ? 'n/a' : (fmt || pctS1)(c[1])) + '</span>'; }).join('') + '</div>'; }
-  var TBH = '<span></span><span></span><span class="h">1M</span><span class="h">3M</span><span class="h">6M %</span>';
-  function tbRow(swv, lab, cs, fmt) { return '<span>' + swv + '</span><span class="lab">' + lab + '</span>' + cs.map(function (c) { var k = c[0] == null ? 'flat' : trKind(c[0], c[1]); var v = c[0] == null ? 'n/a' : fmt ? fmt(c[0]) : (function (x) { var r = Math.round(x * 1000) / 10; return r > 0 ? '+' + r.toFixed(1) : r < 0 ? '(' + Math.abs(r).toFixed(1) + ')' : '0.0'; })(c[0]); return '<span class="n ' + k + '">' + v + '</span>'; }).join(''); }
+  /* PMSD-P4-0DP-2026-11-19 (Richard, 19-Nov-2026, Message 131: "Move to no decimal place"; "Do not state the value in the % tables on RHS"; "Make tables + charts
+     vertically aligned/justified"): the change in % to no decimal place, the row named only by its line, and one fixed width for every table, so the
+     three charts' plot areas and the tables' columns line up one above the other */
+  var TBH = '<span></span><span></span><span class="h">1M %</span><span class="h">3M %</span><span class="h">6M %</span>', TBW = 150;
+  function tbRow(swv, lab, cs, fmt) { return '<span>' + swv + '</span><span class="lab">' + lab + '</span>' + cs.map(function (c) { var k = c[0] == null ? 'flat' : trKind(c[0], c[1]); var v = c[0] == null ? 'n/a' : fmt ? fmt(c[0]) : (function (x) { var r = Math.round(x * 100); return r > 0 ? '+' + r : r < 0 ? '(' + Math.abs(r) + ')' : '0'; })(c[0]); return '<span class="n ' + k + '">' + v + '</span>'; }).join(''); }
   function sw(yi, col) { return '<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + col + '" stroke-width="' + (FYW[yi] || 2) + '" stroke-dasharray="' + (FYDASH[yi] || '') + '"/></svg>'; }
 
   var m = null, X = null, chartRows = null, MECHD = {}, OPTS = {}, st = { vol: 'L3M', est: 'L6M', nub: 'L3M', px: 'm3', py: 'eps3', pv: 'chart', rsz: '12M', estL: 'rows', p6: 'peers', vf: 'pe' };
@@ -180,7 +183,10 @@
   };
   var lw = window.innerWidth, lh = window.innerHeight, tmr;
   window.addEventListener('resize', function () { clearTimeout(tmr); tmr = setTimeout(function () { if (!started || !visible()) return; if (Math.abs(window.innerWidth - lw) < 2 && Math.abs(window.innerHeight - lh) < 2) return; lw = window.innerWidth; lh = window.innerHeight; drawAll(); }, 200); });
-  function drawAll() { drawSP(); drawVol(); drawEst(); drawNub(); drawPeers(); }
+  /* PMSD-PANEL-GUARD-2026-11-19 (Richard, 19-Nov-2026, Message 132, Seche: "Explain why panels are blanks"): one panel that cannot be drawn
+     no longer stops the panels after it; it says so in its own place */
+  function safe(f, id) { try { f(); } catch (e) { if (window.console) console.error(e); var h = document.getElementById(id); if (h) h.insertAdjacentHTML('beforeend', '<div class="os-err" style="padding:10px;color:#9a6700;font-size:12px">This part could not be drawn (' + String(e && e.message || e).replace(/</g, '&lt;') + ').</div>'); } }
+  function drawAll() { safe(drawSP, 'os-chart-container'); safe(drawVol, 'os-vol4'); safe(drawEst, 'os-est3'); safe(drawNub, 'os-nub4'); safe(drawPeers, 'os-pc-plot'); }
 
   /* ================= 1. SP and MAs: the live chart, drawn to the panel's size ================= */
   function drawSP() {
@@ -367,7 +373,7 @@
         pts.filter(function (q) { return q.d >= addDays(d0, -40); }).forEach(function (q) { vals.push(q.v); });
         var c = chg(pts), k_ = trKind(c, band); if (yi === 1) bgK = k_;
         ser.push({ pts: pts, holes: true, se: fmtN, color: TRC[k_], w: FYW[yi], dash: FYDASH[yi], label: names[yi] + ' consensus', fmt: fmtN, dotAt: function (q) { return q.d === pts[pts.length - 1].d; }, dotR: 2.8, mvals: true });
-        rowsH.unshift(tbRow(sw(yi, TRC[k_]), names[yi].replace('FY20', 'FY') + ' ' + fmtN(pts[pts.length - 1].v), [[chgD(pts, 30), 0.005], [chgD(pts, 91), 0.01], [chgD(pts, 182), 0.005]])); });
+        rowsH.unshift(tbRow(sw(yi, TRC[k_]), names[yi].replace('FY20', 'FY'), [[chgD(pts, 30), 0.005], [chgD(pts, 91), 0.01], [chgD(pts, 182), 0.005]])); });
       var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pd = (hi - lo) * 0.1 || Math.abs(hi) * 0.02 || 1;
       var nTxt = labs.map(function (y) { var q = n_[y]; return q && q.n != null ? q.n : null; }).filter(function (v) { return v != null; });
       var h = subCell(host), hp = cardH(h, '<div class="t1"><b>' + kk[1] + ' consensus</b>, ' + Yr.currency + (nTxt.length ? ' <span class="hh">&middot; ' + Math.max.apply(null, nTxt) + ' analysts</span>' : '') + '</div>', L0, true);
@@ -377,6 +383,10 @@
     /* PT, with the analyst ratings (% of analysts: Buys, Other, Sells) as the coloured stacked area behind it, on its own 0-100% scale */
     var S2 = m.H.ss2, sc = S2.tp_scale || 1, tp = m.H.ss.metrics.tp, seen = {};
     var tpp = (tp.monthly || []).concat(tp.daily || []).filter(function (q) { return q.v != null; }).sort(function (a, b) { return a.d < b.d ? -1 : 1; }).filter(function (q) { if (seen[q.d]) return false; seen[q.d] = 1; return true; }).map(function (q) { return { d: q.d, v: q.v * sc }; });
+    /* PMSD-PANEL-GUARD-2026-11-19 (Message 132, Seche): 97 of 1,362 stocks have no Average PT in the monthly sell-side momentum store, only in the
+       daily store (ss2.daily.tp_mean); the line is then drawn from the daily store. With neither, the chart says so instead of failing */
+    if (!tpp.length) { var tm_ = ((S2 || {}).daily || {}).tp_mean; if (tm_ && tm_.length) tpp = tm_.filter(function (q) { return q.v != null && weekday(q.d); }).map(function (q) { return { d: q.d, v: q.v * sc }; }); }
+    if (!tpp.length || !X.ratings || !X.ratings.length) { var hN = subCell(host); cardH(hN, '<div class="t1"><b>Average PT against SP</b> <span class="hh">&middot; no Average PT or analyst ratings are stored for this stock</span></div>', L0, true); return; }
     var px = (chartRows && chartRows.length ? chartRows.map(function (r) { return { d: r.d || r.date, v: r.c != null ? r.c : r.close }; }) : m.daily.map(function (q) { return { d: q.d, v: q.c }; })).filter(function (q) { return q.v != null && q.d <= m.asof; });
     var rp = X.ratings.filter(function (q) { return q.src !== 'daily' || weekday(q.d); }).map(function (q) { var n = q.buys + q.other + q.sells; if (!n) return null; var b = Math.round(q.buys / n * 100), s = Math.round(q.sells / n * 100); return { d: q.d, src: q.src, b: b, s: s, o: 100 - b - s, n: n }; }).filter(Boolean);
     var vv = tpp.concat(px).filter(function (q) { return q.d >= addDays(d0, -40); }).map(function (q) { return q.v; }), lo3 = Math.min.apply(null, vv), hi3 = Math.max.apply(null, vv), p3 = (hi3 - lo3) * 0.08 || 1;
@@ -388,7 +398,7 @@
     var ratLine = '<span style="color:#1a7f37">Buys ' + bNow.b + '%</span> &middot; <span style="color:#57606a">' + (GRID ? 'Holds ' : 'Other ') + bNow.o + '%</span> &middot; <span style="color:#cf222e">Sells ' + bNow.s + '%</span>';
     var hP = subCell(host), hpP = cardH(hP, '<div class="t1"><b>Average PT against SP</b>' + (GRID ? '' : ' <span class="hh">&middot; analyst ratings behind:</span> ' + ratLine) + '</div>', L0, true);
     var ptSeries = [{ pts: px, se: function (v) { return 'SP ' + fmtN(v); }, color: '#57606a', w: 1.1, label: 'SP', fmt: fmtN }, { pts: tpp, se: function (v) { return 'PT ' + fmtN(v); }, color: TRC[pk], w: 2.6, label: 'average PT', fmt: fmtN, dotAt: function (q) { return q.d === tpp[tpp.length - 1].d; }, dotR: 3, mvals: true }];
-    var twP = sumTable(hP, [tbRow('<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + TRC[pk] + '" stroke-width="2.6"/></svg>', 'PT ' + fmtN(tpp[tpp.length - 1].v), [[chgD(tpp, 30), 0.005], [chgD(tpp, 91), 0.01], [chgD(tpp, 182), 0.005]])], hpP);
+    var twP = sumTable(hP, [tbRow('<svg width="18" height="8"><line x1="1" x2="17" y1="4" y2="4" stroke="' + TRC[pk] + '" stroke-width="2.6"/></svg>', 'PT', [[chgD(tpp, 30), 0.005], [chgD(tpp, 91), 0.01], [chgD(tpp, 182), 0.005]])], hpP);
     mini(hP, { d0: d0, d1: d1, L: L0, R: 34 + twP, T: 4, headPx: hpP, rightTicks: true, yDomain: [lo3 - p3, hi3 + p3], yTicks: niceTicks(lo3 - p3, hi3 + p3, 8), yDomain2: [0, 100], markers: tr, series: GRID ? ptSeries : [RAT].concat(ptSeries) });
     if (GRID) {
       /* layout 2 (Richard, 6-Nov 15:13: "4 sub-panels, 2x2, with Buys/Holds/Sells added as a new panel"): the analyst ratings in their own panel, the
@@ -406,8 +416,8 @@
      negative in brackets, green rising, red falling; the chart narrows by the table's width */
   function sumTable(sb, rows, top) {
     if (!rows || !rows.length) return 0;
-    var d = document.createElement('div'); d.className = 'ov6 os-sum'; d.innerHTML = '<div class="tb">' + TBH + rows.join('') + '</div>'; d.style.right = '2px'; d.style.left = 'auto'; d.style.top = (top + 2) + 'px'; sb.appendChild(d);
-    return d.offsetWidth + 8; }
+    var d = document.createElement('div'); d.className = 'ov6 os-sum'; d.innerHTML = '<div class="tb">' + TBH + rows.join('') + '</div>'; d.style.right = '2px'; d.style.left = 'auto'; d.style.top = (top + 2) + 'px'; d.style.width = TBW + 'px'; sb.appendChild(d);
+    return TBW + 8; }
   /* ================= 5. SS upgrade breadth: the live Net Upgrade Breadth charts (item 6 today), daily where the daily store has the counts ================= */
   function drawNub() {
     save();
