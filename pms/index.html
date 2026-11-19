@@ -6152,9 +6152,9 @@ function breachBadge(r) {
     var h = breachBadge(Object.assign({}, r, { _core200Worded: true }));
     h = h.replace('title="', 'title="The 200-day line rule for a Core Middle Innings Investment (from 11-Nov-2026): the 10-day stop-loss rule on the 200-day line, the stop-loss at the line less 6%; an exit sells the whole Core holding at the Tuesday session. ')
          .replace(/the MA/g, 'the 200-day line').replace(/MA ([0-9])/g, '200-day line $1');
-    return h.replace(/">(EXIT CONFIRMED|TESTING|tested|kept|no)/, '">200-day line: $1');
+    return h.replace(/">(EXIT CONFIRMED|TESTING|tested|kept|clear|no)/, '">200-day line: $1');
   }
-  if (!r.breach) return '<span class="badge b-active">no</span>';
+  if (!r.breach) return '<span class="badge b-active" title="No test running: no close at or below the line since the count began">clear</span>';   // 19-Nov-2026 (page principle 1, "values not yes/no"): was a bare "no"
   var B = r.breach;
   // D-PMS-V2-17 (Richard, 22-Sep-2026): a tranche bought from that date at or below its MA is not judged until its first close above it
   if (B.not_yet_judged) return '<span class="badge b-warn" title="Bought ' + B.entry_day_pct_below_stop + '% below its MA and has not closed above it since. The 10-day stop-loss rule starts judging this tranche on its first close above the MA. Change the MA if this is not the one you want.">NOT YET JUDGED</span>';
@@ -6176,7 +6176,7 @@ function breachBadge(r) {
   }
   if (B.kept) return '<span class="badge b-active" title="Richard kept the exit confirmed ' + esc(fmtDate(B.kept.cleared_confirmation)) + ' on ' + esc(fmtDate(B.kept.kept_on)) + (B.kept.reason ? ': ' + esc(B.kept.reason) : '') + '. The count restarted after the keep.">kept ' + esc(fmtDate(B.kept.kept_on)) + '</span>';
   if (B.raw_breach) return '<span class="badge b-active" title="First closed at or below the MA on this date; closed back above it without any exit event">tested ' + esc(fmtDate(B.raw_breach.breach_date)) + ', recovered</span>';
-  return '<span class="badge b-active">no</span>';
+  return '<span class="badge b-active" title="No test running: no close at or below the line since the count began">clear</span>';   // 19-Nov-2026: was a bare "no"
 }
 
 
