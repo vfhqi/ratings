@@ -856,7 +856,8 @@ select.kind-select.kind-speculative { color: var(--k-spec); border-left: 4px sol
 .pgm-test span[title] { color: var(--fg3); cursor: help; text-decoration: underline dotted; }
 .tot-sale .btn-addtr, .tot-sale .btn-remove-inv, .tot-label .btn-remove-inv { margin-right: 2px; font-size: 10.5px; padding: 1px 6px; }
 .tot-label .btn-addtr, .tot-sale .btn-addtr { font-size: 10.5px; padding: 1px 6px; }
-.edit-input.pct.buf { width: 36px; padding: 1px 2px; }   /* UI QC 18-Nov-2026 (part 15): "6.0" was cut to "6." */
+.edit-input.pct.buf { width: 44px; padding: 1px 2px; -moz-appearance: textfield; appearance: textfield; }   /* 19-Nov-2026 (consolidated window; Richard's picture, Message 118: "6." with its last digit cut): 36px left no room for "6.0" beside the number spinner; 44px with the spinner hidden */
+.edit-input.pct.buf::-webkit-outer-spin-button, .edit-input.pct.buf::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 select.kind-select { width: 128px !important; font-size: 10px !important; padding: 1px 1px !important; }
 .ticker-cell .tk-line2 { white-space: normal !important; text-overflow: clip !important; }
 .ticker-cell .tk-line4 { font-weight: 700 !important; font-size: 11px !important; color: var(--ink) !important; }
