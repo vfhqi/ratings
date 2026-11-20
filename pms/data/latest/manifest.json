@@ -32,7 +32,7 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 620106,
+   "bytes": 620093,
    "warnings": []
   },
   "HTRO-SE": {
@@ -47,7 +47,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 560224,
+   "bytes": 560226,
    "warnings": []
   },
   "HFG-GB": {
@@ -67,5 +67,5 @@
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 75.3
+ "seconds": 89.5
 }
