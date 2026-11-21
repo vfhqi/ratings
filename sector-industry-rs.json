@@ -1,18 +1,18 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-17",
+ "current_week": "2026-11-20",
  "prior_week": "2026-09-18",
  "industry": {
   "A. Consumer staples": {
-   "current": "A",
-   "prior": "D"
-  },
-  "B. Healthcare": {
    "current": "B",
    "prior": "D"
   },
+  "B. Healthcare": {
+   "current": "A",
+   "prior": "D"
+  },
   "C. Telecoms": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "D. Infrastructure": {
@@ -32,7 +32,7 @@
    "prior": "B"
   },
   "H. Consumer discretionary": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "I. Transportation": {
@@ -40,7 +40,7 @@
    "prior": "A"
   },
   "J. Technology": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "K. Professional, business and consumer services": {
@@ -60,7 +60,7 @@
    "prior": "F"
   },
   "O. Industrials and capital goods": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -106,7 +106,7 @@
    "prior": "F"
   },
   "B.5. Medtech - consumables": {
-   "current": "B",
+   "current": "A",
    "prior": "D"
   },
   "B.6. Medtech - capital goods": {
@@ -114,11 +114,11 @@
    "prior": "B"
   },
   "B.7. Pharma/biotech": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "C.1. Telecoms - MNOs": {
@@ -126,7 +126,7 @@
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "D.3. Infrastructure - telecom towers": {
@@ -158,7 +158,7 @@
    "prior": "B"
   },
   "G.10. Asset and wealth managers": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "G.13. Banks": {
@@ -182,19 +182,19 @@
    "prior": "C"
   },
   "H.1. Luxury goods": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "H.11. Airlines and travel": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "H.15. Automotive - OEM or supplier": {
@@ -214,7 +214,7 @@
    "prior": "F"
   },
   "H.3. Retail - general/physical": {
-   "current": "B",
+   "current": "A",
    "prior": "D"
   },
   "H.4. Retail - online and delivery platforms": {
@@ -226,11 +226,11 @@
    "prior": "F"
   },
   "H.9. Hotels, leisure and hospitality": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "I.1. Logistics": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "J.1. IT services - consulting": {
@@ -246,7 +246,7 @@
    "prior": "F"
   },
   "J.4. Software - B2B Enterprise": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "J.5. Software - VMS": {
@@ -266,11 +266,11 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "K.11. Information services": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "K.3. Testing and inspection services": {
@@ -282,7 +282,7 @@
    "prior": "B"
   },
   "K.9. Recruitment services": {
-   "current": "B",
+   "current": "A",
    "prior": "A"
   },
   "L.1. Content, TV and other media": {
@@ -314,7 +314,7 @@
    "prior": "C"
   },
   "M.9. Steel and metals": {
-   "current": "D",
+   "current": "F",
    "prior": "B"
   },
   "N.1. Real estate - residential landlords": {
@@ -338,11 +338,11 @@
    "prior": "F"
   },
   "N.6. Real estate - developers and services": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "O.1. Industrial services": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
@@ -350,7 +350,7 @@
    "prior": "A"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
-   "current": "A",
+   "current": "B",
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
@@ -362,7 +362,7 @@
    "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "P.4. Agriculture": {
