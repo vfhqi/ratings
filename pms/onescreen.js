@@ -135,8 +135,8 @@
      (e.g. what timeframe) when I load a new stock"): every panel's window, item 1's zoom, scale and MAs shown, RS's zoom, the peers chart or table */
   var KEY = 'pmsOneScreenSettings';
   function restore() { try { var o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!o) return; for (var k in st) if (k !== 'estL' && typeof o[k] === 'string') st[k] = o[k];   /* the estimates layout is fixed: three stacked (Richard, 6-Nov 15:41) */
-    if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
-  function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200', 'volx'].forEach(function (k) { o.mas[k] = !!chartVis[k]; });   /* VOLX-ONESCREEN-2026-11-15: + volx */ localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
+    if (typeof o.spz === 'string') chartZoom = o.spz; if (o.scale === 'lin' || o.scale === 'log') chartScaleMode = o.scale; if (typeof o.band === 'string' && typeof chartBand !== 'undefined') chartBand = o.band; if (o.mas) for (var mk in o.mas) chartVis[mk] = !!o.mas[mk]; } catch (e) { /* none kept */ } }   /* run at start: holding.html sets its own defaults after this file loads */
+  function save() { try { var o = {}; for (var k in st) o[k] = st[k]; o.spz = chartZoom; o.scale = chartScaleMode; if (typeof chartBand !== 'undefined') o.band = chartBand; o.mas = {}; ['ma5', 'ma10', 'ma20', 'ma50', 'ma100', 'ma150', 'ma200', 'volx'].forEach(function (k) { o.mas[k] = !!chartVis[k]; });   /* VOLX-ONESCREEN-2026-11-15: + volx */ localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* not kept: fine */ } }
   /* PMSD-WINDOWS-2026-11-18 (Richard, 18-Nov-2026: "Add a 1M, 3M, 6M and 12M toggle option for 2. Volume, volatility and closes in the day's range and 5. SS upgrade breadth:
      EPS, revenue, PT, Buys and 4. SS estimate upgrades: EPS, revenue, PT"): the same four buttons on all three panels, in that order, named as he wrote them. Panels 4
      and 5 keep every weekday from 1-May-2026 and the month-ends before it, so 12M shows month-end readings until May and daily readings after */
@@ -194,6 +194,7 @@
     var z = document.getElementById('os-zooms'), s = document.getElementById('os-scales');
     buttons(z, ['1M', '3M', '6M', '12M', '2Y', '3Y', '5Y'].map(function (k) { return [k, k]; }), chartZoom, function (k) { chartZoom = k; drawSP(); });
     buttons(s, [['lin', 'LIN'], ['log', 'LOG']], chartScaleMode, function (k) { chartScaleMode = k; drawSP(); });
+    var bd = document.getElementById('os-bands'); if (bd && typeof chartBand !== 'undefined') buttons(bd, [['off','Off'],['0.04','4%'],['0.05','5%'],['0.06','6%'],['retest','Retest band']], chartBand, function (k) { chartBand = k; drawSP(); });   /* MD-MA-BAND-2026-11-23 */
     /* the Layers buttons, on item 1's title line (Richard, 6-Nov 14:02): the same MAs and colours as the live Layers row, written once as "MAs" then each period; click to show or hide */
     var MAS = [['ma5', '5D', '#8b0000'], ['ma10', '10D', '#e88a9a'], ['ma20', '20D', '#e74c3c'], ['ma50', '50D', '#ff8c00'], ['ma100', '100D', '#2ca02c'], ['ma150', '150D', '#1a5276'], ['ma200', '200D (absolute)', '#4a3d9e']];
     ['obv', 'vol', 'vol50', 'vol20'].forEach(function (k) { chartVis[k] = false; });

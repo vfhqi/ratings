@@ -1,14 +1,18 @@
 /* chart-renderer-dashboard.js: the PMS Per-stock Dashboard's copy of the Master Dashboard's share price chart.
- * Built by scripts/pms_dashboard_renderer_build.py v1.10 on 2026-11-20T17:40:02 from master-dashboard/index.html (md5 feed69cdca94ba5735a8e0e653c1f36b),
+ * Built by scripts/pms_dashboard_renderer_build.py v1.10 on 2026-11-23T20:44:02 from master-dashboard/index.html (md5 970911a26186b822ffa47dd4a08baf75),
  * lines between 'var chartVis={' and 'window.openChart=function(t){', with the changes marked PMS-DASH 1 to 26. DO NOT EDIT BY HAND: rebuild.
  */
 var CHART_REGISTRY=window.CHART_REGISTRY||{};window.CHART_REGISTRY=CHART_REGISTRY;
 var chartZoom=window.chartZoom||'6M',chartScaleMode=window.chartScaleMode||'lin',chartWidth=50,chartTicker=null,currentTab='pms_dashboard',D=window.D||{universe:[]};
 var chartVis={ma5:false,ma10:false,ma20:true,ma50:true,ma100:true,ma150:true,ma200:true,obv:true,vol:true,vol20:true,vol50:true,volx:true}; /* PMS-DASH 23 */
+// MD-MA-BAND-2026-11-23 (Richard, 23-Nov-2026: "Add a visual band around the moving averages with a toggle for 4% 5% 6% for all price/MA
+// charts"; his approval of a fourth choice, "Retest band": 4% around the 20-day and 50-day, 5% around the 100, 150 and 200-day, the band his
+// Retest rule counts in). 'off', '0.04', '0.05', '0.06' or 'retest'. Drawn around each moving average shown, in its colour.
+var chartBand='off';
 // MD-S76-CHART-PERSIST: localStorage helpers. Key shared across sessions and browser windows.
 var _CHART_PREFS_KEY='vf_chart_prefs_v1';
 function saveChartPrefs(){return; /* PMS-DASH 1 */
-  try{localStorage.setItem(_CHART_PREFS_KEY,JSON.stringify({zoom:chartZoom,scale:chartScaleMode,width:chartWidth,vis:chartVis}));}catch(e){}
+  try{localStorage.setItem(_CHART_PREFS_KEY,JSON.stringify({zoom:chartZoom,scale:chartScaleMode,width:chartWidth,vis:chartVis,band:chartBand}));}catch(e){}
 }
 function loadChartPrefs(){
   try{
@@ -16,6 +20,7 @@ function loadChartPrefs(){
     if(!_p)return;
     if(_p.zoom)chartZoom=_p.zoom;
     if(_p.scale)chartScaleMode=_p.scale;
+    if(typeof _p.band==='string')chartBand=_p.band;   // MD-MA-BAND-2026-11-23
     if(typeof _p.width==='number')chartWidth=_p.width;
     if(_p.vis&&typeof _p.vis==='object'){var _vk=Object.keys(_p.vis);for(var _vi=0;_vi<_vk.length;_vi++){if(typeof chartVis[_vk[_vi]]==='boolean')chartVis[_vk[_vi]]=!!_p.vis[_vk[_vi]];}}
   }catch(e){}
@@ -440,6 +445,23 @@ function drawMasterChart(ticker,_sspo){
   // OBV line
   if(vis.obv){ctx.strokeStyle="rgba(188,140,255,0.5)";ctx.lineWidth=1.2;ctx.beginPath();
     for(j=0;j<obv.length;j++){var ox=xPos(j),oy=obvY(obv[j]);if(j===0)ctx.moveTo(ox,oy);else ctx.lineTo(ox,oy)}ctx.stroke()}
+
+  // MD-MA-BAND-2026-11-23: the band around each moving average shown (behind the candles), clipped to the price area
+  if(typeof chartBand!=='undefined'&&chartBand&&chartBand!=='off'){
+    ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,plotW,plotH);ctx.clip();
+    var _bN=0;for(var _bi=0;_bi<maPeriods.length;_bi++)if(vis['ma'+maPeriods[_bi]])_bN++;var _bAlpha=_bN<=1?0.14:(_bN===2?0.10:(_bN===3?0.07:0.05));   // fainter when bands overlap
+    for(var bp=0;bp<maPeriods.length;bp++){var bper=maPeriods[bp];if(!vis['ma'+bper])continue;
+      var bf=chartBand==='retest'?((bper===20||bper===50)?0.04:(bper>=100?0.05:0)):parseFloat(chartBand);if(!bf||!isFinite(bf))continue;
+      var bk='ma'+bper,bup=[],bdn=[];
+      for(var bj=0;bj<chart.length;bj++){var bv=chart[bj][bk];if(bv){bup.push([xPos(bj),priceY(bv*(1+bf))]);bdn.push([xPos(bj),priceY(bv*(1-bf))]);}}
+      if(bup.length<2)continue;
+      ctx.beginPath();ctx.moveTo(bup[0][0],bup[0][1]);for(var bq=1;bq<bup.length;bq++)ctx.lineTo(bup[bq][0],bup[bq][1]);
+      for(bq=bdn.length-1;bq>=0;bq--)ctx.lineTo(bdn[bq][0],bdn[bq][1]);ctx.closePath();
+      ctx.globalAlpha=_bAlpha;ctx.fillStyle=maColors[bper];ctx.fill();
+      ctx.globalAlpha=0.5;ctx.strokeStyle=maColors[bper];ctx.lineWidth=0.8;ctx.setLineDash([2,3]);
+      [bup,bdn].forEach(function(L){ctx.beginPath();for(var q=0;q<L.length;q++){if(q)ctx.lineTo(L[q][0],L[q][1]);else ctx.moveTo(L[q][0],L[q][1]);}ctx.stroke();});
+      ctx.setLineDash([]);ctx.globalAlpha=1;}
+    ctx.restore();}
 
   // Candlesticks (thicker wicks + bodies)
   for(j=0;j<chart.length;j++){
