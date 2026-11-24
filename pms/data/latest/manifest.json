@@ -1,29 +1,29 @@
 {
- "asof": "2026-11-23",
+ "asof": "2026-11-24",
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 545333,
+   "bytes": 545308,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 616843,
+   "bytes": 616814,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 638315,
+   "bytes": 573302,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 574869,
+   "bytes": 574743,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 626916,
+   "bytes": 626911,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,32 +32,32 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 618124,
+   "bytes": 618059,
    "warnings": []
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 506032,
+   "bytes": 505920,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 508809,
+   "bytes": 508702,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 559247,
+   "bytes": 559137,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 572664,
+   "bytes": 572565,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 540564,
+   "bytes": 540479,
    "warnings": []
   }
  },
@@ -67,5 +67,5 @@
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading"
  ],
- "seconds": 114.9
+ "seconds": 109.7
 }
