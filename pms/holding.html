@@ -76,7 +76,7 @@ a.uplink { color:#0969da; font-size:11.5px; font-weight:600; text-decoration:und
   <div class="grid6">
     <!-- 1 -->
     <div class="pnl" id="os-p1">
-      <div class="ph"><b>1. SP and MAs</b><span class="sp"></span><span class="tg" id="os-zooms"></span><span class="tg" id="os-scales"></span><span class="tg" id="os-bands" title="A light band around each moving average shown: 4%, 5% or 6% above and below it, or the Retest band (4% around the 20-day and 50-day, 5% around the 100, 150 and 200-day)"></span><span class="lay1" id="os-legend"></span></div>
+      <div class="ph"><b>1. SP and MAs</b><span class="sp"></span><span class="tg" id="os-zooms"></span><span class="tg" id="os-scales"></span><span class="tg" id="os-bands" title="A light band around each moving average shown: 4%, 5% or 6% above and below it, or the Retest band (4% around the 20-day and 50-day, 5% around the 100, 150 and 200-day)"></span><span class="tg" id="os-bsides" title="Draw the band below each moving average only, or above and below it (drawing only)"></span><span class="lay1" id="os-legend"></span></div>
       <div class="pb" style="display:flex;flex-direction:column">
         <div style="flex:1 1 auto;min-height:0;position:relative"><div id="os-chart-container"><canvas id="os-canvas" style="width:100%;display:block"></canvas></div></div>
         <div id="os-key"></div>
@@ -132,7 +132,7 @@ a.uplink { color:#0969da; font-size:11.5px; font-weight:600; text-decoration:und
        capital criteria/rules"). The items are renumbered in page order; the section ids keep their old names where code reads them. -->
   <div class="sec" id="s1">
     <h2><span>1. SP and MAs</span><span class="mut" id="s1-say"></span></h2>
-    <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut" title="A light band around each moving average shown: 4%, 5% or 6% above and below it, or the Retest band (4% around the 20-day and 50-day, 5% around the 100, 150 and 200-day)">Band</span><span class="grp" id="bands"></span><span class="mut">Layers</span></div>
+    <div class="ctrl"><span class="mut">Zoom</span><span class="grp" id="zooms"></span><span class="mut">Scale</span><span class="grp" id="scales"></span><span class="mut" title="A light band around each moving average shown: 4%, 5% or 6% above and below it, or the Retest band (4% around the 20-day and 50-day, 5% around the 100, 150 and 200-day)">Band</span><span class="grp" id="bands"></span><span class="grp" id="bsides" title="Draw the band below each moving average only, or above and below it (drawing only)"></span><span class="mut">Layers</span></div>
     <div class="layers" id="legend"></div>
     <div class="xs"><div id="chart-container" style="margin-top:4px"><canvas id="chart-canvas" style="width:100%;display:block"></canvas></div></div>
     <div id="s1key"></div>
@@ -403,6 +403,9 @@ a.uplink { color:#0969da; font-size:11.5px; font-weight:600; text-decoration:und
     /* MD-MA-BAND-2026-11-23 (Richard, 23-Nov-2026): the band around the moving averages, the Master Dashboard's own drawing (chartBand) */
     var bd = document.getElementById('bands'); if (bd) { bd.innerHTML = [['off','Off'],['0.04','4%'],['0.05','5%'],['0.06','6%'],['retest','Retest band']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === chartBand ? 'active' : '') + '" data-b="' + k[0] + '">' + k[1] + '</button>'; }).join('');
       bd.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartBand = b.dataset.b; keep(); drawChart(); }; }
+    /* MD-MA-BAND-SIDE-2026-11-24 (Richard, 24-Nov-2026): the band below the line only, or above and below it */
+    var bs = document.getElementById('bsides'); if (bs && typeof chartBandSide !== 'undefined') { bs.innerHTML = [['below','Below only'],['both','Above and below']].map(function (k) { return '<button class="chart-width-btn ' + (k[0] === chartBandSide ? 'active' : '') + '" data-s="' + k[0] + '">' + k[1] + '</button>'; }).join('');
+      bs.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; chartBandSide = b.dataset.s; keep(); drawChart(); }; }
     document.getElementById('legend').innerHTML = chartLegendHTML();
     /* 6-Nov-2026 (Richard, Ricky login: "Remove the OBV, Vol 50D, Vol 200D, Vol lines from the charts and also for the current per-stock dashboard charts; they are not needed"):
        the volume and OBV layers are off (above) and their buttons are taken out of item 1's Layers row; the chart renderer is rebuilt from the Master Dashboard each night, so the change sits here */
