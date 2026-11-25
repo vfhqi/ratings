@@ -118,7 +118,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 72 | C | 40th of 76",
+       "label": "Current momentum | 72 | C | 41st of 76",
        "question": "Current momentum",
        "grade": "C",
        "ras": []
@@ -10142,7 +10142,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 75 | B | 38th of 76",
+       "label": "Forecast financials | 75 | B | 39th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -14144,7 +14144,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -14172,21 +14172,21 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 52 | B | 14th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 52 | B+ | 13th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T8",
-       "label": "Current momentum | 77 | B | 31st of 76",
+       "label": "Current momentum | 77 | B | 32nd of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -18820,7 +18820,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -21359,7 +21359,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 76 | B | 35th of 76",
+       "label": "Forecast financials | 76 | B | 36th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -27916,7 +27916,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -27944,14 +27944,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 75 | B | 38th of 76",
+       "label": "Forecast financials | 75 | B | 39th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 44 | C | 31st of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 44 | C | 30th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -27972,7 +27972,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 51 | D | 39th of 76",
+       "label": "Position in the lifecycle | 51 | D | 38th of 76",
        "question": "Position in the lifecycle",
        "grade": "D",
        "ras": []
@@ -30594,7 +30594,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -30622,7 +30622,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 54 | C | 30th of 76",
+       "label": "Position in the lifecycle | 54 | C | 29th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -31697,7 +31697,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 79 | B | 22nd of 76",
+       "label": "Forecast financials | 79 | B | 23rd of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -31718,7 +31718,7 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 42 | D | 41st of 76",
+       "label": "Riskiness and simplicity of forecasts | 42 | D | 42nd of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
@@ -34310,7 +34310,7 @@
       },
       {
        "code": "T4",
-       "label": "Conservatism of guidance and record of delivery | 76 | A | 5th of 76",
+       "label": "Conservatism of guidance and record of delivery | 76 | A | 4th of 76",
        "question": "Conservatism of guidance and record of delivery",
        "grade": "A",
        "ras": []
@@ -42715,7 +42715,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -44881,7 +44881,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 77 | B | 30th of 76",
+       "label": "Forecast financials | 77 | B | 31st of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -55649,7 +55649,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 53 | C- | 33rd of 76",
+       "label": "Position in the lifecycle | 53 | C- | 32nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -58491,7 +58491,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -60277,7 +60277,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 75 | B | 38th of 76",
+       "label": "Forecast financials | 75 | B | 39th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -62925,7 +62925,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 32nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 31st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -66144,7 +66144,7 @@
       },
       {
        "code": "T4",
-       "label": "Conservatism of guidance and record of delivery | 76 | A | 5th of 76",
+       "label": "Conservatism of guidance and record of delivery | 76 | A | 4th of 76",
        "question": "Conservatism of guidance and record of delivery",
        "grade": "A",
        "ras": []
@@ -66165,7 +66165,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 32nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 31st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -81582,7 +81582,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 80 | B | 19th of 76",
+       "label": "Forecast financials | 80 | B | 20th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -81596,7 +81596,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 77 | B | 31st of 76",
+       "label": "Current momentum | 77 | B | 32nd of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -81624,7 +81624,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 82 | B | 15th of 76",
+       "label": "Total shareholder return | 82 | B | 14th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -82685,7 +82685,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 75 | B | 38th of 76",
+       "label": "Forecast financials | 75 | B | 39th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -82699,7 +82699,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 75 | B | 38th of 76",
+       "label": "Current momentum | 75 | B | 39th of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -82713,7 +82713,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 55 | C | 28th of 76",
+       "label": "Position in the lifecycle | 55 | C | 27th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -88940,7 +88940,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -88961,21 +88961,21 @@
       },
       {
        "code": "T5",
-       "label": "Pricing power, leverage, cost control, feedback loops | 78 | A | 3rd of 76",
+       "label": "Pricing power, leverage, cost control, feedback loops | 78 | A | 2nd of 76",
        "question": "Pricing power, leverage, cost control, feedback loops",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 77 | B | 30th of 76",
+       "label": "Forecast financials | 77 | B | 31st of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 52 | B | 14th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 52 | B+ | 13th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -88996,14 +88996,14 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 54 | C | 30th of 76",
+       "label": "Position in the lifecycle | 54 | C | 29th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
       },
       {
        "code": "T11",
-       "label": "The fair multiple | 64 | C | 29th of 76",
+       "label": "The fair multiple | 64 | C | 28th of 76",
        "question": "The fair multiple",
        "grade": "C",
        "ras": []
@@ -94595,7 +94595,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -95942,14 +95942,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 77 | B | 30th of 76",
+       "label": "Forecast financials | 77 | B | 31st of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 55 | B+ | 11th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 55 | B+ | 10th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -101793,7 +101793,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -103851,7 +103851,7 @@
       },
       {
        "code": "T5",
-       "label": "Pricing power, leverage, cost control, feedback loops | 76 | A | 4th of 76",
+       "label": "Pricing power, leverage, cost control, feedback loops | 76 | A | 3rd of 76",
        "question": "Pricing power, leverage, cost control, feedback loops",
        "grade": "A",
        "ras": []
@@ -103886,7 +103886,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 55 | C | 28th of 76",
+       "label": "Position in the lifecycle | 55 | C | 27th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -103900,7 +103900,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -104867,7 +104867,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -111028,7 +111028,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -111049,9 +111049,9 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 45 | C- | 37th of 76",
+       "label": "Riskiness and simplicity of forecasts | 45 | D | 37th of 76",
        "question": "Riskiness and simplicity of forecasts",
-       "grade": "C",
+       "grade": "D",
        "ras": []
       },
       {
@@ -134009,7 +134009,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 72 | C | 42nd of 76",
+       "label": "Forecast financials | 72 | C | 43rd of 76",
        "question": "Forecast financials",
        "grade": "C",
        "ras": []
@@ -137603,7 +137603,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 52 | C- | 36th of 76",
+       "label": "Position in the lifecycle | 52 | C- | 35th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -140069,7 +140069,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -145482,7 +145482,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 32nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 31st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -145517,7 +145517,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 81 | B | 18th of 76",
+       "label": "Total shareholder return | 81 | B | 17th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -146578,14 +146578,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 86 | B | 18th of 76",
+       "label": "Forecast financials | 86 | B | 19th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 27th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 26th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -147581,7 +147581,7 @@
   },
   "HTWS-GB": {
    "stage": "Early-Stage Assessment",
-   "date": "2026-11-04",
+   "date": "2026-11-25",
    "source_memo": "memo.md",
    "master": [
     {
@@ -147646,86 +147646,86 @@
      "elements": [
       {
        "code": "T1",
-       "label": "Tailwinds in the operating environment | 72 | B+ | 12th of 76",
+       "label": "Tailwinds in the operating environment | 70 | B | 15th of 76",
        "question": "Tailwinds in the operating environment",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 64 | C | 29th of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
-       "grade": "C",
+       "grade": "D",
        "ras": []
       },
       {
        "code": "T3",
-       "label": "Value chain, structure, model, financials, management | 68 | B | 14th of 76",
+       "label": "Value chain, structure, model, financials, management | 66 | C+ | 19th of 76",
        "question": "Value chain, structure, model, financials, management",
-       "grade": "B",
+       "grade": "C",
        "ras": []
       },
       {
        "code": "T4",
-       "label": "Conservatism of guidance and record of delivery | 80 | A | 2nd of 76",
+       "label": "Conservatism of guidance and record of delivery | 76 | A | 4th of 76",
        "question": "Conservatism of guidance and record of delivery",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T5",
-       "label": "Pricing power, leverage, cost control, feedback loops | 80 | A | 1st of 76",
+       "label": "Pricing power, leverage, cost control, feedback loops | 73 | A | 5th of 76",
        "question": "Pricing power, leverage, cost control, feedback loops",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 70 | C | 44th of 76",
+       "label": "Forecast financials | 92 | A | 3rd of 76",
        "question": "Forecast financials",
-       "grade": "C",
+       "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 56 | B+ | 8th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 31st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
-       "grade": "B",
-       "ras": []
-      },
-      {
-       "code": "T8",
-       "label": "Current momentum | 70 | C | 41st of 76",
-       "question": "Current momentum",
        "grade": "C",
        "ras": []
       },
       {
+       "code": "T8",
+       "label": "Current momentum | 78 | B | 30th of 76",
+       "question": "Current momentum",
+       "grade": "B",
+       "ras": []
+      },
+      {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 41 | D | 45th of 76",
+       "label": "Riskiness and simplicity of forecasts | 45 | D | 37th of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 58 | C+ | 21st of 76",
+       "label": "Position in the lifecycle | 51 | D | 38th of 76",
        "question": "Position in the lifecycle",
-       "grade": "C",
+       "grade": "D",
        "ras": []
       },
       {
        "code": "T11",
-       "label": "The fair multiple | 66 | C | 26th of 76",
+       "label": "The fair multiple | 64 | C | 28th of 76",
        "question": "The fair multiple",
        "grade": "C",
        "ras": []
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 91 | A | 1st of 76",
+       "label": "Total shareholder return | 79 | B | 20th of 76",
        "question": "Total shareholder return",
-       "grade": "A",
+       "grade": "B",
        "ras": []
       }
      ]
@@ -148592,7 +148592,7 @@
      "family": "Bottom-up/Stock-driven",
      "grade": "B",
      "owner": "the Rater",
-     "as_at": "2026-11-04",
+     "as_at": "2026-11-25",
      "pinned": null,
      "provenance": "rater"
     },
@@ -148604,7 +148604,7 @@
      "family": "Bottom-up/Stock-driven",
      "grade": "B",
      "owner": "the Rater",
-     "as_at": "2026-11-04",
+     "as_at": "2026-11-25",
      "pinned": null,
      "provenance": "rater"
     },
@@ -148616,7 +148616,7 @@
      "family": "Bottom-up/Stock-driven",
      "grade": "A",
      "owner": "the Rater",
-     "as_at": "2026-11-04",
+     "as_at": "2026-11-25",
      "pinned": null,
      "provenance": "rater"
     },
@@ -148628,7 +148628,7 @@
      "family": "Bottom-up/Stock-driven",
      "grade": "C",
      "owner": "the Rater",
-     "as_at": "2026-11-04",
+     "as_at": "2026-11-25",
      "pinned": null,
      "provenance": "rater"
     },
@@ -151064,7 +151064,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 80 | B | 19th of 76",
+       "label": "Forecast financials | 80 | B | 20th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -157128,16 +157128,16 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 77 | B | 31st of 76",
+       "label": "Current momentum | 77 | B | 32nd of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 45 | C- | 37th of 76",
+       "label": "Riskiness and simplicity of forecasts | 45 | D | 37th of 76",
        "question": "Riskiness and simplicity of forecasts",
-       "grade": "C",
+       "grade": "D",
        "ras": []
       },
       {
@@ -157156,7 +157156,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -158526,7 +158526,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -158554,14 +158554,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 78 | B | 26th of 76",
+       "label": "Forecast financials | 78 | B | 27th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 47 | C+ | 20th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 47 | C+ | 19th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -158596,7 +158596,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 83 | B | 14th of 76",
+       "label": "Total shareholder return | 83 | B | 13th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -163700,7 +163700,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -168421,7 +168421,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -168463,7 +168463,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 84 | B | 12th of 76",
+       "label": "Total shareholder return | 84 | B | 11th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -169847,7 +169847,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -170264,7 +170264,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "B",
      "anchor": "mr1-technical-momentum-d"
     },
     {
@@ -175209,7 +175209,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -175258,9 +175258,9 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 45 | C- | 37th of 76",
+       "label": "Riskiness and simplicity of forecasts | 45 | D | 37th of 76",
        "question": "Riskiness and simplicity of forecasts",
-       "grade": "C",
+       "grade": "D",
        "ras": []
       },
       {
@@ -176305,14 +176305,14 @@
      "elements": [
       {
        "code": "T1",
-       "label": "Tailwinds in the operating environment | 70 | B | 16th of 76",
+       "label": "Tailwinds in the operating environment | 70 | B | 15th of 76",
        "question": "Tailwinds in the operating environment",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -176340,21 +176340,21 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 79 | B | 22nd of 76",
+       "label": "Forecast financials | 79 | B | 23rd of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 27th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 26th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
       },
       {
        "code": "T8",
-       "label": "Current momentum | 76 | B | 36th of 76",
+       "label": "Current momentum | 76 | B | 37th of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -176368,7 +176368,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 57 | C+ | 23rd of 76",
+       "label": "Position in the lifecycle | 57 | C+ | 22nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -179014,7 +179014,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "F",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -192400,7 +192400,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 77 | B | 31st of 76",
+       "label": "Current momentum | 77 | B | 32nd of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -193489,7 +193489,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 72 | C | 42nd of 76",
+       "label": "Forecast financials | 72 | C | 43rd of 76",
        "question": "Forecast financials",
        "grade": "C",
        "ras": []
@@ -193531,7 +193531,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 82 | B | 15th of 76",
+       "label": "Total shareholder return | 82 | B | 14th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -200610,7 +200610,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -200638,21 +200638,21 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 76 | B | 35th of 76",
+       "label": "Forecast financials | 76 | B | 36th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 32nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 42 | C- | 31st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
       },
       {
        "code": "T8",
-       "label": "Current momentum | 75 | B | 38th of 76",
+       "label": "Current momentum | 75 | B | 39th of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -206655,7 +206655,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 54 | C | 30th of 76",
+       "label": "Position in the lifecycle | 54 | C | 29th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -209226,7 +209226,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -209254,7 +209254,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 79 | B | 22nd of 76",
+       "label": "Forecast financials | 79 | B | 23rd of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -209282,7 +209282,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 52 | C- | 36th of 76",
+       "label": "Position in the lifecycle | 52 | C- | 35th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -216207,7 +216207,7 @@
       },
       {
        "code": "T3",
-       "label": "Value chain, structure, model, financials, management | 67 | B | 19th of 76",
+       "label": "Value chain, structure, model, financials, management | 67 | B | 18th of 76",
        "question": "Value chain, structure, model, financials, management",
        "grade": "B",
        "ras": []
@@ -216228,7 +216228,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 76 | B | 35th of 76",
+       "label": "Forecast financials | 76 | B | 36th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -216256,7 +216256,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 53 | C- | 33rd of 76",
+       "label": "Position in the lifecycle | 53 | C- | 32nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -229796,7 +229796,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-a"
     },
     {
@@ -232371,7 +232371,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -233428,21 +233428,21 @@
       },
       {
        "code": "T5",
-       "label": "Pricing power, leverage, cost control, feedback loops | 74 | A | 5th of 76",
+       "label": "Pricing power, leverage, cost control, feedback loops | 74 | A | 4th of 76",
        "question": "Pricing power, leverage, cost control, feedback loops",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 27th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 26th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -233477,7 +233477,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 80 | B | 20th of 76",
+       "label": "Total shareholder return | 80 | B | 19th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -236945,7 +236945,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 22nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 21st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -236980,7 +236980,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -238402,7 +238402,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -238430,14 +238430,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 78 | B | 26th of 76",
+       "label": "Forecast financials | 78 | B | 27th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 47 | C+ | 20th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 47 | C+ | 19th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -238472,7 +238472,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 79 | B | 21st of 76",
+       "label": "Total shareholder return | 79 | B | 20th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -240994,7 +240994,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 77 | B | 30th of 76",
+       "label": "Forecast financials | 77 | B | 31st of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -241008,7 +241008,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 77 | B | 31st of 76",
+       "label": "Current momentum | 77 | B | 32nd of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -241036,7 +241036,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 84 | B | 12th of 76",
+       "label": "Total shareholder return | 84 | B | 11th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -244325,7 +244325,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": ""
     },
     {
@@ -246006,7 +246006,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -246423,7 +246423,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": ""
     },
     {
@@ -249847,7 +249847,7 @@
       },
       {
        "code": "T4",
-       "label": "Conservatism of guidance and record of delivery | 76 | A | 5th of 76",
+       "label": "Conservatism of guidance and record of delivery | 76 | A | 4th of 76",
        "question": "Conservatism of guidance and record of delivery",
        "grade": "A",
        "ras": []
@@ -249861,7 +249861,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 78 | B | 26th of 76",
+       "label": "Forecast financials | 78 | B | 27th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -251367,7 +251367,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -251402,14 +251402,14 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 55 | B+ | 11th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 55 | B+ | 10th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T8",
-       "label": "Current momentum | 76 | B | 36th of 76",
+       "label": "Current momentum | 76 | B | 37th of 76",
        "question": "Current momentum",
        "grade": "B",
        "ras": []
@@ -251437,7 +251437,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 82 | B | 15th of 76",
+       "label": "Total shareholder return | 82 | B | 14th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -254494,7 +254494,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -255005,7 +255005,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -255047,7 +255047,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -257642,7 +257642,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -257677,7 +257677,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 48 | B | 18th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 48 | B | 17th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -262357,14 +262357,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 49 | B | 17th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 49 | B | 16th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -262385,7 +262385,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 53 | C- | 33rd of 76",
+       "label": "Position in the lifecycle | 53 | C- | 32nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -262399,7 +262399,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -264984,14 +264984,14 @@
      "elements": [
       {
        "code": "T1",
-       "label": "Tailwinds in the operating environment | 70 | B | 16th of 76",
+       "label": "Tailwinds in the operating environment | 70 | B | 15th of 76",
        "question": "Tailwinds in the operating environment",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 62 | D | 41st of 76",
+       "label": "Internal change forces | 62 | D | 40th of 76",
        "question": "Internal change forces",
        "grade": "D",
        "ras": []
@@ -265047,7 +265047,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 52 | C- | 36th of 76",
+       "label": "Position in the lifecycle | 52 | C- | 35th of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -267545,7 +267545,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": "mr1-technical-momentum-b"
     },
     {
@@ -270315,7 +270315,7 @@
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 22nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 21st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -271383,7 +271383,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -271411,14 +271411,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 77 | B | 30th of 76",
+       "label": "Forecast financials | 77 | B | 31st of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 54 | B+ | 13th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 54 | B+ | 12th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -272514,14 +272514,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 22nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 21st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -272542,7 +272542,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 57 | C+ | 23rd of 76",
+       "label": "Position in the lifecycle | 57 | C+ | 22nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -275220,7 +275220,7 @@
     {
      "code": "MR1",
      "label": "Technical momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr1-technical-momentum-c"
     },
     {
@@ -279432,14 +279432,14 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 42 | D | 41st of 76",
+       "label": "Riskiness and simplicity of forecasts | 42 | D | 42nd of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 57 | C+ | 23rd of 76",
+       "label": "Position in the lifecycle | 57 | C+ | 22nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -281797,14 +281797,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 48 | B | 18th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 48 | B | 17th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -281818,7 +281818,7 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 42 | D | 41st of 76",
+       "label": "Riskiness and simplicity of forecasts | 42 | D | 42nd of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
@@ -281839,7 +281839,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 81 | B | 18th of 76",
+       "label": "Total shareholder return | 81 | B | 17th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -283373,14 +283373,14 @@
       },
       {
        "code": "T3",
-       "label": "Value chain, structure, model, financials, management | 66 | C+ | 20th of 76",
+       "label": "Value chain, structure, model, financials, management | 66 | C+ | 19th of 76",
        "question": "Value chain, structure, model, financials, management",
        "grade": "C",
        "ras": []
       },
       {
        "code": "T4",
-       "label": "Conservatism of guidance and record of delivery | 76 | A | 5th of 76",
+       "label": "Conservatism of guidance and record of delivery | 76 | A | 4th of 76",
        "question": "Conservatism of guidance and record of delivery",
        "grade": "A",
        "ras": []
@@ -283394,14 +283394,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 91 | A | 4th of 76",
+       "label": "Forecast financials | 91 | A | 5th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 27th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 45 | C | 26th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -283415,14 +283415,14 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 42 | D | 41st of 76",
+       "label": "Riskiness and simplicity of forecasts | 42 | D | 42nd of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 57 | C+ | 23rd of 76",
+       "label": "Position in the lifecycle | 57 | C+ | 22nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -292780,7 +292780,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 80 | B | 19th of 76",
+       "label": "Forecast financials | 80 | B | 20th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -292822,7 +292822,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 85 | B | 11th of 76",
+       "label": "Total shareholder return | 85 | B | 10th of 76",
        "question": "Total shareholder return",
        "grade": "B",
        "ras": []
@@ -293883,14 +293883,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 78 | B | 26th of 76",
+       "label": "Forecast financials | 78 | B | 27th of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 22nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 21st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -293911,7 +293911,7 @@
       },
       {
        "code": "T10",
-       "label": "Position in the lifecycle | 57 | C+ | 23rd of 76",
+       "label": "Position in the lifecycle | 57 | C+ | 22nd of 76",
        "question": "Position in the lifecycle",
        "grade": "C",
        "ras": []
@@ -298184,7 +298184,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
@@ -298205,7 +298205,7 @@
       },
       {
        "code": "T9",
-       "label": "Riskiness and simplicity of forecasts | 44 | D | 40th of 76",
+       "label": "Riskiness and simplicity of forecasts | 44 | D | 41st of 76",
        "question": "Riskiness and simplicity of forecasts",
        "grade": "D",
        "ras": []
@@ -300086,14 +300086,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 50 | B | 16th of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 50 | B | 15th of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "B",
        "ras": []
@@ -301203,7 +301203,7 @@
       },
       {
        "code": "T8",
-       "label": "Current momentum | 70 | C | 41st of 76",
+       "label": "Current momentum | 70 | C | 42nd of 76",
        "question": "Current momentum",
        "grade": "C",
        "ras": []
@@ -302182,14 +302182,14 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 90 | A | 5th of 76",
+       "label": "Forecast financials | 90 | A | 6th of 76",
        "question": "Forecast financials",
        "grade": "A",
        "ras": []
       },
       {
        "code": "T7",
-       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 22nd of 76",
+       "label": "Scope for upgrades over 6 to 12 months | 46 | C+ | 21st of 76",
        "question": "Scope for upgrades over 6 to 12 months",
        "grade": "C",
        "ras": []
@@ -302224,7 +302224,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
@@ -307525,7 +307525,7 @@
       },
       {
        "code": "T2",
-       "label": "Internal change forces | 63 | C- | 34th of 76",
+       "label": "Internal change forces | 63 | C- | 33rd of 76",
        "question": "Internal change forces",
        "grade": "C",
        "ras": []
@@ -307553,7 +307553,7 @@
       },
       {
        "code": "T6",
-       "label": "Forecast financials | 79 | B | 22nd of 76",
+       "label": "Forecast financials | 79 | B | 23rd of 76",
        "question": "Forecast financials",
        "grade": "B",
        "ras": []
@@ -307595,7 +307595,7 @@
       },
       {
        "code": "T12",
-       "label": "Total shareholder return | 90 | A | 4th of 76",
+       "label": "Total shareholder return | 90 | A | 3rd of 76",
        "question": "Total shareholder return",
        "grade": "A",
        "ras": []
