@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-23",
+ "current_week": "2026-11-24",
  "prior_week": "2026-09-25",
  "industry": {
   "A. Consumer staples": {
@@ -12,7 +12,7 @@
    "prior": "C"
   },
   "C. Telecoms": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "D. Infrastructure": {
@@ -32,7 +32,7 @@
    "prior": "B"
   },
   "H. Consumer discretionary": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "I. Transportation": {
@@ -40,7 +40,7 @@
    "prior": "A"
   },
   "J. Technology": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "K. Professional, business and consumer services": {
@@ -60,7 +60,7 @@
    "prior": "F"
   },
   "O. Industrials and capital goods": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -86,7 +86,7 @@
    "prior": "C"
   },
   "A.6. Food production": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "A.7. General retail": {
@@ -114,7 +114,7 @@
    "prior": "B"
   },
   "B.7. Pharma/biotech": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "B.8. Healthcare distribution and retail": {
@@ -122,11 +122,11 @@
    "prior": "D"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "D.3. Infrastructure - telecom towers": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "F.2. Defence - Non-primes": {
@@ -166,7 +166,7 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -214,7 +214,7 @@
    "prior": "D"
   },
   "H.3. Retail - general/physical": {
-   "current": "B",
+   "current": "A",
    "prior": "C"
   },
   "H.4. Retail - online and delivery platforms": {
@@ -230,7 +230,7 @@
    "prior": "D"
   },
   "I.1. Logistics": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "J.1. IT services - consulting": {
@@ -250,11 +250,11 @@
    "prior": "C"
   },
   "J.5. Software - VMS": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "J.8. Hardware": {
@@ -262,11 +262,11 @@
    "prior": "C"
   },
   "J.9. Semiconductors": {
-   "current": "C",
+   "current": "D",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "K.11. Information services": {
@@ -294,7 +294,7 @@
    "prior": "B"
   },
   "M.10. Building materials - cement and aggregates": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "M.3. Chemicals - Specialty and industrial gases": {
@@ -314,7 +314,7 @@
    "prior": "C"
   },
   "M.9. Steel and metals": {
-   "current": "D",
+   "current": "F",
    "prior": "A"
   },
   "N.1. Real estate - residential landlords": {
@@ -342,7 +342,7 @@
    "prior": "F"
   },
   "O.1. Industrial services": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
@@ -354,7 +354,7 @@
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
@@ -362,15 +362,15 @@
    "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
-   "current": "D",
+   "current": "F",
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "O.2. Building technology and products": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.4. Electrical equipment, grid and automation": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "P.4. Agriculture": {

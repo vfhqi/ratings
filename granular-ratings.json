@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-24",
+ "generated": "2026-11-25",
  "count": 368,
  "stocks": {
   "1SXP-DE": {
@@ -22763,62 +22763,62 @@
      "elements": [
       {
        "code": "G1",
-       "label": "External change forces (group judgement) | 46 | D | 27th of 43",
+       "label": "External change forces (group judgement) | 46 | D | 28th of 44",
        "question": "External change forces",
        "grade": "D",
        "ras": [
         {
          "code": "C-01",
-         "label": "To what extent is end-market demand changing, structurally or cyclica… | 56 | D | 25th of 43",
+         "label": "To what extent is end-market demand changing, structurally or cyclica… | 56 | D | 25th of 44",
          "question": "To what extent is end-market demand changing, structurally or cyclically, and with how much visibility? (A cyclical swing counts when it has two-plus years of visibility.)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-02",
-         "label": "To what extent, and in which direction, is competitive intensity chan… | 32 | F | 39th of 43",
+         "label": "To what extent, and in which direction, is competitive intensity chan… | 32 | F | 40th of 44",
          "question": "To what extent, and in which direction, is competitive intensity changing?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-03",
-         "label": "To what extent is a disruption force strengthening or being disproved… | 38 | F | 40th of 43",
+         "label": "To what extent is a disruption force strengthening or being disproved… | 38 | F | 41st of 44",
          "question": "To what extent is a disruption force strengthening or being disproved, and in which direction does it act on the company?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-04",
-         "label": "To what extent is political or regulatory change under way, and how d… | 63 | B+ | 7th of 43",
+         "label": "To what extent is political or regulatory change under way, and how d… | 63 | B+ | 7th of 44",
          "question": "To what extent is political or regulatory change under way, and how does it bear on the company?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-05",
-         "label": "How are input costs, input availability and supplier concentration ch… | 38 | F | 36th of 43",
+         "label": "How are input costs, input availability and supplier concentration ch… | 38 | F | 37th of 44",
          "question": "How are input costs, input availability and supplier concentration changing, and is the net effect a headwind or a tailwind?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-06",
-         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 45 | F | 39th of 43",
+         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 45 | F | 40th of 44",
          "question": "Where is the company's own revenue and demand cycle, and to what extent is it turning?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-07",
-         "label": "To what extent is a macro force acting on the company, on its sector… | 38 | F | 33rd of 43",
+         "label": "To what extent is a macro force acting on the company, on its sector… | 38 | F | 34th of 44",
          "question": "To what extent is a macro force acting on the company, on its sector and on its industry, and at which level does it bite hardest?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-08",
-         "label": "To what extent is a key driver at the industry or sector level accele… | 55 | D | 29th of 43",
+         "label": "To what extent is a key driver at the industry or sector level accele… | 55 | D | 30th of 44",
          "question": "To what extent is a key driver at the industry or sector level accelerating the company's demand?",
          "grade": "D",
          "cqs": []
@@ -22832,7 +22832,7 @@
         },
         {
          "code": "C-10",
-         "label": "Taking each sector and industry thematic driver in turn, and then all… | 47 | D | 26th of 43",
+         "label": "Taking each sector and industry thematic driver in turn, and then all… | 47 | D | 27th of 44",
          "question": "Taking each sector and industry thematic driver in turn, and then all of the above together: how strong are the external headwinds and how strong are the tailwinds at value-chain, industry and sector level, and what is the overall external change picture?",
          "grade": "D",
          "cqs": []
@@ -22841,69 +22841,69 @@
       },
       {
        "code": "G2",
-       "label": "Internal change forces (group judgement) | 50 | F | 38th of 43",
+       "label": "Internal change forces (group judgement) | 50 | F | 39th of 44",
        "question": "Internal change forces",
        "grade": "F",
        "ras": [
         {
          "code": "C-11",
-         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 45 | F | 38th of 43",
+         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 45 | F | 39th of 44",
          "question": "To what extent have the chief executive, or other key leaders (e.g. finance director, operations director, board, division heads, etc.) or other key actors (e.g. activists, major shareholders) changed, and what does the change signal?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-12",
-         "label": "To what extent have the strategy or the strategic priorities changed,… | 47 | F | 42nd of 43",
+         "label": "To what extent have the strategy or the strategic priorities changed,… | 47 | F | 42nd of 44",
          "question": "To what extent have the strategy or the strategic priorities changed, and how well is the change articulated and resourced? (choices)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-13",
-         "label": "To what extent has financial guidance been raised, or have mid-term t… | 30 | F | 43rd of 43",
+         "label": "To what extent has financial guidance been raised, or have mid-term t… | 30 | F | 43rd of 44",
          "question": "To what extent has financial guidance been raised, or have mid-term targets or capital-markets-day ambitions been set or raised? (choices)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-14",
-         "label": "To what extent are standards improving in execution, operational meas… | 58 | D | 28th of 43",
+         "label": "To what extent are standards improving in execution, operational meas… | 58 | D | 29th of 44",
          "question": "To what extent are standards improving in execution, operational measures, governance or cost discipline? (choices and actions)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-15",
-         "label": "To what extent is the company reducing its perimeter or composition,… | 42 | F | 41st of 43",
+         "label": "To what extent is the company reducing its perimeter or composition,… | 42 | F | 42nd of 44",
          "question": "To what extent is the company reducing its perimeter or composition, through divestments, simplification or exits from low-return units? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-16",
-         "label": "To what extent is the company entering new geographic or product mark… | 45 | F | 41st of 43",
+         "label": "To what extent is the company entering new geographic or product mark… | 45 | F | 42nd of 44",
          "question": "To what extent is the company entering new geographic or product markets, and how sensibly? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-17",
-         "label": "To what extent is the company raising prices in real terms (above cos… | 25 | F | 40th of 43",
+         "label": "To what extent is the company raising prices in real terms (above cos… | 25 | F | 41st of 44",
          "question": "To what extent is the company raising prices in real terms (above cost inflation), and are the rises real, merely nominal, or so far only latent or plausible and increasingly noted by management? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-18",
-         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 48 | F | 37th of 43",
+         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 48 | F | 37th of 44",
          "question": "To what extent is the company stepping up mergers and acquisitions, and how strategically sensible, disciplined and well integrated are they? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-19",
-         "label": "To what extent is the company making more use of its balance sheet (f… | 40 | F | 36th of 43",
+         "label": "To what extent is the company making more use of its balance sheet (f… | 40 | F | 36th of 44",
          "question": "To what extent is the company making more use of its balance sheet (for investment, acquisitions or returns), or stepping up shareholder returns (a buyback starting or increasing, a special or progressive dividend), or is management increasingly mooting either? (actions)",
          "grade": "F",
          "cqs": []
@@ -22917,21 +22917,21 @@
         },
         {
          "code": "C-21",
-         "label": "Taken together, how strong, broad and well-resourced are the positive… | 52 | F | 37th of 43",
+         "label": "Taken together, how strong, broad and well-resourced are the positive… | 52 | F | 37th of 44",
          "question": "Taken together, how strong, broad and well-resourced are the positive corporate changes under way?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-86",
-         "label": "What negative corporate change developments are present/plausible? | 30 | F | 41st of 43",
+         "label": "What negative corporate change developments are present/plausible? | 30 | F | 42nd of 44",
          "question": "What negative corporate change developments are present/plausible?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-87",
-         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 42 | F | 38th of 43",
+         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 42 | F | 39th of 44",
          "question": "To what extent have key controlling actors (e.g. activists, major shareholders) indicated scope for change in strategy/approach?",
          "grade": "F",
          "cqs": []
@@ -22940,13 +22940,13 @@
       },
       {
        "code": "G3",
-       "label": "Stock market narrative (group judgement) | 44 | F | 43rd of 43",
+       "label": "Stock market narrative (group judgement) | 44 | F | 44th of 44",
        "question": "Stock market narrative",
        "grade": "F",
        "ras": [
         {
          "code": "C-22",
-         "label": "What staircase of novel positive developments lies ahead: which new,… | 44 | F | 43rd of 43",
+         "label": "What staircase of novel positive developments lies ahead: which new,… | 44 | F | 44th of 44",
          "question": "What staircase of novel positive developments lies ahead: which new, dated things can the market look forward to within the next 6 months, in months 6 to 18, and in months 18 to 36; how novel is each; and how well-founded?",
          "grade": "F",
          "cqs": []
@@ -22955,118 +22955,118 @@
       },
       {
        "code": "G4",
-       "label": "Industry and Value Chain (group judgement) | 38 | F | 43rd of 43",
+       "label": "Industry and Value Chain (group judgement) | 38 | F | 44th of 44",
        "question": "Industry and Value Chain",
        "grade": "F",
        "ras": [
         {
          "code": "C-24",
-         "label": "Where does the company rank by market share or size for its activity… | 45 | F | 38th of 43",
+         "label": "Where does the company rank by market share or size for its activity… | 45 | F | 39th of 44",
          "question": "Where does the company rank by market share or size for its activity or product, and how far is it from the number one or two position?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-25",
-         "label": "How concentrated is the market: do the top five hold more than 30 per… | 45 | F | 40th of 43",
+         "label": "How concentrated is the market: do the top five hold more than 30 per… | 45 | F | 41st of 44",
          "question": "How concentrated is the market: do the top five hold more than 30 percent, and how steep is the share distribution (for example, do the top five hold five times the share of numbers six to ten)?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-26",
-         "label": "How stable are market shares over time, and what share have new entra… | 40 | F | 38th of 43",
+         "label": "How stable are market shares over time, and what share have new entra… | 40 | F | 39th of 44",
          "question": "How stable are market shares over time, and what share have new entrants taken over the last three to five years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-27",
-         "label": "To what extent does market share consolidate over time towards the la… | 38 | F | 41st of 43",
+         "label": "To what extent does market share consolidate over time towards the la… | 38 | F | 42nd of 44",
          "question": "To what extent does market share consolidate over time towards the largest competitors, and towards the most advantaged ones (not necessarily the largest or most established), and is this company among them?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-28",
-         "label": "What is competitors' attitude to competition: do they put margin and… | 33 | F | 40th of 43",
+         "label": "What is competitors' attitude to competition: do they put margin and… | 33 | F | 41st of 44",
          "question": "What is competitors' attitude to competition: do they put margin and return on capital first, or volume first; are they benign and cooperative, or willing to suffer losses; and do industry prices fall when volume falls?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-29",
-         "label": "How stable is that attitude, and how has it changed over the last eig… | 33 | F | 40th of 43",
+         "label": "How stable is that attitude, and how has it changed over the last eig… | 33 | F | 41st of 44",
          "question": "How stable is that attitude, and how has it changed over the last eighteen months to three years: do competitors show 'Michael O'Leary' instability (hard to predict, situation-dependent, reactive), and would they launch a 'shark attack' on industry pricing if they sensed weakness?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-31",
-         "label": "Taken together, how supportive is the industry structure, and how fra… | 36 | F | 43rd of 43",
+         "label": "Taken together, how supportive is the industry structure, and how fra… | 36 | F | 44th of 44",
          "question": "Taken together, how supportive is the industry structure, and how fragile is that support?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-32",
-         "label": "How is customer demand behaving: to what extent does it support the t… | 45 | F | 38th of 43",
+         "label": "How is customer demand behaving: to what extent does it support the t… | 45 | F | 39th of 44",
          "question": "How is customer demand behaving: to what extent does it support the thesis, and how fragile is that support?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-33",
-         "label": "To what extent are the route to market and the intermediaries helping… | 47 | D | 31st of 43",
+         "label": "To what extent are the route to market and the intermediaries helping… | 47 | D | 32nd of 44",
          "question": "To what extent are the route to market and the intermediaries helping or hindering the company, and how fragile is that?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-34",
-         "label": "How are existing competitors behaving, does that help or hurt the com… | 33 | F | 42nd of 43",
+         "label": "How are existing competitors behaving, does that help or hurt the com… | 33 | F | 43rd of 44",
          "question": "How are existing competitors behaving, does that help or hurt the company, and how fragile is the company's position against them?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-35",
-         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 35 | F | 42nd of 43",
+         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 35 | F | 43rd of 44",
          "question": "To what extent are new entrants (from adjacent markets; standard entrants; orthogonal or innovative entrants) entering or threatening this market, and how much of a threat is each type?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-36",
-         "label": "To what extent are substitutes or alternatives (other ways for custom… | 52 | D | 24th of 43",
+         "label": "To what extent are substitutes or alternatives (other ways for custom… | 52 | D | 24th of 44",
          "question": "To what extent are substitutes or alternatives (other ways for customers to solve the problems the company's products solve) a threat, and how is that changing?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-37",
-         "label": "What are regulators and political actors doing, does it help or hurt… | 60 | C+ | 12th of 43",
+         "label": "What are regulators and political actors doing, does it help or hurt… | 60 | C+ | 12th of 44",
          "question": "What are regulators and political actors doing, does it help or hurt the company, and how fragile is that position?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-38",
-         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 40 | F | 36th of 43",
+         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 40 | F | 37th of 44",
          "question": "On whom in the value chain are disruption forces acting (demand, competition, regulators and political actors, suppliers, any other actor), how is each acting, and how fragile do they leave the company's position?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-39",
-         "label": "Where relevant or material, how are suppliers behaving: a support to… | 42 | F | 35th of 43",
+         "label": "Where relevant or material, how are suppliers behaving: a support to… | 42 | F | 36th of 44",
          "question": "Where relevant or material, how are suppliers behaving: a support to the company, or a source of risk?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-84",
-         "label": "What do historical precedents, rules of thumb and the empirical evide… | 30 | F | 43rd of 43",
+         "label": "What do historical precedents, rules of thumb and the empirical evide… | 30 | F | 44th of 44",
          "question": "What do historical precedents, rules of thumb and the empirical evidence show about how companies in this sector and industry have typically generated share price, financial and operational outperformance, and underperformance, and to what extent does this company fit those patterns?",
          "grade": "F",
          "cqs": []
@@ -23075,55 +23075,55 @@
       },
       {
        "code": "G5",
-       "label": "Company - Competitive advantage (group judgement) | 38 | F | 42nd of 43",
+       "label": "Company - Competitive advantage (group judgement) | 38 | F | 43rd of 44",
        "question": "Company - Competitive advantage",
        "grade": "F",
        "ras": [
         {
          "code": "C-41",
-         "label": "Which sustainable relative competitive advantages or moats does the c… | 42 | F | 42nd of 43",
+         "label": "Which sustainable relative competitive advantages or moats does the c… | 42 | F | 43rd of 44",
          "question": "Which sustainable relative competitive advantages or moats does the company hold (customer-related; production-related; scale-based; regulatory or political; culture or knowledge), how strong is each, and are they widening or narrowing?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-42",
-         "label": "How large is the company's scale relative to competitors and other ac… | 38 | F | 39th of 43",
+         "label": "How large is the company's scale relative to competitors and other ac… | 38 | F | 40th of 44",
          "question": "How large is the company's scale relative to competitors and other actors (revenue, headcount and so on), and what does that scale confer?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-43",
-         "label": "How large is the realistic total addressable market relative to the c… | 58 | D | 27th of 43",
+         "label": "How large is the realistic total addressable market relative to the c… | 58 | D | 28th of 44",
          "question": "How large is the realistic total addressable market relative to the company, and what rate of growth does it allow for over the mid term?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-44",
-         "label": "How high is the company's surplus customer utility against competing… | 48 | F | 38th of 43",
+         "label": "How high is the company's surplus customer utility against competing… | 48 | F | 39th of 44",
          "question": "How high is the company's surplus customer utility against competing or alternative offerings, and is it leading, or at least demonstrably not inferior? (Hard to prove, easier to disprove; the aim is to disprove inferiority at Early-Stage and Deep Dive, for example Sophos, Bytes.)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-45",
-         "label": "To what extent does the company have, and use, demonstrable pricing p… | 22 | F | 42nd of 43",
+         "label": "To what extent does the company have, and use, demonstrable pricing p… | 22 | F | 43rd of 44",
          "question": "To what extent does the company have, and use, demonstrable pricing power with minimal erosion of its relative surplus customer utility, shown by evidence of application rather than conjecture?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-46",
-         "label": "To what extent does the company share its scale economies with custom… | 45 | D | 17th of 43",
+         "label": "To what extent does the company share its scale economies with custom… | 45 | D | 18th of 44",
          "question": "To what extent does the company share its scale economies with customers, stated or de facto, in its messaging, strategy, culture or values?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-47",
-         "label": "To what extent do gravitational or mechanical forces, rather than her… | 35 | F | 41st of 43",
+         "label": "To what extent do gravitational or mechanical forces, rather than her… | 35 | F | 42nd of 44",
          "question": "To what extent do gravitational or mechanical forces, rather than heroic company dynamism, improve the company's competitive advantage and its financial outputs against peers with each period that passes?",
          "grade": "F",
          "cqs": []
@@ -23132,83 +23132,83 @@
       },
       {
        "code": "G6",
-       "label": "Company - Economic strength (group judgement) | 28 | F | 43rd of 43",
+       "label": "Company - Economic strength (group judgement) | 28 | F | 44th of 44",
        "question": "Company - Economic strength",
        "grade": "F",
        "ras": [
         {
          "code": "C-49",
-         "label": "What earnings-per-share growth is the company generating, with what r… | 18 | F | 43rd of 43",
+         "label": "What earnings-per-share growth is the company generating, with what r… | 18 | F | 44th of 44",
          "question": "What earnings-per-share growth is the company generating, with what revenue growth, and how durable is it?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-50",
-         "label": "How much immediate scope is there to deploy capital or operating spen… | 40 | F | 35th of 43",
+         "label": "How much immediate scope is there to deploy capital or operating spen… | 40 | F | 36th of 44",
          "question": "How much immediate scope is there to deploy capital or operating spend at a high return on new invested capital for three to five years, and what does that mean for mid- and long-term potential and the fair multiple?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-51",
-         "label": "How high are the returns on capital: post-tax return on new invested… | 12 | F | 43rd of 43",
+         "label": "How high are the returns on capital: post-tax return on new invested… | 12 | F | 44th of 44",
          "question": "How high are the returns on capital: post-tax return on new invested capital, on capital employed and on tangible capital?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-52",
-         "label": "How high is the conversion of net income into free cash flow, and how… | 25 | F | 41st of 43",
+         "label": "How high is the conversion of net income into free cash flow, and how… | 25 | F | 42nd of 44",
          "question": "How high is the conversion of net income into free cash flow, and how do net working capital and similar items behave?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-53",
-         "label": "How high are gross and operating profit margins, and how are they tre… | 18 | F | 43rd of 43",
+         "label": "How high are gross and operating profit margins, and how are they tre… | 18 | F | 44th of 44",
          "question": "How high are gross and operating profit margins, and how are they trending?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-54",
-         "label": "How clean is the earnings base: how large is the gap between adjusted… | 22 | F | 43rd of 43",
+         "label": "How clean is the earnings base: how large is the gap between adjusted… | 22 | F | 44th of 44",
          "question": "How clean is the earnings base: how large is the gap between adjusted and reported earnings; do one-offs, capitalised costs or other items flatter it; and does the tax rate or any other non-obvious leakage erode earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-75",
-         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 45 | F | 35th of 43",
+         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 45 | F | 36th of 44",
          "question": "How material is the fixed-cost operating leverage: how much does a given change in revenue move operating profit, and how wide a range of outcomes does that create?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-76",
-         "label": "How material is the financial leverage or gearing: how much does it a… | 68 | C- | 18th of 43",
+         "label": "How material is the financial leverage or gearing: how much does it a… | 68 | C | 18th of 44",
          "question": "How material is the financial leverage or gearing: how much does it amplify earnings per share and risk, and how comfortable is it?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-77",
-         "label": "How much of each major part of the cost base is cuttable or reducible? | 40 | F | 41st of 43",
+         "label": "How much of each major part of the cost base is cuttable or reducible? | 40 | F | 42nd of 44",
          "question": "How much of each major part of the cost base is cuttable or reducible?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-78",
-         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 45 | F | 43rd of 43",
+         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 45 | F | 44th of 44",
          "question": "Beyond cutting costs, how much plausible scope is there to improve the financial outputs over the mid term; do peer precedents show it is achievable; would it come from a few big areas or many small ones; and is it congruent with the stated strategy?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-79",
-         "label": "How narrow is the business perimeter (number of countries and busines… | 40 | F | 41st of 43",
+         "label": "How narrow is the business perimeter (number of countries and busines… | 40 | F | 42nd of 44",
          "question": "How narrow is the business perimeter (number of countries and business lines), how is it changing, and what does that mean for predictability?",
          "grade": "F",
          "cqs": []
@@ -23217,83 +23217,83 @@
       },
       {
        "code": "G7",
-       "label": "Company - Management (group judgement) | 41 | F | 43rd of 43",
+       "label": "Company - Management (group judgement) | 41 | F | 44th of 44",
        "question": "Company - Management",
        "grade": "F",
        "ras": [
         {
          "code": "C-55",
-         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 38 | F | 42nd of 43",
+         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 38 | F | 43rd of 44",
          "question": "How big is the company's ambition or vision (a force: growth as a priority, outcompeting, innovating, adapting, pushing), particularly in relation to peers?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-56",
-         "label": "How great and smart is the strategy, with right and bold strategic pr… | 40 | F | 43rd of 43",
+         "label": "How great and smart is the strategy, with right and bold strategic pr… | 40 | F | 44th of 44",
          "question": "How great and smart is the strategy, with right and bold strategic priorities (an enabler): widening the moat over the mid term, growth as a priority, and a dynamic strategy that can capitalise on a plausible range of environments?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-57",
-         "label": "How great is the chief executive, judged by actions rather than conje… | 55 | D | 31st of 43",
+         "label": "How great is the chief executive, judged by actions rather than conje… | 55 | D | 31st of 44",
          "question": "How great is the chief executive, judged by actions rather than conjecture (an enabler, not an ossifier)?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-57b",
-         "label": "How high a priority is hiring well for the chief executive, and how g… | 42 | F | 40th of 43",
+         "label": "How high a priority is hiring well for the chief executive, and how g… | 42 | F | 41st of 44",
          "question": "How high a priority is hiring well for the chief executive, and how great is the leadership team the chief executive has built (an enabler)?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-58",
-         "label": "How well resourced and invested is the whole business (a buffer; an a… | 45 | F | 36th of 43",
+         "label": "How well resourced and invested is the whole business (a buffer; an a… | 45 | F | 37th of 44",
          "question": "How well resourced and invested is the whole business (a buffer; an ant colony: built yesterday for resilience)?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-59",
-         "label": "How holistic and congruent is the culture, with alignment across the… | 40 | F | 41st of 43",
+         "label": "How holistic and congruent is the culture, with alignment across the… | 40 | F | 42nd of 44",
          "question": "How holistic and congruent is the culture, with alignment across the total system (as at Lifco, Avanza or Ryanair)? Such that the goals, strategy, culture, execution, decisions are congruent, holistic and symbiotic?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-60",
-         "label": "How clear, straightforward and helpful is the company's communication… | 48 | F | 37th of 43",
+         "label": "How clear, straightforward and helpful is the company's communication… | 48 | F | 38th of 44",
          "question": "How clear, straightforward and helpful is the company's communication, including on the strategy and the driver transmission mechanism?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-61",
-         "label": "How strong is the company's record of acting, not just talking: a rec… | 40 | F | 41st of 43",
+         "label": "How strong is the company's record of acting, not just talking: a rec… | 40 | F | 42nd of 44",
          "question": "How strong is the company's record of acting, not just talking: a recent record of huge delivery and action, and a mid-term track record of delivery, not misses or justifications, whatever the environment (outperforming in tougher ones is even better), beyond its records against guidance and estimates?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-62",
-         "label": "To what extent does the company hold outlier standards, driving highe… | 35 | F | 40th of 43",
+         "label": "To what extent does the company hold outlier standards, driving highe… | 35 | F | 41st of 44",
          "question": "To what extent does the company hold outlier standards, driving higher, faster and better, with a record of out-executing competitors?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-63",
-         "label": "Explain, with the evidence, the extent to which the company puts shar… | 42 | D | 32nd of 43",
+         "label": "Explain, with the evidence, the extent to which the company puts shar… | 42 | D | 32nd of 44",
          "question": "Explain, with the evidence, the extent to which the company puts shareholders first, ahead of management, and how prudent its governance is (scaffolding put in place even where it was not needed): what does the evidence show, and why?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-64",
-         "label": "To what extent is the company an enlightened capital allocator and a… | 28 | F | 41st of 43",
+         "label": "To what extent is the company an enlightened capital allocator and a… | 28 | F | 42nd of 44",
          "question": "To what extent is the company an enlightened capital allocator and a dynamic repurchaser of its shares, not just an operator or generator, with a record of allocating capital at a high return on new invested capital?",
          "grade": "F",
          "cqs": []
@@ -23302,27 +23302,27 @@
       },
       {
        "code": "G8",
-       "label": "Sell-side estimates (group judgement) | 33 | F | 43rd of 43",
+       "label": "Sell-side estimates (group judgement) | 33 | F | 44th of 44",
        "question": "Sell-side estimates",
        "grade": "F",
        "ras": [
         {
          "code": "C-67",
-         "label": "How do the sell-side's forecasts for the next one to three years comp… | 35 | F | 43rd of 43",
+         "label": "How do the sell-side's forecasts for the next one to three years comp… | 35 | F | 44th of 44",
          "question": "How do the sell-side's forecasts for the next one to three years compare with the last one to five years, for the main financial statement line items in particular and the granular working up to them, and how credible is the gap given the change forces and foundations found above?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-69",
-         "label": "What is the company's record of missing, meeting or beating guidance… | 25 | F | 43rd of 43",
+         "label": "What is the company's record of missing, meeting or beating guidance… | 25 | F | 44th of 44",
          "question": "What is the company's record of missing, meeting or beating guidance and sell-side estimates over the last one, three and five years, including in comparable environmental conditions?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-74",
-         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 40 | F | 32nd of 43",
+         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 40 | F | 33rd of 44",
          "question": "To what extent have sell-side estimates been cut deeply and fully across all analysts, and has company guidance recently been rebased lower, or more aggressively kitchen-sinked or sandbagged?",
          "grade": "F",
          "cqs": []
@@ -23331,48 +23331,48 @@
       },
       {
        "code": "G9",
-       "label": "Guidance (group judgement) | 40 | F | 42nd of 43",
+       "label": "Guidance (group judgement) | 40 | F | 43rd of 44",
        "question": "Guidance",
        "grade": "F",
        "ras": [
         {
          "code": "C-68",
-         "label": "To what extent is company guidance above or below sell-side consensus… | 45 | F | 39th of 43",
+         "label": "To what extent is company guidance above or below sell-side consensus… | 45 | F | 40th of 44",
          "question": "To what extent is company guidance above or below sell-side consensus for this financial year and next financial year, and why?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-70",
-         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 35 | F | 39th of 43",
+         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 35 | F | 40th of 44",
          "question": "Beyond meeting or beating, what is the record, nature and behaviour of the company and its chief executive in upgrading guidance?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-71",
-         "label": "How conservative is current guidance for the next one to three years… | 50 | D | 30th of 43",
+         "label": "How conservative is current guidance for the next one to three years… | 50 | D | 31st of 44",
          "question": "How conservative is current guidance for the next one to three years against the last one to five years, adjusted for the difference in input change forces versus the past?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-72",
-         "label": "How specific is the guidance: built from stated building blocks, or v… | 35 | F | 40th of 43",
+         "label": "How specific is the guidance: built from stated building blocks, or v… | 35 | F | 41st of 44",
          "question": "How specific is the guidance: built from stated building blocks, or vague about how results come about?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-73",
-         "label": "What else is material or uncommon about the company's guidance or inv… | 40 | F | 40th of 43",
+         "label": "What else is material or uncommon about the company's guidance or inv… | 40 | F | 41st of 44",
          "question": "What else is material or uncommon about the company's guidance or investor relations?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-85",
-         "label": "To what extent is informal/qualitative company commentary above or be… | 45 | F | 42nd of 43",
+         "label": "To what extent is informal/qualitative company commentary above or be… | 45 | F | 43rd of 44",
          "question": "To what extent is informal/qualitative company commentary above or below formal guidance and sell-side consensus for this financial year and next financial year, and why?",
          "grade": "F",
          "cqs": []
@@ -23381,34 +23381,34 @@
       },
       {
        "code": "G10",
-       "label": "Risks (group judgement) | 34 | F | 39th of 43",
+       "label": "Risks (group judgement) | 34 | F | 40th of 44",
        "question": "Risks",
        "grade": "F",
        "ras": [
         {
          "code": "C-80",
-         "label": "To what extent has the core growth engine decelerated over the last t… | 40 | F | 33rd of 43",
+         "label": "To what extent has the core growth engine decelerated over the last t… | 40 | F | 34th of 44",
          "question": "To what extent has the core growth engine decelerated over the last twelve months: is the revenue growth rate running below the company's own normal rate, and is the input change force itself slowing?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-81",
-         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 32 | F | 41st of 43",
+         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 32 | F | 42nd of 44",
          "question": "What fundamental risks are there that are sudden, high-magnitude and low-probability, and how plausible and how large is each?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-82",
-         "label": "What perception- or sentiment-driven risks are there that are sudden… | 30 | F | 39th of 43",
+         "label": "What perception- or sentiment-driven risks are there that are sudden… | 30 | F | 40th of 44",
          "question": "What perception- or sentiment-driven risks are there that are sudden and high-magnitude, including events elsewhere in the sector, theme or market that could hit the share price whatever the company's own fundamentals?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-83",
-         "label": "How far could the shares fall to a fair trough multiple? | 35 | D | 26th of 43",
+         "label": "How far could the shares fall to a fair trough multiple? | 35 | D | 27th of 44",
          "question": "How far could the shares fall to a fair trough multiple?",
          "grade": "D",
          "cqs": []
@@ -55678,62 +55678,62 @@
      "elements": [
       {
        "code": "G1",
-       "label": "External change forces (group judgement) | 70 | A | 3rd of 43",
+       "label": "External change forces (group judgement) | 70 | A | 3rd of 44",
        "question": "External change forces",
        "grade": "A",
        "ras": [
         {
          "code": "C-01",
-         "label": "To what extent is end-market demand changing, structurally or cyclica… | 76 | A | 3rd of 43",
+         "label": "To what extent is end-market demand changing, structurally or cyclica… | 76 | A | 3rd of 44",
          "question": "To what extent is end-market demand changing, structurally or cyclically, and with how much visibility? (A cyclical swing counts when it has two-plus years of visibility.)",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-02",
-         "label": "To what extent, and in which direction, is competitive intensity chan… | 58 | B+ | 5th of 43",
+         "label": "To what extent, and in which direction, is competitive intensity chan… | 58 | B+ | 5th of 44",
          "question": "To what extent, and in which direction, is competitive intensity changing?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-03",
-         "label": "To what extent is a disruption force strengthening or being disproved… | 62 | B+ | 5th of 43",
+         "label": "To what extent is a disruption force strengthening or being disproved… | 62 | B+ | 5th of 44",
          "question": "To what extent is a disruption force strengthening or being disproved, and in which direction does it act on the company?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-04",
-         "label": "To what extent is political or regulatory change under way, and how d… | 62 | B | 8th of 43",
+         "label": "To what extent is political or regulatory change under way, and how d… | 62 | B | 8th of 44",
          "question": "To what extent is political or regulatory change under way, and how does it bear on the company?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-05",
-         "label": "How are input costs, input availability and supplier concentration ch… | 42 | D | 28th of 43",
+         "label": "How are input costs, input availability and supplier concentration ch… | 42 | D | 28th of 44",
          "question": "How are input costs, input availability and supplier concentration changing, and is the net effect a headwind or a tailwind?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-06",
-         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 74 | A | 2nd of 43",
+         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 74 | A | 2nd of 44",
          "question": "Where is the company's own revenue and demand cycle, and to what extent is it turning?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-07",
-         "label": "To what extent is a macro force acting on the company, on its sector… | 52 | A | 2nd of 43",
+         "label": "To what extent is a macro force acting on the company, on its sector… | 52 | A | 2nd of 44",
          "question": "To what extent is a macro force acting on the company, on its sector and on its industry, and at which level does it bite hardest?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-08",
-         "label": "To what extent is a key driver at the industry or sector level accele… | 76 | A | 2nd of 43",
+         "label": "To what extent is a key driver at the industry or sector level accele… | 76 | A | 2nd of 44",
          "question": "To what extent is a key driver at the industry or sector level accelerating the company's demand?",
          "grade": "A",
          "cqs": []
@@ -55747,7 +55747,7 @@
         },
         {
          "code": "C-10",
-         "label": "Taking each sector and industry thematic driver in turn, and then all… | 70 | A | 3rd of 43",
+         "label": "Taking each sector and industry thematic driver in turn, and then all… | 70 | A | 3rd of 44",
          "question": "Taking each sector and industry thematic driver in turn, and then all of the above together: how strong are the external headwinds and how strong are the tailwinds at value-chain, industry and sector level, and what is the overall external change picture?",
          "grade": "A",
          "cqs": []
@@ -55756,69 +55756,69 @@
       },
       {
        "code": "G2",
-       "label": "Internal change forces (group judgement) | 62 | C | 11th of 43",
+       "label": "Internal change forces (group judgement) | 62 | C | 11th of 44",
        "question": "Internal change forces",
        "grade": "C",
        "ras": [
         {
          "code": "C-11",
-         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 58 | D | 21st of 43",
+         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 58 | D | 21st of 44",
          "question": "To what extent have the chief executive, or other key leaders (e.g. finance director, operations director, board, division heads, etc.) or other key actors (e.g. activists, major shareholders) changed, and what does the change signal?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-12",
-         "label": "To what extent have the strategy or the strategic priorities changed,… | 64 | C | 16th of 43",
+         "label": "To what extent have the strategy or the strategic priorities changed,… | 64 | C | 16th of 44",
          "question": "To what extent have the strategy or the strategic priorities changed, and how well is the change articulated and resourced? (choices)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-13",
-         "label": "To what extent has financial guidance been raised, or have mid-term t… | 40 | F | 36th of 43",
+         "label": "To what extent has financial guidance been raised, or have mid-term t… | 40 | F | 36th of 44",
          "question": "To what extent has financial guidance been raised, or have mid-term targets or capital-markets-day ambitions been set or raised? (choices)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-14",
-         "label": "To what extent are standards improving in execution, operational meas… | 68 | B+ | 5th of 43",
+         "label": "To what extent are standards improving in execution, operational meas… | 68 | B+ | 5th of 44",
          "question": "To what extent are standards improving in execution, operational measures, governance or cost discipline? (choices and actions)",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-15",
-         "label": "To what extent is the company reducing its perimeter or composition,… | 55 | D | 22nd of 43",
+         "label": "To what extent is the company reducing its perimeter or composition,… | 55 | D | 22nd of 44",
          "question": "To what extent is the company reducing its perimeter or composition, through divestments, simplification or exits from low-return units? (actions)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-16",
-         "label": "To what extent is the company entering new geographic or product mark… | 60 | C- | 17th of 43",
+         "label": "To what extent is the company entering new geographic or product mark… | 60 | C- | 17th of 44",
          "question": "To what extent is the company entering new geographic or product markets, and how sensibly? (actions)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-17",
-         "label": "To what extent is the company raising prices in real terms (above cos… | 50 | C- | 17th of 43",
+         "label": "To what extent is the company raising prices in real terms (above cos… | 50 | C- | 18th of 44",
          "question": "To what extent is the company raising prices in real terms (above cost inflation), and are the rises real, merely nominal, or so far only latent or plausible and increasingly noted by management? (actions)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-18",
-         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 45 | F | 42nd of 43",
+         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 45 | F | 43rd of 44",
          "question": "To what extent is the company stepping up mergers and acquisitions, and how strategically sensible, disciplined and well integrated are they? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-19",
-         "label": "To what extent is the company making more use of its balance sheet (f… | 62 | B | 9th of 43",
+         "label": "To what extent is the company making more use of its balance sheet (f… | 62 | B | 9th of 44",
          "question": "To what extent is the company making more use of its balance sheet (for investment, acquisitions or returns), or stepping up shareholder returns (a buyback starting or increasing, a special or progressive dividend), or is management increasingly mooting either? (actions)",
          "grade": "B",
          "cqs": []
@@ -55832,21 +55832,21 @@
         },
         {
          "code": "C-21",
-         "label": "Taken together, how strong, broad and well-resourced are the positive… | 62 | D | 19th of 43",
+         "label": "Taken together, how strong, broad and well-resourced are the positive… | 62 | C- | 19th of 44",
          "question": "Taken together, how strong, broad and well-resourced are the positive corporate changes under way?",
-         "grade": "D",
+         "grade": "C",
          "cqs": []
         },
         {
          "code": "C-86",
-         "label": "What negative corporate change developments are present/plausible? | 40 | B+ | 4th of 43",
+         "label": "What negative corporate change developments are present/plausible? | 40 | B+ | 4th of 44",
          "question": "What negative corporate change developments are present/plausible?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-87",
-         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 48 | F | 33rd of 43",
+         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 48 | F | 34th of 44",
          "question": "To what extent have key controlling actors (e.g. activists, major shareholders) indicated scope for change in strategy/approach?",
          "grade": "F",
          "cqs": []
@@ -55855,13 +55855,13 @@
       },
       {
        "code": "G3",
-       "label": "Stock market narrative (group judgement) | 50 | F | 38th of 43",
+       "label": "Stock market narrative (group judgement) | 50 | F | 39th of 44",
        "question": "Stock market narrative",
        "grade": "F",
        "ras": [
         {
          "code": "C-22",
-         "label": "What staircase of novel positive developments lies ahead: which new,… | 56 | D | 27th of 43",
+         "label": "What staircase of novel positive developments lies ahead: which new,… | 56 | D | 28th of 44",
          "question": "What staircase of novel positive developments lies ahead: which new, dated things can the market look forward to within the next 6 months, in months 6 to 18, and in months 18 to 36; how novel is each; and how well-founded?",
          "grade": "D",
          "cqs": []
@@ -55870,118 +55870,118 @@
       },
       {
        "code": "G4",
-       "label": "Industry and Value Chain (group judgement) | 52 | D | 25th of 43",
+       "label": "Industry and Value Chain (group judgement) | 52 | D | 26th of 44",
        "question": "Industry and Value Chain",
        "grade": "D",
        "ras": [
         {
          "code": "C-24",
-         "label": "Where does the company rank by market share or size for its activity… | 64 | C- | 20th of 43",
+         "label": "Where does the company rank by market share or size for its activity… | 64 | C- | 21st of 44",
          "question": "Where does the company rank by market share or size for its activity or product, and how far is it from the number one or two position?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-25",
-         "label": "How concentrated is the market: do the top five hold more than 30 per… | 38 | F | 42nd of 43",
+         "label": "How concentrated is the market: do the top five hold more than 30 per… | 38 | F | 43rd of 44",
          "question": "How concentrated is the market: do the top five hold more than 30 percent, and how steep is the share distribution (for example, do the top five hold five times the share of numbers six to ten)?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-26",
-         "label": "How stable are market shares over time, and what share have new entra… | 55 | D | 26th of 43",
+         "label": "How stable are market shares over time, and what share have new entra… | 55 | D | 27th of 44",
          "question": "How stable are market shares over time, and what share have new entrants taken over the last three to five years?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-27",
-         "label": "To what extent does market share consolidate over time towards the la… | 62 | C | 16th of 43",
+         "label": "To what extent does market share consolidate over time towards the la… | 62 | C | 17th of 44",
          "question": "To what extent does market share consolidate over time towards the largest competitors, and towards the most advantaged ones (not necessarily the largest or most established), and is this company among them?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-28",
-         "label": "What is competitors' attitude to competition: do they put margin and… | 50 | D | 29th of 43",
+         "label": "What is competitors' attitude to competition: do they put margin and… | 50 | D | 30th of 44",
          "question": "What is competitors' attitude to competition: do they put margin and return on capital first, or volume first; are they benign and cooperative, or willing to suffer losses; and do industry prices fall when volume falls?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-29",
-         "label": "How stable is that attitude, and how has it changed over the last eig… | 54 | C- | 20th of 43",
+         "label": "How stable is that attitude, and how has it changed over the last eig… | 54 | C- | 20th of 44",
          "question": "How stable is that attitude, and how has it changed over the last eighteen months to three years: do competitors show 'Michael O'Leary' instability (hard to predict, situation-dependent, reactive), and would they launch a 'shark attack' on industry pricing if they sensed weakness?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-31",
-         "label": "Taken together, how supportive is the industry structure, and how fra… | 48 | F | 35th of 43",
+         "label": "Taken together, how supportive is the industry structure, and how fra… | 48 | F | 36th of 44",
          "question": "Taken together, how supportive is the industry structure, and how fragile is that support?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-32",
-         "label": "How is customer demand behaving: to what extent does it support the t… | 72 | A | 3rd of 43",
+         "label": "How is customer demand behaving: to what extent does it support the t… | 72 | A | 3rd of 44",
          "question": "How is customer demand behaving: to what extent does it support the thesis, and how fragile is that support?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-33",
-         "label": "To what extent are the route to market and the intermediaries helping… | 62 | B | 10th of 43",
+         "label": "To what extent are the route to market and the intermediaries helping… | 62 | B | 10th of 44",
          "question": "To what extent are the route to market and the intermediaries helping or hindering the company, and how fragile is that?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-34",
-         "label": "How are existing competitors behaving, does that help or hurt the com… | 58 | B | 10th of 43",
+         "label": "How are existing competitors behaving, does that help or hurt the com… | 58 | B | 10th of 44",
          "question": "How are existing competitors behaving, does that help or hurt the company, and how fragile is the company's position against them?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-35",
-         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 55 | C- | 15th of 43",
+         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 55 | C- | 15th of 44",
          "question": "To what extent are new entrants (from adjacent markets; standard entrants; orthogonal or innovative entrants) entering or threatening this market, and how much of a threat is each type?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-36",
-         "label": "To what extent are substitutes or alternatives (other ways for custom… | 70 | A | 1st of 43",
+         "label": "To what extent are substitutes or alternatives (other ways for custom… | 70 | A | 1st of 44",
          "question": "To what extent are substitutes or alternatives (other ways for customers to solve the problems the company's products solve) a threat, and how is that changing?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-37",
-         "label": "What are regulators and political actors doing, does it help or hurt… | 63 | B+ | 6th of 43",
+         "label": "What are regulators and political actors doing, does it help or hurt… | 63 | B+ | 6th of 44",
          "question": "What are regulators and political actors doing, does it help or hurt the company, and how fragile is that position?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-38",
-         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 58 | B+ | 6th of 43",
+         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 58 | B+ | 6th of 44",
          "question": "On whom in the value chain are disruption forces acting (demand, competition, regulators and political actors, suppliers, any other actor), how is each acting, and how fragile do they leave the company's position?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-39",
-         "label": "Where relevant or material, how are suppliers behaving: a support to… | 40 | F | 38th of 43",
+         "label": "Where relevant or material, how are suppliers behaving: a support to… | 40 | F | 39th of 44",
          "question": "Where relevant or material, how are suppliers behaving: a support to the company, or a source of risk?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-84",
-         "label": "What do historical precedents, rules of thumb and the empirical evide… | 56 | B | 8th of 43",
+         "label": "What do historical precedents, rules of thumb and the empirical evide… | 56 | B | 8th of 44",
          "question": "What do historical precedents, rules of thumb and the empirical evidence show about how companies in this sector and industry have typically generated share price, financial and operational outperformance, and underperformance, and to what extent does this company fit those patterns?",
          "grade": "B",
          "cqs": []
@@ -55990,55 +55990,55 @@
       },
       {
        "code": "G5",
-       "label": "Company - Competitive advantage (group judgement) | 55 | D | 26th of 43",
+       "label": "Company - Competitive advantage (group judgement) | 55 | D | 27th of 44",
        "question": "Company - Competitive advantage",
        "grade": "D",
        "ras": [
         {
          "code": "C-41",
-         "label": "Which sustainable relative competitive advantages or moats does the c… | 55 | F | 33rd of 43",
+         "label": "Which sustainable relative competitive advantages or moats does the c… | 55 | F | 34th of 44",
          "question": "Which sustainable relative competitive advantages or moats does the company hold (customer-related; production-related; scale-based; regulatory or political; culture or knowledge), how strong is each, and are they widening or narrowing?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-42",
-         "label": "How large is the company's scale relative to competitors and other ac… | 60 | C | 15th of 43",
+         "label": "How large is the company's scale relative to competitors and other ac… | 60 | C | 16th of 44",
          "question": "How large is the company's scale relative to competitors and other actors (revenue, headcount and so on), and what does that scale confer?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-43",
-         "label": "How large is the realistic total addressable market relative to the c… | 64 | C | 14th of 43",
+         "label": "How large is the realistic total addressable market relative to the c… | 64 | C+ | 14th of 44",
          "question": "How large is the realistic total addressable market relative to the company, and what rate of growth does it allow for over the mid term?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-44",
-         "label": "How high is the company's surplus customer utility against competing… | 64 | C- | 17th of 43",
+         "label": "How high is the company's surplus customer utility against competing… | 64 | C- | 18th of 44",
          "question": "How high is the company's surplus customer utility against competing or alternative offerings, and is it leading, or at least demonstrably not inferior? (Hard to prove, easier to disprove; the aim is to disprove inferiority at Early-Stage and Deep Dive, for example Sophos, Bytes.)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-45",
-         "label": "To what extent does the company have, and use, demonstrable pricing p… | 42 | D | 29th of 43",
+         "label": "To what extent does the company have, and use, demonstrable pricing p… | 42 | D | 30th of 44",
          "question": "To what extent does the company have, and use, demonstrable pricing power with minimal erosion of its relative surplus customer utility, shown by evidence of application rather than conjecture?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-46",
-         "label": "To what extent does the company share its scale economies with custom… | 48 | C+ | 12th of 43",
+         "label": "To what extent does the company share its scale economies with custom… | 48 | C+ | 12th of 44",
          "question": "To what extent does the company share its scale economies with customers, stated or de facto, in its messaging, strategy, culture or values?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-47",
-         "label": "To what extent do gravitational or mechanical forces, rather than her… | 52 | D | 25th of 43",
+         "label": "To what extent do gravitational or mechanical forces, rather than her… | 52 | D | 26th of 44",
          "question": "To what extent do gravitational or mechanical forces, rather than heroic company dynamism, improve the company's competitive advantage and its financial outputs against peers with each period that passes?",
          "grade": "D",
          "cqs": []
@@ -56047,83 +56047,83 @@
       },
       {
        "code": "G6",
-       "label": "Company - Economic strength (group judgement) | 60 | B+ | 7th of 43",
+       "label": "Company - Economic strength (group judgement) | 60 | B+ | 7th of 44",
        "question": "Company - Economic strength",
        "grade": "B",
        "ras": [
         {
          "code": "C-49",
-         "label": "What earnings-per-share growth is the company generating, with what r… | 62 | B | 9th of 43",
+         "label": "What earnings-per-share growth is the company generating, with what r… | 62 | B | 9th of 44",
          "question": "What earnings-per-share growth is the company generating, with what revenue growth, and how durable is it?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-50",
-         "label": "How much immediate scope is there to deploy capital or operating spen… | 56 | C- | 18th of 43",
+         "label": "How much immediate scope is there to deploy capital or operating spen… | 56 | C- | 19th of 44",
          "question": "How much immediate scope is there to deploy capital or operating spend at a high return on new invested capital for three to five years, and what does that mean for mid- and long-term potential and the fair multiple?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-51",
-         "label": "How high are the returns on capital: post-tax return on new invested… | 66 | B+ | 6th of 43",
+         "label": "How high are the returns on capital: post-tax return on new invested… | 66 | B+ | 6th of 44",
          "question": "How high are the returns on capital: post-tax return on new invested capital, on capital employed and on tangible capital?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-52",
-         "label": "How high is the conversion of net income into free cash flow, and how… | 60 | C+ | 11th of 43",
+         "label": "How high is the conversion of net income into free cash flow, and how… | 60 | C+ | 11th of 44",
          "question": "How high is the conversion of net income into free cash flow, and how do net working capital and similar items behave?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-53",
-         "label": "How high are gross and operating profit margins, and how are they tre… | 54 | D | 29th of 43",
+         "label": "How high are gross and operating profit margins, and how are they tre… | 54 | D | 29th of 44",
          "question": "How high are gross and operating profit margins, and how are they trending?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-54",
-         "label": "How clean is the earnings base: how large is the gap between adjusted… | 55 | C+ | 12th of 43",
+         "label": "How clean is the earnings base: how large is the gap between adjusted… | 55 | C+ | 13th of 44",
          "question": "How clean is the earnings base: how large is the gap between adjusted and reported earnings; do one-offs, capitalised costs or other items flatter it; and does the tax rate or any other non-obvious leakage erode earnings per share?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-75",
-         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 52 | C- | 18th of 43",
+         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 52 | C- | 19th of 44",
          "question": "How material is the fixed-cost operating leverage: how much does a given change in revenue move operating profit, and how wide a range of outcomes does that create?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-76",
-         "label": "How material is the financial leverage or gearing: how much does it a… | 76 | B+ | 3rd of 43",
+         "label": "How material is the financial leverage or gearing: how much does it a… | 76 | B+ | 3rd of 44",
          "question": "How material is the financial leverage or gearing: how much does it amplify earnings per share and risk, and how comfortable is it?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-77",
-         "label": "How much of each major part of the cost base is cuttable or reducible? | 45 | F | 36th of 43",
+         "label": "How much of each major part of the cost base is cuttable or reducible? | 45 | F | 37th of 44",
          "question": "How much of each major part of the cost base is cuttable or reducible?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-78",
-         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 60 | D | 22nd of 43",
+         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 60 | D | 22nd of 44",
          "question": "Beyond cutting costs, how much plausible scope is there to improve the financial outputs over the mid term; do peer precedents show it is achievable; would it come from a few big areas or many small ones; and is it congruent with the stated strategy?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-79",
-         "label": "How narrow is the business perimeter (number of countries and busines… | 62 | B | 8th of 43",
+         "label": "How narrow is the business perimeter (number of countries and busines… | 62 | B | 8th of 44",
          "question": "How narrow is the business perimeter (number of countries and business lines), how is it changing, and what does that mean for predictability?",
          "grade": "B",
          "cqs": []
@@ -56132,83 +56132,83 @@
       },
       {
        "code": "G7",
-       "label": "Company - Management (group judgement) | 56 | D | 21st of 43",
+       "label": "Company - Management (group judgement) | 56 | C- | 21st of 44",
        "question": "Company - Management",
-       "grade": "D",
+       "grade": "C",
        "ras": [
         {
          "code": "C-55",
-         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 48 | F | 35th of 43",
+         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 48 | F | 36th of 44",
          "question": "How big is the company's ambition or vision (a force: growth as a priority, outcompeting, innovating, adapting, pushing), particularly in relation to peers?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-56",
-         "label": "How great and smart is the strategy, with right and bold strategic pr… | 62 | C | 16th of 43",
+         "label": "How great and smart is the strategy, with right and bold strategic pr… | 62 | C | 16th of 44",
          "question": "How great and smart is the strategy, with right and bold strategic priorities (an enabler): widening the moat over the mid term, growth as a priority, and a dynamic strategy that can capitalise on a plausible range of environments?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-57",
-         "label": "How great is the chief executive, judged by actions rather than conje… | 64 | C | 17th of 43",
+         "label": "How great is the chief executive, judged by actions rather than conje… | 64 | C | 17th of 44",
          "question": "How great is the chief executive, judged by actions rather than conjecture (an enabler, not an ossifier)?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-57b",
-         "label": "How high a priority is hiring well for the chief executive, and how g… | 60 | B | 8th of 43",
+         "label": "How high a priority is hiring well for the chief executive, and how g… | 60 | B | 8th of 44",
          "question": "How high a priority is hiring well for the chief executive, and how great is the leadership team the chief executive has built (an enabler)?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-58",
-         "label": "How well resourced and invested is the whole business (a buffer; an a… | 56 | D | 26th of 43",
+         "label": "How well resourced and invested is the whole business (a buffer; an a… | 56 | D | 27th of 44",
          "question": "How well resourced and invested is the whole business (a buffer; an ant colony: built yesterday for resilience)?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-59",
-         "label": "How holistic and congruent is the culture, with alignment across the… | 46 | D | 29th of 43",
+         "label": "How holistic and congruent is the culture, with alignment across the… | 46 | D | 30th of 44",
          "question": "How holistic and congruent is the culture, with alignment across the total system (as at Lifco, Avanza or Ryanair)? Such that the goals, strategy, culture, execution, decisions are congruent, holistic and symbiotic?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-60",
-         "label": "How clear, straightforward and helpful is the company's communication… | 50 | F | 30th of 43",
+         "label": "How clear, straightforward and helpful is the company's communication… | 50 | F | 31st of 44",
          "question": "How clear, straightforward and helpful is the company's communication, including on the strategy and the driver transmission mechanism?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-61",
-         "label": "How strong is the company's record of acting, not just talking: a rec… | 66 | C+ | 11th of 43",
+         "label": "How strong is the company's record of acting, not just talking: a rec… | 66 | C+ | 11th of 44",
          "question": "How strong is the company's record of acting, not just talking: a recent record of huge delivery and action, and a mid-term track record of delivery, not misses or justifications, whatever the environment (outperforming in tougher ones is even better), beyond its records against guidance and estimates?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-62",
-         "label": "To what extent does the company hold outlier standards, driving highe… | 45 | D | 29th of 43",
+         "label": "To what extent does the company hold outlier standards, driving highe… | 45 | D | 30th of 44",
          "question": "To what extent does the company hold outlier standards, driving higher, faster and better, with a record of out-executing competitors?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-63",
-         "label": "Explain, with the evidence, the extent to which the company puts shar… | 52 | C- | 19th of 43",
+         "label": "Explain, with the evidence, the extent to which the company puts shar… | 52 | C- | 19th of 44",
          "question": "Explain, with the evidence, the extent to which the company puts shareholders first, ahead of management, and how prudent its governance is (scaffolding put in place even where it was not needed): what does the evidence show, and why?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-64",
-         "label": "To what extent is the company an enlightened capital allocator and a… | 55 | C+ | 13th of 43",
+         "label": "To what extent is the company an enlightened capital allocator and a… | 55 | C+ | 13th of 44",
          "question": "To what extent is the company an enlightened capital allocator and a dynamic repurchaser of its shares, not just an operator or generator, with a record of allocating capital at a high return on new invested capital?",
          "grade": "C",
          "cqs": []
@@ -56217,27 +56217,27 @@
       },
       {
        "code": "G8",
-       "label": "Sell-side estimates (group judgement) | 48 | F | 35th of 43",
+       "label": "Sell-side estimates (group judgement) | 48 | F | 36th of 44",
        "question": "Sell-side estimates",
        "grade": "F",
        "ras": [
         {
          "code": "C-67",
-         "label": "How do the sell-side's forecasts for the next one to three years comp… | 48 | F | 32nd of 43",
+         "label": "How do the sell-side's forecasts for the next one to three years comp… | 48 | F | 33rd of 44",
          "question": "How do the sell-side's forecasts for the next one to three years compare with the last one to five years, for the main financial statement line items in particular and the granular working up to them, and how credible is the gap given the change forces and foundations found above?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-69",
-         "label": "What is the company's record of missing, meeting or beating guidance… | 60 | C | 15th of 43",
+         "label": "What is the company's record of missing, meeting or beating guidance… | 60 | C | 15th of 44",
          "question": "What is the company's record of missing, meeting or beating guidance and sell-side estimates over the last one, three and five years, including in comparable environmental conditions?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-74",
-         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 40 | F | 32nd of 43",
+         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 40 | F | 33rd of 44",
          "question": "To what extent have sell-side estimates been cut deeply and fully across all analysts, and has company guidance recently been rebased lower, or more aggressively kitchen-sinked or sandbagged?",
          "grade": "F",
          "cqs": []
@@ -56246,48 +56246,48 @@
       },
       {
        "code": "G9",
-       "label": "Guidance (group judgement) | 44 | F | 37th of 43",
+       "label": "Guidance (group judgement) | 44 | F | 38th of 44",
        "question": "Guidance",
        "grade": "F",
        "ras": [
         {
          "code": "C-68",
-         "label": "To what extent is company guidance above or below sell-side consensus… | 45 | F | 39th of 43",
+         "label": "To what extent is company guidance above or below sell-side consensus… | 45 | F | 40th of 44",
          "question": "To what extent is company guidance above or below sell-side consensus for this financial year and next financial year, and why?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-70",
-         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 36 | F | 37th of 43",
+         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 36 | F | 38th of 44",
          "question": "Beyond meeting or beating, what is the record, nature and behaviour of the company and its chief executive in upgrading guidance?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-71",
-         "label": "How conservative is current guidance for the next one to three years… | 52 | D | 25th of 43",
+         "label": "How conservative is current guidance for the next one to three years… | 52 | D | 26th of 44",
          "question": "How conservative is current guidance for the next one to three years against the last one to five years, adjusted for the difference in input change forces versus the past?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-72",
-         "label": "How specific is the guidance: built from stated building blocks, or v… | 34 | F | 42nd of 43",
+         "label": "How specific is the guidance: built from stated building blocks, or v… | 34 | F | 43rd of 44",
          "question": "How specific is the guidance: built from stated building blocks, or vague about how results come about?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-73",
-         "label": "What else is material or uncommon about the company's guidance or inv… | 46 | D | 24th of 43",
+         "label": "What else is material or uncommon about the company's guidance or inv… | 46 | D | 25th of 44",
          "question": "What else is material or uncommon about the company's guidance or investor relations?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-85",
-         "label": "To what extent is informal/qualitative company commentary above or be… | 55 | C- | 17th of 43",
+         "label": "To what extent is informal/qualitative company commentary above or be… | 55 | C- | 17th of 44",
          "question": "To what extent is informal/qualitative company commentary above or below formal guidance and sell-side consensus for this financial year and next financial year, and why?",
          "grade": "C",
          "cqs": []
@@ -56296,34 +56296,34 @@
       },
       {
        "code": "G10",
-       "label": "Risks (group judgement) | 44 | C+ | 14th of 43",
+       "label": "Risks (group judgement) | 44 | C | 15th of 44",
        "question": "Risks",
        "grade": "C",
        "ras": [
         {
          "code": "C-80",
-         "label": "To what extent has the core growth engine decelerated over the last t… | 74 | A | 3rd of 43",
+         "label": "To what extent has the core growth engine decelerated over the last t… | 74 | A | 3rd of 44",
          "question": "To what extent has the core growth engine decelerated over the last twelve months: is the revenue growth rate running below the company's own normal rate, and is the input change force itself slowing?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-81",
-         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 45 | C | 12th of 43",
+         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 45 | C | 13th of 44",
          "question": "What fundamental risks are there that are sudden, high-magnitude and low-probability, and how plausible and how large is each?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-82",
-         "label": "What perception- or sentiment-driven risks are there that are sudden… | 38 | C- | 17th of 43",
+         "label": "What perception- or sentiment-driven risks are there that are sudden… | 38 | C- | 18th of 44",
          "question": "What perception- or sentiment-driven risks are there that are sudden and high-magnitude, including events elsewhere in the sector, theme or market that could hit the share price whatever the company's own fundamentals?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-83",
-         "label": "How far could the shares fall to a fair trough multiple? | 34 | D | 31st of 43",
+         "label": "How far could the shares fall to a fair trough multiple? | 34 | D | 32nd of 44",
          "question": "How far could the shares fall to a fair trough multiple?",
          "grade": "D",
          "cqs": []
@@ -283931,62 +283931,62 @@
      "elements": [
       {
        "code": "G1",
-       "label": "External change forces (group judgement) | 72 | A | 2nd of 43",
+       "label": "External change forces (group judgement) | 72 | A | 2nd of 44",
        "question": "External change forces",
        "grade": "A",
        "ras": [
         {
          "code": "C-01",
-         "label": "To what extent is end-market demand changing, structurally or cyclica… | 80 | A | 2nd of 43",
+         "label": "To what extent is end-market demand changing, structurally or cyclica… | 80 | A | 2nd of 44",
          "question": "To what extent is end-market demand changing, structurally or cyclically, and with how much visibility? (A cyclical swing counts when it has two-plus years of visibility.)",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-02",
-         "label": "To what extent, and in which direction, is competitive intensity chan… | 60 | A | 4th of 43",
+         "label": "To what extent, and in which direction, is competitive intensity chan… | 60 | A | 4th of 44",
          "question": "To what extent, and in which direction, is competitive intensity changing?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-03",
-         "label": "To what extent is a disruption force strengthening or being disproved… | 62 | B+ | 5th of 43",
+         "label": "To what extent is a disruption force strengthening or being disproved… | 62 | B+ | 5th of 44",
          "question": "To what extent is a disruption force strengthening or being disproved, and in which direction does it act on the company?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-04",
-         "label": "To what extent is political or regulatory change under way, and how d… | 78 | A | 2nd of 43",
+         "label": "To what extent is political or regulatory change under way, and how d… | 78 | A | 2nd of 44",
          "question": "To what extent is political or regulatory change under way, and how does it bear on the company?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-05",
-         "label": "How are input costs, input availability and supplier concentration ch… | 52 | B+ | 7th of 43",
+         "label": "How are input costs, input availability and supplier concentration ch… | 52 | B+ | 7th of 44",
          "question": "How are input costs, input availability and supplier concentration changing, and is the net effect a headwind or a tailwind?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-06",
-         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 60 | C- | 19th of 43",
+         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 60 | C- | 20th of 44",
          "question": "Where is the company's own revenue and demand cycle, and to what extent is it turning?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-07",
-         "label": "To what extent is a macro force acting on the company, on its sector… | 35 | F | 40th of 43",
+         "label": "To what extent is a macro force acting on the company, on its sector… | 35 | F | 41st of 44",
          "question": "To what extent is a macro force acting on the company, on its sector and on its industry, and at which level does it bite hardest?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-08",
-         "label": "To what extent is a key driver at the industry or sector level accele… | 75 | A | 4th of 43",
+         "label": "To what extent is a key driver at the industry or sector level accele… | 75 | A | 4th of 44",
          "question": "To what extent is a key driver at the industry or sector level accelerating the company's demand?",
          "grade": "A",
          "cqs": []
@@ -284000,7 +284000,7 @@
         },
         {
          "code": "C-10",
-         "label": "Taking each sector and industry thematic driver in turn, and then all… | 72 | A | 2nd of 43",
+         "label": "Taking each sector and industry thematic driver in turn, and then all… | 72 | A | 2nd of 44",
          "question": "Taking each sector and industry thematic driver in turn, and then all of the above together: how strong are the external headwinds and how strong are the tailwinds at value-chain, industry and sector level, and what is the overall external change picture?",
          "grade": "A",
          "cqs": []
@@ -284009,69 +284009,69 @@
       },
       {
        "code": "G2",
-       "label": "Internal change forces (group judgement) | 62 | C | 11th of 43",
+       "label": "Internal change forces (group judgement) | 62 | C | 11th of 44",
        "question": "Internal change forces",
        "grade": "C",
        "ras": [
         {
          "code": "C-11",
-         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 55 | D | 27th of 43",
+         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 55 | D | 28th of 44",
          "question": "To what extent have the chief executive, or other key leaders (e.g. finance director, operations director, board, division heads, etc.) or other key actors (e.g. activists, major shareholders) changed, and what does the change signal?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-12",
-         "label": "To what extent have the strategy or the strategic priorities changed,… | 68 | B+ | 7th of 43",
+         "label": "To what extent have the strategy or the strategic priorities changed,… | 68 | B+ | 7th of 44",
          "question": "To what extent have the strategy or the strategic priorities changed, and how well is the change articulated and resourced? (choices)",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-13",
-         "label": "To what extent has financial guidance been raised, or have mid-term t… | 80 | A | 1st of 43",
+         "label": "To what extent has financial guidance been raised, or have mid-term t… | 80 | A | 1st of 44",
          "question": "To what extent has financial guidance been raised, or have mid-term targets or capital-markets-day ambitions been set or raised? (choices)",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-14",
-         "label": "To what extent are standards improving in execution, operational meas… | 58 | D | 28th of 43",
+         "label": "To what extent are standards improving in execution, operational meas… | 58 | D | 29th of 44",
          "question": "To what extent are standards improving in execution, operational measures, governance or cost discipline? (choices and actions)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-15",
-         "label": "To what extent is the company reducing its perimeter or composition,… | 40 | F | 42nd of 43",
+         "label": "To what extent is the company reducing its perimeter or composition,… | 40 | F | 43rd of 44",
          "question": "To what extent is the company reducing its perimeter or composition, through divestments, simplification or exits from low-return units? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-16",
-         "label": "To what extent is the company entering new geographic or product mark… | 62 | B | 7th of 43",
+         "label": "To what extent is the company entering new geographic or product mark… | 62 | B | 7th of 44",
          "question": "To what extent is the company entering new geographic or product markets, and how sensibly? (actions)",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-17",
-         "label": "To what extent is the company raising prices in real terms (above cos… | 46 | D | 25th of 43",
+         "label": "To what extent is the company raising prices in real terms (above cos… | 46 | D | 26th of 44",
          "question": "To what extent is the company raising prices in real terms (above cost inflation), and are the rises real, merely nominal, or so far only latent or plausible and increasingly noted by management? (actions)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-18",
-         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 55 | C | 13th of 43",
+         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 55 | C+ | 13th of 44",
          "question": "To what extent is the company stepping up mergers and acquisitions, and how strategically sensible, disciplined and well integrated are they? (actions)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-19",
-         "label": "To what extent is the company making more use of its balance sheet (f… | 42 | F | 35th of 43",
+         "label": "To what extent is the company making more use of its balance sheet (f… | 42 | F | 35th of 44",
          "question": "To what extent is the company making more use of its balance sheet (for investment, acquisitions or returns), or stepping up shareholder returns (a buyback starting or increasing, a special or progressive dividend), or is management increasingly mooting either? (actions)",
          "grade": "F",
          "cqs": []
@@ -284085,21 +284085,21 @@
         },
         {
          "code": "C-21",
-         "label": "Taken together, how strong, broad and well-resourced are the positive… | 64 | C+ | 11th of 43",
+         "label": "Taken together, how strong, broad and well-resourced are the positive… | 64 | C+ | 11th of 44",
          "question": "Taken together, how strong, broad and well-resourced are the positive corporate changes under way?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-86",
-         "label": "What negative corporate change developments are present/plausible? | 32 | F | 37th of 43",
+         "label": "What negative corporate change developments are present/plausible? | 32 | F | 38th of 44",
          "question": "What negative corporate change developments are present/plausible?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-87",
-         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 55 | C+ | 10th of 43",
+         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 55 | C+ | 11th of 44",
          "question": "To what extent have key controlling actors (e.g. activists, major shareholders) indicated scope for change in strategy/approach?",
          "grade": "C",
          "cqs": []
@@ -284108,13 +284108,13 @@
       },
       {
        "code": "G3",
-       "label": "Stock market narrative (group judgement) | 64 | A | 2nd of 43",
+       "label": "Stock market narrative (group judgement) | 64 | A | 2nd of 44",
        "question": "Stock market narrative",
        "grade": "A",
        "ras": [
         {
          "code": "C-22",
-         "label": "What staircase of novel positive developments lies ahead: which new,… | 66 | A | 2nd of 43",
+         "label": "What staircase of novel positive developments lies ahead: which new,… | 66 | A | 2nd of 44",
          "question": "What staircase of novel positive developments lies ahead: which new, dated things can the market look forward to within the next 6 months, in months 6 to 18, and in months 18 to 36; how novel is each; and how well-founded?",
          "grade": "A",
          "cqs": []
@@ -284123,118 +284123,118 @@
       },
       {
        "code": "G4",
-       "label": "Industry and Value Chain (group judgement) | 66 | A | 4th of 43",
+       "label": "Industry and Value Chain (group judgement) | 66 | A | 4th of 44",
        "question": "Industry and Value Chain",
        "grade": "A",
        "ras": [
         {
          "code": "C-24",
-         "label": "Where does the company rank by market share or size for its activity… | 78 | B+ | 7th of 43",
+         "label": "Where does the company rank by market share or size for its activity… | 78 | B+ | 7th of 44",
          "question": "Where does the company rank by market share or size for its activity or product, and how far is it from the number one or two position?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-25",
-         "label": "How concentrated is the market: do the top five hold more than 30 per… | 76 | B | 7th of 43",
+         "label": "How concentrated is the market: do the top five hold more than 30 per… | 76 | B | 7th of 44",
          "question": "How concentrated is the market: do the top five hold more than 30 percent, and how steep is the share distribution (for example, do the top five hold five times the share of numbers six to ten)?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-26",
-         "label": "How stable are market shares over time, and what share have new entra… | 72 | A | 3rd of 43",
+         "label": "How stable are market shares over time, and what share have new entra… | 72 | A | 3rd of 44",
          "question": "How stable are market shares over time, and what share have new entrants taken over the last three to five years?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-27",
-         "label": "To what extent does market share consolidate over time towards the la… | 70 | B+ | 5th of 43",
+         "label": "To what extent does market share consolidate over time towards the la… | 70 | B+ | 5th of 44",
          "question": "To what extent does market share consolidate over time towards the largest competitors, and towards the most advantaged ones (not necessarily the largest or most established), and is this company among them?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-28",
-         "label": "What is competitors' attitude to competition: do they put margin and… | 68 | B | 11th of 43",
+         "label": "What is competitors' attitude to competition: do they put margin and… | 68 | B | 11th of 44",
          "question": "What is competitors' attitude to competition: do they put margin and return on capital first, or volume first; are they benign and cooperative, or willing to suffer losses; and do industry prices fall when volume falls?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-29",
-         "label": "How stable is that attitude, and how has it changed over the last eig… | 62 | B | 8th of 43",
+         "label": "How stable is that attitude, and how has it changed over the last eig… | 62 | B | 8th of 44",
          "question": "How stable is that attitude, and how has it changed over the last eighteen months to three years: do competitors show 'Michael O'Leary' instability (hard to predict, situation-dependent, reactive), and would they launch a 'shark attack' on industry pricing if they sensed weakness?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-31",
-         "label": "Taken together, how supportive is the industry structure, and how fra… | 68 | B | 8th of 43",
+         "label": "Taken together, how supportive is the industry structure, and how fra… | 68 | B | 8th of 44",
          "question": "Taken together, how supportive is the industry structure, and how fragile is that support?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-32",
-         "label": "How is customer demand behaving: to what extent does it support the t… | 74 | A | 1st of 43",
+         "label": "How is customer demand behaving: to what extent does it support the t… | 74 | A | 1st of 44",
          "question": "How is customer demand behaving: to what extent does it support the thesis, and how fragile is that support?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-33",
-         "label": "To what extent are the route to market and the intermediaries helping… | 55 | D | 21st of 43",
+         "label": "To what extent are the route to market and the intermediaries helping… | 55 | D | 21st of 44",
          "question": "To what extent are the route to market and the intermediaries helping or hindering the company, and how fragile is that?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-34",
-         "label": "How are existing competitors behaving, does that help or hurt the com… | 63 | A | 4th of 43",
+         "label": "How are existing competitors behaving, does that help or hurt the com… | 63 | A | 4th of 44",
          "question": "How are existing competitors behaving, does that help or hurt the company, and how fragile is the company's position against them?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-35",
-         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 60 | B+ | 7th of 43",
+         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 60 | B+ | 7th of 44",
          "question": "To what extent are new entrants (from adjacent markets; standard entrants; orthogonal or innovative entrants) entering or threatening this market, and how much of a threat is each type?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-36",
-         "label": "To what extent are substitutes or alternatives (other ways for custom… | 66 | B+ | 5th of 43",
+         "label": "To what extent are substitutes or alternatives (other ways for custom… | 66 | B+ | 5th of 44",
          "question": "To what extent are substitutes or alternatives (other ways for customers to solve the problems the company's products solve) a threat, and how is that changing?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-37",
-         "label": "What are regulators and political actors doing, does it help or hurt… | 75 | A | 2nd of 43",
+         "label": "What are regulators and political actors doing, does it help or hurt… | 75 | A | 2nd of 44",
          "question": "What are regulators and political actors doing, does it help or hurt the company, and how fragile is that position?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-38",
-         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 58 | B+ | 6th of 43",
+         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 58 | B+ | 6th of 44",
          "question": "On whom in the value chain are disruption forces acting (demand, competition, regulators and political actors, suppliers, any other actor), how is each acting, and how fragile do they leave the company's position?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-39",
-         "label": "Where relevant or material, how are suppliers behaving: a support to… | 52 | C- | 18th of 43",
+         "label": "Where relevant or material, how are suppliers behaving: a support to… | 52 | C- | 18th of 44",
          "question": "Where relevant or material, how are suppliers behaving: a support to the company, or a source of risk?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-84",
-         "label": "What do historical precedents, rules of thumb and the empirical evide… | 55 | C+ | 10th of 43",
+         "label": "What do historical precedents, rules of thumb and the empirical evide… | 55 | C+ | 10th of 44",
          "question": "What do historical precedents, rules of thumb and the empirical evidence show about how companies in this sector and industry have typically generated share price, financial and operational outperformance, and underperformance, and to what extent does this company fit those patterns?",
          "grade": "C",
          "cqs": []
@@ -284243,55 +284243,55 @@
       },
       {
        "code": "G5",
-       "label": "Company - Competitive advantage (group judgement) | 66 | B | 8th of 43",
+       "label": "Company - Competitive advantage (group judgement) | 66 | B | 8th of 44",
        "question": "Company - Competitive advantage",
        "grade": "B",
        "ras": [
         {
          "code": "C-41",
-         "label": "Which sustainable relative competitive advantages or moats does the c… | 70 | B | 9th of 43",
+         "label": "Which sustainable relative competitive advantages or moats does the c… | 70 | C+ | 10th of 44",
          "question": "Which sustainable relative competitive advantages or moats does the company hold (customer-related; production-related; scale-based; regulatory or political; culture or knowledge), how strong is each, and are they widening or narrowing?",
-         "grade": "B",
+         "grade": "C",
          "cqs": []
         },
         {
          "code": "C-42",
-         "label": "How large is the company's scale relative to competitors and other ac… | 62 | C+ | 12th of 43",
+         "label": "How large is the company's scale relative to competitors and other ac… | 62 | C+ | 13th of 44",
          "question": "How large is the company's scale relative to competitors and other actors (revenue, headcount and so on), and what does that scale confer?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-43",
-         "label": "How large is the realistic total addressable market relative to the c… | 74 | A | 4th of 43",
+         "label": "How large is the realistic total addressable market relative to the c… | 74 | A | 4th of 44",
          "question": "How large is the realistic total addressable market relative to the company, and what rate of growth does it allow for over the mid term?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-44",
-         "label": "How high is the company's surplus customer utility against competing… | 75 | A | 2nd of 43",
+         "label": "How high is the company's surplus customer utility against competing… | 75 | A | 2nd of 44",
          "question": "How high is the company's surplus customer utility against competing or alternative offerings, and is it leading, or at least demonstrably not inferior? (Hard to prove, easier to disprove; the aim is to disprove inferiority at Early-Stage and Deep Dive, for example Sophos, Bytes.)",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-45",
-         "label": "To what extent does the company have, and use, demonstrable pricing p… | 42 | D | 29th of 43",
+         "label": "To what extent does the company have, and use, demonstrable pricing p… | 42 | D | 30th of 44",
          "question": "To what extent does the company have, and use, demonstrable pricing power with minimal erosion of its relative surplus customer utility, shown by evidence of application rather than conjecture?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-46",
-         "label": "To what extent does the company share its scale economies with custom… | 70 | A | 1st of 43",
+         "label": "To what extent does the company share its scale economies with custom… | 70 | A | 1st of 44",
          "question": "To what extent does the company share its scale economies with customers, stated or de facto, in its messaging, strategy, culture or values?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-47",
-         "label": "To what extent do gravitational or mechanical forces, rather than her… | 66 | B+ | 7th of 43",
+         "label": "To what extent do gravitational or mechanical forces, rather than her… | 66 | B+ | 7th of 44",
          "question": "To what extent do gravitational or mechanical forces, rather than heroic company dynamism, improve the company's competitive advantage and its financial outputs against peers with each period that passes?",
          "grade": "B",
          "cqs": []
@@ -284300,83 +284300,83 @@
       },
       {
        "code": "G6",
-       "label": "Company - Economic strength (group judgement) | 52 | D | 25th of 43",
+       "label": "Company - Economic strength (group judgement) | 52 | D | 26th of 44",
        "question": "Company - Economic strength",
        "grade": "D",
        "ras": [
         {
          "code": "C-49",
-         "label": "What earnings-per-share growth is the company generating, with what r… | 74 | A | 3rd of 43",
+         "label": "What earnings-per-share growth is the company generating, with what r… | 74 | A | 3rd of 44",
          "question": "What earnings-per-share growth is the company generating, with what revenue growth, and how durable is it?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-50",
-         "label": "How much immediate scope is there to deploy capital or operating spen… | 58 | C | 13th of 43",
+         "label": "How much immediate scope is there to deploy capital or operating spen… | 58 | C+ | 13th of 44",
          "question": "How much immediate scope is there to deploy capital or operating spend at a high return on new invested capital for three to five years, and what does that mean for mid- and long-term potential and the fair multiple?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-51",
-         "label": "How high are the returns on capital: post-tax return on new invested… | 60 | C+ | 12th of 43",
+         "label": "How high are the returns on capital: post-tax return on new invested… | 60 | C+ | 12th of 44",
          "question": "How high are the returns on capital: post-tax return on new invested capital, on capital employed and on tangible capital?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-52",
-         "label": "How high is the conversion of net income into free cash flow, and how… | 30 | F | 40th of 43",
+         "label": "How high is the conversion of net income into free cash flow, and how… | 30 | F | 41st of 44",
          "question": "How high is the conversion of net income into free cash flow, and how do net working capital and similar items behave?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-53",
-         "label": "How high are gross and operating profit margins, and how are they tre… | 72 | A | 3rd of 43",
+         "label": "How high are gross and operating profit margins, and how are they tre… | 72 | A | 3rd of 44",
          "question": "How high are gross and operating profit margins, and how are they trending?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-54",
-         "label": "How clean is the earnings base: how large is the gap between adjusted… | 38 | D | 28th of 43",
+         "label": "How clean is the earnings base: how large is the gap between adjusted… | 38 | D | 29th of 44",
          "question": "How clean is the earnings base: how large is the gap between adjusted and reported earnings; do one-offs, capitalised costs or other items flatter it; and does the tax rate or any other non-obvious leakage erode earnings per share?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-75",
-         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 48 | D | 32nd of 43",
+         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 48 | F | 33rd of 44",
          "question": "How material is the fixed-cost operating leverage: how much does a given change in revenue move operating profit, and how wide a range of outcomes does that create?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         },
         {
          "code": "C-76",
-         "label": "How material is the financial leverage or gearing: how much does it a… | 38 | F | 38th of 43",
+         "label": "How material is the financial leverage or gearing: how much does it a… | 38 | F | 39th of 44",
          "question": "How material is the financial leverage or gearing: how much does it amplify earnings per share and risk, and how comfortable is it?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-77",
-         "label": "How much of each major part of the cost base is cuttable or reducible? | 38 | F | 43rd of 43",
+         "label": "How much of each major part of the cost base is cuttable or reducible? | 38 | F | 44th of 44",
          "question": "How much of each major part of the cost base is cuttable or reducible?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-78",
-         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 66 | B+ | 4th of 43",
+         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 66 | B+ | 4th of 44",
          "question": "Beyond cutting costs, how much plausible scope is there to improve the financial outputs over the mid term; do peer precedents show it is achievable; would it come from a few big areas or many small ones; and is it congruent with the stated strategy?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-79",
-         "label": "How narrow is the business perimeter (number of countries and busines… | 55 | C | 15th of 43",
+         "label": "How narrow is the business perimeter (number of countries and busines… | 55 | C- | 16th of 44",
          "question": "How narrow is the business perimeter (number of countries and business lines), how is it changing, and what does that mean for predictability?",
          "grade": "C",
          "cqs": []
@@ -284385,83 +284385,83 @@
       },
       {
        "code": "G7",
-       "label": "Company - Management (group judgement) | 60 | B | 8th of 43",
+       "label": "Company - Management (group judgement) | 60 | B | 8th of 44",
        "question": "Company - Management",
        "grade": "B",
        "ras": [
         {
          "code": "C-55",
-         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 82 | A | 1st of 43",
+         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 82 | A | 1st of 44",
          "question": "How big is the company's ambition or vision (a force: growth as a priority, outcompeting, innovating, adapting, pushing), particularly in relation to peers?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-56",
-         "label": "How great and smart is the strategy, with right and bold strategic pr… | 68 | B+ | 5th of 43",
+         "label": "How great and smart is the strategy, with right and bold strategic pr… | 68 | B+ | 5th of 44",
          "question": "How great and smart is the strategy, with right and bold strategic priorities (an enabler): widening the moat over the mid term, growth as a priority, and a dynamic strategy that can capitalise on a plausible range of environments?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-57",
-         "label": "How great is the chief executive, judged by actions rather than conje… | 72 | A | 4th of 43",
+         "label": "How great is the chief executive, judged by actions rather than conje… | 72 | A | 4th of 44",
          "question": "How great is the chief executive, judged by actions rather than conjecture (an enabler, not an ossifier)?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-57b",
-         "label": "How high a priority is hiring well for the chief executive, and how g… | 55 | D | 20th of 43",
+         "label": "How high a priority is hiring well for the chief executive, and how g… | 55 | D | 21st of 44",
          "question": "How high a priority is hiring well for the chief executive, and how great is the leadership team the chief executive has built (an enabler)?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-58",
-         "label": "How well resourced and invested is the whole business (a buffer; an a… | 62 | C | 15th of 43",
+         "label": "How well resourced and invested is the whole business (a buffer; an a… | 62 | C | 16th of 44",
          "question": "How well resourced and invested is the whole business (a buffer; an ant colony: built yesterday for resilience)?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-59",
-         "label": "How holistic and congruent is the culture, with alignment across the… | 58 | B | 9th of 43",
+         "label": "How holistic and congruent is the culture, with alignment across the… | 58 | B | 9th of 44",
          "question": "How holistic and congruent is the culture, with alignment across the total system (as at Lifco, Avanza or Ryanair)? Such that the goals, strategy, culture, execution, decisions are congruent, holistic and symbiotic?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-60",
-         "label": "How clear, straightforward and helpful is the company's communication… | 52 | D | 24th of 43",
+         "label": "How clear, straightforward and helpful is the company's communication… | 52 | D | 25th of 44",
          "question": "How clear, straightforward and helpful is the company's communication, including on the strategy and the driver transmission mechanism?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-61",
-         "label": "How strong is the company's record of acting, not just talking: a rec… | 78 | A | 2nd of 43",
+         "label": "How strong is the company's record of acting, not just talking: a rec… | 78 | A | 2nd of 44",
          "question": "How strong is the company's record of acting, not just talking: a recent record of huge delivery and action, and a mid-term track record of delivery, not misses or justifications, whatever the environment (outperforming in tougher ones is even better), beyond its records against guidance and estimates?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-62",
-         "label": "To what extent does the company hold outlier standards, driving highe… | 72 | A | 2nd of 43",
+         "label": "To what extent does the company hold outlier standards, driving highe… | 72 | A | 2nd of 44",
          "question": "To what extent does the company hold outlier standards, driving higher, faster and better, with a record of out-executing competitors?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-63",
-         "label": "Explain, with the evidence, the extent to which the company puts shar… | 38 | F | 36th of 43",
+         "label": "Explain, with the evidence, the extent to which the company puts shar… | 38 | F | 37th of 44",
          "question": "Explain, with the evidence, the extent to which the company puts shareholders first, ahead of management, and how prudent its governance is (scaffolding put in place even where it was not needed): what does the evidence show, and why?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-64",
-         "label": "To what extent is the company an enlightened capital allocator and a… | 42 | D | 29th of 43",
+         "label": "To what extent is the company an enlightened capital allocator and a… | 42 | D | 29th of 44",
          "question": "To what extent is the company an enlightened capital allocator and a dynamic repurchaser of its shares, not just an operator or generator, with a record of allocating capital at a high return on new invested capital?",
          "grade": "D",
          "cqs": []
@@ -284470,27 +284470,27 @@
       },
       {
        "code": "G8",
-       "label": "Sell-side estimates (group judgement) | 62 | A | 3rd of 43",
+       "label": "Sell-side estimates (group judgement) | 62 | A | 3rd of 44",
        "question": "Sell-side estimates",
        "grade": "A",
        "ras": [
         {
          "code": "C-67",
-         "label": "How do the sell-side's forecasts for the next one to three years comp… | 60 | B+ | 5th of 43",
+         "label": "How do the sell-side's forecasts for the next one to three years comp… | 60 | B+ | 5th of 44",
          "question": "How do the sell-side's forecasts for the next one to three years compare with the last one to five years, for the main financial statement line items in particular and the granular working up to them, and how credible is the gap given the change forces and foundations found above?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-69",
-         "label": "What is the company's record of missing, meeting or beating guidance… | 78 | A | 1st of 43",
+         "label": "What is the company's record of missing, meeting or beating guidance… | 78 | A | 1st of 44",
          "question": "What is the company's record of missing, meeting or beating guidance and sell-side estimates over the last one, three and five years, including in comparable environmental conditions?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-74",
-         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 50 | D | 24th of 43",
+         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 50 | D | 25th of 44",
          "question": "To what extent have sell-side estimates been cut deeply and fully across all analysts, and has company guidance recently been rebased lower, or more aggressively kitchen-sinked or sandbagged?",
          "grade": "D",
          "cqs": []
@@ -284499,48 +284499,48 @@
       },
       {
        "code": "G9",
-       "label": "Guidance (group judgement) | 62 | A | 3rd of 43",
+       "label": "Guidance (group judgement) | 62 | A | 3rd of 44",
        "question": "Guidance",
        "grade": "A",
        "ras": [
         {
          "code": "C-68",
-         "label": "To what extent is company guidance above or below sell-side consensus… | 66 | A | 1st of 43",
+         "label": "To what extent is company guidance above or below sell-side consensus… | 66 | A | 1st of 44",
          "question": "To what extent is company guidance above or below sell-side consensus for this financial year and next financial year, and why?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-70",
-         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 80 | A | 1st of 43",
+         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 80 | A | 1st of 44",
          "question": "Beyond meeting or beating, what is the record, nature and behaviour of the company and its chief executive in upgrading guidance?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-71",
-         "label": "How conservative is current guidance for the next one to three years… | 58 | C+ | 13th of 43",
+         "label": "How conservative is current guidance for the next one to three years… | 58 | C+ | 13th of 44",
          "question": "How conservative is current guidance for the next one to three years against the last one to five years, adjusted for the difference in input change forces versus the past?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-72",
-         "label": "How specific is the guidance: built from stated building blocks, or v… | 55 | D | 25th of 43",
+         "label": "How specific is the guidance: built from stated building blocks, or v… | 55 | D | 26th of 44",
          "question": "How specific is the guidance: built from stated building blocks, or vague about how results come about?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-73",
-         "label": "What else is material or uncommon about the company's guidance or inv… | 42 | F | 34th of 43",
+         "label": "What else is material or uncommon about the company's guidance or inv… | 42 | F | 35th of 44",
          "question": "What else is material or uncommon about the company's guidance or investor relations?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-85",
-         "label": "To what extent is informal/qualitative company commentary above or be… | 64 | B+ | 4th of 43",
+         "label": "To what extent is informal/qualitative company commentary above or be… | 64 | B+ | 4th of 44",
          "question": "To what extent is informal/qualitative company commentary above or below formal guidance and sell-side consensus for this financial year and next financial year, and why?",
          "grade": "B",
          "cqs": []
@@ -284549,34 +284549,34 @@
       },
       {
        "code": "G10",
-       "label": "Risks (group judgement) | 42 | C- | 17th of 43",
+       "label": "Risks (group judgement) | 42 | C- | 18th of 44",
        "question": "Risks",
        "grade": "C",
        "ras": [
         {
          "code": "C-80",
-         "label": "To what extent has the core growth engine decelerated over the last t… | 62 | C+ | 12th of 43",
+         "label": "To what extent has the core growth engine decelerated over the last t… | 62 | C+ | 12th of 44",
          "question": "To what extent has the core growth engine decelerated over the last twelve months: is the revenue growth rate running below the company's own normal rate, and is the input change force itself slowing?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-81",
-         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 40 | D | 25th of 43",
+         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 40 | D | 26th of 44",
          "question": "What fundamental risks are there that are sudden, high-magnitude and low-probability, and how plausible and how large is each?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-82",
-         "label": "What perception- or sentiment-driven risks are there that are sudden… | 30 | F | 39th of 43",
+         "label": "What perception- or sentiment-driven risks are there that are sudden… | 30 | F | 40th of 44",
          "question": "What perception- or sentiment-driven risks are there that are sudden and high-magnitude, including events elsewhere in the sector, theme or market that could hit the share price whatever the company's own fundamentals?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-83",
-         "label": "How far could the shares fall to a fair trough multiple? | 55 | A | 2nd of 43",
+         "label": "How far could the shares fall to a fair trough multiple? | 55 | A | 2nd of 44",
          "question": "How far could the shares fall to a fair trough multiple?",
          "grade": "A",
          "cqs": []
@@ -301726,62 +301726,62 @@
      "elements": [
       {
        "code": "G1",
-       "label": "External change forces (group judgement) | 43 | F | 35th of 43",
+       "label": "External change forces (group judgement) | 43 | F | 36th of 44",
        "question": "External change forces",
        "grade": "F",
        "ras": [
         {
          "code": "C-01",
-         "label": "To what extent is end-market demand changing, structurally or cyclica… | 52 | D | 28th of 43",
+         "label": "To what extent is end-market demand changing, structurally or cyclica… | 52 | D | 29th of 44",
          "question": "To what extent is end-market demand changing, structurally or cyclically, and with how much visibility? (A cyclical swing counts when it has two-plus years of visibility.)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-02",
-         "label": "To what extent, and in which direction, is competitive intensity chan… | 40 | D | 27th of 43",
+         "label": "To what extent, and in which direction, is competitive intensity chan… | 40 | D | 28th of 44",
          "question": "To what extent, and in which direction, is competitive intensity changing?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-03",
-         "label": "To what extent is a disruption force strengthening or being disproved… | 40 | F | 35th of 43",
+         "label": "To what extent is a disruption force strengthening or being disproved… | 40 | F | 36th of 44",
          "question": "To what extent is a disruption force strengthening or being disproved, and in which direction does it act on the company?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-04",
-         "label": "To what extent is political or regulatory change under way, and how d… | 46 | F | 34th of 43",
+         "label": "To what extent is political or regulatory change under way, and how d… | 46 | F | 34th of 44",
          "question": "To what extent is political or regulatory change under way, and how does it bear on the company?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-05",
-         "label": "How are input costs, input availability and supplier concentration ch… | 47 | C+ | 13th of 43",
+         "label": "How are input costs, input availability and supplier concentration ch… | 47 | C+ | 13th of 44",
          "question": "How are input costs, input availability and supplier concentration changing, and is the net effect a headwind or a tailwind?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-06",
-         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 52 | D | 31st of 43",
+         "label": "Where is the company's own revenue and demand cycle, and to what exte… | 52 | F | 32nd of 44",
          "question": "Where is the company's own revenue and demand cycle, and to what extent is it turning?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         },
         {
          "code": "C-07",
-         "label": "To what extent is a macro force acting on the company, on its sector… | 38 | F | 33rd of 43",
+         "label": "To what extent is a macro force acting on the company, on its sector… | 38 | F | 34th of 44",
          "question": "To what extent is a macro force acting on the company, on its sector and on its industry, and at which level does it bite hardest?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-08",
-         "label": "To what extent is a key driver at the industry or sector level accele… | 50 | F | 33rd of 43",
+         "label": "To what extent is a key driver at the industry or sector level accele… | 50 | F | 34th of 44",
          "question": "To what extent is a key driver at the industry or sector level accelerating the company's demand?",
          "grade": "F",
          "cqs": []
@@ -301795,7 +301795,7 @@
         },
         {
          "code": "C-10",
-         "label": "Taking each sector and industry thematic driver in turn, and then all… | 43 | F | 35th of 43",
+         "label": "Taking each sector and industry thematic driver in turn, and then all… | 43 | F | 36th of 44",
          "question": "Taking each sector and industry thematic driver in turn, and then all of the above together: how strong are the external headwinds and how strong are the tailwinds at value-chain, industry and sector level, and what is the overall external change picture?",
          "grade": "F",
          "cqs": []
@@ -301804,69 +301804,69 @@
       },
       {
        "code": "G2",
-       "label": "Internal change forces (group judgement) | 64 | B | 8th of 43",
+       "label": "Internal change forces (group judgement) | 64 | B | 8th of 44",
        "question": "Internal change forces",
        "grade": "B",
        "ras": [
         {
          "code": "C-11",
-         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 68 | B+ | 5th of 43",
+         "label": "To what extent have the chief executive, or other key leaders (e.g. f… | 68 | B+ | 5th of 44",
          "question": "To what extent have the chief executive, or other key leaders (e.g. finance director, operations director, board, division heads, etc.) or other key actors (e.g. activists, major shareholders) changed, and what does the change signal?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-12",
-         "label": "To what extent have the strategy or the strategic priorities changed,… | 60 | D | 24th of 43",
+         "label": "To what extent have the strategy or the strategic priorities changed,… | 60 | D | 24th of 44",
          "question": "To what extent have the strategy or the strategic priorities changed, and how well is the change articulated and resourced? (choices)",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-13",
-         "label": "To what extent has financial guidance been raised, or have mid-term t… | 66 | B+ | 5th of 43",
+         "label": "To what extent has financial guidance been raised, or have mid-term t… | 66 | B+ | 5th of 44",
          "question": "To what extent has financial guidance been raised, or have mid-term targets or capital-markets-day ambitions been set or raised? (choices)",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-14",
-         "label": "To what extent are standards improving in execution, operational meas… | 63 | C+ | 14th of 43",
+         "label": "To what extent are standards improving in execution, operational meas… | 63 | C+ | 14th of 44",
          "question": "To what extent are standards improving in execution, operational measures, governance or cost discipline? (choices and actions)",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-15",
-         "label": "To what extent is the company reducing its perimeter or composition,… | 63 | B | 11th of 43",
+         "label": "To what extent is the company reducing its perimeter or composition,… | 63 | B | 11th of 44",
          "question": "To what extent is the company reducing its perimeter or composition, through divestments, simplification or exits from low-return units? (actions)",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-16",
-         "label": "To what extent is the company entering new geographic or product mark… | 54 | F | 34th of 43",
+         "label": "To what extent is the company entering new geographic or product mark… | 54 | F | 35th of 44",
          "question": "To what extent is the company entering new geographic or product markets, and how sensibly? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-17",
-         "label": "To what extent is the company raising prices in real terms (above cos… | 38 | F | 35th of 43",
+         "label": "To what extent is the company raising prices in real terms (above cos… | 38 | F | 36th of 44",
          "question": "To what extent is the company raising prices in real terms (above cost inflation), and are the rises real, merely nominal, or so far only latent or plausible and increasingly noted by management? (actions)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-18",
-         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 65 | A | 2nd of 43",
+         "label": "To what extent is the company stepping up mergers and acquisitions, a… | 65 | A | 2nd of 44",
          "question": "To what extent is the company stepping up mergers and acquisitions, and how strategically sensible, disciplined and well integrated are they? (actions)",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-19",
-         "label": "To what extent is the company making more use of its balance sheet (f… | 55 | D | 21st of 43",
+         "label": "To what extent is the company making more use of its balance sheet (f… | 55 | D | 21st of 44",
          "question": "To what extent is the company making more use of its balance sheet (for investment, acquisitions or returns), or stepping up shareholder returns (a buyback starting or increasing, a special or progressive dividend), or is management increasingly mooting either? (actions)",
          "grade": "D",
          "cqs": []
@@ -301880,21 +301880,21 @@
         },
         {
          "code": "C-21",
-         "label": "Taken together, how strong, broad and well-resourced are the positive… | 64 | C+ | 11th of 43",
+         "label": "Taken together, how strong, broad and well-resourced are the positive… | 64 | C+ | 11th of 44",
          "question": "Taken together, how strong, broad and well-resourced are the positive corporate changes under way?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-86",
-         "label": "What negative corporate change developments are present/plausible? | 35 | D | 28th of 43",
+         "label": "What negative corporate change developments are present/plausible? | 35 | D | 29th of 44",
          "question": "What negative corporate change developments are present/plausible?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-87",
-         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 66 | A | 1st of 43",
+         "label": "To what extent have key controlling actors (e.g. activists, major sha… | 66 | A | 1st of 44",
          "question": "To what extent have key controlling actors (e.g. activists, major shareholders) indicated scope for change in strategy/approach?",
          "grade": "A",
          "cqs": []
@@ -301903,13 +301903,13 @@
       },
       {
        "code": "G3",
-       "label": "Stock market narrative (group judgement) | 58 | C- | 15th of 43",
+       "label": "Stock market narrative (group judgement) | 58 | C- | 15th of 44",
        "question": "Stock market narrative",
        "grade": "C",
        "ras": [
         {
          "code": "C-22",
-         "label": "What staircase of novel positive developments lies ahead: which new,… | 58 | D | 21st of 43",
+         "label": "What staircase of novel positive developments lies ahead: which new,… | 58 | D | 21st of 44",
          "question": "What staircase of novel positive developments lies ahead: which new, dated things can the market look forward to within the next 6 months, in months 6 to 18, and in months 18 to 36; how novel is each; and how well-founded?",
          "grade": "D",
          "cqs": []
@@ -301918,118 +301918,118 @@
       },
       {
        "code": "G4",
-       "label": "Industry and Value Chain (group judgement) | 48 | D | 29th of 43",
+       "label": "Industry and Value Chain (group judgement) | 48 | D | 30th of 44",
        "question": "Industry and Value Chain",
        "grade": "D",
        "ras": [
         {
          "code": "C-24",
-         "label": "Where does the company rank by market share or size for its activity… | 55 | F | 33rd of 43",
+         "label": "Where does the company rank by market share or size for its activity… | 55 | F | 34th of 44",
          "question": "Where does the company rank by market share or size for its activity or product, and how far is it from the number one or two position?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-25",
-         "label": "How concentrated is the market: do the top five hold more than 30 per… | 63 | C- | 19th of 43",
+         "label": "How concentrated is the market: do the top five hold more than 30 per… | 63 | C- | 20th of 44",
          "question": "How concentrated is the market: do the top five hold more than 30 percent, and how steep is the share distribution (for example, do the top five hold five times the share of numbers six to ten)?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-26",
-         "label": "How stable are market shares over time, and what share have new entra… | 48 | F | 34th of 43",
+         "label": "How stable are market shares over time, and what share have new entra… | 48 | F | 35th of 44",
          "question": "How stable are market shares over time, and what share have new entrants taken over the last three to five years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-27",
-         "label": "To what extent does market share consolidate over time towards the la… | 50 | F | 32nd of 43",
+         "label": "To what extent does market share consolidate over time towards the la… | 50 | F | 33rd of 44",
          "question": "To what extent does market share consolidate over time towards the largest competitors, and towards the most advantaged ones (not necessarily the largest or most established), and is this company among them?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-28",
-         "label": "What is competitors' attitude to competition: do they put margin and… | 52 | D | 25th of 43",
+         "label": "What is competitors' attitude to competition: do they put margin and… | 52 | D | 26th of 44",
          "question": "What is competitors' attitude to competition: do they put margin and return on capital first, or volume first; are they benign and cooperative, or willing to suffer losses; and do industry prices fall when volume falls?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-29",
-         "label": "How stable is that attitude, and how has it changed over the last eig… | 45 | D | 28th of 43",
+         "label": "How stable is that attitude, and how has it changed over the last eig… | 45 | D | 29th of 44",
          "question": "How stable is that attitude, and how has it changed over the last eighteen months to three years: do competitors show 'Michael O'Leary' instability (hard to predict, situation-dependent, reactive), and would they launch a 'shark attack' on industry pricing if they sensed weakness?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-31",
-         "label": "Taken together, how supportive is the industry structure, and how fra… | 50 | F | 32nd of 43",
+         "label": "Taken together, how supportive is the industry structure, and how fra… | 50 | F | 33rd of 44",
          "question": "Taken together, how supportive is the industry structure, and how fragile is that support?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-32",
-         "label": "How is customer demand behaving: to what extent does it support the t… | 50 | D | 29th of 43",
+         "label": "How is customer demand behaving: to what extent does it support the t… | 50 | D | 30th of 44",
          "question": "How is customer demand behaving: to what extent does it support the thesis, and how fragile is that support?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-33",
-         "label": "To what extent are the route to market and the intermediaries helping… | 44 | F | 37th of 43",
+         "label": "To what extent are the route to market and the intermediaries helping… | 44 | F | 38th of 44",
          "question": "To what extent are the route to market and the intermediaries helping or hindering the company, and how fragile is that?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-34",
-         "label": "How are existing competitors behaving, does that help or hurt the com… | 40 | F | 36th of 43",
+         "label": "How are existing competitors behaving, does that help or hurt the com… | 40 | F | 37th of 44",
          "question": "How are existing competitors behaving, does that help or hurt the company, and how fragile is the company's position against them?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-35",
-         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 45 | D | 28th of 43",
+         "label": "To what extent are new entrants (from adjacent markets; standard entr… | 45 | D | 29th of 44",
          "question": "To what extent are new entrants (from adjacent markets; standard entrants; orthogonal or innovative entrants) entering or threatening this market, and how much of a threat is each type?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-36",
-         "label": "To what extent are substitutes or alternatives (other ways for custom… | 52 | D | 24th of 43",
+         "label": "To what extent are substitutes or alternatives (other ways for custom… | 52 | D | 24th of 44",
          "question": "To what extent are substitutes or alternatives (other ways for customers to solve the problems the company's products solve) a threat, and how is that changing?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-37",
-         "label": "What are regulators and political actors doing, does it help or hurt… | 46 | F | 33rd of 43",
+         "label": "What are regulators and political actors doing, does it help or hurt… | 46 | F | 34th of 44",
          "question": "What are regulators and political actors doing, does it help or hurt the company, and how fragile is that position?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-38",
-         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 43 | D | 32nd of 43",
+         "label": "On whom in the value chain are disruption forces acting (demand, comp… | 43 | D | 33rd of 44",
          "question": "On whom in the value chain are disruption forces acting (demand, competition, regulators and political actors, suppliers, any other actor), how is each acting, and how fragile do they leave the company's position?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-39",
-         "label": "Where relevant or material, how are suppliers behaving: a support to… | 50 | D | 22nd of 43",
+         "label": "Where relevant or material, how are suppliers behaving: a support to… | 50 | D | 22nd of 44",
          "question": "Where relevant or material, how are suppliers behaving: a support to the company, or a source of risk?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-84",
-         "label": "What do historical precedents, rules of thumb and the empirical evide… | 50 | D | 27th of 43",
+         "label": "What do historical precedents, rules of thumb and the empirical evide… | 50 | D | 27th of 44",
          "question": "What do historical precedents, rules of thumb and the empirical evidence show about how companies in this sector and industry have typically generated share price, financial and operational outperformance, and underperformance, and to what extent does this company fit those patterns?",
          "grade": "D",
          "cqs": []
@@ -302038,55 +302038,55 @@
       },
       {
        "code": "G5",
-       "label": "Company - Competitive advantage (group judgement) | 45 | F | 38th of 43",
+       "label": "Company - Competitive advantage (group judgement) | 45 | F | 39th of 44",
        "question": "Company - Competitive advantage",
        "grade": "F",
        "ras": [
         {
          "code": "C-41",
-         "label": "Which sustainable relative competitive advantages or moats does the c… | 48 | F | 40th of 43",
+         "label": "Which sustainable relative competitive advantages or moats does the c… | 48 | F | 41st of 44",
          "question": "Which sustainable relative competitive advantages or moats does the company hold (customer-related; production-related; scale-based; regulatory or political; culture or knowledge), how strong is each, and are they widening or narrowing?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-42",
-         "label": "How large is the company's scale relative to competitors and other ac… | 52 | D | 30th of 43",
+         "label": "How large is the company's scale relative to competitors and other ac… | 52 | D | 31st of 44",
          "question": "How large is the company's scale relative to competitors and other actors (revenue, headcount and so on), and what does that scale confer?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-43",
-         "label": "How large is the realistic total addressable market relative to the c… | 45 | F | 39th of 43",
+         "label": "How large is the realistic total addressable market relative to the c… | 45 | F | 40th of 44",
          "question": "How large is the realistic total addressable market relative to the company, and what rate of growth does it allow for over the mid term?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-44",
-         "label": "How high is the company's surplus customer utility against competing… | 42 | F | 39th of 43",
+         "label": "How high is the company's surplus customer utility against competing… | 42 | F | 40th of 44",
          "question": "How high is the company's surplus customer utility against competing or alternative offerings, and is it leading, or at least demonstrably not inferior? (Hard to prove, easier to disprove; the aim is to disprove inferiority at Early-Stage and Deep Dive, for example Sophos, Bytes.)",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-45",
-         "label": "To what extent does the company have, and use, demonstrable pricing p… | 37 | F | 35th of 43",
+         "label": "To what extent does the company have, and use, demonstrable pricing p… | 37 | F | 36th of 44",
          "question": "To what extent does the company have, and use, demonstrable pricing power with minimal erosion of its relative surplus customer utility, shown by evidence of application rather than conjecture?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-46",
-         "label": "To what extent does the company share its scale economies with custom… | 40 | F | 34th of 43",
+         "label": "To what extent does the company share its scale economies with custom… | 40 | F | 35th of 44",
          "question": "To what extent does the company share its scale economies with customers, stated or de facto, in its messaging, strategy, culture or values?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-47",
-         "label": "To what extent do gravitational or mechanical forces, rather than her… | 50 | D | 27th of 43",
+         "label": "To what extent do gravitational or mechanical forces, rather than her… | 50 | D | 28th of 44",
          "question": "To what extent do gravitational or mechanical forces, rather than heroic company dynamism, improve the company's competitive advantage and its financial outputs against peers with each period that passes?",
          "grade": "D",
          "cqs": []
@@ -302095,83 +302095,83 @@
       },
       {
        "code": "G6",
-       "label": "Company - Economic strength (group judgement) | 43 | F | 39th of 43",
+       "label": "Company - Economic strength (group judgement) | 43 | F | 40th of 44",
        "question": "Company - Economic strength",
        "grade": "F",
        "ras": [
         {
          "code": "C-49",
-         "label": "What earnings-per-share growth is the company generating, with what r… | 38 | F | 41st of 43",
+         "label": "What earnings-per-share growth is the company generating, with what r… | 38 | F | 42nd of 44",
          "question": "What earnings-per-share growth is the company generating, with what revenue growth, and how durable is it?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-50",
-         "label": "How much immediate scope is there to deploy capital or operating spen… | 40 | F | 35th of 43",
+         "label": "How much immediate scope is there to deploy capital or operating spen… | 40 | F | 36th of 44",
          "question": "How much immediate scope is there to deploy capital or operating spend at a high return on new invested capital for three to five years, and what does that mean for mid- and long-term potential and the fair multiple?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-51",
-         "label": "How high are the returns on capital: post-tax return on new invested… | 32 | F | 37th of 43",
+         "label": "How high are the returns on capital: post-tax return on new invested… | 32 | F | 38th of 44",
          "question": "How high are the returns on capital: post-tax return on new invested capital, on capital employed and on tangible capital?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-52",
-         "label": "How high is the conversion of net income into free cash flow, and how… | 50 | D | 27th of 43",
+         "label": "How high is the conversion of net income into free cash flow, and how… | 50 | D | 28th of 44",
          "question": "How high is the conversion of net income into free cash flow, and how do net working capital and similar items behave?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-53",
-         "label": "How high are gross and operating profit margins, and how are they tre… | 42 | F | 40th of 43",
+         "label": "How high are gross and operating profit margins, and how are they tre… | 42 | F | 41st of 44",
          "question": "How high are gross and operating profit margins, and how are they trending?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-54",
-         "label": "How clean is the earnings base: how large is the gap between adjusted… | 30 | F | 37th of 43",
+         "label": "How clean is the earnings base: how large is the gap between adjusted… | 30 | F | 38th of 44",
          "question": "How clean is the earnings base: how large is the gap between adjusted and reported earnings; do one-offs, capitalised costs or other items flatter it; and does the tax rate or any other non-obvious leakage erode earnings per share?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-75",
-         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 45 | F | 35th of 43",
+         "label": "How material is the fixed-cost operating leverage: how much does a gi… | 45 | F | 36th of 44",
          "question": "How material is the fixed-cost operating leverage: how much does a given change in revenue move operating profit, and how wide a range of outcomes does that create?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-76",
-         "label": "How material is the financial leverage or gearing: how much does it a… | 45 | F | 33rd of 43",
+         "label": "How material is the financial leverage or gearing: how much does it a… | 45 | F | 34th of 44",
          "question": "How material is the financial leverage or gearing: how much does it amplify earnings per share and risk, and how comfortable is it?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-77",
-         "label": "How much of each major part of the cost base is cuttable or reducible? | 60 | B+ | 3rd of 43",
+         "label": "How much of each major part of the cost base is cuttable or reducible? | 60 | B+ | 3rd of 44",
          "question": "How much of each major part of the cost base is cuttable or reducible?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-78",
-         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 60 | D | 22nd of 43",
+         "label": "Beyond cutting costs, how much plausible scope is there to improve th… | 60 | D | 22nd of 44",
          "question": "Beyond cutting costs, how much plausible scope is there to improve the financial outputs over the mid term; do peer precedents show it is achievable; would it come from a few big areas or many small ones; and is it congruent with the stated strategy?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-79",
-         "label": "How narrow is the business perimeter (number of countries and busines… | 52 | D | 22nd of 43",
+         "label": "How narrow is the business perimeter (number of countries and busines… | 52 | D | 23rd of 44",
          "question": "How narrow is the business perimeter (number of countries and business lines), how is it changing, and what does that mean for predictability?",
          "grade": "D",
          "cqs": []
@@ -302180,83 +302180,83 @@
       },
       {
        "code": "G7",
-       "label": "Company - Management (group judgement) | 58 | C | 13th of 43",
+       "label": "Company - Management (group judgement) | 58 | C | 13th of 44",
        "question": "Company - Management",
        "grade": "C",
        "ras": [
         {
          "code": "C-55",
-         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 52 | D | 30th of 43",
+         "label": "How big is the company's ambition or vision (a force: growth as a pri… | 52 | D | 31st of 44",
          "question": "How big is the company's ambition or vision (a force: growth as a priority, outcompeting, innovating, adapting, pushing), particularly in relation to peers?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-56",
-         "label": "How great and smart is the strategy, with right and bold strategic pr… | 55 | D | 31st of 43",
+         "label": "How great and smart is the strategy, with right and bold strategic pr… | 55 | F | 32nd of 44",
          "question": "How great and smart is the strategy, with right and bold strategic priorities (an enabler): widening the moat over the mid term, growth as a priority, and a dynamic strategy that can capitalise on a plausible range of environments?",
-         "grade": "D",
+         "grade": "F",
          "cqs": []
         },
         {
          "code": "C-57",
-         "label": "How great is the chief executive, judged by actions rather than conje… | 66 | C | 14th of 43",
+         "label": "How great is the chief executive, judged by actions rather than conje… | 66 | C+ | 14th of 44",
          "question": "How great is the chief executive, judged by actions rather than conjecture (an enabler, not an ossifier)?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-57b",
-         "label": "How high a priority is hiring well for the chief executive, and how g… | 60 | B | 8th of 43",
+         "label": "How high a priority is hiring well for the chief executive, and how g… | 60 | B | 8th of 44",
          "question": "How high a priority is hiring well for the chief executive, and how great is the leadership team the chief executive has built (an enabler)?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-58",
-         "label": "How well resourced and invested is the whole business (a buffer; an a… | 48 | F | 33rd of 43",
+         "label": "How well resourced and invested is the whole business (a buffer; an a… | 48 | F | 34th of 44",
          "question": "How well resourced and invested is the whole business (a buffer; an ant colony: built yesterday for resilience)?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-59",
-         "label": "How holistic and congruent is the culture, with alignment across the… | 45 | F | 32nd of 43",
+         "label": "How holistic and congruent is the culture, with alignment across the… | 45 | F | 33rd of 44",
          "question": "How holistic and congruent is the culture, with alignment across the total system (as at Lifco, Avanza or Ryanair)? Such that the goals, strategy, culture, execution, decisions are congruent, holistic and symbiotic?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-60",
-         "label": "How clear, straightforward and helpful is the company's communication… | 60 | C | 15th of 43",
+         "label": "How clear, straightforward and helpful is the company's communication… | 60 | C | 15th of 44",
          "question": "How clear, straightforward and helpful is the company's communication, including on the strategy and the driver transmission mechanism?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-61",
-         "label": "How strong is the company's record of acting, not just talking: a rec… | 62 | C | 15th of 43",
+         "label": "How strong is the company's record of acting, not just talking: a rec… | 62 | C | 15th of 44",
          "question": "How strong is the company's record of acting, not just talking: a recent record of huge delivery and action, and a mid-term track record of delivery, not misses or justifications, whatever the environment (outperforming in tougher ones is even better), beyond its records against guidance and estimates?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-62",
-         "label": "To what extent does the company hold outlier standards, driving highe… | 50 | D | 22nd of 43",
+         "label": "To what extent does the company hold outlier standards, driving highe… | 50 | D | 23rd of 44",
          "question": "To what extent does the company hold outlier standards, driving higher, faster and better, with a record of out-executing competitors?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-63",
-         "label": "Explain, with the evidence, the extent to which the company puts shar… | 63 | A | 3rd of 43",
+         "label": "Explain, with the evidence, the extent to which the company puts shar… | 63 | A | 3rd of 44",
          "question": "Explain, with the evidence, the extent to which the company puts shareholders first, ahead of management, and how prudent its governance is (scaffolding put in place even where it was not needed): what does the evidence show, and why?",
          "grade": "A",
          "cqs": []
         },
         {
          "code": "C-64",
-         "label": "To what extent is the company an enlightened capital allocator and a… | 64 | A | 3rd of 43",
+         "label": "To what extent is the company an enlightened capital allocator and a… | 64 | A | 3rd of 44",
          "question": "To what extent is the company an enlightened capital allocator and a dynamic repurchaser of its shares, not just an operator or generator, with a record of allocating capital at a high return on new invested capital?",
          "grade": "A",
          "cqs": []
@@ -302265,27 +302265,27 @@
       },
       {
        "code": "G8",
-       "label": "Sell-side estimates (group judgement) | 42 | F | 39th of 43",
+       "label": "Sell-side estimates (group judgement) | 42 | F | 40th of 44",
        "question": "Sell-side estimates",
        "grade": "F",
        "ras": [
         {
          "code": "C-67",
-         "label": "How do the sell-side's forecasts for the next one to three years comp… | 40 | F | 41st of 43",
+         "label": "How do the sell-side's forecasts for the next one to three years comp… | 40 | F | 42nd of 44",
          "question": "How do the sell-side's forecasts for the next one to three years compare with the last one to five years, for the main financial statement line items in particular and the granular working up to them, and how credible is the gap given the change forces and foundations found above?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-69",
-         "label": "What is the company's record of missing, meeting or beating guidance… | 55 | C- | 20th of 43",
+         "label": "What is the company's record of missing, meeting or beating guidance… | 55 | C- | 20th of 44",
          "question": "What is the company's record of missing, meeting or beating guidance and sell-side estimates over the last one, three and five years, including in comparable environmental conditions?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-74",
-         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 38 | F | 39th of 43",
+         "label": "To what extent have sell-side estimates been cut deeply and fully acr… | 38 | F | 40th of 44",
          "question": "To what extent have sell-side estimates been cut deeply and fully across all analysts, and has company guidance recently been rebased lower, or more aggressively kitchen-sinked or sandbagged?",
          "grade": "F",
          "cqs": []
@@ -302294,48 +302294,48 @@
       },
       {
        "code": "G9",
-       "label": "Guidance (group judgement) | 56 | C+ | 11th of 43",
+       "label": "Guidance (group judgement) | 56 | C+ | 11th of 44",
        "question": "Guidance",
        "grade": "C",
        "ras": [
         {
          "code": "C-68",
-         "label": "To what extent is company guidance above or below sell-side consensus… | 58 | B | 8th of 43",
+         "label": "To what extent is company guidance above or below sell-side consensus… | 58 | B | 8th of 44",
          "question": "To what extent is company guidance above or below sell-side consensus for this financial year and next financial year, and why?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-70",
-         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 60 | B | 10th of 43",
+         "label": "Beyond meeting or beating, what is the record, nature and behaviour o… | 60 | B | 10th of 44",
          "question": "Beyond meeting or beating, what is the record, nature and behaviour of the company and its chief executive in upgrading guidance?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "C-71",
-         "label": "How conservative is current guidance for the next one to three years… | 56 | C | 17th of 43",
+         "label": "How conservative is current guidance for the next one to three years… | 56 | C | 18th of 44",
          "question": "How conservative is current guidance for the next one to three years against the last one to five years, adjusted for the difference in input change forces versus the past?",
          "grade": "C",
          "cqs": []
         },
         {
          "code": "C-72",
-         "label": "How specific is the guidance: built from stated building blocks, or v… | 55 | D | 25th of 43",
+         "label": "How specific is the guidance: built from stated building blocks, or v… | 55 | D | 26th of 44",
          "question": "How specific is the guidance: built from stated building blocks, or vague about how results come about?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-73",
-         "label": "What else is material or uncommon about the company's guidance or inv… | 48 | D | 21st of 43",
+         "label": "What else is material or uncommon about the company's guidance or inv… | 48 | D | 21st of 44",
          "question": "What else is material or uncommon about the company's guidance or investor relations?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-85",
-         "label": "To what extent is informal/qualitative company commentary above or be… | 52 | D | 25th of 43",
+         "label": "To what extent is informal/qualitative company commentary above or be… | 52 | D | 26th of 44",
          "question": "To what extent is informal/qualitative company commentary above or below formal guidance and sell-side consensus for this financial year and next financial year, and why?",
          "grade": "D",
          "cqs": []
@@ -302344,34 +302344,34 @@
       },
       {
        "code": "G10",
-       "label": "Risks (group judgement) | 40 | D | 23rd of 43",
+       "label": "Risks (group judgement) | 40 | D | 24th of 44",
        "question": "Risks",
        "grade": "D",
        "ras": [
         {
          "code": "C-80",
-         "label": "To what extent has the core growth engine decelerated over the last t… | 48 | D | 26th of 43",
+         "label": "To what extent has the core growth engine decelerated over the last t… | 48 | D | 26th of 44",
          "question": "To what extent has the core growth engine decelerated over the last twelve months: is the revenue growth rate running below the company's own normal rate, and is the input change force itself slowing?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "C-81",
-         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 38 | F | 32nd of 43",
+         "label": "What fundamental risks are there that are sudden, high-magnitude and… | 38 | F | 33rd of 44",
          "question": "What fundamental risks are there that are sudden, high-magnitude and low-probability, and how plausible and how large is each?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-82",
-         "label": "What perception- or sentiment-driven risks are there that are sudden… | 34 | F | 34th of 43",
+         "label": "What perception- or sentiment-driven risks are there that are sudden… | 34 | F | 35th of 44",
          "question": "What perception- or sentiment-driven risks are there that are sudden and high-magnitude, including events elsewhere in the sector, theme or market that could hit the share price whatever the company's own fundamentals?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "C-83",
-         "label": "How far could the shares fall to a fair trough multiple? | 40 | C | 16th of 43",
+         "label": "How far could the shares fall to a fair trough multiple? | 40 | C | 17th of 44",
          "question": "How far could the shares fall to a fair trough multiple?",
          "grade": "C",
          "cqs": []
