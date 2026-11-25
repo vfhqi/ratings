@@ -23425,69 +23425,69 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Financial forecasts (group judgement) | 34 | F | 28th of 28, provisional",
+       "label": "Financial forecasts (group judgement) | 34 | F | 29th of 30",
        "question": "Financial forecasts",
        "grade": "F",
        "ras": [
         {
          "code": "P-01",
-         "label": "After assessing the fixed-cost operating leverage in greater detail,… | 40 | F | 27th of 28, provisional",
+         "label": "After assessing the fixed-cost operating leverage in greater detail,… | 40 | F | 29th of 30",
          "question": "After assessing the fixed-cost operating leverage in greater detail, how is it likely to shape the main financial line items over the next 18 months to four years, against the last four to six years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-02",
-         "label": "After assessing the financial leverage in greater detail, how is it l… | 52 | D | 19th of 28, provisional",
+         "label": "After assessing the financial leverage in greater detail, how is it l… | 52 | D | 20th of 30",
          "question": "After assessing the financial leverage in greater detail, how is it likely to shape earnings per share and the balance sheet over the next 18 months to four years?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "P-03",
-         "label": "After assessing the scope for cost elimination and efficiency in grea… | 35 | F | 28th of 28, provisional",
+         "label": "After assessing the scope for cost elimination and efficiency in grea… | 35 | F | 30th of 30",
          "question": "After assessing the scope for cost elimination and efficiency in greater detail, how much is likely to reach the main financial line items over the next 18 months to four years, and when?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-04",
-         "label": "After assessing the pricing power in greater detail, how is price lik… | 27 | F | 27th of 28, provisional",
+         "label": "After assessing the pricing power in greater detail, how is price lik… | 27 | F | 29th of 30",
          "question": "After assessing the pricing power in greater detail, how is price likely to contribute to revenue and margin over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-05",
-         "label": "After assessing in greater detail whether reinforcing or balancing fe… | 38 | F | 28th of 28, provisional",
+         "label": "After assessing in greater detail whether reinforcing or balancing fe… | 38 | F | 29th of 30",
          "question": "After assessing in greater detail whether reinforcing or balancing feedback loops are at work in the business model, such that dynamics at play today create additional scope for further positive/negative dynamics in the near/mid-term (reinforcing feedback loops), or the opposite (balancing loops), how are they likely to shape the main financial line items over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-06",
-         "label": "After assessing the track record of delivery in greater detail, how m… | 33 | F | 28th of 28, provisional",
+         "label": "After assessing the track record of delivery in greater detail, how m… | 33 | F | 30th of 30",
          "question": "After assessing the track record of delivery in greater detail, how much weight should the forecasts for the next 18 months to four years carry, and in which direction should they be leaned?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-08",
-         "label": "After assessing below-operating-profit cost items (e.g. tax, interest… | 30 | F | 27th of 28, provisional",
+         "label": "After assessing below-operating-profit cost items (e.g. tax, interest… | 30 | F | 28th of 30",
          "question": "After assessing below-operating-profit cost items (e.g. tax, interest, one-offs, minority investments, etc.) and share buybacks or issuance in greater detail, how is it likely to shape earnings per share, net income and free cash flow over the next 18 months to four years, versus the last four to six years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-09",
-         "label": "After assessing the other questions/items in the set in greater detai… | 33 | F | 28th of 28, provisional",
+         "label": "After assessing the other questions/items in the set in greater detai… | 33 | F | 29th of 30",
          "question": "After assessing the other questions/items in the set in greater detail, what is the net likely impact to the main financial line items over the next 18 months to four years, versus the last four to six years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-10",
-         "label": "Pulling together all the above answers, in all sets so far, what is y… | 34 | F | 28th of 28, provisional",
+         "label": "Pulling together all the above answers, in all sets so far, what is y… | 34 | F | 30th of 30",
          "question": "Pulling together all the above answers, in all sets so far, what is your carefully considered base case for the key operational drivers and the key financial line items over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
@@ -59995,7 +59995,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -69101,7 +69101,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -71882,7 +71882,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "B",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -83700,7 +83700,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "A",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -88491,7 +88491,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-nr"
     },
     {
@@ -91148,7 +91148,7 @@
     {
      "code": "MR2",
      "label": "Earnings momentum",
-     "grade": "B",
+     "grade": "A",
      "anchor": ""
     },
     {
@@ -107119,7 +107119,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -113437,7 +113437,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "F",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -142663,7 +142663,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-d"
     },
     {
@@ -197833,7 +197833,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "A",
+     "grade": "B",
      "anchor": "mr2-sell-side-earnings-momentum-f"
     },
     {
@@ -205732,7 +205732,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "F",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
@@ -218696,7 +218696,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "D",
+     "grade": "C",
      "anchor": "mr2-sell-side-earnings-momentum-c"
     },
     {
@@ -286843,7 +286843,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": null,
+     "grade": "F",
      "anchor": "mr2-sell-side-earnings-momentum-nr"
     },
     {
@@ -302388,69 +302388,69 @@
      "elements": [
       {
        "code": "G1",
-       "label": "Financial forecasts (group judgement) | 38 | F | 26th of 28, provisional",
+       "label": "Financial forecasts (group judgement) | 38 | F | 27th of 30",
        "question": "Financial forecasts",
        "grade": "F",
        "ras": [
         {
          "code": "P-01",
-         "label": "After assessing the fixed-cost operating leverage in greater detail,… | 45 | D | 18th of 28, provisional",
+         "label": "After assessing the fixed-cost operating leverage in greater detail,… | 45 | D | 19th of 30",
          "question": "After assessing the fixed-cost operating leverage in greater detail, how is it likely to shape the main financial line items over the next 18 months to four years, against the last four to six years?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "P-02",
-         "label": "After assessing the financial leverage in greater detail, how is it l… | 40 | F | 28th of 28, provisional",
+         "label": "After assessing the financial leverage in greater detail, how is it l… | 40 | F | 29th of 30",
          "question": "After assessing the financial leverage in greater detail, how is it likely to shape earnings per share and the balance sheet over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-03",
-         "label": "After assessing the scope for cost elimination and efficiency in grea… | 58 | B | 3rd of 28, provisional",
+         "label": "After assessing the scope for cost elimination and efficiency in grea… | 58 | B+ | 3rd of 30",
          "question": "After assessing the scope for cost elimination and efficiency in greater detail, how much is likely to reach the main financial line items over the next 18 months to four years, and when?",
          "grade": "B",
          "cqs": []
         },
         {
          "code": "P-04",
-         "label": "After assessing the pricing power in greater detail, how is price lik… | 36 | F | 24th of 28, provisional",
+         "label": "After assessing the pricing power in greater detail, how is price lik… | 36 | F | 24th of 30",
          "question": "After assessing the pricing power in greater detail, how is price likely to contribute to revenue and margin over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-05",
-         "label": "After assessing in greater detail whether reinforcing or balancing fe… | 47 | F | 21st of 28, provisional",
+         "label": "After assessing in greater detail whether reinforcing or balancing fe… | 47 | D | 21st of 30",
          "question": "After assessing in greater detail whether reinforcing or balancing feedback loops are at work in the business model, such that dynamics at play today create additional scope for further positive/negative dynamics in the near/mid-term (reinforcing feedback loops), or the opposite (balancing loops), how are they likely to shape the main financial line items over the next 18 months to four years?",
-         "grade": "F",
+         "grade": "D",
          "cqs": []
         },
         {
          "code": "P-06",
-         "label": "After assessing the track record of delivery in greater detail, how m… | 45 | D | 18th of 28, provisional",
+         "label": "After assessing the track record of delivery in greater detail, how m… | 45 | D | 18th of 30",
          "question": "After assessing the track record of delivery in greater detail, how much weight should the forecasts for the next 18 months to four years carry, and in which direction should they be leaned?",
          "grade": "D",
          "cqs": []
         },
         {
          "code": "P-08",
-         "label": "After assessing below-operating-profit cost items (e.g. tax, interest… | 30 | F | 27th of 28, provisional",
+         "label": "After assessing below-operating-profit cost items (e.g. tax, interest… | 30 | F | 28th of 30",
          "question": "After assessing below-operating-profit cost items (e.g. tax, interest, one-offs, minority investments, etc.) and share buybacks or issuance in greater detail, how is it likely to shape earnings per share, net income and free cash flow over the next 18 months to four years, versus the last four to six years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-09",
-         "label": "After assessing the other questions/items in the set in greater detai… | 38 | F | 26th of 28, provisional",
+         "label": "After assessing the other questions/items in the set in greater detai… | 38 | F | 27th of 30",
          "question": "After assessing the other questions/items in the set in greater detail, what is the net likely impact to the main financial line items over the next 18 months to four years, versus the last four to six years?",
          "grade": "F",
          "cqs": []
         },
         {
          "code": "P-10",
-         "label": "Pulling together all the above answers, in all sets so far, what is y… | 40 | F | 26th of 28, provisional",
+         "label": "Pulling together all the above answers, in all sets so far, what is y… | 40 | F | 27th of 30",
          "question": "Pulling together all the above answers, in all sets so far, what is your carefully considered base case for the key operational drivers and the key financial line items over the next 18 months to four years?",
          "grade": "F",
          "cqs": []
@@ -306276,7 +306276,7 @@
     {
      "code": "MR2",
      "label": "Sell-side earnings momentum",
-     "grade": "C",
+     "grade": "D",
      "anchor": "mr2-sell-side-earnings-momentum-b"
     },
     {
