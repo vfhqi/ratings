@@ -3,12 +3,12 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 545794,
+   "bytes": 545796,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 617077,
+   "bytes": 617073,
    "warnings": []
   },
   "CVSG-GB": {
@@ -18,12 +18,12 @@
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 575035,
+   "bytes": 575033,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 627502,
+   "bytes": 627500,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,12 +32,12 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 618430,
+   "bytes": 618429,
    "warnings": []
   },
   "EKTA.B-SE": {
    "file": "EKTA_B-SE.json",
-   "bytes": 551439,
+   "bytes": 551517,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
     "sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
@@ -46,17 +46,17 @@
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 506334,
+   "bytes": 506335,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509184,
+   "bytes": 509188,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 559447,
+   "bytes": 559452,
    "warnings": []
   },
   "HFG-GB": {
@@ -66,7 +66,7 @@
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 540765,
+   "bytes": 540763,
    "warnings": []
   }
  },
@@ -79,5 +79,5 @@
   "EKTA.B-SE: sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
  ],
- "seconds": 72.4
+ "seconds": 64.9
 }
