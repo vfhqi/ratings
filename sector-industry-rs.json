@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-24",
+ "current_week": "2026-11-25",
  "prior_week": "2026-09-25",
  "industry": {
   "A. Consumer staples": {
@@ -74,7 +74,7 @@
    "prior": "D"
   },
   "A.2. Tobacco": {
-   "current": "D",
+   "current": "C",
    "prior": "D"
   },
   "A.4. Household products": {
@@ -94,15 +94,15 @@
    "prior": "D"
   },
   "B.11. Biotech - clinical stage": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "B.3. Hospitals, clinics and care homes": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
-   "current": "C",
+   "current": "B",
    "prior": "F"
   },
   "B.5. Medtech - consumables": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "F.2. Defence - Non-primes": {
@@ -162,11 +162,11 @@
    "prior": "B"
   },
   "G.13. Banks": {
-   "current": "B",
+   "current": "C",
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -190,7 +190,7 @@
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "C",
+   "current": "D",
    "prior": "F"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
@@ -262,7 +262,7 @@
    "prior": "C"
   },
   "J.9. Semiconductors": {
-   "current": "D",
+   "current": "F",
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
@@ -274,7 +274,7 @@
    "prior": "D"
   },
   "K.3. Testing and inspection services": {
-   "current": "B",
+   "current": "A",
    "prior": "B"
   },
   "K.5. Advertising and consulting services": {
@@ -330,7 +330,7 @@
    "prior": "D"
   },
   "N.4. Real estate - logistics and industrial": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "N.5. Real estate - healthcare, student, storage, hotels and other specialist": {
@@ -346,7 +346,7 @@
    "prior": "D"
   },
   "O.13. Renewable energy equipment and installation": {
-   "current": "D",
+   "current": "F",
    "prior": "B"
   },
   "O.15. Industrial and chemical distributors and technical trading": {
@@ -354,11 +354,11 @@
    "prior": "B"
   },
   "O.16. Capital goods - trucks, rail and heavy vehicles": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
@@ -370,7 +370,7 @@
    "prior": "B"
   },
   "O.2. Building technology and products": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.4. Electrical equipment, grid and automation": {
@@ -390,7 +390,7 @@
    "prior": "A"
   },
   "P.2. Energy - upstream E&P": {
-   "current": "A",
+   "current": "B",
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
