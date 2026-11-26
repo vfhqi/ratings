@@ -363,7 +363,7 @@
     buttons(document.getElementById('os-tg4'), WINB, st.est, function (k) { st.est = k; drawEst(); });
     var host = document.getElementById('os-est3'); host.innerHTML = ''; host.className = 'q3 os-est-' + st.estL; var GRID = st.estL === 'grid';
     var days = WIN[st.est], d0 = addDays(m.asof, -days), d1 = addDays(m.asof, 3), band = st.est === 'L1M' ? 0.005 : 0.01, Yr = m.H.ss.years, labs = Yr.labels, names = Yr.names;
-    var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? L_.v / b.v - 1 : null; };
+    var chgD = function (pts, dd) { if (!pts.length) return null; var L_ = pts[pts.length - 1], b = null; pts.forEach(function (q) { if (q.d <= addDays(L_.d, -dd)) b = q; }); return b && b.v ? (L_.v - b.v) / Math.abs(b.v) : null; };   /* PMSD-NEG-2026-11-26: a negative EPS (a loss) narrowing is an upgrade */
     var chg = function (pts) { return chgD(pts, days); };
     /* QC 18-Nov-2026: the line style of each FY is shown by the line sample beside it in each table on the right, so the header no longer repeats it (it was cut short at 1920 pixels) */
     document.getElementById('os-p4say').textContent = '';

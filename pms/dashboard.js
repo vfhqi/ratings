@@ -91,7 +91,7 @@
      that would touch another is left out (the hover still gives every value). */
   function monthPts(pts, d0, d1) { var by = {}, ks = []; (pts || []).forEach(function (q) { if (q.v == null) return; var k = q.d.slice(0, 7); if (!by[k]) ks.push(k); by[k] = q; }); ks.sort();
     var out = [], last = ks.length ? by[ks[ks.length - 1]] : null, nextM = function (k) { var y_ = +k.slice(0, 4), mo = +k.slice(5, 7); return mo === 12 ? (y_ + 1) + '-01' : y_ + '-' + (mo < 9 ? '0' : '') + (mo + 1); };
-    ks.forEach(function (k, i) { var q = by[k]; if (q === last && addDays(q.d, 4).slice(0, 7) === k) return; if (q.d < d0 || q.d > d1) return; var pr = i && nextM(ks[i - 1]) === k ? by[ks[i - 1]] : null; out.push({ d: q.d, v: q.v, mom: pr && pr.v ? q.v / pr.v - 1 : null }); });
+    ks.forEach(function (k, i) { var q = by[k]; if (q === last && addDays(q.d, 4).slice(0, 7) === k) return; if (q.d < d0 || q.d > d1) return; var pr = i && nextM(ks[i - 1]) === k ? by[ks[i - 1]] : null; out.push({ d: q.d, v: q.v, mom: pr && pr.v ? (q.v - pr.v) / Math.abs(pr.v) : null }); });
     return out; }
   function mvLabels(g, list, b) {
     var occ = (b.occ || []).slice(), hit = function (r) { return occ.some(function (o) { return r[0] < o[2] && r[2] > o[0] && r[1] < o[3] && r[3] > o[1]; }); };
@@ -1744,7 +1744,7 @@
     var fmtL = function (k, v) { return v == null ? 'n/a' : (k === 'ebitda' || k === 'sales') ? Math.round(v).toLocaleString('en-GB') : v.toFixed(2); };
     var h = '<table class="tbl" style="margin-top:6px"><tr><th>Metric</th><th class="num">Now</th><th class="num">At the month-end before tranche 1</th><th class="num">Change since then</th><th class="num">Revisions 1M</th><th class="num">3M</th><th class="num">6M</th><th>Daily readings</th></tr>';
     info.S.forEach(function (s) {
-      var x = s.x || {}, now = s.now, base = s.base, ch = (now && base && base.v) ? (now.v / base.v - 1) : null, rv = x.rev || {};
+      var x = s.x || {}, now = s.now, base = s.base, ch = (now && base && base.v) ? ((now.v - base.v) / Math.abs(base.v)) : null, rv = x.rev || {};
       var rc = function (v) { return '<td class="num">' + (v == null ? '<span class="mut">n/a</span>' : (v > 0 ? '+' : '') + v + '%') + '</td>'; };
       h += '<tr><td><b>' + esc(s.label) + '</b> <span class="mut">' + esc(s.sub) + '</span></td><td class="num">' + (now ? fmtL(s.key, now.v) + ' <span class="mut">' + fmtD(now.d) + '</span>' : 'n/a') + '</td><td class="num">' + (base ? fmtL(s.key, base.v) + ' <span class="mut">' + fmtD(base.d) + '</span>' : 'n/a') + '</td><td class="num">' + (ch == null ? 'n/a' : (ch > 0 ? '+' : '') + (ch * 100).toFixed(1) + '%') + '</td>' + rc(rv.L1M) + rc(rv.L3M) + rc(rv.L6M) + '<td class="mut" style="font-size:11px">' + esc(s.none ? 'no monthly history' : s.joined ? 'joined' : (s.note || '').replace(/^not joined: /, 'not joined: ')) + '</td></tr>';
     });
@@ -2043,13 +2043,13 @@
      3-month trend; the 1, 3 and 6-month changes of each line sit above its chart; the purple line is labelled as tranche 1's purchase. */
   var TRC = { up: '#1a7f37', dn: '#cf222e', flat: '#6e7781' }, TRBG = { up: 'rgba(26,127,55,0.07)', dn: 'rgba(207,34,46,0.07)', flat: null };
   var FYDASH = ['', '7 4', '2 3'], FYW = [2.8, 2.3, 2.3];
-  function chgOver(pts, days) { if (!pts || pts.length < 2) return null; var L = pts[pts.length - 1], t = addDays(L.d, -days), b = null; for (var i = 0; i < pts.length; i++) { if (pts[i].d <= t) b = pts[i]; else break; } if (!b || !b.v) return null; return L.v / b.v - 1; }
+  function chgOver(pts, days) { if (!pts || pts.length < 2) return null; var L = pts[pts.length - 1], t = addDays(L.d, -days), b = null; for (var i = 0; i < pts.length; i++) { if (pts[i].d <= t) b = pts[i]; else break; } if (!b || !b.v) return null; return (L.v - b.v) / Math.abs(b.v); }   /* PMSD-NEG-2026-11-26: the change against the size of the old value, so a loss narrowing reads as an upgrade */
   function chgPts(pts, days) { if (!pts || pts.length < 2) return null; var L = pts[pts.length - 1], t = addDays(L.d, -days), b = null; for (var i = 0; i < pts.length; i++) { if (pts[i].d <= t) b = pts[i]; else break; } return b ? L.v - b.v : null; }
   function trKind(c, band) { return c == null ? 'flat' : c <= -band ? 'dn' : c >= band ? 'up' : 'flat'; }
   function segSeries(pts, yi, label, fmt, band) {
     var out = [];
     /* each piece takes the colour of the line's change over the month to its end (a month-end against the month-end before; a daily point against the point a month earlier) */
-    for (var i = 1; i < pts.length; i++) { var a = pts[i - 1], b = pts[i], t = addDays(b.d, -28), r = null; for (var j = 0; j < i; j++) { if (pts[j].d <= t) r = pts[j]; else break; } r = r || a; var c = r.v ? b.v / r.v - 1 : null; out.push({ pts: [a, b], color: TRC[trKind(c, band)], w: FYW[yi] || 2.3, dash: FYDASH[yi] || '' }); }
+    for (var i = 1; i < pts.length; i++) { var a = pts[i - 1], b = pts[i], t = addDays(b.d, -28), r = null; for (var j = 0; j < i; j++) { if (pts[j].d <= t) r = pts[j]; else break; } r = r || a; var c = r.v ? (b.v - r.v) / Math.abs(r.v) : null; out.push({ pts: [a, b], color: TRC[trKind(c, band)], w: FYW[yi] || 2.3, dash: FYDASH[yi] || '' }); }
     if (pts.length === 1) out.push({ pts: pts, color: TRC.flat, w: FYW[yi] || 2.3, dotAt: function () { return true; }, dotR: 3.6 });
     return out;
   }
