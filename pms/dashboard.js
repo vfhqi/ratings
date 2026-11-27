@@ -1189,7 +1189,7 @@
       sw('<svg width="14" height="16"><text x="7" y="7" font-size="8" text-anchor="middle" fill="#cf222e">▼</text><rect x="4" y="8" width="6" height="8" fill="rgba(207,34,46,0.95)"/></svg>', '<b>distribution day</b>: a down close on volume above 1.25 times the 50D average'),
       sw(bar('rgba(139,148,158,0.30)'), '<b>quiet day</b> (paler): volume below half the 50D average'),
       sw('<svg width="12" height="14"><defs><pattern id="hk" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#57606a" stroke-width="1.6"/></pattern></defs><rect x="3" y="2" width="6" height="12" fill="url(#hk)"/></svg>', '<b>index review or option expiry day</b> (hatched; volume driven by the event, hover for the reason)'),
-      sw(ln(C.red, '2 3', 1.3), '1.25 times the 50D average: a down day above it is a distribution day'), sw(ln('#1a7f37', '', 2.2), 'average volume of the up days: L1W dotted, L1M solid, L3M dashed (5, 21 and 63 sessions)'), sw(ln(C.red, '', 2.2), 'average volume of the down days: L1W dotted, L1M solid, L3M dashed')].join('');
+      sw(ln(C.red, '2 3', 1.3), '1.25 times the 50D average: a down day above it is a distribution day'), sw(ln('#1a7f37', '', 2.2), 'average volume of the up days: L1W dotted, L2W dot-dash, L1M solid, L3M dashed (5, 10, 21 and 63 sessions)'), sw(ln(C.red, '', 2.2), 'average volume of the down days: the same windows'), sw(ln('#a40e26', '', 1.2), 'distribution days in the last 25 sessions, on the daily volume chart (6 the warning level)')].join('');
   }
   /* ---------- 11-Nov-2026 (D-PMS-V4-167) and 12-Nov-2026 (D-PMS-V4-168): item 2's sub-panels and the daily volatility and closes charts ---------- */
   function vCell(grid, w, h) { var c = document.createElement('div'); c.style.position = 'relative'; c.style.minWidth = '0'; grid.appendChild(c);
@@ -1225,11 +1225,20 @@
      price against its 52W high) and, through the one-screen code's nightly copy, the Multi-stock Dashboard.
      o: w, h (else the host's size); padL; band (a title band); top (kept free above for a card); keyTop and plotTop (the full page lines it up with the
      chart beside it); compact (the one-screen sizes). */
-  var VOLC = { a5: '#d4721c', a1m: '#8250df', a3m: '#1f2328' };
+  var VOLC = { a5: '#d4721c', a1m: '#8250df', a3m: '#1f2328', w4: '#d4721c', w13: '#8250df', w26: '#1f2328' };
+  /* PMS-PANEL2-2026-11-27 (Richard, 27-Nov-2026 09:41 and 09:48, Q4 = A): weekly volatility, the average weekly true range over the last 4, 13 and 26
+     completed weeks (weekly L1M, L3M, L6M; extract 1.15's w4, w13, w26), dotted in its daily partner's colour, each a toggle; off until chosen */
+  var WDOT = '0.1 3.4';
   /* 12-Nov-2026 (Richard, D-PMS-V4-168: "add a toggle for each of the 5D, 1M and 3M volatility. Ensure the Y axis adjusts appropriately if the more
      volatile line (e.g. 5D) is removed"): each line's key item is a toggle; the choice is kept in this browser for both views and every stock; at least
      one line stays on; the y-axis is scaled to the lines shown (and the universe's middle). */
-  var VOLVIS = (function () { var v = { a5: true, a1m: true, a3m: true }; try { var o = JSON.parse(localStorage.getItem('pmsVolLines') || 'null'); if (o) for (var k in v) if (typeof o[k] === 'boolean') v[k] = o[k]; } catch (e) { /* none kept */ } if (!v.a5 && !v.a1m && !v.a3m) v.a3m = true; return v; })();
+  var VOLVIS = (function () { var v = { a5: true, a1m: true, a3m: true, w4: false, w13: false, w26: false }; try { var o = JSON.parse(localStorage.getItem('pmsVolLines') || 'null'); if (o) for (var k in v) if (typeof o[k] === 'boolean') v[k] = o[k]; } catch (e) { /* none kept */ } if (!v.a5 && !v.a1m && !v.a3m && !v.w4 && !v.w13 && !v.w26) v.a3m = true; return v; })();
+  /* PMS-PANEL2-2026-11-27 (Richard, 27-Nov-2026: "toggles for trailing averages" of the up-day and down-day volume): L1W, L2W, L1M, L3M (5, 10, 21, 63
+     sessions); L1W, L1M and L3M on until changed; kept in this browser for both views and every stock; at least one stays on */
+  var VAW = [['w', 'L1W', 5, '2 2', 1.4], ['f', 'L2W', 10, '5 2 1 2', 1.5], ['m', 'L1M', 21, '', 2.2], ['q', 'L3M', 63, '7 3', 1.6]];
+  var VAVIS = (function () { var v = { w: true, f: false, m: true, q: true }; try { var o = JSON.parse(localStorage.getItem('pmsVolAvgLines') || 'null'); if (o) for (var k in v) if (typeof o[k] === 'boolean') v[k] = o[k]; } catch (e) { /* none kept */ } if (!v.w && !v.f && !v.m && !v.q) v.m = true; return v; })();
+  function saveVaVis() { try { localStorage.setItem('pmsVolAvgLines', JSON.stringify(VAVIS)); } catch (e) { /* not kept: fine */ } }
+  function vaToggle(k) { var on = 0; for (var x in VAVIS) if (VAVIS[x]) on++; if (VAVIS[k] && on === 1) return false; VAVIS[k] = !VAVIS[k]; saveVaVis(); return true; }
   function saveVolVis() { try { localStorage.setItem('pmsVolLines', JSON.stringify(VOLVIS)); } catch (e) { /* not kept: fine */ } }
   /* PMSD-2026-11-18: a second function pctS here (no brackets, unused here) replaced the one at the top of this file for the whole file, so every
      negative Net Upgrade Breadth was written -5% instead of (5%) (Richard's standing rule: negative numbers in brackets). Removed. */
@@ -1237,20 +1246,21 @@
   function rangeKey(m, dates, cp) {
     var V = (m.H && m.H.volume) || [], by = {}; V.forEach(function (q) { if (q) by[q.d] = q; });
     var ser = function (k) { return dates.map(function (d) { var q = by[d]; return q && q[k] != null ? q[k] : null; }); };
-    var A5 = ser('a5'), A1 = ser('a1m'), A3 = ser('a3m'), last = function (a) { for (var i = a.length - 1; i >= 0; i--) if (a[i] != null) return a[i]; return null; };
+    var A5 = ser('a5'), A1 = ser('a1m'), A3 = ser('a3m'), W4 = ser('w4'), W13 = ser('w13'), W26 = ser('w26'), last = function (a) { for (var i = a.length - 1; i >= 0; i--) if (a[i] != null) return a[i]; return null; };
     var R = (m.H && m.H.range) || null, U = R && R.universe, ua = U && U.atr && U.atr.L3M ? U.atr.L3M[1] : null;
-    var items = [{ id: 'a5', t: 'L5D ' + atrS(last(A5)), c: VOLC.a5, w: 1.5 }, { id: 'a1m', t: 'L1M ' + atrS(last(A1)), c: VOLC.a1m, w: 2 }, { id: 'a3m', t: 'L3M ' + atrS(last(A3)), c: VOLC.a3m, w: 2.2 }];
+    var items = [{ id: 'a5', t: 'daily L5D ' + atrS(last(A5)), tn: 'daily L5D', c: VOLC.a5, w: 1.5 }, { id: 'a1m', t: 'L1M ' + atrS(last(A1)), tn: 'daily L1M', c: VOLC.a1m, w: 2 }, { id: 'a3m', t: 'L3M ' + atrS(last(A3)), tn: 'daily L3M', c: VOLC.a3m, w: 2.2 },
+      { id: 'w4', t: 'weekly L1M ' + atrS(last(W4)), tn: 'weekly L1M', c: VOLC.w4, w: 2.4, dash: WDOT, cap: 1 }, { id: 'w13', t: 'L3M ' + atrS(last(W13)), tn: 'weekly L3M', c: VOLC.w13, w: 2.4, dash: WDOT, cap: 1 }, { id: 'w26', t: 'L6M ' + atrS(last(W26)), tn: 'weekly L6M', c: VOLC.w26, w: 2.4, dash: WDOT, cap: 1 }];
     items.forEach(function (it) { it.toggle = true; it.on = VOLVIS[it.id]; });
-    if (ua != null) items.push({ t: (cp ? 'universe ' : 'universe middle, L3M ') + atrS(ua), c: C.ink3, w: 1.3, dash: '2 3' });
-    return { items: items, A5: A5, A1: A1, A3: A3, ua: ua, R: R, U: U, any: A5.concat(A1, A3).some(function (v) { return v != null; }) };
+    if (ua != null && !cp) items.push({ t: 'universe middle, L3M ' + atrS(ua), c: C.ink3, w: 1.3, dash: '2 3' });   /* PMS-PANEL2-2026-11-27: the one-screen key leaves it out for room; the line and its hover stay */
+    return { items: items, A5: A5, A1: A1, A3: A3, W4: W4, W13: W13, W26: W26, ua: ua, R: R, U: U, any: A5.concat(A1, A3).some(function (v) { return v != null; }) };
   }
   /* a toggle in a key: a light chip around the item; off = greyed, struck through; a click switches it */
   function keyToggles(svg, x0, x1, y, items, cp, onPick) {
     var x = x0, r = 0, fs = cp ? 9 : 10.5, sl = cp ? 11 : 15, lh = cp ? 12 : KEYLH;
     items.forEach(function (it) { var w = keyItemW(it, cp); if (x + w > x1 && x > x0) { r++; x = x0; } var yy = y + r * lh, off = it.toggle && !it.on;
       if (it.toggle) { var chip = el('rect', { x: x - 3, y: yy - (cp ? 9 : 11), width: w - (cp ? 4 : 8), height: cp ? 12 : 15, rx: 4, fill: off ? '#f6f8fa' : '#fff', stroke: off ? C.grid : C.border, 'stroke-width': 0.8, style: 'cursor:pointer' }, svg);
-        var tt = document.createElementNS('http://www.w3.org/2000/svg', 'title'); tt.textContent = (off ? 'Show' : 'Hide') + ' the ' + it.t.split(' ')[0] + ' line'; chip.appendChild(tt); }
-      if (it.sw !== false) el('line', { x1: x, x2: x + sl, y1: yy - 3.5, y2: yy - 3.5, stroke: off ? C.ink3 : it.c, 'stroke-width': it.w || 2, 'stroke-dasharray': it.dash || '', opacity: off ? 0.45 : 1, style: 'pointer-events:none' }, svg);
+        var tt = document.createElementNS('http://www.w3.org/2000/svg', 'title'); tt.textContent = (off ? 'Show' : 'Hide') + ' the ' + (it.tn || it.t.split(' ')[0]) + ' line'; chip.appendChild(tt); }
+      if (it.sw !== false) el('line', { x1: x, x2: x + sl, y1: yy - 3.5, y2: yy - 3.5, stroke: off ? C.ink3 : it.c, 'stroke-width': it.w || 2, 'stroke-dasharray': it.dash || '', 'stroke-linecap': it.cap ? 'round' : 'butt', opacity: off ? 0.45 : 1, style: 'pointer-events:none' }, svg);
       var t = txt(svg, x + (it.sw === false ? 0 : sl + 4), yy, it.t, { fill: off ? C.ink3 : it.c, 'font-size': fs, 'font-weight': 600, halo: !it.toggle, 'text-decoration': off ? 'line-through' : 'none', style: 'pointer-events:none' });
       if (it.toggle) chip.addEventListener('click', function () { onPick(it.id); });
       x += w; });
@@ -1290,8 +1300,73 @@
   function closesTip(CK, i) { var h = ''; ['1', '3'].forEach(function (w) { if (!CLVIS['l' + w]) return; h += '<div>closes in the top half, L' + w + 'M: ' + CLK.map(function (k) { var v = CK.S[k[0] + w][i]; return k[1] + ' ' + (v == null ? 'n/a' : v + '%'); }).join(', ') + '</div>'; }); return h; }
   function cpDates(svg, F, y) { for (var j = 0; j < F.n; j++) { if (!(j === 0 || F.mstart(j))) continue; var mo = F.ds[j].getUTCMonth(), xx = j === 0 ? F.edge(0) + 1 : F.edge(j) + 2; if (j === 0 && F.n > 1 && F.mstart(1)) continue; if (j === 0) { var k1 = 0; for (var q2 = 1; q2 < F.n; q2++) if (F.mstart(q2)) { k1 = q2; break; } if (k1 && F.edge(k1) - xx < 24) continue; }
       txt(svg, xx, y, MON[mo] + (mo === 0 ? ' ' + String(F.ds[j].getUTCFullYear()).slice(2) : ''), { 'font-size': 8.5, fill: C.ink2, 'font-weight': mo % 3 === 0 ? 700 : 500 }); } }
+  /* PMS-PANEL2-2026-11-27: the volatility plot, shared by both views. Daily lines solid, weekly dotted; the y-axis fits the lines shown. Shaded between the
+     shortest and the longest daily line shown (the weekly lines when fewer than two daily lines are shown): red where the shorter is above, volatility
+     rising (worsening); green where it is below, volatility falling (Richard, 27-Nov-2026: "signal worsening/improving red/green"). */
+  function volPlot(svg, F, K, top, h, cp) {
+    var x0 = F.pad.l, x1 = F.W - F.pad.r, L = [['a5', K.A5], ['a1m', K.A1], ['a3m', K.A3], ['w4', K.W4], ['w13', K.W13], ['w26', K.W26]].filter(function (a) { return VOLVIS[a[0]]; }), vv = [];
+    L.forEach(function (a) { vv = vv.concat(a[1].filter(function (v) { return v != null; })); }); if (K.ua != null) vv.push(K.ua);
+    var hi = Math.max.apply(null, vv.concat([0.5])) * 1.08, NT = niceTicks(0, hi, cp ? 2 : 4); if (NT[NT.length - 1] > hi) hi = NT[NT.length - 1];
+    var y = function (v) { return top + h - v / hi * h; };
+    tdGrid(svg, F, top, h);
+    NT.forEach(function (v) { if (v > hi + 1e-9) return; el('line', { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, x0 - (cp ? 4 : 6), y(v) + (cp ? 3 : 4), v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': cp ? 9 : 10.5, fill: C.ink2 }); });
+    var dl = L.filter(function (a) { return a[0].charAt(0) === 'a'; }), wl = L.filter(function (a) { return a[0].charAt(0) === 'w'; }), pr = dl.length >= 2 ? dl : wl.length >= 2 ? wl : null;
+    if (pr) { var s1 = pr[0][1], s2 = pr[pr.length - 1][1];
+      for (var i = 0; i < F.n; i++) { if (s1[i] == null || s2[i] == null) continue; el('rect', { x: F.edge(i), y: Math.min(y(s1[i]), y(s2[i])), width: F.bw + 0.4, height: Math.max(0.5, Math.abs(y(s1[i]) - y(s2[i]))), fill: s1[i] > s2[i] ? 'rgba(207,34,46,0.14)' : 'rgba(26,127,55,0.13)' }, svg); } }
+    if (K.ua != null) el('line', { x1: x0, x2: x1, y1: y(K.ua), y2: y(K.ua), stroke: C.ink3, 'stroke-width': cp ? 1.2 : 1.3, 'stroke-dasharray': '2 3' }, svg);
+    [['w26', K.W26], ['w13', K.W13], ['w4', K.W4]].forEach(function (a) { if (!VOLVIS[a[0]]) return; var dp = ''; a[1].forEach(function (v, i) { if (v == null) return; dp += (dp && a[1][i - 1] != null ? 'L' : 'M') + F.xi(i).toFixed(1) + ',' + y(v).toFixed(1); });
+      if (dp) el('path', { d: dp, fill: 'none', stroke: VOLC[a[0]], 'stroke-width': cp ? 2.2 : 2.6, 'stroke-dasharray': WDOT, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg); });
+    if (VOLVIS.a3m) tdPath(svg, F, K.A3, y, VOLC.a3m, cp ? 1.8 : 2.2); if (VOLVIS.a1m) tdPath(svg, F, K.A1, y, VOLC.a1m, cp ? 1.6 : 2); if (VOLVIS.a5) tdPath(svg, F, K.A5, y, VOLC.a5, cp ? 1.2 : 1.5);
+    el('line', { x1: x0, x2: x1, y1: top + h, y2: top + h, stroke: C.border }, svg);
+  }
+  function volTip(K, i) { var R = K.R, h = '<div>daily average true range: L5D ' + atrS(K.A5[i]) + ', L1M ' + atrS(K.A1[i]) + ', L3M ' + atrS(K.A3[i]) + '</div>';
+    if (K.W4[i] != null || K.W13[i] != null || K.W26[i] != null) h += '<div>weekly average true range (completed weeks): L1M ' + atrS(K.W4[i]) + ', L3M ' + atrS(K.W13[i]) + ', L6M ' + atrS(K.W26[i]) + '</div>';
+    return h + (K.ua != null ? '<div class="mut">the universe\'s middle, daily L3M, as at ' + fmtDY(R.asof) + ': ' + atrS(K.ua) + '</div>' : ''); }
+  /* PMS-PANEL2-2026-11-27 (Richard, 27-Nov-2026 09:41: "Combine the two up days vs. down days charts into one panel"): "Up days against down days", both
+     views. Above: the share of closes in the top half of the day's range for up, down and all days (L1M solid, L3M dashed, each a toggle, as before).
+     Beneath: up days less down days in the last 25 sessions, as bars (green more up days, red more down days); an up day closes at or above the previous
+     close. o as rangePane's. */
+  function udPane(host, m, dates, o) {
+    o = o || {};
+    var rs = host.getBoundingClientRect(), Wc = o.w || Math.floor(rs.width), Hc = o.h || Math.floor(rs.height);
+    if (Wc < 80 || Hc < 80 || !dates || !dates.length) return;
+    var cp = !!o.compact, svg = el('svg', { width: Wc, height: Hc, viewBox: '0 0 ' + Wc + ' ' + Hc, style: 'display:block;' + (cp ? '' : 'max-width:100%;') + 'font-family:Segoe UI,system-ui,sans-serif' }, host);
+    var F = cellFrame(dates, Wc, o.padL || (cp ? 34 : 46), o.padR != null ? o.padR : (cp ? 8 : 12)), x0 = F.pad.l, x1 = Wc - F.pad.r, GREEN = '#1a7f37';
+    if (o.band) tdBand(svg, F, 22, 'Up days against down days: closes in the top half of the day\'s range; beneath, up days less down days', 'Up days against down days');
+    var CK = closesKey(m, dates, cp);
+    var VV = ((m.H && m.H.volume) || []).filter(function (q) { return q && q.v != null; }), udN = {};
+    for (var k = 24; k < VV.length; k++) { var nu = 0; for (var j = k - 24; j <= k; j++) if (VV[j].up) nu++; udN[VV[k].d] = { u: nu, n: 25 - nu }; }
+    var ud = dates.map(function (d) { return udN[d] || null; }), net = ud.map(function (q) { return q ? q.u - q.n : null; }), uL = null;
+    for (var i0 = F.n - 1; i0 >= 0; i0--) if (ud[i0]) { uL = ud[i0]; break; }
+    if (!CK.any && !uL) { txt(svg, Wc / 2, Hc / 2, 'No readings yet', { 'text-anchor': 'middle', 'font-size': cp ? 9 : 10.5, fill: C.ink3 }); return; }
+    var items = CK.items.concat(uL ? [{ t: (cp ? 'bars, 25 sessions: ' : 'bars: up days less down days, last 25 sessions: ') + uL.u + ' up, ' + uL.n + ' down', c: uL.u >= uL.n ? GREEN : C.red, w: 6, sw: cp ? false : undefined }] : []);
+    var tip = document.createElement('div'), redraw = function (id) { var on = 0; for (var kk in CLVIS) if (CLVIS[kk]) on++; if (CLVIS[id] && on === 1) return; CLVIS[id] = !CLVIS[id]; saveClVis();
+      if (svg.parentNode) svg.parentNode.removeChild(svg); if (tip.parentNode) tip.parentNode.removeChild(tip); udPane(host, m, dates, o); };
+    var LH = cp ? 12 : KEYLH, keyY = o.keyTop || ((o.top || 0) + (o.band ? 36 : 9)), kr = keyToggles(svg, cp ? x0 - 30 : x0, x1, keyY, items, cp, redraw);
+    var pTop = Math.max(o.plotTop || 0, keyY + (kr - 1) * LH + (cp ? 5 : 9)), defH = cp ? (Hc >= 200 ? 21 : 0) : 0, pAll = o.chartH || (cp ? Hc - pTop - 12 - defH : Hc - pTop - 70);
+    var sH = Math.max(cp ? 22 : 30, Math.round(pAll * 0.32)), gap = cp ? 5 : 8, hC = pAll - sH - gap, sTop = pTop + hC + gap, sMid = sTop + sH / 2;
+    drawCloses(svg, F, pTop, hC, CK, cp);
+    tdGrid(svg, F, sTop, sH);
+    var nv = net.filter(function (v) { return v != null; }), sMax = Math.max(5, Math.ceil(Math.max.apply(null, nv.map(Math.abs).concat([0])) / 5) * 5), yS = function (v) { return sMid - v / sMax * (sH / 2 - 2); };
+    el('line', { x1: x0, x2: x1, y1: sMid, y2: sMid, stroke: C.ink3, 'stroke-width': 0.8 }, svg);
+    txt(svg, x0 - (cp ? 4 : 6), sMid + 3.5, '0', { 'text-anchor': 'end', 'font-size': cp ? 9 : 10, fill: C.ink3 });
+    [sMax, -sMax].forEach(function (v) { txt(svg, x0 - (cp ? 4 : 6), yS(v) + (v > 0 ? 6 : 1), v > 0 ? '+' + v : '(' + (-v) + ')', { 'text-anchor': 'end', 'font-size': cp ? 8.5 : 9.5, fill: v > 0 ? GREEN : C.red }); });
+    for (var i3 = 0; i3 < F.n; i3++) { var v3 = net[i3]; if (v3 == null || v3 === 0) continue; el('rect', { x: F.edge(i3), y: Math.min(sMid, yS(v3)), width: F.bw + 0.4, height: Math.abs(yS(v3) - sMid), fill: v3 > 0 ? 'rgba(26,127,55,0.55)' : 'rgba(207,34,46,0.55)' }, svg); }
+    el('line', { x1: x0, x2: x1, y1: sTop + sH, y2: sTop + sH, stroke: C.border }, svg);
+    if (cp) { tdTranches(svg, F, m, pTop, sTop + sH, false); cpDates(svg, F, sTop + sH + 10); if (defH) wrapTxt(svg, 2, sTop + sH + 21, 'Lines: the share of closes in the top half of the day\'s range. Bars: up days less down days, last 25 sessions.', Wc - 6, 8, 9.5, 2); }
+    else { tdTranches(svg, F, m, pTop, sTop + sH); tdLabels(svg, F, sTop + sH + 14);
+      wrapTxt(svg, x0, Hc - 32, 'Lines: the share of closes in the top half of the day\'s range (above its midpoint) over the last 30 days (L1M, solid) and 91 days (L3M, dashed), for up, down and all days; click L1M or L3M above to hide or show them. Bars: up days less down days in the last 25 sessions; an up day closes at or above the previous close.', x1 - x0, 9.5, 11.5, 3); }
+    var cross = el('line', { x1: 0, x2: 0, y1: pTop, y2: sTop + sH, stroke: C.ink3, 'stroke-dasharray': '2 2', opacity: 0 }, svg);
+    tip.className = 'tip'; tip.style.display = 'none'; if (!cp) host.style.position = 'relative'; host.appendChild(tip);
+    svg.addEventListener('mousemove', function (ev) { var r = svg.getBoundingClientRect(), sc = Wc / (r.width || Wc), px = (ev.clientX - r.left) * sc, py = (ev.clientY - r.top) * sc, i = Math.floor((px - x0) / F.bw);
+      if (i < 0 || i >= F.n || py < pTop - 4 || py > sTop + sH + 4) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; }
+      cross.setAttribute('x1', F.xi(i)); cross.setAttribute('x2', F.xi(i)); cross.setAttribute('opacity', 1);
+      tip.innerHTML = '<b>' + fmtDY(dates[i]) + '</b>' + closesTip(CK, i) + (ud[i] ? '<div>last 25 sessions: ' + ud[i].u + ' up days, ' + ud[i].n + ' down days (' + (net[i] > 0 ? '+' + net[i] : net[i] < 0 ? '(' + (-net[i]) + ')' : '0') + ')</div>' : '');
+      tip.style.display = 'block'; tip.style.maxWidth = '360px'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 300)) + 'px'; tip.style.top = Math.max(0, ev.clientY - r.top + 10) + 'px'; });
+    svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
+  }
   /* o.part: 'vol' (the full page's daily volatility sub-panel), 'closes' (the full page's closes sub-panel), or both, one above the other (the one-screen
-     view and the Multi-stock Dashboard) */
+     view and the Multi-stock Dashboard). PMS-PANEL2-2026-11-27: 'vol' also at the one-screen sizes (o.compact) */
   function rangePane(host, m, dates, o) {
     o = o || {};
     var part = o.part || 'both', showVol = part !== 'closes', showCl = part !== 'vol';
@@ -1299,33 +1374,23 @@
     if (Wc < 80 || Hc < 80 || !dates || !dates.length) return;
     var cp = !!o.compact, svg = el('svg', { width: Wc, height: Hc, viewBox: '0 0 ' + Wc + ' ' + Hc, style: 'display:block;' + (cp ? '' : 'max-width:100%;') + 'font-family:Segoe UI,system-ui,sans-serif' }, host);
     var fs = cp ? 9 : 10.5, F = cellFrame(dates, Wc, o.padL || (cp ? 34 : 46), o.padR != null ? o.padR : (cp ? 8 : 12)), x0 = F.pad.l, x1 = Wc - F.pad.r;
-    if (o.band) tdBand(svg, F, 22, part === 'vol' ? 'Daily volatility: average true range, % a day' : part === 'closes' ? 'Closes in the top half of the day\'s range, over time' : 'Daily volatility and closes in the top half of the day\'s range', part === 'vol' ? 'Daily volatility (average true range)' : part === 'closes' ? 'Closes in the top half of the day\'s range' : 'Daily volatility; closes in the top half');
+    if (o.band) tdBand(svg, F, 22, part === 'vol' ? 'Volatility: average true range, daily (solid) and weekly (dotted)' : part === 'closes' ? 'Closes in the top half of the day\'s range, over time' : 'Daily volatility and closes in the top half of the day\'s range', part === 'vol' ? 'Volatility (average true range)' : part === 'closes' ? 'Closes in the top half of the day\'s range' : 'Daily volatility; closes in the top half');
     var K = rangeKey(m, dates, cp), CK = closesKey(m, dates, cp), R = K.R;
     if (showVol && (!R || !K.any) || (!showVol && !CK.any)) { txt(svg, Wc / 2, Hc / 2, 'No readings yet: this stock\'s data file was written before ' + (showVol ? '11' : '12') + '-Nov-2026', { 'text-anchor': 'middle', 'font-size': fs, fill: C.ink3 }); return; }
-    var DEF1 = 'Average true range: each day\'s high to low, stretched to the previous close on a gap, as a % of the previous close; L5D the last 5 sessions, L1M and L3M the last 30 and 91 days. Click a line\'s name above to hide or show it.';
+    var DEF1 = 'Average true range. Daily (solid): each day\'s high to low, stretched to the previous close on a gap, as a % of the previous close, over the last 5 sessions and the last 30 and 91 days. Weekly (dotted): the same for each week against the previous week\'s close, over the last 4, 13 and 26 completed weeks. Red shading: the shortest line shown above the longest (volatility rising); green: below.';
+    var DEFV = 'Average true range, % of the previous close: daily solid, weekly dotted (completed weeks). Red: the shortest line above the longest (rising).';
     var DEF2 = 'The share of closes in the top half of the day\'s range (above the midpoint of its high-low range) over the last 30 days (L1M, solid) and 91 days (L3M, dashed), recalculated each day; an up day closes at or above the previous close. Click L1M or L3M above to hide or show them.';
     var DEFS = 'Upper: average true range, % of the previous close. Lower: the share of closes in the top half of the day\'s range (above its midpoint).';
     var tip = null, redraw = function (id) { var st = id in VOLVIS ? VOLVIS : CLVIS, on = 0; for (var k in st) if (st[k]) on++; if (st[id] && on === 1) return; st[id] = !st[id]; if (st === VOLVIS) saveVolVis(); else saveClVis();
       if (svg.parentNode) svg.parentNode.removeChild(svg); if (tip && tip.parentNode) tip.parentNode.removeChild(tip); rangePane(host, m, dates, o); };
     var LH = cp ? 12 : KEYLH, keyY = o.keyTop || ((o.top || 0) + (o.band ? 36 : 9)), regions = [];
     if (part === 'vol' || part === 'closes') {
-      var items = part === 'vol' ? K.items : CK.items, kr = keyToggles(svg, x0, x1, keyY, items, false, redraw);
-      var pTop = Math.max(o.plotTop || 0, keyY + (kr - 1) * LH + 9), pH = o.chartH || (Hc - pTop - 30 - 40);
-      if (part === 'vol') {
-        var shown = [['a5', K.A5], ['a1m', K.A1], ['a3m', K.A3]].filter(function (a) { return VOLVIS[a[0]]; }), vv = [];
-        shown.forEach(function (a) { vv = vv.concat(a[1].filter(function (v) { return v != null; })); }); if (K.ua != null) vv.push(K.ua);
-        var hi = Math.max.apply(null, vv.concat([0.5])) * 1.08, NT = niceTicks(0, hi, 4); if (NT[NT.length - 1] > hi) hi = NT[NT.length - 1];
-        var y = function (v) { return pTop + pH - v / hi * pH; };
-        tdGrid(svg, F, pTop, pH);
-        NT.forEach(function (v) { if (v > hi + 1e-9) return; el('line', { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: C.grid }, svg); txt(svg, x0 - 6, y(v) + 4, v ? (v % 1 ? v.toFixed(1) : String(v)) + '%' : '0', { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
-        if (K.ua != null) el('line', { x1: x0, x2: x1, y1: y(K.ua), y2: y(K.ua), stroke: C.ink3, 'stroke-width': 1.3, 'stroke-dasharray': '2 3' }, svg);
-        if (VOLVIS.a3m) tdPath(svg, F, K.A3, y, VOLC.a3m, 2.2); if (VOLVIS.a1m) tdPath(svg, F, K.A1, y, VOLC.a1m, 2); if (VOLVIS.a5) tdPath(svg, F, K.A5, y, VOLC.a5, 1.5);
-        el('line', { x1: x0, x2: x1, y1: pTop + pH, y2: pTop + pH, stroke: C.border }, svg);
-        regions.push({ top: pTop, bot: pTop + pH, kind: 'vol' });
-      } else { drawCloses(svg, F, pTop, pH, CK, false); regions.push({ top: pTop, bot: pTop + pH, kind: 'cl' }); }
-      tdTranches(svg, F, m, pTop, pTop + pH);
-      tdLabels(svg, F, pTop + pH + 14);
-      wrapTxt(svg, x0, Hc - 32, part === 'vol' ? DEF1 : DEF2, x1 - x0, 9.5, 11.5, 3);
+      var items = part === 'vol' ? K.items : CK.items, kr = keyToggles(svg, cp ? x0 - 30 : x0, x1, keyY, items, cp, redraw);
+      var defV = cp ? (Hc >= 200 ? 21 : 0) : 0, pTop = Math.max(o.plotTop || 0, keyY + (kr - 1) * LH + (cp ? 5 : 9)), pH = o.chartH || (cp ? Hc - pTop - 12 - defV : Hc - pTop - 30 - 40);
+      if (part === 'vol') { volPlot(svg, F, K, pTop, pH, cp); regions.push({ top: pTop, bot: pTop + pH, kind: 'vol' }); }
+      else { drawCloses(svg, F, pTop, pH, CK, cp); regions.push({ top: pTop, bot: pTop + pH, kind: 'cl' }); }
+      if (cp) { tdTranches(svg, F, m, pTop, pTop + pH, false); cpDates(svg, F, pTop + pH + 10); if (defV) wrapTxt(svg, 2, pTop + pH + 21, part === 'vol' ? DEFV : DEFS, Wc - 6, 8, 9.5, 2); }
+      else { tdTranches(svg, F, m, pTop, pTop + pH); tdLabels(svg, F, pTop + pH + 14); wrapTxt(svg, x0, Hc - 32, part === 'vol' ? DEF1 : DEF2, x1 - x0, 9.5, 11.5, 3); }
     } else {
       /* both, one above the other, at the one-screen sizes: two charts where they fit (1920 x 950); the closes as two lines of text where only one chart
          fits (1536 x 730); no charts at the smallest (1366 x 650): the volatility key carries today's readings */
@@ -1368,7 +1433,7 @@
       var r = svg.getBoundingClientRect(), sc = Wc / (r.width || Wc), px = (ev.clientX - r.left) * sc, py = (ev.clientY - r.top) * sc, h = '', i = Math.floor((px - x0) / F.bw);
       var reg = regions.filter(function (g) { return py >= g.top - 4 && py <= g.bot + 4; })[0];
       if (reg && i >= 0 && i < F.n) { cross.setAttribute('x1', F.xi(i)); cross.setAttribute('x2', F.xi(i)); cross.setAttribute('y1', reg.top); cross.setAttribute('y2', reg.bot); cross.setAttribute('opacity', 1);
-        h = '<b>' + fmtDY(dates[i]) + '</b>' + (reg.kind === 'vol' ? '<div>average true range: L5D ' + atrS(K.A5[i]) + ', L1M ' + atrS(K.A1[i]) + ', L3M ' + atrS(K.A3[i]) + '</div>' + (K.ua != null ? '<div class="mut">the universe\'s middle, L3M, as at ' + fmtDY(R.asof) + ': ' + atrS(K.ua) + '</div>' : '') : closesTip(CK, i)); }
+        h = '<b>' + fmtDY(dates[i]) + '</b>' + (reg.kind === 'vol' ? volTip(K, i) : closesTip(CK, i)); }
       if (!h) { tip.style.display = 'none'; cross.setAttribute('opacity', 0); return; }
       tip.innerHTML = h; tip.style.display = 'block'; tip.style.maxWidth = '360px'; tip.style.left = Math.max(0, Math.min(ev.clientX - r.left + 14, r.width - 300)) + 'px'; tip.style.top = Math.max(0, ev.clientY - r.top + 10) + 'px'; });
     svg.addEventListener('mouseleave', function () { tip.style.display = 'none'; cross.setAttribute('opacity', 0); });
@@ -1407,7 +1472,7 @@
     var VV = V.filter(function (q) { return q && q.v != null; });
     var UD = (function () { var out = {};
       for (var k = 0; k < VV.length; k++) { var o = {};
-        [5, 20, 21, 50, 63].forEach(function (N) {  /* PMS-VOLAVG-2026-11-14: 5, 21 and 63 sessions for item 2's chart (Richard, 13-Nov-2026, Question 4 = A) */ var su = 0, nu = 0, sd = 0, nd = 0; for (var j = Math.max(1, k - N + 2); j <= k; j++) { if (VV[j].up) { su += VV[j].v; nu++; } else { sd += VV[j].v; nd++; } }
+        [5, 10, 20, 21, 50, 63].forEach(function (N) {  /* PMS-VOLAVG-2026-11-14: 5, 21 and 63 sessions for item 2's chart (Richard, 13-Nov-2026, Question 4 = A) */ var su = 0, nu = 0, sd = 0, nd = 0; for (var j = Math.max(1, k - N + 2); j <= k; j++) { if (VV[j].up) { su += VV[j].v; nu++; } else { sd += VV[j].v; nd++; } }
           o['u' + N] = nu ? su / nu : null; o['d' + N] = nd ? sd / nd : null; o['nu' + N] = nu; o['nd' + N] = nd; });
         out[VV[k].d] = o; }
       return out; })();
@@ -1415,7 +1480,7 @@
     var UR = dates.map(function (d, i) { return udRow(i); });
     var ser = function (key) { return UR.map(function (o) { return o ? o[key] : null; }); };
     var u20 = ser('u20'), d20 = ser('d20'), u50 = ser('u50'), d50 = ser('d50');
-    var VA = [['w', 'L1W', 5, '2 2', 1.4], ['m', 'L1M', 21, '', 2.2], ['q', 'L3M', 63, '6 3', 1.6]].map(function (a) { return { k: a[0], lab: a[1], N: a[2], dash: a[3], w: a[4], u: ser('u' + a[2]), d: ser('d' + a[2]) }; });  /* PMS-VOLAVG-2026-11-14 */
+    var VA = VAW.map(function (a) { return { k: a[0], lab: a[1], N: a[2], dash: a[3], w: a[4], u: ser('u' + a[2]), d: ser('d' + a[2]) }; }), VAS = VA.filter(function (a) { return VAVIS[a.k]; });  /* PMS-VOLAVG-2026-11-14; PMS-PANEL2-2026-11-27: L2W added, the choice kept */
     var rd = drows.map(function (q) { return q && q.rdh != null ? q.rdh * 100 : null; }), rdv = rd.filter(function (v) { return v != null; });
     /* up days less down days over the same last 25 sessions as the distribution-day count (the one-screen view's strip, 10-Nov-2026, D-PMS-V4-161):
        an up day closes at or above the previous close, as the bars are coloured */
@@ -1426,16 +1491,17 @@
     var gw = Math.floor(grid.getBoundingClientRect().width) || Math.floor(host.getBoundingClientRect().width) || layout.W, two = gw >= 760;
     if (!two) grid.style.gridTemplateColumns = 'minmax(0,1fr)';
     var cw = two ? Math.floor((gw - 26) / 2) : gw, PL = 46, PR = 34, FB = cellFrame(dates, cw, PL, PR), kx0 = FB.pad.l, kx1 = cw - FB.pad.r, keyY = 36, L = n - 1, DLB = 34, FOOT = 40;
-    var itA = [{ t: '1.25 times the 50D average', c: C.red, dash: '2 3', w: 1.2 }, { t: 'right: times the 50D average', c: C.ink3, sw: false }];
+    var itA = [{ t: '1.25 times the 50D average', c: C.red, dash: '2 3', w: 1.2 }, { t: 'right: times the 50D average', c: C.ink3, sw: false }]
+      .concat(lastQ && lastQ.dist25 != null ? [{ t: 'distribution days, last 25 sessions: ' + lastQ.dist25 + ' (its own scale, 0 to 8; 6 the warning level, dashed)', c: C.red, w: 1.4 }] : []);
     var itB = [];  /* PMS-VOLAVG-2026-11-14: L1W dotted, L1M solid, L3M dashed; green up days, red down days */
-    VA.forEach(function (a) { if (a.u[L] != null) itB.push({ t: a.lab + ' up ' + fmtVol(a.u[L]), c: GREEN, dash: a.dash, w: a.w }); if (a.d[L] != null) itB.push({ t: a.lab + ' down ' + fmtVol(a.d[L]), c: C.red, dash: a.dash, w: a.w }); });
+    VAS.forEach(function (a) { if (a.u[L] != null) itB.push({ t: a.lab + ' up ' + fmtVol(a.u[L]), c: GREEN, dash: a.dash, w: a.w }); if (a.d[L] != null) itB.push({ t: a.lab + ' down ' + fmtVol(a.d[L]), c: C.red, dash: a.dash, w: a.w }); });
     var uL = ud[L];
     var itC = (lastQ && lastQ.dist25 != null ? [{ t: lastQ.dist25 + ' distribution day' + (lastQ.dist25 === 1 ? '' : 's') + ' now', c: C.red, w: 1.8 }, { t: '6: the warning level', c: C.red, dash: '5 3', w: 1.2 }] : [])
       .concat(uL ? [{ t: 'beneath: up days less down days, ' + uL.u + ' up, ' + uL.n + ' down', c: net[L] >= 0 ? GREEN : C.red, w: 6 }] : []);
     var lastD = null; for (var k3 = n - 1; k3 >= 0; k3--) if (rd[k3] != null) { lastD = k3; break; }
     var itD = (lastD != null ? [{ t: (rd[lastD] >= 0 ? 'at' : '(' + Math.round(-rd[lastD]) + '%) below') + ' its 52W high now', c: C.rel, w: 1.9 }] : []).concat([{ t: '(25%): the sell line, read at the month-end', c: C.red, dash: '3 2', w: 1.4 }]);
-    var itE = rangeKey(m, dates, false).items, itF = closesKey(m, dates, false).items;
-    var kr = Math.max(keyRows(itA, kx0, kx1), keyRows(itB, kx0, kx1), keyRows(itC, kx0, kx1), keyRows(itD, kx0, kx1), keyRows(itE, kx0, kx1), keyRows(itF, kx0, kx1));
+    var itE = rangeKey(m, dates, false).items, itF = closesKey(m, dates, false).items.concat(uL ? [{ t: 'bars: up days less down days, last 25 sessions: ' + uL.u + ' up, ' + uL.n + ' down', c: GREEN, w: 6 }] : []);
+    var kr = Math.max(keyRows(itA, kx0, kx1), keyRows(itB, kx0, kx1), keyRows(itD, kx0, kx1), keyRows(itE, kx0, kx1), keyRows(itF, kx0, kx1));
     var pT = keyY + (kr - 1) * KEYLH + 9, hP = 170, H = pT + hP + DLB + FOOT + 4;
     var foot = function (svg, s) { wrapTxt(svg, kx0, pT + hP + DLB + 12, s, kx1 - kx0, 9.5, 11.5, 3); };
     /* ---- 1. daily volume */
@@ -1458,6 +1524,14 @@
       if (dist || acc) txt(sA, FB.xi(i), Math.max(top + 9, top + hP - hgt - 3), dist ? '▼' : '▲', { 'text-anchor': 'middle', 'font-size': FB.bw >= 6 ? 10 : 8, fill: dist ? C.red : GREEN });
     });
     tdPath(sA, FB, rows.map(function (q) { return q && q.v50 ? q.v50 * 1.25 : null; }), yA, C.red, 1.1, '2 3', 0.75);
+    /* PMS-PANEL2-2026-11-27 (Richard, 27-Nov-2026 09:41: overlay the distribution days on the daily volume "elegantly"): the count of the last 25 sessions as a
+       thin red step line on its own scale, 0 to 8 over the plot's height, 6 (the warning level) dashed; written at its right end */
+    var dmx = Math.max(8, Math.max.apply(null, vals.map(function (q) { return q.dist25 || 0; }))), yDd = function (v) { return top + hP - v / dmx * (hP - 6); }, ddp = '';
+    rows.forEach(function (q, i) { if (!q || q.dist25 == null) return; ddp += (ddp ? 'L' : 'M') + FB.edge(i).toFixed(1) + ',' + yDd(q.dist25).toFixed(1) + 'L' + FB.edge(i + 1).toFixed(1) + ',' + yDd(q.dist25).toFixed(1); });
+    if (ddp) { el('line', { x1: kx0, x2: kx1, y1: yDd(6), y2: yDd(6), stroke: C.red, 'stroke-width': 1, 'stroke-dasharray': '6 4', opacity: 0.55 }, sA);
+      txt(sA, kx0 + 3, yDd(6) - 3, '6 distribution days: warning', { 'font-size': 9, fill: C.red, opacity: 0.85, halo: true });
+      el('path', { d: ddp, fill: 'none', stroke: '#fff', 'stroke-width': 2.8, opacity: 0.7, 'stroke-linejoin': 'round' }, sA); el('path', { d: ddp, fill: 'none', stroke: '#a40e26', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, sA);
+      if (lastQ && lastQ.dist25 != null) txt(sA, kx1 - 3, yDd(lastQ.dist25) - 4, String(lastQ.dist25), { 'text-anchor': 'end', 'font-size': 10, 'font-weight': 700, fill: C.red, halo: true }); }
     /* the multiples of today's 50D average, in the narrow right margin every sub-panel keeps so the time axes line up down each column */
     if (v50now) { var lastY = -99, usedY = [];   /* QC 18-Nov-2026: 1.25x (the distribution-day line) first; any other multiple within 9 pixels of a written one is left out */
       [1.25, 0.5, 1, 2, 3].forEach(function (k) { var v = k * v50now; if (v > cap) return; var yy = yA(v); if (usedY.some(function (u) { return Math.abs(yy - u) < 9; })) return; usedY.push(yy); el('line', { x1: kx1, x2: kx1 + 3, y1: yy, y2: yy, stroke: C.ink3 }, sA); txt(sA, kx1 + 4, yy + 3.5, k + 'x', { 'font-size': 9.5, fill: k === 1.25 ? C.red : C.ink2, 'font-weight': k === 1.25 || k === 1 ? 650 : 400 }); lastY = yy; }); }
@@ -1470,62 +1544,42 @@
         (o ? '<div>average volume per day, last 20 sessions: up days ' + fmtVol(o.u20) + ', down days ' + fmtVol(o.d20) + '</div>' : '') + '<div>distribution days in 25 sessions: ' + q.dist25 + '</div>'; });
     /* ---- 2. average volume per day, up days against down days */
     var cB = vCell(grid, cw, H), sB = cB.svg;
-    tdBand(sB, FB, 22, 'Average volume per day: up days (green) against down days (red); L1W dotted, L1M solid, L3M dashed', 'Average volume, up against down days: L1W, L1M, L3M');
+    tdBand(sB, FB, 22, 'Average volume per day: up days (green) against down days (red); L1W dotted, L2W dot-dash, L1M solid, L3M dashed', 'Average volume, up against down days');
     topKey(sB, kx0, kx1, keyY, itB);
-    var bv = []; VA.forEach(function (a) { bv = bv.concat(a.u, a.d); }); bv = bv.filter(function (v) { return v != null; });
+    var bv = []; VAS.forEach(function (a) { bv = bv.concat(a.u, a.d); }); bv = bv.filter(function (v) { return v != null; });
     tdGrid(sB, FB, top, hP);
-    window.PMS_VA_VIS = window.PMS_VA_VIS || { w: true, m: true, q: true };
     if (bv.length) {
       var bLo = Math.min.apply(null, bv), bHi = Math.max.apply(null, bv), bp = (bHi - bLo) * 0.08 || bHi * 0.05; bLo = Math.max(0, bLo - bp); bHi += bp;
       var yB = function (v) { return top + hP - (v - bLo) / (bHi - bLo) * hP; };
       niceTicks(bLo, bHi, 4).forEach(function (v) { el('line', { x1: kx0, x2: kx1, y1: yB(v), y2: yB(v), stroke: C.grid }, sB); txt(sB, kx0 - 6, yB(v) + 4, fmtVol(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: C.ink2 }); });
-      var vM = VA[1];
+      var vM = VAVIS.m ? VA[2] : VAS[0];   /* the shading: over L1M, or the shortest window shown when L1M is off */
       for (var i2 = 0; i2 < n; i2++) { if (vM.u[i2] == null || vM.d[i2] == null) continue; var upH = vM.u[i2] >= vM.d[i2];
-        el('rect', { 'class': 'va-m', x: FB.edge(i2), y: Math.min(yB(vM.u[i2]), yB(vM.d[i2])), width: FB.bw + 0.4, height: Math.max(0.5, Math.abs(yB(vM.u[i2]) - yB(vM.d[i2]))), fill: upH ? 'rgba(26,127,55,0.14)' : 'rgba(207,34,46,0.14)' }, sB); }
+        el('rect', { x: FB.edge(i2), y: Math.min(yB(vM.u[i2]), yB(vM.d[i2])), width: FB.bw + 0.4, height: Math.max(0.5, Math.abs(yB(vM.u[i2]) - yB(vM.d[i2]))), fill: upH ? 'rgba(26,127,55,0.14)' : 'rgba(207,34,46,0.14)' }, sB); }
       var vaPath = function (vals, color, a) { var dp = ''; vals.forEach(function (v, i) { if (v == null) return; dp += (dp && vals[i - 1] != null ? 'L' : 'M') + FB.xi(i).toFixed(1) + ',' + yB(v).toFixed(1); });
-        if (dp) el('path', { 'class': 'va-' + a.k, d: dp, fill: 'none', stroke: color, 'stroke-width': a.w, 'stroke-dasharray': a.dash }, sB); };
-      VA.slice().reverse().forEach(function (a) { vaPath(a.u, GREEN, a); vaPath(a.d, C.red, a); });
-      var vaApply = function () { ['w', 'm', 'q'].forEach(function (k) { Array.prototype.forEach.call(sB.querySelectorAll('.va-' + k), function (e2) { e2.style.display = window.PMS_VA_VIS[k] ? '' : 'none'; }); }); };
-      var vbar = document.createElement('div'); vbar.style.cssText = 'position:absolute;top:2px;right:' + (FB.pad.r) + 'px;display:flex;gap:4px;font:11px Segoe UI,system-ui,sans-serif';
-      VA.forEach(function (a) { var b = document.createElement('button'); b.type = 'button'; b.textContent = a.lab.replace('L', '');
-        var paint = function () { var on = window.PMS_VA_VIS[a.k]; b.style.cssText = 'cursor:pointer;padding:1px 7px;border-radius:4px;border:1px solid #c9cfdc;background:' + (on ? '#1d2433' : '#fff') + ';color:' + (on ? '#fff' : '#57606a'); b.title = (on ? 'Hide' : 'Show') + ' the ' + a.lab + ' lines (' + a.N + ' sessions)'; };
-        paint(); b.addEventListener('click', function () { window.PMS_VA_VIS[a.k] = !window.PMS_VA_VIS[a.k]; paint(); vaApply(); }); vbar.appendChild(b); });
-      cB.div.appendChild(vbar); vaApply();
+        if (dp) el('path', { d: dp, fill: 'none', stroke: color, 'stroke-width': a.w, 'stroke-dasharray': a.dash }, sB); };
+      VAS.slice().reverse().forEach(function (a) { vaPath(a.u, GREEN, a); vaPath(a.d, C.red, a); });
     }
+    /* the window buttons, top right (Richard, 27-Nov-2026): L1W, L2W, L1M, L3M; the choice kept in this browser for both views */
+    var vbar = document.createElement('div'); vbar.style.cssText = 'position:absolute;top:2px;right:' + (FB.pad.r) + 'px;display:flex;gap:4px;font:11px Segoe UI,system-ui,sans-serif';
+    VA.forEach(function (a) { var b = document.createElement('button'), on = VAVIS[a.k]; b.type = 'button'; b.textContent = a.lab;
+      b.style.cssText = 'cursor:pointer;padding:1px 7px;border-radius:4px;border:1px solid #c9cfdc;background:' + (on ? '#1d2433' : '#fff') + ';color:' + (on ? '#fff' : '#57606a'); b.title = (on ? 'Hide' : 'Show') + ' the ' + a.lab + ' lines (' + a.N + ' sessions)';
+      b.addEventListener('click', function () { if (vaToggle(a.k)) drawVolume(host, m, layout); }); vbar.appendChild(b); });
+    cB.div.appendChild(vbar);
     tdTranches(sB, FB, m, top, top + hP);
     el('line', { x1: kx0, x2: kx1, y1: top + hP, y2: top + hP, stroke: C.border }, sB);
     tdLabels(sB, FB, top + hP + 14);
-    foot(sB, 'Each day: the average volume of the up days and of the down days among the last 5 sessions (L1W, dotted), 21 (L1M, solid) and 63 (L3M, dashed); shaded green where up days trade heavier over L1M, red where down days do. The 1W, 1M and 3M buttons show or hide each pair.');
-    cellHover(cB.div, sB, FB, top, top + hP, function (i) { var o = UR[i]; if (!o) return ''; return [['L1W', 5], ['L1M', 21], ['L3M', 63]].map(function (x) { return '<div>' + x[0] + ' (' + x[1] + ' sessions): up days ' + fmtVol(o['u' + x[1]]) + ' (' + o['nu' + x[1]] + '), down days ' + fmtVol(o['d' + x[1]]) + ' (' + o['nd' + x[1]] + ')</div>'; }).join(''); });  /* PMS-VOLAVG-2026-11-14 */
-    /* ---- 3. distribution days, and beneath them up days less down days over the same 25 sessions */
-    var cC = vCell(grid, cw, H), sC = cC.svg, sH = Math.round(hP * 0.3), hC = hP - sH - 8;
-    tdBand(sC, FB, 22, 'Distribution days in the last 25 sessions (6 or more is the warning level)', 'Distribution days, last 25 sessions (6 or more: warning)');
-    topKey(sC, kx0, kx1, keyY, itC);
-    tdGrid(sC, FB, top, hP);
-    var dmax = Math.max(8, Math.max.apply(null, vals.map(function (q) { return q.dist25 || 0; }))), yC = function (v) { return top + hC - v / dmax * hC; };
-    [0, 2, 4, 6, 8].forEach(function (v) { if (v > dmax) return; el('line', { x1: kx0, x2: kx1, y1: yC(v), y2: yC(v), stroke: v === 6 ? C.red : C.grid, 'stroke-dasharray': v === 6 ? '5 3' : '', opacity: v === 6 ? 0.7 : 1 }, sC); txt(sC, kx0 - 6, yC(v) + 4, String(v), { 'text-anchor': 'end', 'font-size': 10.5, fill: v === 6 ? C.red : C.ink2, 'font-weight': v === 6 ? 650 : 400 }); });
-    var dp = ''; rows.forEach(function (q, i) { if (!q || q.dist25 == null) return; var xa = FB.edge(i), xb = FB.edge(i + 1); dp += (dp ? 'L' : 'M') + xa.toFixed(1) + ',' + yC(q.dist25).toFixed(1) + 'L' + xb.toFixed(1) + ',' + yC(q.dist25).toFixed(1); });
-    if (dp) { el('path', { d: dp + 'L' + kx1 + ',' + (top + hC) + 'L' + kx0 + ',' + (top + hC) + 'Z', fill: 'rgba(207,34,46,0.10)', stroke: 'none' }, sC); el('path', { d: dp, fill: 'none', stroke: C.red, 'stroke-width': 1.8 }, sC); }
-    var sTop = top + hC + 8, sMid = sTop + sH / 2, nv = net.filter(function (v) { return v != null; }), sMax = Math.max(5, Math.ceil(Math.max.apply(null, nv.map(Math.abs).concat([0])) / 5) * 5), yS = function (v) { return sMid - v / sMax * (sH / 2 - 2); };
-    el('rect', { x: kx0, y: sTop - 4, width: kx1 - kx0, height: 4, fill: '#fff' }, sC);
-    el('line', { x1: kx0, x2: kx1, y1: sTop - 4, y2: sTop - 4, stroke: C.border }, sC);
-    el('line', { x1: kx0, x2: kx1, y1: sMid, y2: sMid, stroke: C.ink3, 'stroke-width': 0.8 }, sC);
-    txt(sC, kx0 - 6, sMid + 4, '0', { 'text-anchor': 'end', 'font-size': 10, fill: C.ink3 });
-    [sMax, -sMax].forEach(function (v) { txt(sC, kx0 - 6, yS(v) + (v > 0 ? 7 : 1), v > 0 ? '+' + v : '(' + (-v) + ')', { 'text-anchor': 'end', 'font-size': 9.5, fill: v > 0 ? GREEN : C.red }); });
-    for (var i3 = 0; i3 < n; i3++) { var v3 = net[i3]; if (v3 == null || v3 === 0) continue; el('rect', { x: FB.edge(i3), y: Math.min(sMid, yS(v3)), width: FB.bw + 0.4, height: Math.abs(yS(v3) - sMid), fill: v3 > 0 ? 'rgba(26,127,55,0.55)' : 'rgba(207,34,46,0.55)' }, sC); }
-    tdTranches(sC, FB, m, top, top + hP);
-    el('line', { x1: kx0, x2: kx1, y1: top + hP, y2: top + hP, stroke: C.border }, sC);
-    tdLabels(sC, FB, top + hP + 14);
-    foot(sC, 'A distribution day: a close below the previous close on volume above 1.25 times the 50D average. Beneath: up days less down days in the same 25 sessions (green: more up days; red: more down days).');
-    cellHover(cC.div, sC, FB, top, top + hP, function (i) { var q = rows[i]; return (q && q.dist25 != null ? '<div>distribution days in the 25 sessions to this day: ' + q.dist25 + '</div>' : '') + (ud[i] ? '<div>in the same 25 sessions: ' + ud[i].u + ' up days, ' + ud[i].n + ' down days</div>' : ''); });
+    foot(sB, 'Each day: the average volume of the up days and of the down days among the last 5 sessions (L1W, dotted), 10 (L2W, dot-dash), 21 (L1M, solid) and 63 (L3M, dashed); shaded green where up days trade heavier over L1M (or the shortest window shown), red where down days do. The buttons show or hide each pair.');
+    cellHover(cB.div, sB, FB, top, top + hP, function (i) { var o = UR[i]; if (!o) return ''; return VAS.map(function (a) { return [a.lab, a.N]; }).map(function (x) { return '<div>' + x[0] + ' (' + x[1] + ' sessions): up days ' + fmtVol(o['u' + x[1]]) + ' (' + o['nu' + x[1]] + '), down days ' + fmtVol(o['d' + x[1]]) + ' (' + o['nd' + x[1]] + ')</div>'; }).join(''); });  /* PMS-VOLAVG-2026-11-14 */
+    /* ---- 3. up days against down days (PMS-PANEL2-2026-11-27, Richard, 27-Nov-2026: "Combine the two up days vs. down days charts into one panel"): the
+       closes in the top half of the day's range, and beneath them up days less down days over 25 sessions; the distribution days are on chart 1 */
+    var dU = document.createElement('div'); dU.style.position = 'relative'; dU.style.minWidth = '0'; grid.appendChild(dU);
+    udPane(dU, m, dates, { w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT, chartH: hP });
     /* ---- 4. daily volatility (the shared function; the toggles live in its key) */
     var dE = document.createElement('div'); dE.style.position = 'relative'; dE.style.minWidth = '0'; grid.appendChild(dE);
     rangePane(dE, m, dates, { part: 'vol', w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT, chartH: hP });
-    /* ---- 5. closes in the top half of the day's range, over time (Richard, 12-Nov-2026 07:16: "Do Option B. Remove Universe.", D-PMS-V4-169) */
-    var dF = document.createElement('div'); dF.style.position = 'relative'; dF.style.minWidth = '0'; grid.appendChild(dF);
-    rangePane(dF, m, dates, { part: 'closes', w: cw, h: H, padL: PL, padR: PR, band: true, keyTop: keyY, plotTop: pT, chartH: hP });
     /* ---- 6. relative price against its 52W high, last (Richard, 12-Nov-2026) */
-    var cD = vCell(grid, cw, H), sD = cD.svg;
+    if (two) { FB = cellFrame(dates, gw, PL, PR); kx1 = gw - FB.pad.r; }   /* PMS-PANEL2-2026-11-27: five charts now, so the last spans both columns */
+    var cD = vCell(grid, two ? gw : cw, H), sD = cD.svg; if (two) cD.div.style.gridColumn = '1 / -1';
     tdBand(sD, FB, 22, 'Relative price against its 52W high (%): more than 25% below at a month-end is a sell signal', 'Relative price against its 52W high: below (25%) at a month-end is a sell signal');
     topKey(sD, kx0, kx1, keyY, itD);
     tdGrid(sD, FB, top, hP);
@@ -2238,7 +2292,7 @@
     stack(cell, { d0: ds[0], d1: ds[ds.length - 1], width: W, left: 52, right: 290, markers: [], panels: [{ h: Hh, labelEdge: true, labelGap: 11.5, labelSize: 9.5, series: series, yDomain: [lo - pd, hi + pd], yFmt: function (v) { return Math.round(v); } }] });
   }
 
-  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, slCharts: slCharts, slKey: slKey, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, overlayKey: overlayKey, trCol: trCol, monthPts: monthPts, mvLabels: mvLabels, drawVolume: drawVolume, rangePane: rangePane, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, aheadAddWords: aheadAddWords, orderLine: orderLine, writtenBefore: writtenBefore, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
+  window.DASH = { C: C, marketRender: marketRender, snakeRender: snakeRender, ratingsRender: ratingsRender, nubRender: nubRender, ssRender: ssRender, pressureSentence: pressureSentence, niceTicks: niceTicks, stack: stack, ladder: ladder, slCharts: slCharts, slKey: slKey, model: model, oneLine: oneLine, stateWords: stateWords, renderHeader: renderHeader, renderFund: renderFund, overlayFor: overlayFor, overlayKey: overlayKey, trCol: trCol, monthPts: monthPts, mvLabels: mvLabels, drawVolume: drawVolume, rangePane: rangePane, udPane: udPane, VAW: VAW, VAVIS: VAVIS, vaToggle: vaToggle, drawRS: drawRS, drawRelMA: drawRelMA, lookAhead: lookAhead, aheadWords: aheadWords, aheadPill: aheadPill, aheadAddWords: aheadAddWords, orderLine: orderLine, writtenBefore: writtenBefore, setMech: setMech, volumeKey: volumeKey, rsKey: rsKey,
     rsPanel: rsPanel, relPanel: relPanel, statusPanel: statusPanel, ssPanels: ssPanels, ssLegend: ssLegend, ssTable: ssTable, valChart: valChart, valLine: valLine, pctNow: pctNow, peersPicture: peersPicture, peersTable: peersTable, peersKey: peersKey, ladderKey: ladderKey, insightsRender: insightsRender, addsRender: addsRender,
     renderRatings: renderRatings, renderContext: renderContext, renderJudgement: renderJudgement, renderPlaceholders: renderPlaceholders, renderExperiment: renderExperiment, overlay: overlay, CRIT_WORDS: CRIT_WORDS, addDays: addDays, ordinal: ordinal };
 })();

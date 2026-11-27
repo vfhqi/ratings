@@ -3,27 +3,27 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 546167,
+   "bytes": 705521,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 617758,
+   "bytes": 658462,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 574203,
+   "bytes": 615645,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 575603,
+   "bytes": 617489,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 628337,
+   "bytes": 670587,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,13 +32,14 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 619074,
+   "bytes": 660739,
    "warnings": []
   },
   "EKTA.B-SE": {
    "file": "EKTA_B-SE.json",
-   "bytes": 552104,
+   "bytes": 648306,
    "warnings": [
+    "check stop: the alignment calculation script gave no levels_series for tranche T2",
     "sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
     "sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
     "no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
@@ -46,27 +47,27 @@
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 506813,
+   "bytes": 550913,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 509640,
+   "bytes": 551533,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 560089,
+   "bytes": 601760,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 574009,
+   "bytes": 615307,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 541356,
+   "bytes": 583674,
    "warnings": []
   }
  },
@@ -75,9 +76,10 @@
   "HTWS-GB: sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
   "HTWS-GB: sell-side sales: not joined: no monthly value within 40 days before the first daily reading",
+  "EKTA.B-SE: check stop: the alignment calculation script gave no levels_series for tranche T2",
   "EKTA.B-SE: sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
  ],
- "seconds": 149.6
+ "seconds": 133.4
 }
