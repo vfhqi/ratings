@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-25",
+ "current_week": "2026-11-26",
  "prior_week": "2026-09-25",
  "industry": {
   "A. Consumer staples": {
@@ -86,7 +86,7 @@
    "prior": "C"
   },
   "A.6. Food production": {
-   "current": "C",
+   "current": "D",
    "prior": "D"
   },
   "A.7. General retail": {
@@ -98,11 +98,11 @@
    "prior": "F"
   },
   "B.3. Hospitals, clinics and care homes": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "B.4. Pharma manufacturing services and supplies": {
-   "current": "B",
+   "current": "C",
    "prior": "F"
   },
   "B.5. Medtech - consumables": {
@@ -122,7 +122,7 @@
    "prior": "D"
   },
   "C.1. Telecoms - MNOs": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "D.1. Infrastructure - transport and storage concessions": {
@@ -146,7 +146,7 @@
    "prior": "F"
   },
   "F.1. Defence - Primes": {
-   "current": "F",
+   "current": "D",
    "prior": "D"
   },
   "F.2. Defence - Non-primes": {
@@ -166,11 +166,11 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
-   "current": "F",
+   "current": "D",
    "prior": "F"
   },
   "G.4. Holding companies": {
@@ -190,7 +190,7 @@
    "prior": "F"
   },
   "H.12. Online classifieds/platforms": {
-   "current": "D",
+   "current": "C",
    "prior": "F"
   },
   "H.14. Automotive - retail, aftermarket, leasing and rental": {
@@ -250,7 +250,7 @@
    "prior": "C"
   },
   "J.5. Software - VMS": {
-   "current": "C",
+   "current": "B",
    "prior": "F"
   },
   "J.7. Software - Computer games": {
@@ -266,7 +266,7 @@
    "prior": "A"
   },
   "K.1. Outsourced business services: facilities, security, catering, waste and support": {
-   "current": "B",
+   "current": "C",
    "prior": "D"
   },
   "K.11. Information services": {
@@ -278,7 +278,7 @@
    "prior": "B"
   },
   "K.5. Advertising and consulting services": {
-   "current": "C",
+   "current": "B",
    "prior": "C"
   },
   "K.9. Recruitment services": {
@@ -338,7 +338,7 @@
    "prior": "F"
   },
   "N.6. Real estate - developers and services": {
-   "current": "D",
+   "current": "F",
    "prior": "F"
   },
   "O.1. Industrial services": {
@@ -370,7 +370,7 @@
    "prior": "B"
   },
   "O.2. Building technology and products": {
-   "current": "C",
+   "current": "D",
    "prior": "C"
   },
   "O.4. Electrical equipment, grid and automation": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "D",
+   "current": "C",
    "prior": "B"
   },
   "P.4. Agriculture": {
