@@ -13,7 +13,7 @@
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 616076,
+   "bytes": 616079,
    "warnings": []
   },
   "FEVR-GB": {
@@ -37,7 +37,7 @@
   },
   "EKTA.B-SE": {
    "file": "EKTA_B-SE.json",
-   "bytes": 649307,
+   "bytes": 649308,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
     "sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
@@ -56,7 +56,7 @@
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 600668,
+   "bytes": 600663,
    "warnings": []
   },
   "HFG-GB": {
@@ -79,5 +79,5 @@
   "EKTA.B-SE: sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
  ],
- "seconds": 111.7
+ "seconds": 69.4
 }
