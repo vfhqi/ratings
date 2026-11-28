@@ -3,22 +3,22 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 705994,
+   "bytes": 705998,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 658626,
+   "bytes": 658630,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 615610,
+   "bytes": 615606,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 617438,
+   "bytes": 617445,
    "warnings": []
   },
   "HTWS-GB": {
@@ -32,12 +32,12 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 660686,
+   "bytes": 660678,
    "warnings": []
   },
   "EKTA.B-SE": {
    "file": "EKTA_B-SE.json",
-   "bytes": 649124,
+   "bytes": 649121,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
     "sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
@@ -46,27 +46,27 @@
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 551009,
+   "bytes": 551014,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 551493,
+   "bytes": 551491,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 601680,
+   "bytes": 601679,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 615279,
+   "bytes": 615290,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 583576,
+   "bytes": 583573,
    "warnings": []
   }
  },
@@ -79,5 +79,5 @@
   "EKTA.B-SE: sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
  ],
- "seconds": 74.1
+ "seconds": 67.0
 }
