@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-28 13:54:04",
+ "generated": "2026-11-28 15:04:03",
  "clock": "the computer that ran the builder (UK time on Richard's PC)",
  "builder": "build-canonical-ratings.py 1.7",
  "rule": {
@@ -5439,7 +5439,7 @@
    "layer": "the memo",
    "id": "thesis_change_forces",
    "group": "The Eight Master Ratings of Capital Deployment Worthiness, bottom-up four",
-   "title": "Thesis's Change Forces' Strength",
+   "title": "Investment Case - Degree of Change Forces",
    "scale_version": "the Rater v3.0, 2026-11-03: standing in the Universe of about 1,300 listed European companies (90 = better than about 9 in 10), every item scored after the memo is written, the case first on judgement topics, anchors from the corrected ordering of 75 companies, the question groups' keys (D-SQ-280)",
    "n": 83,
    "populations": {
@@ -5523,7 +5523,7 @@
    "layer": "the memo",
    "id": "setups_fit",
    "group": "The Eight Master Ratings of Capital Deployment Worthiness, bottom-up four",
-   "title": "Setups' Fit/Crispness",
+   "title": "Case Profile Fit",
    "scale_version": "the Rater v3.0, 2026-11-03: standing in the Universe of about 1,300 listed European companies (90 = better than about 9 in 10), every item scored after the memo is written, the case first on judgement topics, anchors from the corrected ordering of 75 companies, the question groups' keys (D-SQ-280)",
    "n": 83,
    "populations": {
@@ -5565,7 +5565,7 @@
    "layer": "the memo",
    "id": "case_riskiness",
    "group": "The Eight Master Ratings of Capital Deployment Worthiness, bottom-up four",
-   "title": "Case Riskiness",
+   "title": "Investment Case Riskiness",
    "scale_version": "the Rater v3.0, 2026-11-03: standing in the Universe of about 1,300 listed European companies (90 = better than about 9 in 10), every item scored after the memo is written, the case first on judgement topics, anchors from the corrected ordering of 75 companies, the question groups' keys (D-SQ-280)",
    "n": 83,
    "populations": {
