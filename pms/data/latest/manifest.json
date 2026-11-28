@@ -3,27 +3,27 @@
  "files": {
   "AZA-SE": {
    "file": "AZA-SE.json",
-   "bytes": 705563,
+   "bytes": 705960,
    "warnings": []
   },
   "CARL.B-DK": {
    "file": "CARL_B-DK.json",
-   "bytes": 657420,
+   "bytes": 657956,
    "warnings": []
   },
   "CVSG-GB": {
    "file": "CVSG-GB.json",
-   "bytes": 615549,
+   "bytes": 616076,
    "warnings": []
   },
   "FEVR-GB": {
    "file": "FEVR-GB.json",
-   "bytes": 615992,
+   "bytes": 616525,
    "warnings": []
   },
   "HTWS-GB": {
    "file": "HTWS-GB.json",
-   "bytes": 670309,
+   "bytes": 670838,
    "warnings": [
     "sell-side eps: not joined: no monthly value within 40 days before the first daily reading",
     "sell-side ebitda: not joined: no monthly value within 40 days before the first daily reading",
@@ -32,12 +32,12 @@
   },
   "IMCD-NL": {
    "file": "IMCD-NL.json",
-   "bytes": 660755,
+   "bytes": 661286,
    "warnings": []
   },
   "EKTA.B-SE": {
    "file": "EKTA_B-SE.json",
-   "bytes": 648773,
+   "bytes": 649307,
    "warnings": [
     "sell-side eps: not joined: the daily file's value a month earlier (4.3327) differs from the 2026-08-31 month-end (4.4044) by -1.6%, so the two are on different bases",
     "sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
@@ -46,27 +46,27 @@
   },
   "HTRO-SE": {
    "file": "HTRO-SE.json",
-   "bytes": 549914,
+   "bytes": 550429,
    "warnings": []
   },
   "SDIP.B-SE": {
    "file": "SDIP_B-SE.json",
-   "bytes": 549672,
+   "bytes": 550194,
    "warnings": []
   },
   "DIE-BE": {
    "file": "DIE-BE.json",
-   "bytes": 600136,
+   "bytes": 600668,
    "warnings": []
   },
   "HFG-GB": {
    "file": "HFG-GB.json",
-   "bytes": 613780,
+   "bytes": 614303,
    "warnings": []
   },
   "ART-ES": {
    "file": "ART-ES.json",
-   "bytes": 582186,
+   "bytes": 582705,
    "warnings": []
   }
  },
@@ -79,5 +79,5 @@
   "EKTA.B-SE: sell-side tp: not joined: the daily file's value a month earlier (57.6063) differs from the 2026-08-31 month-end (58.5133) by -1.6%, so the two are on different bases",
   "EKTA.B-SE: no block for this holding in the APM PMS Q&A SOP note APM-PMS-QA-SOP-2026-11-23-the-session-run-on-monday-on-the-23-nov-close.md"
  ],
- "seconds": 99.6
+ "seconds": 111.7
 }
