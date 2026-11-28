@@ -1,6 +1,6 @@
 {
  "source": "rs-dashboard.html",
- "current_week": "2026-11-26",
+ "current_week": "2026-11-27",
  "prior_week": "2026-09-25",
  "industry": {
   "A. Consumer staples": {
@@ -12,7 +12,7 @@
    "prior": "C"
   },
   "C. Telecoms": {
-   "current": "D",
+   "current": "F",
    "prior": "D"
   },
   "D. Infrastructure": {
@@ -60,7 +60,7 @@
    "prior": "F"
   },
   "O. Industrials and capital goods": {
-   "current": "F",
+   "current": "D",
    "prior": "C"
   },
   "P. Energy, commodities and metals mining": {
@@ -70,7 +70,7 @@
  },
  "sector": {
   "A.1. Beverages": {
-   "current": "B",
+   "current": "A",
    "prior": "D"
   },
   "A.2. Tobacco": {
@@ -166,7 +166,7 @@
    "prior": "A"
   },
   "G.2. Exchanges and brokers": {
-   "current": "B",
+   "current": "C",
    "prior": "B"
   },
   "G.3. Specialist/Alternative Finance": {
@@ -214,7 +214,7 @@
    "prior": "D"
   },
   "H.3. Retail - general/physical": {
-   "current": "A",
+   "current": "B",
    "prior": "C"
   },
   "H.4. Retail - online and delivery platforms": {
@@ -270,7 +270,7 @@
    "prior": "D"
   },
   "K.11. Information services": {
-   "current": "C",
+   "current": "B",
    "prior": "D"
   },
   "K.3. Testing and inspection services": {
@@ -278,7 +278,7 @@
    "prior": "B"
   },
   "K.5. Advertising and consulting services": {
-   "current": "B",
+   "current": "C",
    "prior": "C"
   },
   "K.9. Recruitment services": {
@@ -358,7 +358,7 @@
    "prior": "C"
   },
   "O.17. Engineered components, polymers and electronics manufacturing": {
-   "current": "D",
+   "current": "C",
    "prior": "C"
   },
   "O.18. Test, measurement, sensing and safety technology": {
@@ -366,7 +366,7 @@
    "prior": "C"
   },
   "O.19. Diversified industrial groups": {
-   "current": "C",
+   "current": "B",
    "prior": "B"
   },
   "O.2. Building technology and products": {
@@ -394,7 +394,7 @@
    "prior": "A"
   },
   "P.3. Energy - services and engineering contractors": {
-   "current": "C",
+   "current": "D",
    "prior": "B"
   },
   "P.4. Agriculture": {
